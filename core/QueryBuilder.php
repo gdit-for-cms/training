@@ -162,7 +162,7 @@ Trait QueryBuilder
         $this->resetQuery();
 
         if(!empty($query)){
-            return $query->fetchALl(PDO::FETCH_ASSOC);
+            return $query->fetchAll(PDO::FETCH_ASSOC);
         }
         return false;
     }
@@ -182,7 +182,7 @@ Trait QueryBuilder
         $this->resetQuery();
 
         if(!empty($query)){
-            return $query->fetchALl(PDO::FETCH_ASSOC);
+            return $query->fetchAll(PDO::FETCH_ASSOC);
         }
         return false;
     }
