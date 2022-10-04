@@ -18,8 +18,5 @@ class DefaultController extends Controller
         View::render('default/index.php');
     }
 
-    public function testAction()
-    {
-        View::render('default/test.php');
-    }
+    
 }
