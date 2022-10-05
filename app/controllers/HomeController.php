@@ -17,16 +17,18 @@ class HomeController extends Controller
     {
         View::render('default/index.php1');
     }
-    public function testAction()
+    public function diffAction()
     {
-        View::render('default/test.php');
+        View::render('default/diff.php');
     }
 
     public function compareAction()
     {
         if(isset($_POST['importSubmit'])){
             if(is_uploaded_file($_FILES['file1']['tmp_name']) && is_uploaded_file($_FILES['file2']['tmp_name'])){
-                echo 'Uploaded file1';
+                echo 'Uploaded file successfully';
+
+                // Read the import file contents
                 $fileroot1 = fopen($_FILES['file1']['tmp_name'], 'r');
                 $fileroot2 = fopen($_FILES['file2']['tmp_name'], 'r');
 
@@ -34,12 +36,15 @@ class HomeController extends Controller
                 $fh1 = fopen("../core/inc/file1.inc", 'r+');
                 $fh2 = fopen("../core/inc/file2.inc", 'r+');
 
-                
+                // Clear content in init file to 0 bits
+                ftruncate($fh1, 0);
+                ftruncate($fh2, 0);
+
+                // Set variables form import file
                 $variablesFile1 = [];
                 $variablesFile2 = [];
 
-                // set variables for variables in init file
-
+                // Set variables in init file
                 $variableGLOBALS1 = [];
                 $variableGLOBALS2 = [];
     
@@ -64,7 +69,7 @@ class HomeController extends Controller
                         
                     };
 
-                    // write data to init file
+                    // Write data to init file
                     if(!preg_match('/define\(/i', $line1)){
                         fwrite($fh1, $line1); 
                     };
@@ -86,13 +91,13 @@ class HomeController extends Controller
                     }else if (preg_match('/define\("(.+?)\", \"\"/i', $line2 , $match)){
 
                         $variablesFile2[$match[1]] = '';
-                    }else if(preg_match('/setDefineArray\(\'(.+?)\'/i', $line1 , $match)){
+                    }else if(preg_match('/setDefineArray\(\'(.+?)\'/i', $line2 , $match)){
 
                         $variableGLOBALS2[] = $match[1];
                         
                     };
 
-                    // write data to init file
+                    // Write data to init file
                     if(!preg_match('/define\(/i', $line2)){
                         fwrite($fh2, $line2); 
                     };
@@ -103,12 +108,16 @@ class HomeController extends Controller
                 fclose($fh1);
                 fclose($fh2);   
 
+                $this->data['variableGLOBALS1'] = $variableGLOBALS1;
+                $this->data['variableGLOBALS2'] = $variableGLOBALS2;
+                $this->data['variablesFile1'] = $variablesFile1;
+                $this->data['variablesFile2'] = $variablesFile2;
+                View::render('default/compare.php',$this->data);
+
                
+            }else {
+                echo 'Uploaded file failed';
             }
-                
         }
-        $this->data['variableGLOBALS1'] = $variableGLOBALS1;
-        $this->data['variableGLOBALS2'] = $variableGLOBALS2;
-        View::render('default/compare.php',$this->data);
     }
 }

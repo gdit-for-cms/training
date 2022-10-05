@@ -1,4 +1,4 @@
-<!-- <!DOCTYPE html> -->
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,13 +8,16 @@
     <style>
         .container {
             display: flex;
+            width: 80%;
+            
         }
 
         .left, .right {
             flex: 1;
             padding : 0 90px;
-            border-right: 1px solid #ccc;
-            font-size: 32px;
+            padding-bottom: 40px;
+            border-right: 3px solid #000;
+            font-size: 26px;
         }
 </style>
 </head>
@@ -22,77 +25,141 @@
 
 <?php 
 require_once '../core/inc/setDefineArray.php' ;
-require_once '../core/inc/file1.inc';
 
-$getGlobal1 = [];
-$getGlobal2 = [];
+// Get the array of variables in file1
+require_once '../core/inc/file1.inc';
+$tempGlobal1 = [];
+$GlobalsVarName1 = [];
 
 foreach($variableGLOBALS1 as $each){
-    $getGlobal[$each] = $GLOBALS[$each];
+    $GlobalsVarName1[] = $each;
+    $tempGlobal1[$each] = $GLOBALS[$each];
     unset($GLOBALS[$each]);
 }
+
+
+// Get the array of variables in file2
 require_once '../core/inc/file2.inc';
+$tempGlobal2 = [];
+$GlobalsVarName2 = [];
 
 foreach($variableGLOBALS2 as $each){
-    $getGloba2[$each] = $GLOBALS[$each];
+    $GlobalsVarName2[] = $each;
+    $tempGlobal2[$each] = $GLOBALS[$each];
     unset($GLOBALS[$each]);
 }
-// unset($GLOBALS['IMAGE_TEST']);
-// print_r($GLOBALS['IMAGE_TEST']);
-// var_dump($GLOBALS);
-print_r($getGloba1);
-print_r($getGloba2);
-?>
+
+$backroundSame = 'background-color: hsl(134deg 90% 83% / 45%); border-top: 1px solid #ccc;';
+$backroundDiff = 'background-color: hsl(59deg 76% 81% / 45%); border-top: 1px solid #ccc;';
+$diff = [];
+// Check and repare a same variable name in 2 files
+$arr = array_intersect($GlobalsVarName1,$GlobalsVarName2);
+if(!empty($arr)){
+    foreach($arr as $name){
+        if(count($tempGlobal1[$name]) == count($tempGlobal2[$name])) {
+        for($i = 0; $i < count($tempGlobal1[$name]); $i++){
+            $diff[$i] = array_diff_assoc($tempGlobal1[$name][$i], $tempGlobal2[$name][$i]);
+            if(!empty($diff[$i])){  
+                $keyDiff = key($diff[$i]);?>
+                    <div class="container" style="<?= $backroundDiff ?>">
+                        <div class="left">
+                            <h4><?= $name ?></h4>
+                            <?php foreach ($tempGlobal1[$name][$i] as $key =>$value ){ $style = '';?>
+                                <?php if($key == $keyDiff){ $style = "color:red;"; }?>
+    
+                                    <span style=<?= $style ?>><?= $key ?> : <?= $value ?></span></br>
+                                    
+                            <?php }?>   
+                        </div>
+                        <div class="right">
+                            <h4><?= $name ?></h4>
+                            <?php foreach ($tempGlobal2[$name][$i] as $key =>$value ){ $style = '';?>
+                                <?php if($key == $keyDiff){ $style = "color:red;"; }?>
+    
+                                    <span style=<?= $style ?>><?= $key ?> : <?= $value ?></span></br>
+
+                            <?php }?>   
+                        </div>
+                    </div>
+            <?php  }else {  ?>
+                    <div class="container" style="<?= $backroundSame ?>">
+                        <div class="left">
+                            <h4><?= $name ?></h4>
+                            <?php foreach ($tempGlobal1[$name][$i] as $key =>$value ){ ?>
+        
+                                    <span><?= $key ?> : <?= $value ?></span></br>
+        
+                            <?php  } ?>
+                        </div>
+                        <div class="right">
+                            <h4><?= $name ?></h4>
+                            <?php foreach ($tempGlobal2[$name][$i] as $key =>$value ){ ?>
+                                
+                                    <span><?= $key ?> : <?= $value ?></span></br>
+        
+                            <?php   } ?>
+                        </div>
+                    </div>
+<?php   }} } else { ?>
+        <div class="container" style="<?= $backroundDiff ?>">
+            <div class="left">
+                <h4><?= $name ?></h4>
+                <?php for($i = 0 ; $i < count($tempGlobal1[$name]); $i++) {
+                    foreach ($tempGlobal1[$name][$i] as $key =>$value ){ ?>
+            
+                        <span ><?= $key ?> : <?= $value ?></span></br>
+
+                <?php } echo '<br />'; }?>   
+            </div>
+            <div class="right">
+                <h4><?= $name ?></h4>
+                <?php for($i = 0 ; $i < count($tempGlobal2[$name]); $i++) {
+                    foreach ($tempGlobal2[$name][$i] as $key =>$value ){ ?>
+            
+                        <span ><?= $key ?> : <?= $value ?></span></br>
+
+                <?php } echo '<br />'; }?>   
+            </div>
+        </div>
+
+<?php }}}; ?>
+
 
 <?php 
-$test = [];
 
-    $test[$i] = array_diff_assoc($GLOBALS['IMAGE_TEST'][$i], $GLOBALS['IMAGE_TEST_2222'][$i]);
-    if(!empty($test[$i])){  
-        print_r($test[$i]);
-        $keyDiff = key($test[$i]);
-        echo '</br>'; ?>
-            <div class="container">
-                <div class="left">
-                    <h2>IMAGE_TEST</h2>
-                    <?php foreach ($GLOBALS['IMAGE_TEST'][$i] as $key =>$value ){ ?>
-                        <?php if($key == $keyDiff){?>
 
-                            <span style="color:red;"><?php print_r($key) ?> : <?php print_r($value) ?></span></br>
+foreach ($variablesFile1 as $key1 => $value1) {
+    foreach ($variablesFile2 as $key2 => $value2) {
+        if  ($key1 == $key2 && $value1 == $value2) {  ?>
+                <div class="container" style="<?= $backroundSame ?>">
+                    <div class="left">
 
-                        <?php  }else { ?>
+                        <span ><?= $key1 ?> : <?= $value1 ?></span></br>
 
-                            <span><?php print_r($key) ?> : <?php print_r($value) ?></span></br>
-
-                        <?php  }  ?>
-                    <?php  }  ?>
-                </div>
-                <div class="right">
-                    <h2>IMAGE_TEST_2222</h2>
-                    <?php foreach ($GLOBALS['IMAGE_TEST_2222'][$i] as $key =>$value ){ ?>
-                        <?php if($key == $keyDiff){?>
-
-                            <span style="color:red;"><?php print_r($key) ?> : <?php print_r($value) ?></span></br>
-
-                        <?php  }else { ?>
-
-                            <span><?php print_r($key) ?> : <?php print_r($value) ?></span></br>
-
-                        <?php  }  ?>
-                    <?php  }  ?>
-                </div>
-            </div>
-<?php  } ; ?>
-
+                    </div>
+                    <div class="right">
+                    
+                        <span ><?= $key2 ?> : <?= $value2 ?></span></br>
     
 
+                    </div>
+                </div>
+<?php   }else if ($key1 == $key2 && $value1 !== $value2 ){ ?>
+                <div class="container" style="<?= $backroundDiff ?>">
+                    <div class="left">
 
-<?php 
-    if($test){
-        echo 'Nothing !';
-        echo '</br>';
-    } 
-?>
+                        <span style="color:red;"><?= $key1 ?> : <?= $value1 ?></span></br>
+
+                    </div>
+                    <div class="right">
+                    
+                        <span style="color:red;"><?= $key2 ?> : <?= $value2 ?></span></br>
+    
+
+                    </div>
+                </div>
+<?php   } }}; ?>
+
 
 </body>
 </html>

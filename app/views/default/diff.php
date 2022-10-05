@@ -29,14 +29,7 @@
         <input type="submit" class="btn btn-primary" name="importSubmit" value="Import(CSV)">
     </form>
 
-    <?php
-    require_once '../core/inc/setDefineArray.php';
-    require_once '../core/inc/file1.inc';
-    require_once '../core/inc/file2.inc';
 
-
-    // print_r($GLOBALS);
-    ?>
 </body>
 
 </html>
