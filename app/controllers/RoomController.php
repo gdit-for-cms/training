@@ -12,7 +12,6 @@ use Core\Http\Request;
 
 class RoomController extends Controller
 {
-    private $_table = 'room';
     private $request ;
     public $data = [];
     /**

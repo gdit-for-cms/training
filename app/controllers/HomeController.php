@@ -4,19 +4,70 @@ namespace App\Controllers;
 
 use Core\Controller;
 use Core\View;
+use App\models\User;
+use Core\Http\Session;
+use Core\Http\Request;
 
 class HomeController extends Controller
 {
     public $data =[] ;
+    public $session  ;
     /**
      * Show the index page
      *
      * @return void
      */
-    public function indexAction()
+    public function __construct()
     {
-        View::render('default/index.php1');
+       $this->session =  Session::getInstance();
     }
+    /**
+     * Show the index page
+     *
+     * @return void
+     */
+
+    public function homepage()
+    {
+
+        View::render('home/homepage.php');
+
+    }
+    public function login(Request $request)
+    {
+
+        $email = htmlspecialchars(addslashes($request->getPost()['email']));
+        $password = htmlspecialchars(addslashes($request->getPost()['password']));
+
+        $user = new User();
+        $currentUser = $user->table('user')
+                     ->where('email', '=', $email)
+                     ->where('password', '=', $password)
+                     ->get('');
+
+        $number_rows = count($currentUser);
+
+        if ($number_rows == 1) {
+            $data = [
+                'name' => $currentUser[0]['name'],
+                'email' => $currentUser[0]['email'],
+                'role_id' => $currentUser[0]['role_id'],
+                'room_id' => $currentUser[0]['room_id'],
+            ];
+            $this->session->__unset('error');
+            $this->session->__set('currentUser', $data);
+
+            $token = uniqid('user_', true) . time();
+            $user->table('user')->where('id', '=', $currentUser[0]['id'])->update(['token' => $token]);
+
+            setcookie('remember', $token, time() + 86400*30, '/');
+            header("location: /index");
+        } else {
+            $this->session->__set('error', 'email or password is incorrect');
+            header('Location: /');
+        }
+    }
+
     public function diffAction()
     {
         View::render('default/diff.php');

@@ -1,0 +1,142 @@
+* {
+    box-sizing: border-box;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+a {
+    text-decoration: none;
+    color: #000;
+    background-color: transparent;
+}
+
+#header {
+    position: sticky;
+    top: 0;
+    height: 70px;
+    line-height: 70px;
+    font-size: 13px;
+    font-weight: 400;
+    background-color: #ffffff;
+    z-index: 11;
+    transition: background  .3s;
+
+}
+
+#header .header-main{
+    display :flex;
+    height: 70px;
+    border-bottom: 1px solid #e4d5d5;
+}
+#header .item{
+    padding: 0 23px;
+}
+.box-left-logo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 70px;
+    border-right: 1px solid #e6eaea;
+    background-color: transparent;
+
+}
+.box-left-logo img {
+    width: 100%;
+}
+
+#header .header-main>.box-right{
+    display: flex;
+    justify-content:flex-end;
+    flex: 1;
+}
+
+#header .login{
+    text-transform: uppercase;
+    flex: 1;
+    text-align: right;
+}
+#header .login strong{
+    font-weight: 600;
+    margin-left: 4px;
+}
+
+.button{
+    position: relative;
+    display: inline-block;
+    height: 60px;
+    padding: 0 35px;
+    background-color: #030303;
+    color: #fff;
+    line-height: 60px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition:  all .3s;
+}
+
+
+#Cart-or-something{
+    position: relative;
+    width: 190px;
+    height: 70px;
+    padding: 0 !important;
+    overflow: hidden;
+    transition: width .3s ease-in-out
+}
+
+
+#Cart-or-something .button{
+    position: relative;
+    width: 190px;
+    height: 70px;
+    padding: 0 !important;
+    overflow: hidden;
+    transition: width .3s ease-in-out
+}
+
+.button.black{
+    background-color: #000;
+    color: #fff;
+    font-weight: 400;
+    line-height: 70px;
+    font-size: 18px;
+}
+/* LOGO */
+.logo-header{
+    display: block;
+    position: absolute;
+    top: 23px;
+    left: 50%;
+    width: auto;
+    height: 23px;
+    line-height: normal;
+    transform: translateX(-50%);
+}
+.logo-header a {
+    font-size: 20px;
+    font-weight: 700;
+}
+.logo-fill {
+    fill: #303030;
+    z-index: 0;
+    transition: all .3s;
+}
+.logo-header.p .logo-fill{
+    fill:  transparent;
+    transform: translateX(85px);
+}
+.logo-header.p #logo-p,.logo-header.p #logo-p1{
+    fill:  black;
+    transform: translateX(85px);
+}
+
+.open-login{
+    cursor: pointer;
+}

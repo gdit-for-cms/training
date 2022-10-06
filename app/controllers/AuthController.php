@@ -9,9 +9,8 @@ use Core\Http\Session;
 use Core\Http\Request;
 
 
-class AuthController extends Controller
+class AuthController extends Controller 
 {   
-    private $_table = 'user';
     public $session  ;
     /**
      * Show the index page

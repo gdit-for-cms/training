@@ -10,7 +10,6 @@ use Core\Http\Request;
 
 class AdminController extends Controller
 {
-    private $_table = 'user';
     /**
      * Show the index page
      *
