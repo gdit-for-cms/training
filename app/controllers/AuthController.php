@@ -9,10 +9,11 @@ use Core\Http\Session;
 use Core\Http\Request;
 
 
-class AuthController extends Controller
+class AuthController extends Controller 
 {   
     public $session;
     public $currentUser = [];
+
     /**
      * Show the index page
      *
