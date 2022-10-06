@@ -24,9 +24,14 @@ class User extends Model
      */
     public static function getAll()
     {
-        // $db = static::getDB();
-        // $stmt = $db->query('SELECT id, name FROM users');
-        // return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $db = static::getDB();
+        $stmt = $db->query('SELECT u.id, u.name, u.email, u.room_id, role.name role_name, room.name room_name
+                            FROM user AS u
+                            JOIN role ON u.role_id = role.id
+                            JOIN room ON u.room_id = room.id');
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     }
+
 
 }

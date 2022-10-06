@@ -5,12 +5,19 @@ namespace App\Controllers;
 use Core\Controller;
 use Core\View;
 use App\models\User;
+use App\models\Room;
 use Core\Http\Session;
 use Core\Http\Request;
 
 class AdminController extends Controller
 {
-    private $_table = 'user';
+    public $data =[] ;
+    public $session;
+
+    public function __construct()
+    {
+       $this->session =  Session::getInstance();
+    }
     /**
      * Show the index page
      *
@@ -18,9 +25,23 @@ class AdminController extends Controller
      */
     public function indexAction()
     {   
-        
-        View::render('default/dashboard.php');
+        $currentUser = $this->session->__isset('currentUser');
+        if (!$currentUser) {
+            header('Location: /default/index');
+            exit;
+        }
+
+        $this->data['allUsers'] = User::getAll();
+
+        $users = new User();
+        $this->data['admins'] = $users->table('user')->where('role_id', '=', 1)->get();
+        $this->data['users'] = $users->table('user')->where('role_id', '=', 2)->get();
+
+        $rooms = new Room();
+        $this->data['rooms'] = $rooms->table('room')->all();
+
+        $this->data['mainContainer'] = 'default/dashboard.php';
+        View::render('layout/master.php', $this->data);
     }
 
-    
 }

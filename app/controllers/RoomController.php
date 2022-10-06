@@ -12,7 +12,6 @@ use Core\Http\Request;
 
 class RoomController extends Controller
 {
-    private $_table = 'room';
     private $request ;
     public $data = [];
     /**
@@ -20,25 +19,21 @@ class RoomController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->request = new Request();   
-    }
 
     public function newAction()
     {   
 
-        View::render('room/new.php');
+        $this->data['mainContainer'] = 'room/new.php';
+        View::render('admin-layout/master.php', $this->data);
         
     }
 
-    public function createAction()
+    public function createAction(Request $request)
     {
-        
-        $post = $this->request->getPost();
+        $post = $request->getPost();
 
-        $name = htmlspecialchars($post['name']);
-        $description = htmlspecialchars($post['description']);
+        $name = htmlspecialchars(addslashes($post['name']));
+        $description = htmlspecialchars(addslashes($post['description']));
         
         $room = new Room();
         $room->insert(['name' => $name,
@@ -49,37 +44,38 @@ class RoomController extends Controller
  
     }
 
-
-    public function editAction()
+    public function editAction(Request $request)
     {   
-        $id = $this->request->getGet()['id'];
+        $id = $request->getGet()['id'];
 
         $room = new Room();
         $this->data['room'] = $room->table('room')->find($id, 'id, name, description');
 
-        View::render('room/edit.php', $this->data);
+        $this->data['mainContainer'] = 'room/edit.php';
+        View::render('admin-layout/master.php', $this->data);
     }
 
-    public function updateAction()
+    public function updateAction(Request $request)
     {
-        $get = $this->request->getGet();
+        $get = $request->getGet();
 
-        $id = htmlspecialchars($get['id']);
-        $name = htmlspecialchars($get['name']);
-        $description = htmlspecialchars($get['description']);
+        $id = htmlspecialchars(addslashes($get['id']));
+        $name = htmlspecialchars(addslashes($get['name']));
+        $description = htmlspecialchars(addslashes($get['description']));
+
 
         $room = new Room();
         $room->update(['name' => $name,
                        'description' => $description]
                         , "id = $id");
-                        
+
         header('Location: /admin/index');
         exit;
     }
 
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
-        $id = $this->request->getGet()['id'];
+        $id = $request->getGet()['id'];
 
         $room = new Room();
         $room->destroy("id = $id");

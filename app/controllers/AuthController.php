@@ -11,8 +11,8 @@ use Core\Http\Request;
 
 class AuthController extends Controller
 {   
-    private $_table = 'user';
-    public $session  ;
+    public $session;
+    public $currentUser = [];
     /**
      * Show the index page
      *
@@ -28,64 +28,64 @@ class AuthController extends Controller
 
         $currentUser = $this->session->__isset('currentUser');
         if ($currentUser) {
-            View::render('admin/index.php');
-            exit;
+            header('Location: admin/index');
         } else {
 
-            header('Location:../default/index');
-
+            header('Location: default/index');
             exit;
         }
     }
 
-    public function loginAction()
+    public function loginAction(Request $request)
     {   
         
-        $request = new Request;
         $post = $request->getPost();
 
         $email = $post['email'];
         $password = $post['password'];
+        $password = base64_encode($password);
 
-        // $userModel = new User();
-        // $userModel->login($email, $password);
         $user = new User();
-        $currentUser = $user->table('user')
+        $inputUser = $user->table('user')
                      ->where('email', '=', $email)
                      ->where('password', '=', $password)
                      ->get();
-        // var_dump($user);
-        // echo '123';
-        $number_rows = count($currentUser);
-        // echo($user[0]['id']);
+        var_dump($inputUser);
+        if ($inputUser['role_id'] != 1) {
+            header('Location: /default/index');
+            $this->session->__set('error', 'you are not admin');
+        } else {
+            $this->currentUser = $inputUser;
+        }
+
+        $number_rows = count($this->currentUser);
         if ($number_rows == 1) {
             $data = [
-                'name' => $currentUser[0]['name'],
-                'email' => $currentUser[0]['email'],
-                'role_id' => $currentUser[0]['role_id'],
-                'room_id' => $currentUser[0]['room_id'],
+                'name' => $this->currentUser[0]['name'],
+                'email' => $this->currentUser[0]['email'],
+                'role_id' => $this->currentUser[0]['role_id'],
+                'room_id' => $this->currentUser[0]['room_id'],
             ];
-            $session = Session::getInstance();
-            $session->__unset('error');
-            $session->__set('currentUser', $data);
+            $this->session->__unset('error');
+            $this->session->__set('currentUser', $data);
             // print_r($_SESSION['id']);
 
             $token = uniqid('', true) . time();
-            $user->table('user')->where('id', '=', 1)->update(['token' => $token]);
+            $user->table('user')->where('id', '=', $this->currentUser[0]['id'])->update(['token' => $token]);
 
             setcookie('remember', $token, time() + 86400*30, '/');
             header("location: /admin/index");
+            exit;
         } else {
-            $session = Session::getInstance();
-            $session->__set('error', 'email or password is incorrect');
+            $this->session->__set('error', 'email or password is incorrect');
             header('Location: /');
+            exit;
         }
     }
 
     public function logoutAction()
     {   
-        $session = Session::getInstance();
-        $session->__unset('currentUser');
+        $this->session->__unset('currentUser');
 
         setcookie('remember',null,-1);
 

@@ -12,17 +12,13 @@ use Core\Http\Request;
 
 class UserController extends Controller
 {
-    private $request ;
     public $data = [];
     /**
      * Show the index page
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->request = new Request();   
-    }
+
 
     public function newAction()
     {   
@@ -31,14 +27,16 @@ class UserController extends Controller
 
         $room = new Room();
         $this->data['allRoom'] = $room->table('room')->all();
-        View::render('user/new.php', $this->data);
+
+        $this->data['mainContainer'] = 'user/new.php';
+        View::render('admin-layout/master.php', $this->data);
         
     }
 
-    public function createAction()
+    public function createAction(Request $request)
     {
         
-        $post = $this->request->getPost();
+        $post = $request->getPost();
 
         $name = htmlspecialchars($post['name']);
         $password = htmlspecialchars($post['password']);
@@ -69,9 +67,9 @@ class UserController extends Controller
     }
 
 
-    public function editAction()
+    public function editAction(Request $request)
     {   
-        $id = $this->request->getGet()['id'];
+        $id = $request->getGet()['id'];
 
         $role = new Role();
         $this->data['allRole'] = $role->table('role')->all();
@@ -82,12 +80,13 @@ class UserController extends Controller
         $user = new User();
         $this->data['user'] = $user->table('user')->find($id, 'id, name, email, role_id, room_id');
 
-        View::render('user/edit.php', $this->data);
+        $this->data['mainContainer'] = 'user/edit.php';
+        View::render('admin-layout/master.php', $this->data);
     }
 
-    public function updateAction()
+    public function updateAction(Request $request)
     {
-        $get = $this->request->getGet();
+        $get = $request->getGet();
 
         $id = htmlspecialchars($get['id']);
         $name = htmlspecialchars($get['name']);
@@ -110,9 +109,9 @@ class UserController extends Controller
         }
     }
 
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
-        $id = $this->request->getGet()['id'];
+        $id = $request->getGet()['id'];
 
         $user = new User();
         $user->destroy("id = $id");
