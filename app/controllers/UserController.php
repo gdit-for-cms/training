@@ -13,12 +13,11 @@ use Core\Http\Request;
 class UserController extends Controller
 {
     public $data = [];
-    /**
-     * Show the index page
-     *
-     * @return void
-     */
-
+    
+    public function __construct()
+    {
+       $this->session =  Session::getInstance();
+    }
 
     public function newAction()
     {   
@@ -38,12 +37,17 @@ class UserController extends Controller
         
         $post = $request->getPost();
 
-        $name = htmlspecialchars($post['name']);
-        $password = htmlspecialchars($post['password']);
-        $email = htmlspecialchars($post['email']);
-        $role_id = htmlspecialchars($post['role']);
-        $room_id = htmlspecialchars($post['room']);
+        $name = htmlspecialchars(addslashes($post['name']));
+        $password = htmlspecialchars(addslashes($post['password']));
+        $email = htmlspecialchars(addslashes($post['email']));
+        $role_id = htmlspecialchars(addslashes($post['role']));
+        $room_id = htmlspecialchars(addslashes($post['room']));
 
+        if ($name == '' || $role_id == '' || $email == '') {
+            $this->session->__set('errorCreateUser', 'Create room failed');
+            header('Location: /user/new');
+            exit;
+        }
         if($email != '') {
             $user = new User();
             $query = $user->table('user')->where('email', '=', $email)->get();
@@ -52,6 +56,7 @@ class UserController extends Controller
                 header('Location: /user/new');
                 exit;
             }else{
+                $this->session->__unset('errorCreateUser');
                 $password = base64_encode($password);
                 $user->insert(['name' => $name, 
                                'email' => $email, 
@@ -88,12 +93,12 @@ class UserController extends Controller
     {
         $get = $request->getGet();
 
-        $id = htmlspecialchars($get['id']);
-        $name = htmlspecialchars($get['name']);
-        $password = base64_encode(htmlspecialchars($get['password']));
-        $email = htmlspecialchars($get['email']);
-        $role_id = htmlspecialchars($get['role']);
-        $room_id = htmlspecialchars($get['room']);
+        $id = htmlspecialchars(addslashes($get['id']));
+        $name = htmlspecialchars(addslashes($get['name']));
+        $password = base64_encode(htmlspecialchars(addslashes($get['password'])));
+        $email = htmlspecialchars(addslashes($get['email']));
+        $role_id = htmlspecialchars(addslashes($get['role']));
+        $room_id = htmlspecialchars(addslashes($get['room']));
 
         if ($email != '') {
             $user = new User();

@@ -52,6 +52,13 @@ class AuthController extends Controller
                      ->where('password', '=', $password)
                      ->get();
 
+        if ($inputUser['role_id'] != 1) {
+            header('Location: /default/index');
+            $this->session->__set('error', 'you are not admin');
+        } else {
+            $this->currentUser = $inputUser;
+        }
+
         $this->currentUser = $inputUser;
         $number_rows = count($this->currentUser);
         if ($number_rows == 1 && $this->currentUser[0]['role_id'] == 1) {

@@ -348,6 +348,8 @@ Trait QueryBuilder
 
         $query = $db->query($sqlQuery);
 
+        return !!$query;
+
         if($query){
             return true;
         }else {

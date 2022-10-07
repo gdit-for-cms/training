@@ -13,3 +13,11 @@ function setDefineArray($name, $ary) {
 	
 	// return 1;
 }
+function setTempGlobal($variableGLOBALS, $globalsVarName, $tempGlobal){
+    foreach($variableGLOBALS as $each){
+        $globalsVarName[] = $each;
+        $tempGlobal[$each] = $GLOBALS[$each];
+        unset($GLOBALS[$each]);
+    }
+    return array( $globalsVarName, $tempGlobal );
+}

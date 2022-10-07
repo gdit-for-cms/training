@@ -36,4 +36,3 @@
         </div><!-- /.container-fluid -->
     </nav>
 </header>
-<script type="text/javascript" src="/js/header.js"></script>

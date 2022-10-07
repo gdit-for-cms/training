@@ -7,11 +7,15 @@ use Core\View;
 use App\models\User;
 use Core\Http\Session;
 use Core\Http\Request;
+use Core\Http\ResponseTrait;
 
 class HomeController extends Controller
 {
-    public $data =[] ;
-    public $session  ;
+    use ResponseTrait;
+
+    public $data = [];
+    public $session;
+
     /**
      * Show the index page
      *
@@ -19,32 +23,26 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-       $this->session =  Session::getInstance();
+       $this->session = Session::getInstance();
     }
-    /**
-     * Show the index page
-     *
-     * @return void
-     */
-
+ 
     public function homepage()
     {
-
-        View::render('home/homepage.php');
+        $this->data['content'] = 'home/homepage';
+        View::render('front-layouts/master.php',$this->data);
 
     }
-    public function login(Request $request)
+    
+    public function loginAction(Request $request)
     {
-
         $email = htmlspecialchars(addslashes($request->getPost()['email']));
-        $password = htmlspecialchars(addslashes($request->getPost()['password']));
+        $password = addslashes($request->getPost()['password']);
 
         $user = new User();
         $currentUser = $user->table('user')
                      ->where('email', '=', $email)
                      ->where('password', '=', $password)
-                     ->get('');
-
+                     ->get();
         $number_rows = count($currentUser);
 
         if ($number_rows == 1) {
@@ -57,15 +55,21 @@ class HomeController extends Controller
             $this->session->__unset('error');
             $this->session->__set('currentUser', $data);
 
-            $token = uniqid('user_', true) . time();
-            $user->table('user')->where('id', '=', $currentUser[0]['id'])->update(['token' => $token]);
-
-            setcookie('remember', $token, time() + 86400*30, '/');
-            header("location: /index");
+            echo $this->successResponse();
         } else {
-            $this->session->__set('error', 'email or password is incorrect');
-            header('Location: /');
+
+            echo $this->errorResponse($message = 'failed');
         }
+    }
+
+    public function logoutAction()
+    {   
+        $this->session->__unset('currentUser');
+
+        setcookie('remember',null,-1);
+
+        header('location: /home/homepage');
+        exit;
     }
 
     public function diffAction()
@@ -98,71 +102,57 @@ class HomeController extends Controller
                 // Set variables in init file
                 $variableGLOBALS1 = [];
                 $variableGLOBALS2 = [];
+                
+                function ExecuteImportFile($fileroot, $fileinit ,$variablesFile, $variableGLOBALS ) {
+                    while (($line  = fgets($fileroot))) {
+                        if (preg_match('/define\("(.+?)\", \"(.+?)\"/i', $line, $match)) {
+                            $i = 1 ;
+                            if (isset($variablesFile[$match[1]])) {
+                                $variablesFile[$match[1].'['.$i++.']'] = $match[2];
+                            } else {
+                                $variablesFile[$match[1]] = $match[2];
+                            }
+                        } else if (preg_match('/define\("(.+?)\", \"\"/i', $line, $match)) {
+                            $variablesFile[$match[1]] = '';
+                        } else if (preg_match('/setDefineArray\(\'(.+?)\'/i', $line, $match)) {
+                            $variableGLOBALS[] = $match[1];
+                        };
     
-                while(($line1  = fgets($fileroot1)) !== false) {
+                        // Write data to init file
+                        if (!preg_match('/define\(/i', $line)) {
+                            fwrite($fileinit, $line); 
+                        };
+                    }
 
-                    if(preg_match('/define\("(.+?)\", \"(.+?)\"/i', $line1 , $match)){
+                    return array( $variablesFile, $variableGLOBALS );
+                };
 
-                        if(isset($variablesFile1[$match[1]])){
-
-                            $variablesFile1[$match[1].'no2'] = $match[2];
-                        }else {
-
-                            $variablesFile1[$match[1]] = $match[2];
-                        }
-                        
-                    }else if (preg_match('/define\("(.+?)\", \"\"/i', $line1 , $match)){
-
-                        $variablesFile1[$match[1]] = '';
-                    }else if(preg_match('/setDefineArray\(\'(.+?)\'/i', $line1 , $match)){
-
-                        $variableGLOBALS1[] = $match[1];
-                        
-                    };
-
-                    // Write data to init file
-                    if(!preg_match('/define\(/i', $line1)){
-                        fwrite($fh1, $line1); 
-                    };
-
-                   
-                }
-                while(($line2  = fgets($fileroot2)) !== false) {
-
-                    if(preg_match('/define\("(.+?)\", \"(.+?)\"/i', $line2 , $match)){
-
-                        if(isset($variablesFile2[$match[1]])){
-
-                            $variablesFile2[$match[1].'no2'] = $match[2];
-                        }else {
-
-                            $variablesFile2[$match[1]] = $match[2];
-                        }
-                        
-                    }else if (preg_match('/define\("(.+?)\", \"\"/i', $line2 , $match)){
-
-                        $variablesFile2[$match[1]] = '';
-                    }else if(preg_match('/setDefineArray\(\'(.+?)\'/i', $line2 , $match)){
-
-                        $variableGLOBALS2[] = $match[1];
-                        
-                    };
-
-                    // Write data to init file
-                    if(!preg_match('/define\(/i', $line2)){
-                        fwrite($fh2, $line2); 
-                    };
-                   
-                }
-
-   
+                list($variablesFile1, $variableGLOBALS1) = ExecuteImportFile($fileroot1, $fh1, $variablesFile1, $variableGLOBALS1);
+                list($variablesFile2, $variableGLOBALS2) = ExecuteImportFile($fileroot2, $fh2, $variablesFile2, $variableGLOBALS2);
+                
                 fclose($fh1);
                 fclose($fh2);   
 
-                $this->data['variableGLOBALS1'] = $variableGLOBALS1;
-                $this->data['variableGLOBALS2'] = $variableGLOBALS2;
+                require_once '../core/inc/setDefineArray.php' ;
+
+                // Get the array of variables in file1
+                require_once '../core/inc/file1.inc';
+                $tempGlobal1 = [];
+                $globalsVarName1 = [];
+                list($globalsVarName1, $tempGlobal1) = setTempGlobal($variableGLOBALS1, $globalsVarName1, $tempGlobal1);
+
+                // Get the array of variables in file2
+                require_once '../core/inc/file2.inc';
+                $tempGlobal2 = [];
+                $globalsVarName2 = [];
+                list($globalsVarName2, $tempGlobal2) = setTempGlobal($variableGLOBALS2, $globalsVarName2, $tempGlobal2);
+
                 $this->data['variablesFile1'] = $variablesFile1;
                 $this->data['variablesFile2'] = $variablesFile2;
+                $this->data['globalsVarName1'] = $globalsVarName1;
+                $this->data['tempGlobal1'] = $tempGlobal1;
+                $this->data['globalsVarName2'] = $globalsVarName2;
+                $this->data['tempGlobal2'] = $tempGlobal2;
                 View::render('default/compare.php',$this->data);
 
                

@@ -8,7 +8,12 @@
         $description = '';
     } ?>
 <div class="form-group row">
-    <label for="name" class="col-3 col-form-label">Name</label> 
+    <?php if (isset($_SESSION['error'])) { ?>
+        <div class="alert alert-danger" role="alert">
+            <? echo $_SESSION['error'] ?>
+        </div>
+    <?php } ?>
+    <label for="name" class="col-3 col-form-label">Name*</label>
     <div class="col-9">
         <input id="id" name="id" value="<?= $id ?>" type="hidden" class="form-control">
         <input id="name" name="name" type="text" value="<?= $name ?>" class="form-control">
