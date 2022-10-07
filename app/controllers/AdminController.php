@@ -6,18 +6,12 @@ use Core\Controller;
 use Core\View;
 use App\models\User;
 use App\models\Room;
-use Core\Http\Session;
 use Core\Http\Request;
 
 class AdminController extends Controller
 {
-    public $data = [];
-    public $session;
 
-    public function __construct()
-    {
-       $this->session = Session::getInstance();
-    }
+    public $data = [];
     /**
      * Show the index page
      *
@@ -25,14 +19,12 @@ class AdminController extends Controller
      */
     public function indexAction(Request $request)
     {   
-        // $currentUser = $request->getSession('currentUser');
-        // print_r($currentUser);
-        // die;
-        // if (!$currentUser) {
-        //     header('Location: /default/index');
-        //     exit;
-        // }
-        //
+        
+        if (!checkUser($request)) {
+            header('Location: /default/index');
+            exit;
+        }
+        
         $this->data['allUsers'] = User::getAll();
 
         $users = new User();
