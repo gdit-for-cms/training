@@ -140,3 +140,241 @@ a {
 .open-login{
     cursor: pointer;
 }
+
+/* HOMEPAGE  */
+.box-lightbox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    visibility: hidden;
+    opacity: 0;
+    min-height: 100%;
+    height: auto;
+    padding: 70px 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: rgba(0,0,0,.75);
+    z-index: 10;
+    transition: all .3s;
+}
+.box-lightbox.open {
+    visibility: visible;
+    opacity: 1;
+    z-index: 100;
+}
+.cd-login , .cd-signup{
+    display: none;
+}
+.cd-login.active , .cd-signup.active{
+    display: block;
+}
+
+.box-lightbox .bt-close{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 66px;
+    height: 70px;
+    background-color: rgb(202, 180, 180);
+    cursor: pointer;
+    z-index: 1;
+    transition: all .3s ease-in-out;
+}
+.box-lightbox .bt-close:before{
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+.box-lightbox .bt-close:after{
+    transform: translate(-50%, -50%) rotate(45deg);;
+}
+
+.box-lightbox .bt-close:before ,.box-lightbox .bt-close:after{
+    content:"";
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 2px;
+    background-color: #222222;
+}
+
+.cd-login, .cd-signup{
+    width: 100%;
+    height: 100%;
+}
+/* MODAL */
+
+
+.popup{
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+
+}
+
+
+
+.footer 	{ text-align:center; }
+.footer a  { color:#53B2C8; }
+
+/* form starting stylings ------------------------------- */
+.form .group 			  {
+  position:relative;
+  margin-bottom:22px;
+}
+.group input 				{
+  font-size:18px;
+  padding: 0 0 8px 0;
+  display:block;
+  width:100%;
+  border:none;
+  border-bottom:1px solid #757575;
+}
+.group input:focus 		{ outline:none; }
+
+/* LABEL ======================================= */
+/* .group label 				 {
+  color:#999;
+  font-size:14px;
+  font-weight:normal;
+  position:absolute;
+  pointer-events:none;
+  left:5px;
+  top:10px;
+  transition:0.2s ease all;
+  -moz-transition:0.2s ease all;
+  -webkit-transition:0.2s ease all;
+} */
+
+.group input::placeholder{
+    color:#999;
+  font-size:14px;
+  font-weight:normal;
+  position:absolute;
+  pointer-events:none;
+  left:5px;
+  top:10px;
+  transition:0.2s ease all;
+  -moz-transition:0.2s ease all;
+  -webkit-transition:0.2s ease all;
+}
+
+
+/* BOTTOM BARS ================================= */
+
+
+/* active state */
+.group input:focus ~ .bar:before, input:focus ~ .bar:after {
+  width:50%;
+}
+
+/* HIGHLIGHTER ================================== */
+.highlight {
+  position:absolute;
+  height:60%;
+  width:100px;
+  top:25%;
+  left:0;
+  pointer-events:none;
+  opacity:0.5;
+}
+
+/* active state */
+.group input:focus ~ .highlight {
+  -webkit-animation:inputHighlighter 0.3s ease;
+  -moz-animation:inputHighlighter 0.3s ease;
+  animation:inputHighlighter 0.3s ease;
+}
+
+/* ANIMATIONS ================ */
+@-webkit-keyframes inputHighlighter {
+	from { background:#5264AE; }
+  to 	{ width:0; background:transparent; }
+}
+@-moz-keyframes inputHighlighter {
+	from { background:#5264AE; }
+  to 	{ width:0; background:transparent; }
+}
+@keyframes inputHighlighter {
+	from { background:#5264AE; }
+  to 	{ width:0; background:transparent; }
+}
+
+.form{
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    padding: 50px 70px;
+}
+
+.form span{
+    font-size: 12px;
+    color: rgb(121, 115, 115);
+}
+
+.single{
+    display: flex;
+    font-size: 14px;
+    text-align: left;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.single label{
+    margin-left: 6px
+}
+
+.group button{
+    margin-top: 32px;
+    outline: none;
+    background: rgb(24, 23, 23);
+    color: #fff;
+    width: 100%;
+    border: 0;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: inherit;
+    cursor: pointer;
+}
+
+.single button{
+    margin-top: 32px;
+    margin-bottom: 32px;
+    outline: none;
+    background: #fff;
+    color: rgb(24, 23, 23);
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 8px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: inherit;
+    cursor: pointer;
+    display: flex;
+    text-align: left;
+    justify-content: center;
+    align-items: center;
+}
+.single svg {
+    width: 22px; height: 22px;
+    margin-right: 6px;
+}
+
+
+
+.textdanger{
+    color: rgb(234, 118, 118)!important;
+}

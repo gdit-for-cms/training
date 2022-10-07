@@ -51,7 +51,7 @@ class AuthController extends Controller
                      ->where('email', '=', $email)
                      ->where('password', '=', $password)
                      ->get();
-        var_dump($inputUser);
+                     
         if ($inputUser['role_id'] != 1) {
             header('Location: /default/index');
             $this->session->__set('error', 'you are not admin');

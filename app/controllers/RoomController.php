@@ -11,7 +11,7 @@ use Core\Http\Session;
 use Core\Http\Request;
 
 class RoomController extends Controller
-{
+{ 
     private $request ;
     public $data = [];
     /**
@@ -22,7 +22,7 @@ class RoomController extends Controller
 
     public function newAction()
     {   
-
+        
         $this->data['mainContainer'] = 'room/new.php';
         View::render('admin-layout/master.php', $this->data);
         
