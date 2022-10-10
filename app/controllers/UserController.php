@@ -62,8 +62,10 @@ class UserController extends Controller
         $room_id = $post['room'];
 
         if ($name == '' || $role_id == '' || $email == '') {
-            header('Location: /user/new');
-            exit;
+            $this->data['error'] = showError('create');
+            $this->data['content'] = 'user/new';
+            view::render('admin/back-layouts/master.php', $this->data);
+            // exit;
         }
         if ($email != '') {
             $user = new User();
@@ -106,12 +108,12 @@ class UserController extends Controller
     {
         $get = $request->getGet();
 
-        $id = htmlspecialchars(addslashes($get['id']));
-        $name = htmlspecialchars(addslashes($get['name']));
-        $password = base64_encode(htmlspecialchars(addslashes($get['password'])));
-        $email = htmlspecialchars(addslashes($get['email']));
-        $role_id = htmlspecialchars(addslashes($get['role']));
-        $room_id = htmlspecialchars(addslashes($get['room']));
+        $id = $get['id'];
+        $name = $get['name'];
+        $password = $get['password'];
+        $email = $get['email'];
+        $role_id = $get['role'];
+        $room_id = $get['room'];
 
         if ($email != '') {
             $user = new User();
