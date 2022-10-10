@@ -1,4 +1,4 @@
-<div class="col-md-2 sidebar">
+<div class="col-md-2 sidebar w-1/2" >
     <div class="row">
     <!-- uncomment code for absolute positioning tweek see top comment in css -->
         <div class="absolute-wrapper"> </div>

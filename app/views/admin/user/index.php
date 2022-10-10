@@ -1,4 +1,4 @@
-<div class="col-md-10 mt-6">
+<div class="col-md-10">
       <div id="user" name="user" class="col-md-10 mt-6 w-full nav_content hidden">
           <div class="panel panel-default shadow-xl">
               <div class="panel-heading flex items-center justify-between">
