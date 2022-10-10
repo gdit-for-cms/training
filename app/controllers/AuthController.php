@@ -12,18 +12,18 @@ use Core\Http\Request;
 class AuthController extends Controller 
 {   
     protected function before() {
-        if (!checkUser()) {
-            header('Location: /default/index');
+        if (checkUser()) {
+            header('Location: /admin/index');
             exit;
         }
     }
 
-    public function index()
+    public function loginAction()
     {   
-        View::render('default/index.php');
+        View::render('admin/auth/login.php');
     }
 
-    public function loginAction(Request $request)
+    public function loginProcessAction(Request $request)
     {   
         $post = $request->getPost();
 
@@ -65,12 +65,8 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {   
-        if (!checkUser()) {
-            header('Location: /default/index');
-            exit;
-        }
         $request->deleteUser();
-        header('Location: /default/index');
+        header('Location: /auth/login');
     }
     
 }

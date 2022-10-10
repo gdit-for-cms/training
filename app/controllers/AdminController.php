@@ -43,7 +43,7 @@ class AdminController extends Controller
             if (is_uploaded_file($_FILES['file1']['tmp_name']) && is_uploaded_file($_FILES['file2']['tmp_name']) 
             && in_array($_FILES['file1']['type'], $fileAccept) && in_array($_FILES['file2']['type'], $fileAccept)) {
 
-                $this->data['uploadStatus'] = 'Uploaded file successfully';
+                $this->data['uploadStatus'] = 'success';
                 
                 // Read the import file contents
                 $before = fopen($_FILES['file1']['tmp_name'], 'r');
@@ -96,7 +96,7 @@ class AdminController extends Controller
                 View::render('admin/back-layouts/master.php', $this->data);
                
             } else {
-                $this->data['uploadStatus'] = 'Uploaded file failed';
+                $this->data['uploadStatus'] = 'failed';
                 $this->data['content'] = 'diff-file/compare';
                 View::render('admin/back-layouts/master.php', $this->data);
             }

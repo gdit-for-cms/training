@@ -1,12 +1,11 @@
+<div class="container-fluid p-0 ">
+<div class="row">
+<div class="col-12">
 <style>
-    .container {
+    .container-compare {
         display: flex;
-        width: 80%;
-        flex-direction: column;
-        
     }
-
-    .left, .right {
+    .container-compare .left, .container-compare .right {
         flex: 1;
         padding : 0 90px;
         padding-bottom: 40px;
@@ -30,7 +29,7 @@ if (!empty($arr)) {
                 $diff[$i] = array_diff_assoc($tempGlobal1[$name][$i], $tempGlobal2[$name][$i]);
                 if (!empty($diff[$i])) { $keyDiff = key($diff[$i]); ?>
                     
-                        <div class="container" style="<?= $backroundDiff ?>">
+                        <div class="container-compare" style="<?= $backroundDiff ?>">
                             <div class="left">
                                 <h4><?= $name ?></h4>
                                 <? foreach ($tempGlobal1[$name][$i] as $key =>$value ) { $style = ''; ?>
@@ -49,7 +48,7 @@ if (!empty($arr)) {
                         
                 <?  } else { ?>
 
-                        <div class="container" style="<?= $backroundSame ?>">
+                        <div class="container-compare" style="<?= $backroundSame ?>">
                             <div class="left">
                                 <h4><?= $name ?></h4>
                                 <? foreach ($tempGlobal1[$name][$i] as $key =>$value) { ?>
@@ -66,7 +65,7 @@ if (!empty($arr)) {
 
 <?php  }}} else { ?>
 
-        <div class="container" style="<?= $backroundDiff ?>">
+        <div class="container-compare" style="<?= $backroundDiff ?>">
             <div class="left">
                 <h4><?= $name ?></h4>
                 <? for ($i = 0; $i < count($tempGlobal1[$name]); $i++) {
@@ -88,7 +87,7 @@ if (!empty($arr)) {
 foreach ($variableInFile1 as $key1 => $value1) {
     foreach ($variableInFile2 as $key2 => $value2) {
         if ($key1 == $key2 && $value1 == $value2) { ?>
-                <div class="container" style="<?= $backroundSame ?>">
+                <div class="container-compare" style="<?= $backroundSame ?>">
                     <div class="left">
                         <span ><?= $key1 ?> : <?= $value1 ?></span></br>
                     </div>
@@ -97,7 +96,7 @@ foreach ($variableInFile1 as $key1 => $value1) {
                     </div>
                 </div>
 <?php  } else if ($key1 == $key2 && $value1 !== $value2) { ?>
-                <div class="container" style="<?= $backroundDiff ?>">
+                <div class="container-compare" style="<?= $backroundDiff ?>">
                     <div class="left">
                         <span style="color:red;"><?= $key1 ?> : <?= $value1 ?></span></br>
                     </div>
@@ -107,16 +106,26 @@ foreach ($variableInFile1 as $key1 => $value1) {
                 </div>
 <?php  }}}; ?>
 
-
-<script src="/js/front-js/sweetalert2.all.min.js"></script>
-<script >
-    Swal.fire({
-        position: 'top-end',
-        icon: 'success',
-        title: 'Your work has been saved',
-        showConfirmButton: false,
-        timer: 1500
-    })
-</script>
-</body>
-</html>
+        </div>
+    </div>
+</div>
+<?php if ($uploadStatus == 'success') { ?>
+    <script src="/js/front-js/sweetalert2.all.min.js"></script>
+    <script >
+        Swal.fire({
+            icon: 'success',
+            title: 'Uploaded file successfully',
+            showConfirmButton: false,
+            timer: 1500
+        })
+    </script>
+<?  } else { ?>  
+    <script src="/js/front-js/sweetalert2.all.min.js"></script>
+    <script >
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Uploaded file failed!',
+        })
+    </script>
+<?  } ?>  

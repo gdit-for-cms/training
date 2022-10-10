@@ -21,7 +21,7 @@
                             <? echo $error ?>
                         </div>
                     <?php } ?>
-                    <form action="/auth/login" method="POST">
+                    <form action="/auth/loginProcess" method="POST">
                     <div class="form-floating mb-3">
                         <input type="email" name="email" class="form-control" id="floatingInput" placeholder="name@example.com">
                         <label for="floatingInput">Email address</label>
