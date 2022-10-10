@@ -31,7 +31,7 @@ class RoomController extends Controller
     {   
         $this->data['allUsers'] = User::getAll();
 
-        $rooms = new Room();
+        $rooms = new User();
         $this->data['rooms'] = $rooms->table('room')->all();
 
         $this->data['content'] = 'room/index';

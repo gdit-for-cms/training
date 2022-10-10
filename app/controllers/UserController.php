@@ -34,8 +34,7 @@ class UserController extends Controller
         $this->data['admins'] = $users->table('user')->where('role_id', '=', 1)->get();
         $this->data['users'] = $users->table('user')->where('role_id', '=', 2)->get();
 
-        $rooms = new Room();
-        $this->data['rooms'] = $rooms->table('room')->all();
+        $this->data['rooms'] = Room::All();
 
         $this->data['content'] = 'user/index';
     }

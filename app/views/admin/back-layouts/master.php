@@ -9,15 +9,14 @@
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
     <link href="/css/back-css/dashboard.css" rel="stylesheet">
+    <link href="/css/back-css/bootstrap1.min.css" rel="stylesheet">
 
 </head>
-<body>
-    <?php require_once 'header.php' ?>
-    <div class="container-fluid main-container">
-        <div class="fixed mt-24">
-            <?php require_once 'menu.php' ?>
-        </div>
-        <div class="flex w-full ml-50 justify-end mt-28">
+<body class="crm_body_bg">
+    <?php require_once 'sidebar.php' ?>  
+    <section class="main_content dashboard_part large_header_bg">
+        <?php require_once 'header.php' ?>
+        <div class="main_content_iner overly_inner ">
             <?php require_once '../app/views/admin/'.$content.'.php'?> 
         </div>
     </div>
