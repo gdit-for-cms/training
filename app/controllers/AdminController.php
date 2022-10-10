@@ -39,7 +39,9 @@ class AdminController extends Controller
     public function compareAction()
     {
         if (isset($_POST['importSubmit'])) {
+
             $fileAccept = array('application/octet-stream', 'application/inc', 'application/php');
+
             if (is_uploaded_file($_FILES['file1']['tmp_name']) && is_uploaded_file($_FILES['file2']['tmp_name']) 
             && in_array($_FILES['file1']['type'], $fileAccept) && in_array($_FILES['file2']['type'], $fileAccept)) {
 
@@ -71,8 +73,6 @@ class AdminController extends Controller
                 fclose($fh1);
                 fclose($fh2);   
                 
-                require_once '../storage/inc/setDefineArray.php';
-
                 // Get the array of variables in file1 
                 require_once '../storage/inc/file1.inc';
                 $tempGlobal1 = [];
