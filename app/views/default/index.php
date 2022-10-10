@@ -16,9 +16,9 @@
                     
                 <div class="card-body p-4 p-sm-5">
                     <h5 class="card-title text-center mb-5 fw-light fs-5">Sign In</h5>
-                    <?php if (isset($_SESSION['errorLogin'])) { ?>
+                    <?php if (isset($error)) { ?>
                         <div class="alert alert-danger" role="alert">
-                            <? echo $_SESSION['errorLogin'] ?>
+                            <? echo $error ?>
                         </div>
                     <?php } ?>
                     <form action="/auth/login" method="POST">
@@ -27,7 +27,7 @@
                         <label for="floatingInput">Email address</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
+                        <input type="text" name="password" class="form-control" id="floatingPassword" placeholder="Password">
                         <label for="floatingPassword">Password</label>
                     </div>
                     <div class="form-check mb-3">

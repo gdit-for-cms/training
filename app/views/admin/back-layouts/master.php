@@ -14,9 +14,12 @@
 <body>
     <?php require_once 'header.php' ?>
     <div class="container-fluid main-container">
-        <?php require_once 'menu.php' ?>
-        
-        <?php require_once '../app/views/admin/'.$content.'.php'?> 
+        <div class="fixed mt-20">
+            <?php require_once 'menu.php' ?>
+        </div>
+        <div class="flex w-full ml-50">
+            <?php require_once '../app/views/admin/'.$content.'.php'?> 
+        </div>
     </div>
     
     

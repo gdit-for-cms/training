@@ -11,7 +11,6 @@ use Core\Http\Request;
 
 class AuthController extends Controller 
 {   
-    public $session;
     public $currentUser = [];
 
     /**
@@ -19,20 +18,14 @@ class AuthController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-       $this->session =  Session::getInstance();
-    }
     
-    public function index()
+    public function indexAction()
     {   
-
-        $currentUser = $this->session->__isset('currentUser');
-        if ($currentUser) {
-            header('Location: admin/index');
+        if (!checkUser()) {
+            header('Location: /default/index');
+            exit;
         } else {
-
-            header('Location: default/index');
+            header('Location: /admin/index');
             exit;
         }
     }
@@ -42,8 +35,8 @@ class AuthController extends Controller
         
         $post = $request->getPost();
 
-        $email = htmlspecialchars(addslashes($post['email']));
-        $password = htmlspecialchars(addslashes($post['password']));
+        $email = $post['email'];
+        $password = $post['password'];
 
         $user = new User();
         $inputUser = $user->table('user')
@@ -51,11 +44,13 @@ class AuthController extends Controller
                      ->where('password', '=', $password)
                      ->first();
 
+        // var_dump($inputUser);
+        // exit;
+        if (!$inputUser) {
+            $this->data['error'] = showError('login');
 
-        if ($inputUser['role_id'] != 1) {
-            header('Location: /default/index');
-        } else {
-            $this->currentUser = $inputUser;
+            View::render('default/index.php', $this->data);
+            exit;
         }
 
         $this->currentUser = $inputUser;
@@ -72,13 +67,18 @@ class AuthController extends Controller
             header('Location: /admin/index');
 
         } else {
-            $this->data['errorLogin'] = 'Email or password is incorrect';
+            $this->data['error'] = showError('login');
+
             View::render('default/index.php', $this->data);
         }
     }
 
     public function logoutAction(Request $request)
     {   
+        if (!checkUser()) {
+            header('Location: /default/index');
+            exit;
+        }
         $request->deleteUser();
         header('Location: /default/index');
     }

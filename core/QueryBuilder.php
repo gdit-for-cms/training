@@ -39,6 +39,7 @@ Trait QueryBuilder
         }else {
             $this->operator = ' AND ';
         }
+        $value = addslashes($value);
         $this->where .= "$this->operator $column $compare '$value'";
         return $this;
     }

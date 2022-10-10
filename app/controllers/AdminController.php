@@ -17,13 +17,17 @@ class AdminController extends Controller
      *
      * @return void
      */
-    public function indexAction(Request $request)
-    {   
-        
-        if (!checkUser($request)) {
+
+    protected function before()
+    {
+        if (!checkUser()) {
             header('Location: /default/index');
             exit;
         }
+    }
+
+    public function indexAction()
+    {   
         
         $this->data['allUsers'] = User::getAll();
 
@@ -34,8 +38,8 @@ class AdminController extends Controller
         $rooms = new Room();
         $this->data['rooms'] = $rooms->table('room')->all();
 
-        $this->data['mainContainer'] = 'default/dashboard.php';
-        View::render('admin-layout/master.php', $this->data);
+        $this->data['content'] = 'default/dashboard.php';
+        View::render('admin/back-layouts/master.php', $this->data);
     }
 
     public function diffAction()

@@ -14,16 +14,32 @@ class UserController extends Controller
 {
     public $data = [];
     
-    public function __construct()
+    protected function before()
     {
-       $this->session =  Session::getInstance();
+        if (!checkUser()) {
+            header('Location: /default/index');
+            exit;
+        }
     }
 
-    public function index(){
-        
-        $this->data['content'] = 'user/index.php';
+    protected function after()
+    {
         View::render('admin/back-layouts/master.php', $this->data);
     }
+
+    public function indexAction()
+    {   
+        $this->data['allUsers'] = User::getAll();
+        $users = new User();
+        $this->data['admins'] = $users->table('user')->where('role_id', '=', 1)->get();
+        $this->data['users'] = $users->table('user')->where('role_id', '=', 2)->get();
+
+        $rooms = new Room();
+        $this->data['rooms'] = $rooms->table('room')->all();
+
+        $this->data['content'] = 'user/index';
+    }
+
     public function newAction()
     {   
         $role = new Role();
@@ -32,8 +48,7 @@ class UserController extends Controller
         $room = new Room();
         $this->data['allRoom'] = $room->table('room')->all();
 
-        $this->data['mainContainer'] = 'user/new.php';
-        View::render('admin-layout/master.php', $this->data);
+        $this->data['content'] = 'user/new';
         
     }
 
@@ -42,14 +57,13 @@ class UserController extends Controller
         
         $post = $request->getPost();
 
-        $name = htmlspecialchars(addslashes($post['name']));
-        $password = htmlspecialchars(addslashes($post['password']));
-        $email = htmlspecialchars(addslashes($post['email']));
-        $role_id = htmlspecialchars(addslashes($post['role']));
-        $room_id = htmlspecialchars(addslashes($post['room']));
+        $name = $post['name'];
+        $password = $post['password'];
+        $email = $post['email'];
+        $role_id = $post['role'];
+        $room_id = $post['room'];
 
         if ($name == '' || $role_id == '' || $email == '') {
-            $this->session->__set('errorCreateUser', 'Create room failed');
             header('Location: /user/new');
             exit;
         }
@@ -61,8 +75,6 @@ class UserController extends Controller
                 header('Location: /user/new');
                 exit;
             }else{
-                $this->session->__unset('errorCreateUser');
-                $password = base64_encode($password);
                 $user->insert(['name' => $name, 
                                'email' => $email, 
                                'password' => $password, 
@@ -90,8 +102,8 @@ class UserController extends Controller
         $user = new User();
         $this->data['user'] = $user->table('user')->find($id, 'id, name, email, role_id, room_id');
 
-        $this->data['mainContainer'] = 'user/edit.php';
-        View::render('admin-layout/master.php', $this->data);
+        $this->data['content'] = 'user/edit';
+        View::render('admin/back-layouts/master.php', $this->data);
     }
 
     public function updateAction(Request $request)

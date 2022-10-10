@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use Core\Controller;
 use Core\View;
-// use App\models\User;
+use App\models\User;
 // use App\models\Role;
 use App\models\Room;
 use Core\Http\Session;
@@ -13,23 +13,34 @@ use Core\Http\Request;
 class RoomController extends Controller
 {
     public $data = [];
-    public $session;
-    /**
-     * Show the index page
-     *
-     * @return void
-     */
 
-    public function __construct()
+    protected function before()
     {
-       $this->session =  Session::getInstance();
+        if (!checkUser()) {
+            header('Location: /default/index');
+            exit;
+        }
+    }
+
+    protected function after()
+    {
+        View::render('admin/back-layouts/master.php', $this->data);
+    }
+
+    public function indexAction()
+    {   
+        $this->data['allUsers'] = User::getAll();
+
+        $rooms = new Room();
+        $this->data['rooms'] = $rooms->table('room')->all();
+
+        $this->data['content'] = 'room/index';
     }
 
     public function newAction()
     {   
 
-        $this->data['mainContainer'] = 'room/new.php';
-        View::render('admin-layout/master.php', $this->data);
+        $this->data['content'] = 'room/new';
         
     }
 
@@ -37,15 +48,8 @@ class RoomController extends Controller
     {
         $post = $request->getPost();
 
-        $name = htmlspecialchars(addslashes($post['name']));
-        $description = htmlspecialchars(addslashes($post['description']));
-
-        if ($name == "") {
-            $this->session->__set('error', 'Create room failed');
-            header('Location: /room/new');
-            exit;
-        } else {
-            $this->session->__unset('error');
+        $name = $post['name'];
+        $description = $post['description'];
 
             $room = new Room();
             $room->insert(['name' => $name,
@@ -53,8 +57,6 @@ class RoomController extends Controller
             
             header('Location: /admin/index');
             exit;
-        }
-
  
     }
 
@@ -65,17 +67,16 @@ class RoomController extends Controller
         $room = new Room();
         $this->data['room'] = $room->table('room')->find($id, 'id, name, description');
 
-        $this->data['mainContainer'] = 'room/edit.php';
-        View::render('admin-layout/master.php', $this->data);
+        $this->data['content'] = 'room/edit';
     }
 
     public function updateAction(Request $request)
     {
         $get = $request->getGet();
 
-        $id = htmlspecialchars(addslashes($get['id']));
-        $name = htmlspecialchars(addslashes($get['name']));
-        $description = htmlspecialchars(addslashes($get['description']));
+        $id = $get['id'];
+        $name = $get['name'];
+        $description = $get['description'];
 
 
         $room = new Room();

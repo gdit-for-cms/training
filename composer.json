@@ -8,7 +8,8 @@
             "App\\Services\\": "app/services/"
         },
         "files" : [
-            "app/helpers.php"
+            "app/helpers.php",
+            "app/errors.php"
         ]
     }
 }
