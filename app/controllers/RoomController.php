@@ -39,9 +39,7 @@ class RoomController extends Controller
 
     public function newAction()
     {   
-
         $this->data['content'] = 'room/new';
-        
     }
 
     public function createAction(Request $request)

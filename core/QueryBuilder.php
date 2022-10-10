@@ -18,8 +18,8 @@ Trait QueryBuilder
      * @param  string  $tableName
      * @return $this
      */
-    public function table($tableName){
-
+    public function table($tableName)
+    {
         $this->tableName = $tableName;
         return $this;
     }
@@ -32,8 +32,8 @@ Trait QueryBuilder
      * @param  string  $compare (Symbol)
      * @return $this
      */
-    public function where($column, $compare, $value){
-
+    public function where($column, $compare, $value)
+    {
         if(empty($this->where)){
             $this->operator = ' WHERE ';
         }else {
@@ -52,8 +52,8 @@ Trait QueryBuilder
      * @param  string  $compare
      * @return $this
      */
-    public function orWhere($column, $compare, $value){
-
+    public function orWhere($column, $compare, $value)
+    {
         if(empty($this->where)){
             $this->operator = ' WHERE ';
         }else {
@@ -70,8 +70,8 @@ Trait QueryBuilder
      * @param  mixed  $value
      * @return $this
      */
-    public function whereLike($column, $value){
-
+    public function whereLike($column, $value)
+    {
         if(empty($this->where)){
             $this->operator = ' WHERE ';
         }else {
@@ -87,8 +87,8 @@ Trait QueryBuilder
      * @param  array|mixed  $columns
      * @return $this
      */
-    public function select($column = '*'){
-
+    public function select($column = '*')
+    {
         $this->selectColumn = $column;
         return $this;
     }
@@ -100,8 +100,8 @@ Trait QueryBuilder
      * @param  int  $offset
      * @return $this
      */
-    public function limit($number, $offset = 0){
-        
+    public function limit($number, $offset = 0)
+    {
         $this->limit = "LIMIT " . $offset . ", " . $number;
         return $this;
     }
@@ -113,8 +113,8 @@ Trait QueryBuilder
      * @param  string  $direction
      * @return $this
      */
-    public function orderBy($column, $direction = 'asc'){
-
+    public function orderBy($column, $direction = 'asc')
+    {
         $arrColumns = array_filter(explode(',', $column));
         if(!empty($arrColumns) && count($arrColumns) >= 2 ){
 
@@ -152,8 +152,8 @@ Trait QueryBuilder
      *
      * @return array
      */
-    public function get($column = '*'){
-
+    public function get($column = '*')
+    {
         $db = static::getDB();
         $this->selectColumn = $column;
         $sqlQuery = 
@@ -180,8 +180,8 @@ Trait QueryBuilder
      *
      * @return array
      */
-    public function all(){
-
+    public function all()
+    {
         $db = static::getDB();
         $sqlQuery = "SELECT * FROM $this->tableName";
         $query = $db->query($sqlQuery);
@@ -202,8 +202,8 @@ Trait QueryBuilder
      * @param  array  $column
      * @return mixed|static
      */
-    public function find($id, $column = '*'){
-    
+    public function find($id, $column = '*')
+    {
         return $this->where('id', '=', $id)->first($column);
     }
 
@@ -213,8 +213,8 @@ Trait QueryBuilder
      * @param  array|string  $column
      * @return object|static|null
      */
-    public function first($column = '*'){
-    
+    public function first($column = '*')
+    {
         $db = static::getDB();
         $this->selectColumn = $column;
         $sqlQuery = "SELECT " . $this->selectColumn . " FROM " . $this->tableName . " " . $this->where;
@@ -229,8 +229,8 @@ Trait QueryBuilder
         return false;
     }
 
-    public function resetQuery(){
-    
+    public function resetQuery()
+    {
         $this->tableName = '';
         $this->where = '';
         $this->operator = '';
@@ -247,8 +247,8 @@ Trait QueryBuilder
      * @param  string  $tableName
      * @return $this
      */
-    public function join($tableName, $relationship){
-
+    public function join($tableName, $relationship)
+    {
         $this->innerJoin = "INNER JOIN" .$tableName. " ON " .$relationship." ";
         return $this;
     }
@@ -259,8 +259,8 @@ Trait QueryBuilder
      * @param  array|mixed  $data
      * @return boolean
      */
-    public function insert($data){
-        
+    public function insert($data)
+    {
         $db = static::getDB();
         $tableName = $this->_table;
 
@@ -292,8 +292,8 @@ Trait QueryBuilder
      * @param  array|mixed  $conditions
      * @return boolean
      */
-    public function update($data , $conditions = ''){
-        
+    public function update($data , $conditions = '')
+    {
         $db = static::getDB();
         $tableName = $this->_table;
 
@@ -327,7 +327,6 @@ Trait QueryBuilder
      * @return boolean
      */
     public function destroy($conditions){
-        
         $db = static::getDB();
         $tableName = $this->_table;
 
@@ -343,8 +342,8 @@ Trait QueryBuilder
      *
      * @return boolean
      */
-    public function delete(){
-        
+    public function delete()
+    {
         $db = static::getDB();
         $tableName = $this->_table;
 

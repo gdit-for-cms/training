@@ -11,28 +11,20 @@ use Core\Http\Request;
 
 class AuthController extends Controller 
 {   
-    public $currentUser = [];
-
-    /**
-     * Show the index page
-     *
-     * @return void
-     */
-    
-    public function indexAction()
-    {   
+    protected function before() {
         if (!checkUser()) {
             header('Location: /default/index');
-            exit;
-        } else {
-            header('Location: /admin/index');
             exit;
         }
     }
 
+    public function index()
+    {   
+        View::render('default/index.php');
+    }
+
     public function loginAction(Request $request)
     {   
-        
         $post = $request->getPost();
 
         $email = $post['email'];
@@ -44,8 +36,6 @@ class AuthController extends Controller
                      ->where('password', '=', $password)
                      ->first();
 
-        // var_dump($inputUser);
-        // exit;
         if (!$inputUser) {
             $this->data['error'] = showError('login');
 
@@ -61,9 +51,9 @@ class AuthController extends Controller
                 'role_id' => $this->currentUser['role_id'],
                 'room_id' => $this->currentUser['room_id'],
             ];
-
+            
             $request->saveUser($data);
-
+            
             header('Location: /admin/index');
 
         } else {
@@ -73,7 +63,7 @@ class AuthController extends Controller
         }
     }
 
-    public function logoutAction(Request $request)
+    public function logout(Request $request)
     {   
         if (!checkUser()) {
             header('Location: /default/index');

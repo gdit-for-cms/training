@@ -30,16 +30,12 @@ class User extends Model
                             JOIN role ON u.role_id = role.id
                             JOIN room ON u.room_id = room.id');
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-
     }
 
-    public static function getdataAdmin()
+    public static function getDataFollowRole($role_id)
     {
         $db = static::getDB();
-        $stmt = $db->query('SELECT u.id, u.name, u.email, u.room_id, role.name role_name, room.name room_name
-                            FROM user AS u
-                            JOIN role ON u.role_id = role.id
-                            JOIN room ON u.room_id = room.id');
+        $stmt = $db->query("SELECT * FROM user WHERE role_id = $role_id");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
