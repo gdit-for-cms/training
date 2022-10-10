@@ -45,8 +45,7 @@ class UserController extends Controller
         $role = new Role();
         $this->data['allRole'] = $role->table('role')->all();
 
-        $room = new Room();
-        $this->data['allRoom'] = $room->table('room')->all();
+        $this->data['allRoom'] = Room::All();
 
         $this->data['content'] = 'user/new';
         
@@ -56,7 +55,6 @@ class UserController extends Controller
     {
         
         $post = $request->getPost();
-
         $name = $post['name'];
         $password = $post['password'];
         $email = $post['email'];
@@ -67,7 +65,7 @@ class UserController extends Controller
             header('Location: /user/new');
             exit;
         }
-        if($email != '') {
+        if ($email != '') {
             $user = new User();
             $query = $user->table('user')->where('email', '=', $email)->get();
             $num_rows = count($query);
@@ -93,12 +91,10 @@ class UserController extends Controller
     {   
         $id = $request->getGet()['id'];
 
-        $role = new Role();
-        $this->data['allRole'] = $role->table('role')->all();
-
-        $room = new Room();
-        $this->data['allRoom'] = $room->table('room')->all();
-
+        $this->data['allRole'] = Role::All();
+        
+        $this->data['allRoom'] = Room::All();
+        
         $user = new User();
         $this->data['user'] = $user->table('user')->find($id, 'id, name, email, role_id, room_id');
 

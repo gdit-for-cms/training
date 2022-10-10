@@ -20,6 +20,11 @@ class Role extends Model
      *
      * @return array
      */
-
+    public static function All()
+    {
+        $db = static::getDB();
+        $stmt = $db->query('SELECT * FROM `role` ');
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
 }

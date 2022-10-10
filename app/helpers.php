@@ -4,7 +4,8 @@ use Core\Http\Request;
 
 function checkUser() {
      $request = new Request;
-     if ($request->getUser() !== null) {
+     $user = $request->getUser();
+     if ($user !== null && $user['role_id'] == 1) {
           return true;
      } else {
           return false;
