@@ -1,38 +1,42 @@
-<header>
-    <nav class="navbar navbar-default navbar-static-top fixed w-full pt-8">
-        <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle navbar-toggle-sidebar collapsed">
-                    MENU
-                </button>
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                    data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">
-                    Administrator
-                </a>
+<div class="container-fluid g-0">
+    <div class="row">
+        <div class="col-lg-12 p-0 ">
+            <div class="header_iner d-flex justify-content-between align-items-center">
+                <div class="sidebar_icon d-lg-none">
+                    <i class="ti-menu"></i>
+                </div>
+                <div class="line_icon open_miniSide d-none d-lg-block">
+                    <img src="img/line_img.png" alt="">
+                </div>
+                <div class="serach_field-area d-flex align-items-center">
+                    <div class="search_inner">
+                        <form action="#">
+                            <div class="search_field">
+                                <input type="text" placeholder="Search">
+                            </div>
+                            <button type="submit"> <img src="img/icon/icon_search.svg" alt=""> </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="header_right d-flex justify-content-between align-items-center">
+                    <div class="header_notification_warp d-flex align-items-center">
+                    </div>
+                    <div class="profile_info">
+                        <img src="img/client_img.png" alt="#">
+                        <div class="profile_info_iner">
+                            <div class="profile_author_name">
+                                <p>Neurologist </p>
+                                <h5>Dr. Robar Smith</h5>
+                            </div>
+                            <div class="profile_info_details">
+                                <a href="#">My Profile </a>
+                                <a href="#">Settings</a>
+                                <a href="/auth/logout">Log Out </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown ">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            Account
-                            <span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li class="dropdown-header">SETTINGS</li>
-                            <li class="divider"></li>
-                            <li><a href="/auth/logout">Logout</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div><!-- /.navbar-collapse -->
-        </div><!-- /.container-fluid -->
-    </nav>
-</header>
+        </div>
+    </div>
+</div>

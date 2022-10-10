@@ -31,7 +31,7 @@ class RoomController extends Controller
     {   
         $this->data['allUsers'] = User::getAll();
 
-        $rooms = new Room();
+        $rooms = new User();
         $this->data['rooms'] = $rooms->table('room')->all();
 
         $this->data['content'] = 'room/index';
@@ -62,7 +62,7 @@ class RoomController extends Controller
     {   
         $id = $request->getGet()['id'];
 
-        $room = new Room();
+        $room = new User();
         $this->data['room'] = $room->table('room')->find($id, 'id, name, description');
 
         $this->data['content'] = 'room/edit';
