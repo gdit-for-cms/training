@@ -8,7 +8,7 @@
                 <!-- Main Menu -->
                 <div class="side-menu-container">
                     <ul class="nav navbar-nav w-full">
-                        <li class="active nav_item"><a href="/user/index"><span class="glyphicon glyphicon-dashboard"></span>User</a></li>
+                        <li class="nav_item"><a href="/user/index"><span class="glyphicon glyphicon-dashboard"></span>User</a></li>
                         <li class="nav_item"><a href="#"><span class="glyphicon glyphicon-plane"></span>Role</a></li>
                         <li class="nav_item"><a href="#"><span class="glyphicon glyphicon-cloud"></span>Room</a></li>
                         <li class="nav_item"><a href="/exam/list"><span class="glyphicon glyphicon-cloud"></span>Exam</a></li>

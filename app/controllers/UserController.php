@@ -19,8 +19,8 @@ class UserController extends Controller
        $this->session =  Session::getInstance();
     }
 
-    public function index(){
-        
+    public function indexAction()
+    {
         $this->data['content'] = 'user/index.php';
         View::render('admin/back-layouts/master.php', $this->data);
     }

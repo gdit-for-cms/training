@@ -2,7 +2,8 @@
 
 use Core\Http\Request;
 
-function checkUser(Request $request){
+function checkUser(){
+     $request = new Request();
    if ($request->getUser() !== null) {
         return true;
    } else {
@@ -12,6 +13,4 @@ function checkUser(Request $request){
 
 function test(){
     return 1;
- }
-
-?>
+}

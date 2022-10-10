@@ -7,7 +7,7 @@
             Exam list
         </div>
         <div class="panel-body">
-
+            <?php echo $title ?>
         </table>
         </div>
     </div>

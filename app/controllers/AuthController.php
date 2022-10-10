@@ -11,52 +11,35 @@ use Core\Http\Request;
 
 class AuthController extends Controller 
 {   
-    public $session;
-    public $currentUser = [];
-
-    /**
-     * Show the index page
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-       $this->session =  Session::getInstance();
-    }
-    
-    public function index()
-    {   
-
-        $currentUser = $this->session->__isset('currentUser');
-        if ($currentUser) {
-            header('Location: admin/index');
-        } else {
-
-            header('Location: default/index');
+    protected function before() {
+        if (!checkUser()) {
+            header('Location: /default/index');
             exit;
         }
     }
 
+    public function index()
+    {   
+        View::render('default/index.php');
+    }
+
     public function loginAction(Request $request)
     {   
-        
         $post = $request->getPost();
-
+        
         $email = htmlspecialchars(addslashes($post['email']));
         $password = htmlspecialchars(addslashes($post['password']));
-
+        
         $user = new User();
         $inputUser = $user->table('user')
                      ->where('email', '=', $email)
                      ->where('password', '=', $password)
                      ->first();
-
-
-        if ($inputUser['role_id'] != 1) {
+        
+        if (!$inputUser) {
             header('Location: /default/index');
-        } else {
-            $this->currentUser = $inputUser;
-        }
+            exit;
+        } 
 
         $this->currentUser = $inputUser;
         if ($this->currentUser['role_id'] == 1) {
@@ -66,9 +49,9 @@ class AuthController extends Controller
                 'role_id' => $this->currentUser['role_id'],
                 'room_id' => $this->currentUser['room_id'],
             ];
-
+            
             $request->saveUser($data);
-
+            
             header('Location: /admin/index');
 
         } else {
@@ -77,7 +60,7 @@ class AuthController extends Controller
         }
     }
 
-    public function logoutAction(Request $request)
+    public function logout(Request $request)
     {   
         $request->deleteUser();
         header('Location: /default/index');

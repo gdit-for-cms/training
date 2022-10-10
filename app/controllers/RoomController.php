@@ -27,10 +27,8 @@ class RoomController extends Controller
 
     public function newAction()
     {   
-
         $this->data['mainContainer'] = 'room/new.php';
         View::render('admin-layout/master.php', $this->data);
-        
     }
 
     public function createAction(Request $request)

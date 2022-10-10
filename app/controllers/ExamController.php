@@ -9,27 +9,26 @@ use Core\Http\Request;
 class ExamController extends Controller
 {
     public $data = [];
-    /**
-     * Show the index page
-     *
-     * @return void
-     */
-
     
-    public function list()
+    protected function before() {
+        if (!checkUser()) {
+            header('Location: /default/index');
+            exit;
+        }
+    }
+
+    protected function after() {
+        View::render('admin/back-layouts/master.php',$this->data);
+    }
+    
+    public function listAction()
     {
         $this->data['content'] = 'exam/list';
-        View::render('admin/back-layouts/master.php',$this->data);
-
     }
 
-    public function create()
+    public function newAction()
     {
-        $this->data['content'] = 'exam/create';
-        View::render('admin/back-layouts/master.php',$this->data);
-
+        $this->data['content'] = 'exam/new';
     }
 
-    
-    
 }

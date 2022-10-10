@@ -1,5 +1,4 @@
 <?php
-
 function setDefineArray($name, $ary) {
 	if ($name == "") return;
 	global $$name;
@@ -10,9 +9,8 @@ function setDefineArray($name, $ary) {
 	}
 	$$name = $temp;
 	return $$name;
-	
-	// return 1;
 }
+
 function setTempGlobal($variableGLOBALS, $globalsVarName, $tempGlobal){
     foreach($variableGLOBALS as $each){
         $globalsVarName[] = $each;

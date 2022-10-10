@@ -12,28 +12,25 @@ use Core\Http\ResponseTrait;
 class HomeController extends Controller
 {
     use ResponseTrait;
-
     public $data = [];
-    public $session;
 
-    /**
-     * Show the index page
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-       $this->session = Session::getInstance();
+    protected function before() {
+        if (!checkUser()) {
+            header('Location: /default/index');
+            exit;
+        }
     }
- 
-    public function homepage()
+
+    protected function after() {
+        View::render('admin/back-layouts/master.php',$this->data);
+    }
+
+    public function homepageAction()
     {
         $this->data['content'] = 'home/homepage';
-        View::render('front-layouts/master.php',$this->data);
-
     }
     
-    public function loginAction(Request $request)
+    public function login(Request $request)
     {
         $email = htmlspecialchars(addslashes($request->getPost()['email']));
         $password = addslashes($request->getPost()['password']);
@@ -57,12 +54,11 @@ class HomeController extends Controller
 
             echo $this->successResponse();
         } else {
-
             echo $this->errorResponse($message = 'failed');
         }
     }
 
-    public function logoutAction()
+    public function logout()
     {   
         $this->session->__unset('currentUser');
 

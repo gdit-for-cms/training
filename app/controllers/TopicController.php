@@ -9,25 +9,26 @@ use Core\Http\Request;
 class TopicController extends Controller
 {
     public $data = [];
-    /**
-     * Show the index page
-     *
-     * @return void
-     */
-
-    
-    public function list()
-    {
-        $this->data['content'] = 'topic/list';
-        View::render('admin/back-layouts/master.php',$this->data);
-
+   
+    protected function before() {
+        if (!checkUser()) {
+            header('Location: /default/index');
+            exit;
+        }
     }
 
-    public function create()
-    {
-        $this->data['content'] = 'topic/create';
+    protected function after() {
         View::render('admin/back-layouts/master.php',$this->data);
+    }
 
+    public function listAction()
+    {
+        $this->data['content'] = 'topic/list';
+    }
+
+    public function newAction()
+    {
+        $this->data['content'] = 'topic/new';
     }
 
     

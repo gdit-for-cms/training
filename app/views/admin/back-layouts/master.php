@@ -19,7 +19,6 @@
         <?php require_once '../app/views/admin/'.$content.'.php'?> 
     </div>
     
-    
     <script src="/js/front-js/jquery.min.js"></script>
     <script src="/js/front-js/sweetalert2.all.min.js"></script>
     <script type="text/javascript" src="/js/header.js"></script>
