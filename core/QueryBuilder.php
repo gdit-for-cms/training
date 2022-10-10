@@ -76,6 +76,7 @@ Trait QueryBuilder
         }else {
             $this->operator = ' AND ';
         }
+        $value = addslashes($value);
         $this->where .= "$this->operator $column LIKE '%$value%'";
         return $this;
     }
@@ -100,7 +101,7 @@ Trait QueryBuilder
      */
     public function limit($number, $offset = 0){
         
-        $this->limit = "LIMIT $offset, $number";
+        $this->limit = "LIMIT " . $offset . ", " . $number;
         return $this;
     }
 
@@ -119,7 +120,7 @@ Trait QueryBuilder
             $this->orderBy = "ORDER BY". implode(', ', $arrColumns);
         }else {
 
-            $this->orderBy = "ORDER BY". $column." ".$direction;
+            $this->orderBy = "ORDER BY" . $column . " " . $direction;
         }
         return $this;
     }
@@ -154,15 +155,21 @@ Trait QueryBuilder
 
         $db = static::getDB();
         $this->selectColumn = $column;
-        $sqlQuery = "SELECT $this->selectColumn FROM $this->tableName $this->innerJoin $this->where $this->orderBy $this->limit";
+        $sqlQuery = 
+        "SELECT " . $this->selectColumn . 
+        " FROM " . $this->tableName . " " .
+        $this->innerJoin . " " . 
+        $this->where . " " . 
+        $this->orderBy . " " . 
+        $this->limit;
         $sqlQuery = trim($sqlQuery);
-        $query = $db->query($sqlQuery);
-
+        $result = $db->query($sqlQuery);
+ 
         // Reset field
         $this->resetQuery();
 
-        if(!empty($query)){
-            return $query->fetchAll(PDO::FETCH_ASSOC);
+        if(!empty($result)){
+            return $result->fetchAll(PDO::FETCH_ASSOC);
         }
         return false;
     }
@@ -209,14 +216,14 @@ Trait QueryBuilder
     
         $db = static::getDB();
         $this->selectColumn = $column;
-        $sqlQuery = "SELECT $this->selectColumn FROM $this->tableName $this->where";
-        $query = $db->query($sqlQuery);
+        $sqlQuery = "SELECT " . $this->selectColumn . " FROM " . $this->tableName . " " . $this->where;
+        $result = $db->query($sqlQuery);
 
         // Reset field
         $this->resetQuery();
 
-        if(!empty($query)){
-            return $query->fetch(PDO::FETCH_ASSOC);
+        if(!empty($result)){
+            return $result->fetch(PDO::FETCH_ASSOC);
         }
         return false;
     }
@@ -264,12 +271,12 @@ Trait QueryBuilder
                 $valueStr.= "'".$value."',";
             }
             $columnStr = rtrim($columnStr, ',');
-            $valueStr = rtrim($valueStr, ',');
+            $valueStr = addslashes(rtrim($valueStr, ','));
 
-            $sqlQuery = "INSERT INTO $tableName ($columnStr) VALUES ($valueStr)";
-            $query = $db->query($sqlQuery);
+            $sqlQuery = "INSERT INTO " . $tableName . " (" . $columnStr . ")" . " VALUES " . "(" . $valueStr . ") " ;
+            $result = $db->query($sqlQuery);
 
-            if($query){
+            if($result){
                 return true;
             }
         }
@@ -294,17 +301,17 @@ Trait QueryBuilder
             foreach($data as $key => $value){
                 $updateStr.= "$key = '$value',";
             }
-            $updateStr = rtrim($updateStr, ',');
+            $updateStr = addslashes(rtrim($updateStr, ','));
             
             if(!empty($conditions)){
-                $sqlQuery = "UPDATE $tableName SET $updateStr WHERE $conditions";
+                $sqlQuery = "UPDATE " . $tableName . " SET " . $updateStr . " WHERE " . $conditions;
             }else {
-                $sqlQuery = "UPDATE $tableName SET $updateStr ";
+                $sqlQuery = "UPDATE " . $tableName . " SET " . $updateStr ;
             }
 
-            $query = $db->query($sqlQuery);
+            $result = $db->query($sqlQuery);
 
-            if($query){
+            if($result){
                 return true;
             }
         }
@@ -323,15 +330,11 @@ Trait QueryBuilder
         $db = static::getDB();
         $tableName = $this->_table;
 
-        $sqlQuery = "DELETE FROM $tableName WHERE $conditions";
+        $sqlQuery = "DELETE FROM " . $tableName . " WHERE " . $conditions;
 
-        $query = $db->query($sqlQuery);
+        $result = $db->query($sqlQuery);
 
-        if($query){
-            return true;
-        }else {
-            return false;
-        }
+        return !!$result;
     }
 
      /**
@@ -344,17 +347,11 @@ Trait QueryBuilder
         $db = static::getDB();
         $tableName = $this->_table;
 
-        $sqlQuery = "DELETE FROM $tableName";
+        $sqlQuery = "DELETE FROM " . $tableName;
 
-        $query = $db->query($sqlQuery);
+        $result = $db->query($sqlQuery);
 
-        return !!$query;
-
-        if($query){
-            return true;
-        }else {
-            return false;
-        }
+        return !!$result;
     }
 }
 

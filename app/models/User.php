@@ -41,7 +41,6 @@ class User extends Model
                             JOIN role ON u.role_id = role.id
                             JOIN room ON u.room_id = room.id');
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-
     }
 
 }
