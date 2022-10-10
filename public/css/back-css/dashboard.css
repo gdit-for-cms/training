@@ -27,6 +27,15 @@ h1.page-header {
 	outline: none;
 }
 
+#content{
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	max-width: fit-content;
+	right: 300px;
+
+}
+
 .side-menu {
 	position: relative;
 	width: 100%;

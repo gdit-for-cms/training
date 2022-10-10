@@ -17,7 +17,7 @@
         <div class="fixed mt-24">
             <?php require_once 'menu.php' ?>
         </div>
-        <div class="flex w-full ml-50 justify-end mt-28">
+        <div id="content" class="" >
             <?php require_once '../app/views/admin/'.$content.'.php'?> 
         </div>
     </div>
