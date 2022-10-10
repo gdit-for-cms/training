@@ -11,18 +11,23 @@ use Core\Http\Session;
 use Core\Http\Request;
 
 class RoomController extends Controller
-{ 
-    private $request ;
+{
     public $data = [];
+    public $session;
     /**
      * Show the index page
      *
      * @return void
      */
 
+    public function __construct()
+    {
+       $this->session =  Session::getInstance();
+    }
+
     public function newAction()
     {   
-        
+
         $this->data['mainContainer'] = 'room/new.php';
         View::render('admin-layout/master.php', $this->data);
         
@@ -34,13 +39,22 @@ class RoomController extends Controller
 
         $name = htmlspecialchars(addslashes($post['name']));
         $description = htmlspecialchars(addslashes($post['description']));
-        
-        $room = new Room();
-        $room->insert(['name' => $name,
-                       'description' => $description]);
-        
-        header('Location: /admin/index');
-        exit;
+
+        if ($name == "") {
+            $this->session->__set('error', 'Create room failed');
+            header('Location: /room/new');
+            exit;
+        } else {
+            $this->session->__unset('error');
+
+            $room = new Room();
+            $room->insert(['name' => $name,
+                           'description' => $description]);
+            
+            header('Location: /admin/index');
+            exit;
+        }
+
  
     }
 

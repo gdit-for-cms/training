@@ -8,36 +8,41 @@
         $name = '';
         $email = '';
     } ?>
+    <?php if (isset($_SESSION['error'])) { ?>
+        <div class="alert alert-danger" role="alert">
+            <? echo $_SESSION['error'] ?>
+        </div>
+    <?php } ?>
   <div class="form-group row">
-    <label for="name" class="col-3 col-form-label">Name</label> 
+    <label for="name" class="col-3 col-form-label">Name*</label> 
     <div class="col-9">
         <input id="id" name="id" value="<?= $id ?>" type="hidden" class="form-control">
         <input id="name" name="name" value="<?= $name ?>" type="text" class="form-control">
     </div>
   </div>
   <div class="form-group row">
-    <label for="email" class="col-3 col-form-label">Email</label> 
+    <label for="email" class="col-3 col-form-label">Email*</label> 
     <div class="col-9">
       <input id="email" name="email" type="text" value="<?= $email ?>" class="form-control">
     </div>
   </div>
   <div class="form-group row">
-    <label for="password" class="col-3 col-form-label">Password</label> 
+    <label for="password" class="col-3 col-form-label">Password*</label> 
     <div class="col-9">
       <input id="password" name="password" type="password" class="form-control">
     </div>
   </div>
   <div class="form-group row">
-    <label for="confirmPassword" class="col-3 col-form-label">Confirm Password</label> 
+    <label for="confirmPassword" class="col-3 col-form-label">Confirm Password*</label> 
     <div class="col-9">
       <input id="confirmPassword" name="confirmPassword" type="password" class="form-control">
     </div>
   </div>
   <div class="form-group row">
-    <label for="role" class="col-3 col-form-label">Role</label> 
+    <label for="role" class="col-3 col-form-label">Role*</label> 
     <div class="col-9">
       <select id="role" name="role" class="custom-select">
-        <option disabled selected value> --select an role-- </option>
+        <!-- <option disabled selected value="0"> --select an role-- </option> -->
         <?php if (isset($user)) {
             # code...
             foreach($allRole as $role) { ?> 
@@ -53,7 +58,7 @@
     <label for="room" class="col-3 col-form-label">Room</label> 
     <div class="col-9">
       <select id="room" name="room" class="custom-select">
-        <option disabled selected value> --select an room-- </option> 
+        <!-- <option disabled selected value="0"> --select an room-- </option>  -->
         <?php if (isset($user)) {
             # code...
             foreach($allRoom as $room) { ?> 

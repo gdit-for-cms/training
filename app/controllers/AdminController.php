@@ -6,31 +6,25 @@ use Core\Controller;
 use Core\View;
 use App\models\User;
 use App\models\Room;
-use Core\Http\Session;
 use Core\Http\Request;
 
 class AdminController extends Controller
 {
-    public $data =[] ;
-    public $session;
 
-    public function __construct()
-    {
-       $this->session =  Session::getInstance();
-    }
+    public $data = [];
     /**
      * Show the index page
      *
      * @return void
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {   
-        $currentUser = $this->session->__isset('currentUser');
-        if (!$currentUser) {
+        
+        if (!checkUser($request)) {
             header('Location: /default/index');
             exit;
         }
-
+        
         $this->data['allUsers'] = User::getAll();
 
         $users = new User();
@@ -41,7 +35,7 @@ class AdminController extends Controller
         $this->data['rooms'] = $rooms->table('room')->all();
 
         $this->data['mainContainer'] = 'default/dashboard.php';
-        View::render('layout/master.php', $this->data);
+        View::render('admin-layout/master.php', $this->data);
     }
 
     public function diffAction()

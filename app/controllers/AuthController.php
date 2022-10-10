@@ -42,66 +42,45 @@ class AuthController extends Controller
         
         $post = $request->getPost();
 
-        $email = $post['email'];
-        $password = $post['password'];
-        $password = base64_encode($password);
+        $email = htmlspecialchars(addslashes($post['email']));
+        $password = htmlspecialchars(addslashes($post['password']));
 
         $user = new User();
         $inputUser = $user->table('user')
                      ->where('email', '=', $email)
                      ->where('password', '=', $password)
-                     ->get();
-                     
+                     ->first();
+
+
         if ($inputUser['role_id'] != 1) {
             header('Location: /default/index');
-            $this->session->__set('error', 'you are not admin');
         } else {
             $this->currentUser = $inputUser;
         }
 
-        $number_rows = count($this->currentUser);
-        if ($number_rows == 1) {
+        $this->currentUser = $inputUser;
+        if ($this->currentUser['role_id'] == 1) {
             $data = [
-                'name' => $this->currentUser[0]['name'],
-                'email' => $this->currentUser[0]['email'],
-                'role_id' => $this->currentUser[0]['role_id'],
-                'room_id' => $this->currentUser[0]['room_id'],
+                'name' => $this->currentUser['name'],
+                'email' => $this->currentUser['email'],
+                'role_id' => $this->currentUser['role_id'],
+                'room_id' => $this->currentUser['room_id'],
             ];
-            $this->session->__unset('error');
-            $this->session->__set('currentUser', $data);
-            // print_r($_SESSION['id']);
 
-            $token = uniqid('', true) . time();
-            $user->table('user')->where('id', '=', $this->currentUser[0]['id'])->update(['token' => $token]);
+            $request->saveUser($data);
 
-            setcookie('remember', $token, time() + 86400*30, '/');
-            header("location: /admin/index");
-            exit;
+            header('Location: /admin/index');
+
         } else {
-            $this->session->__set('error', 'email or password is incorrect');
-            header('Location: /');
-            exit;
+            $this->data['errorLogin'] = 'Email or password is incorrect';
+            View::render('default/index.php', $this->data);
         }
     }
 
-    public function logoutAction()
+    public function logoutAction(Request $request)
     {   
-        $this->session->__unset('currentUser');
-
-        setcookie('remember',null,-1);
-
-        header('location: /');
-        exit;
+        $request->deleteUser();
+        header('Location: /default/index');
     }
     
-    public function deleteAction()
-    {
-        $user = new User();
-        $data = $user->destroy('id = 1');
-
-    }
-    public function testAction()
-    {
-        View::render('default/test.php');
-    }
 }

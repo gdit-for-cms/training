@@ -6,12 +6,21 @@ let config = JSON.parse(localStorage.getItem(PAGE_STORAGE_KEY)) || {}
 
 const navItemEles = $$('.nav_item')
 const navContentEles = $$('.nav_content')
+const selectRoomEles = $('.room_select')
+const selectRoleEles = $('.role_select')
+const userItemsEles = $$('.user_items')
+const roomNameEles = $$('.room_name')
+const modalRoomEle = $('#modal_room')
+const addMemberBtn = $$('.add_member_btn')
+const closeModalBtn = $('.close_modal_btn')
+const roomNameAddEles = $$('.room_name_add')
 
 
 function start() {
     loadNav();
     changeNav();
-    
+    sort();
+    showAndCloseModal();
 }
 
 start()
@@ -61,4 +70,43 @@ function loadNav(params) {
     })
 }
 
+function sort() {
+    selectRoomEles.addEventListener('change', () => {
+        console.log(selectRoomEles.value);
+        if (selectRoomEles.value == 0) {
+            userItemsEles.forEach(ele => {
+                ele.classList.remove('hidden')
+            })
+        } else {
+            userItemsEles.forEach(ele => {
+                if (selectRoomEles.value != ele.querySelector('.room_name').textContent ) {
+                    ele.classList.add('hidden')
+                } else {
+                    ele.classList.remove('hidden')
+                }
+            })
+        }
 
+    })
+}
+
+function showAndCloseModal(params) {
+    addMemberBtn.forEach(ele => {
+        ele.addEventListener('click', () => {
+            modalRoomEle.classList.remove('hidden');
+            console.log(ele.parentNode.parentNode.parentNode.querySelector('.room_name_main').textContent);
+            roomNameAddEles.forEach(e => {
+                if (ele.parentNode.parentNode.parentNode.querySelector('.room_name_main').textContent == e.textContent) {
+                    e.parentNode.getElementsByTagName('input')[0].checked = true
+                }
+
+            })
+        })
+    })
+    closeModalBtn.addEventListener('click', () => {
+        roomNameAddEles.forEach(e => {
+             e.parentNode.getElementsByTagName('input')[0].checked = false
+        })
+        modalRoomEle.classList.add('hidden');
+    })
+}
