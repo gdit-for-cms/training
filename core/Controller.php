@@ -57,7 +57,11 @@ abstract class Controller
      * @return void
      */
     protected function before() {
+<<<<<<< HEAD
         if (!checkAdmin()) {
+=======
+        if (!checkUser()) {
+>>>>>>> 2fb2e3a85cf25348ae57e2997639bb06dd692d12
             header('Location: /auth/login');
             exit;
         }

@@ -5,24 +5,24 @@ namespace App\Controllers;
 use Core\Controller;
 use Core\View;
 use App\models\User;
-use Core\Http\Session;
 use Core\Http\Request;
 use Core\Http\ResponseTrait;
 
 class HomeController extends Controller
 {
     use ResponseTrait;
-    public $data = [];
+    public array $data;
 
     protected function before() {
         if (!checkUser()) {
             header('Location: /default/index');
             exit;
         }
+        $this->data['title'] = 'Homepage';
     }
 
     protected function after() {
-        View::render('admin/back-layouts/master.php',$this->data);
+        View::render('homepage/front-layouts/master.php',$this->data);
     }
 
     public function homepageAction()
@@ -61,7 +61,6 @@ class HomeController extends Controller
     public function logout()
     {   
         $this->session->__unset('currentUser');
-
         setcookie('remember',null,-1);
 
         header('location: /home/homepage');

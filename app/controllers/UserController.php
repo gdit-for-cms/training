@@ -8,7 +8,6 @@ use Core\View;
 use App\models\User;
 use App\models\Role;
 use App\models\Room;
-use Core\Http\Session;
 use Core\Http\Request;
 
 class UserController extends Controller

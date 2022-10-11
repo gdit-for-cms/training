@@ -296,7 +296,7 @@ Trait QueryBuilder
     public function update($data , $conditions = '')
     {
         $db = static::getDB();
-        $tableName = $this->_table;
+        $tableName = $this->_table; 
 
         if(!empty($data)){
             $updateStr = '';

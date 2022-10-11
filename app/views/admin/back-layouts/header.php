@@ -6,7 +6,7 @@
                     <i class="ti-menu"></i>
                 </div>
                 <div class="line_icon open_miniSide d-none d-lg-block">
-                    <img src="img/line_img.png" alt="">
+                    <img src="" alt="">
                 </div>
                 <div class="serach_field-area d-flex align-items-center">
                     <div class="search_inner">
@@ -14,7 +14,7 @@
                             <div class="search_field">
                                 <input type="text" placeholder="Search">
                             </div>
-                            <button type="submit"> <img src="img/icon/icon_search.svg" alt=""> </button>
+                            <button type="submit"> <img src="" alt=""> </button>
                         </form>
                     </div>
                 </div>
@@ -22,12 +22,12 @@
                     <div class="header_notification_warp d-flex align-items-center">
                     </div>
                     <div class="profile_info">
-                        <img src="img/client_img.png" alt="#">
+                        <img src="" alt="#">
                         <div class="profile_info_iner">
                             <div class="profile_info_details">
-                                <a href="#">My Profile </a>
+                                <a href="#">My Profile</a>
                                 <a href="#">Settings</a>
-                                <a href="/auth/logout">Log Out </a>
+                                <a href="/auth/logout">Log Out</a>
                             </div>
                         </div>
                     </div>

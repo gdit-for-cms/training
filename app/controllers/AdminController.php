@@ -4,9 +4,6 @@ namespace App\Controllers;
 
 use Core\Controller;
 use Core\View;
-use App\models\User;
-use App\models\Room;
-use Core\Http\Request;
 
 class AdminController extends Controller
 {
@@ -33,8 +30,10 @@ class AdminController extends Controller
 
             $fileAccept = array('application/octet-stream', 'application/inc', 'application/php');
 
-            if (is_uploaded_file($_FILES['file1']['tmp_name']) && is_uploaded_file($_FILES['file2']['tmp_name']) 
-            && in_array($_FILES['file1']['type'], $fileAccept) && in_array($_FILES['file2']['type'], $fileAccept)) {
+            if (is_uploaded_file($_FILES['file1']['tmp_name']) 
+                && is_uploaded_file($_FILES['file2']['tmp_name']) 
+                && in_array($_FILES['file1']['type'], $fileAccept) 
+                && in_array($_FILES['file2']['type'], $fileAccept)) {
 
                 $this->data['uploadStatus'] = 'success';
                 

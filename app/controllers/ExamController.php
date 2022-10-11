@@ -4,21 +4,14 @@ namespace App\Controllers;
 
 use Core\Controller;
 use Core\View;
-use Core\Http\Request;
 
 class ExamController extends Controller
 {
-    public $data = [];
-    
-    protected function before() {
-        if (!checkUser()) {
-            header('Location: /default/index');
-            exit;
-        }
-    }
+    public array $data;
 
-    protected function after() {
-        View::render('admin/back-layouts/master.php',$this->data);
+    protected function after() 
+    {
+        View::render('admin/back-layouts/master.php', $this->data);
     }
     
     public function listAction()
@@ -30,5 +23,4 @@ class ExamController extends Controller
     {
         $this->data['content'] = 'exam/new';
     }
-
 }

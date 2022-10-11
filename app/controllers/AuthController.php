@@ -8,23 +8,25 @@ use App\models\User;
 use Core\Http\Session;
 use Core\Http\Request;
 
-
 class AuthController extends Controller 
 {   
+    public array $data;
+
     protected function before() {
         if (checkAdmin()) {
             header('Location: /admin/index');
             exit;
         }
+        $this->data['title'] = 'Login';
     }
 
     public function loginAction()
-    {   
+    {  
         View::render('admin/auth/login.php');
     }
 
     public function loginProcessAction(Request $request)
-    {   
+    {
         $post = $request->getPost();
 
         $email = $post['email'];

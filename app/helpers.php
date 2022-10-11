@@ -14,7 +14,7 @@ if (! function_exists('checkAdmin')) {
      }
 }
 
-if (! function_exists('setDefineArray')) {
+if (!function_exists('setDefineArray')) {
      function setDefineArray($name, $ary) {
           if ($name == "") return;
           global $$name;
@@ -28,8 +28,8 @@ if (! function_exists('setDefineArray')) {
      }
 }
 
-if (! function_exists('setTempGlobal')) {
-     function setTempGlobal($variableGLOBALS, $globalsVarName, $tempGlobal){
+if (!function_exists('setTempGlobal')) {
+     function setTempGlobal($variableGLOBALS, $globalsVarName, $tempGlobal) {
           if (!empty($variableGLOBALS)) {
                foreach($variableGLOBALS as $each){
                     $globalsVarName[] = $each;
@@ -37,7 +37,6 @@ if (! function_exists('setTempGlobal')) {
                     unset($GLOBALS[$each]);
                }
           }
-     
-     return array( $globalsVarName, $tempGlobal );
+          return array($globalsVarName, $tempGlobal);
      }
 }

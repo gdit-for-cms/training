@@ -6,7 +6,6 @@ use Core\Controller;
 use Core\View;
 use App\models\User;
 use App\models\Room;
-use Core\Http\Session;
 use Core\Http\Request;
 
 class RoomController extends Controller

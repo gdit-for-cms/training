@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.24/dist/sweetalert2.min.css">
     <link href="/css/front-css/main.css" rel="stylesheet">
-    <title>INTERNSHIP | TASK</title>
+    <title><?= $title ?></title>
 </head>
 <body>
     <?php require_once 'header.php' ?>
