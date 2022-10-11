@@ -5,27 +5,12 @@ namespace App\Controllers;
 use Core\Controller;
 use Core\View;
 use App\models\User;
-// use App\models\Role;
 use App\models\Room;
-use Core\Http\Session;
 use Core\Http\Request;
 
 class RoomController extends Controller
 {
     public $data = [];
-
-    protected function before()
-    {
-        if (!checkUser()) {
-            header('Location: /default/index');
-            exit;
-        }
-    }
-
-    protected function after()
-    {
-        View::render('admin/back-layouts/master.php', $this->data);
-    }
 
     public function indexAction()
     {   

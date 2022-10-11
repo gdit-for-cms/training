@@ -1,20 +1,25 @@
-<div class="col-md-10 nav_content">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            Create a new Topic
-        </div>
-        <div class="panel-body">
-            <form>
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Name</label>
-                    <input type="email" class="form-control" id="topic-name" aria-describedby="emailHelp" placeholder="Enter your new topic">
-                    <small id="emailHelp" class="form-text text-muted">Unique </small>
+<div class="container-fluid p-0 ">
+    <div class="row">
+        <div class="col-12">
+            <div class="white_card card_height_100 mb_30">
+                <div class="white_card_header">
+                    <div class="box_header m-0">
+                        <div class="main-title">
+                            <h3 class="m-0">Add new topic</h3>
+                        </div>
+                    </div>
                 </div>
-                
-                <button type="submit" class="btn btn-primary" id="submit-topic" disabled>Submit</button>
-            </form>
+                <div class="white_card_body">
+                    <form action="create" class="add-form">
+                        <div class="row mb-3">
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="add-topic-name" name="name" placeholder="Topic name">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="add-topic-submit" disabled>Create</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
-

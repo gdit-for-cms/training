@@ -1,5 +1,20 @@
+function checkName(objName) {
+    $.ajax({
+        type: "GET",
+        url: "/" + objName + "/apiCheckName",
+        data: { name: $(`#add-${objName}-name`).val() },
+        dataType: 'json',
+        success: function (response) {
+            if (response.data) {
+                Swal.fire(`${objName} has been exits`);
+                $(`#add-${objName}-name`).val('');
+            } else {
+                $(`#add-${objName}-submit`).attr('disabled', false);
+            }
+        }
+    });
+}
 $(document).ready(function () {
-
     $('#topic-name').change(function () {
         $.ajax({
             type: "GET",
@@ -11,4 +26,49 @@ $(document).ready(function () {
             }
         });
     });
+    
+    $('.edit-btn').click(function (e) {
+        let id = $(this).data('id');
+        let name = $(this).data('name');
+        $('.box-lightbox').addClass('open');
+    });
+
+    $('.js-lightbox-close').click(function (e) {
+        $('.box-lightbox').removeClass('open');
+    });
+
+    $('#add-topic-name').change(function () {
+        checkName('topic');
+    });
+
+    $('.add-form').submit(function (e) {
+        e.preventDefault();
+        var form = $(this);
+        var actionUrl = form.attr('action');
+        $.ajax({
+            type: "POST",
+            url: actionUrl,
+            data: form.serialize(),
+            dataType: 'json',
+            success: function (response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: "Successfully",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                setTimeout(() => {
+                    document.location.reload(true);
+                }, "1600");
+            },
+            error: function (response) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: response.responseJSON.message,
+                });
+            }
+        });
+    });
 });
+

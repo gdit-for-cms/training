@@ -7,7 +7,6 @@ use Core\View;
 
 class DefaultController extends Controller
 {
-
     /**
      * Show the index page
      *

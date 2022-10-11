@@ -11,7 +11,7 @@ trait ResponseTrait
             'message' => $message,
         ] ,$status);
     }
-    public function errorResponse($message = '' ,$status = 400)
+    public function errorResponse($message = '' , $status = 404)
     {
         return json_encode([
             'success' => false,
@@ -20,5 +20,3 @@ trait ResponseTrait
         ], $status);
     }
 }
-
-?>

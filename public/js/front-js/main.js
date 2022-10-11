@@ -71,7 +71,7 @@
                         });
                         setTimeout(() => {
                             document.location.reload(true);
-                        }, "1700");
+                        }, "1600");
                     },
                     error: function (response)
                     {
