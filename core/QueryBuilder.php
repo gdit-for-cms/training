@@ -263,16 +263,17 @@ Trait QueryBuilder
     {
         $db = static::getDB();
         $tableName = $this->_table;
-
         if(!empty($data)){
             $columnStr = '';
             $valueStr = '';
             foreach($data as $key => $value){
+                $key = addslashes($key);
+                $value = addslashes($value);
                 $columnStr.= $key.',';
                 $valueStr.= "'".$value."',";
             }
             $columnStr = rtrim($columnStr, ',');
-            $valueStr = addslashes(rtrim($valueStr, ','));
+            $valueStr = rtrim($valueStr, ',');
 
             $sqlQuery = "INSERT INTO " . $tableName . " (" . $columnStr . ")" . " VALUES " . "(" . $valueStr . ") " ;
             $result = $db->query($sqlQuery);
@@ -300,9 +301,11 @@ Trait QueryBuilder
         if(!empty($data)){
             $updateStr = '';
             foreach($data as $key => $value){
+                $key = addslashes($key);
+                $value = addslashes($value);
                 $updateStr.= "$key = '$value',";
             }
-            $updateStr = addslashes(rtrim($updateStr, ','));
+            $updateStr = rtrim($updateStr, ',');
             
             if(!empty($conditions)){
                 $sqlQuery = "UPDATE " . $tableName . " SET " . $updateStr . " WHERE " . $conditions;

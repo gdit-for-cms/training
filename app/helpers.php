@@ -2,11 +2,11 @@
 
 use Core\Http\Request;
 
-if (! function_exists('checkUser')) {
-     function checkUser() {
+if (! function_exists('checkAdmin')) {
+     function checkAdmin() {
           $request = new Request;
-          $user = $request->getUser();
-          if ($user !== null && $user['role_id'] == 1) {
+          $admin = $request->getUser();
+          if ($admin !== null && $admin['role_id'] == 1) {
                return true;
           } else {
                return false;

@@ -11,21 +11,23 @@ use Core\QueryBuilder;
  *
  * PHP version 7.0
  */
-class Role extends Model
+class Position extends Model
 {
     use QueryBuilder;
-    private $_table = 'room';
+    private $_table = 'position';
 
     /**
      * Get all the users as an associative array
      *
      * @return array
      */
+
     public static function All()
     {
         $db = static::getDB();
-        $stmt = $db->query('SELECT * FROM `role` ');
+        $stmt = $db->query('SELECT * FROM `position` ');
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
 }

@@ -5,7 +5,7 @@ const accountEle = $('.dropdown');
 const dropMenu = $('.dropdown-menu');
 
 function start() {
-    handleEvent();
+    // handleEvent();
 }
 
 start()

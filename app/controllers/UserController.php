@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\Position;
 use Core\Controller;
 use Core\View;
 use App\models\User;
@@ -12,30 +13,20 @@ use Core\Http\Request;
 
 class UserController extends Controller
 {
-    public $data = [];
-    
-    protected function before()
-    {
-        if (!checkUser()) {
-            header('Location: /default/index');
-            exit;
-        }
-    }
-
-    protected function after()
-    {
-        View::render('admin/back-layouts/master.php', $this->data);
-    }
+    public array $data;
 
     public function indexAction()
     {   
         $this->data['allUsers'] = User::getAll();
         $users = new User();
-        $this->data['admins'] = $users->table('user')->where('role_id', '=', 1)->get();
-        $this->data['users'] = $users->table('user')->where('role_id', '=', 2)->get();
+        $this->data['admins'] =  $users->table('user')->where('role_id', '=', 1)->get();
+        $this->data['users'] =  $users->table('user')->where('role_id', '=', 2)->get();
 
-        $rooms = new Room();
-        $this->data['rooms'] = $rooms->table('room')->all();
+        $this->data['rooms'] =  $users->table('room')->all();
+
+        $this->data['roles'] =  $users->table('role')->all();
+
+        $this->data['positions'] =  $users->table('position')->all();
 
         $this->data['content'] = 'user/index';
     }
@@ -70,11 +61,11 @@ class UserController extends Controller
         if ($email != '') {
             $user = new User();
             $query = $user->table('user')->where('email', '=', $email)->get();
-            $num_rows = count($query);
-            if($num_rows >= 1){
+            $numRows = count($query);
+            if ($numRows == 1) {
                 header('Location: /user/new');
                 exit;
-            }else{
+            } else {
                 $user->insert(['name' => $name, 
                                'email' => $email, 
                                'password' => $password, 
@@ -94,11 +85,11 @@ class UserController extends Controller
         $id = $request->getGet()['id'];
 
         $this->data['allRole'] = Role::All();
-        
         $this->data['allRoom'] = Room::All();
+        $this->data['allPosition'] = Position::All();
         
         $user = new User();
-        $this->data['user'] = $user->table('user')->find($id, 'id, name, email, role_id, room_id');
+        $this->data['user'] = $user->table('user')->find($id, 'id, name, email, role_id, room_id, position_id');
 
         $this->data['content'] = 'user/edit';
         View::render('admin/back-layouts/master.php', $this->data);
@@ -114,6 +105,7 @@ class UserController extends Controller
         $email = $get['email'];
         $role_id = $get['role'];
         $room_id = $get['room'];
+        $position_id = $get['position'];
 
         if ($email != '') {
             $user = new User();
@@ -121,7 +113,8 @@ class UserController extends Controller
                            'password' => $password,
                            'email' => $email,
                            'role_id' => $role_id,
-                           'room_id' => $room_id]
+                           'room_id' => $room_id,
+                           'position_id' => $position_id]
                            , "id = $id");
                            
             header('Location: /admin/index');
@@ -136,7 +129,7 @@ class UserController extends Controller
         $user = new User();
         $user->destroy("id = $id");
 
-        header('Location: /admin/index');
+        header('Location: /user/index');
         exit;
     }
 }

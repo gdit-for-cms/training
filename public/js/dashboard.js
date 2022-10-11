@@ -8,6 +8,7 @@ const navItemEles = $$('.nav_item')
 const navContentEles = $$('.nav_content')
 const selectRoomEles = $('.room_select')
 const selectRoleEles = $('.role_select')
+const selectPositionEles = $('.position_select')
 const userItemsEles = $$('.user_items')
 const roomNameEles = $$('.room_name')
 const modalRoomEle = $('#modal_room')
@@ -19,8 +20,11 @@ const roomNameAddEles = $$('.room_name_add')
 function start() {
     loadNav();
     changeNav();
-    sort();
-    showAndCloseModal();
+    sort(selectRoomEles, '.room_name', 'roomSort');
+    sort(selectRoleEles, '.role_name', 'roleSort');
+    sort(selectPositionEles, '.position_name', 'positionSort');
+    // showAndCloseModal();
+    
 }
 
 start()
@@ -70,16 +74,17 @@ function loadNav(params) {
     })
 }
 
-function sort() {
-    selectRoomEles.addEventListener('change', () => {
-        console.log(selectRoomEles.value);
-        if (selectRoomEles.value == 0) {
+function sort(selectOption, itemName, sortName) {
+    // console.log(selectRoomEles.value);
+    selectOption.addEventListener('change', () => {
+        setPage(sortName, selectOption.value)
+        if (selectOption.value == 0) {
             userItemsEles.forEach(ele => {
                 ele.classList.remove('hidden')
             })
         } else {
             userItemsEles.forEach(ele => {
-                if (selectRoomEles.value != ele.querySelector('.room_name').textContent ) {
+                if (selectOption.value != ele.querySelector(itemName).textContent ) {
                     ele.classList.add('hidden')
                 } else {
                     ele.classList.remove('hidden')
@@ -89,6 +94,23 @@ function sort() {
 
     })
 }
+
+// function loadSort(params) {
+//     config.sort
+//     if (selectOption.value == 0) {
+//         userItemsEles.forEach(ele => {
+//             ele.classList.remove('hidden')
+//         })
+//     } else {
+//         userItemsEles.forEach(ele => {
+//             if (selectOption.value != ele.querySelector(itemName).textContent ) {
+//                 ele.classList.add('hidden')
+//             } else {
+//                 ele.classList.remove('hidden')
+//             }
+//         })
+//     }
+// }
 
 function showAndCloseModal(params) {
     addMemberBtn.forEach(ele => {

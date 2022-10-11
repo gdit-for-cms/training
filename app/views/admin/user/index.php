@@ -22,6 +22,12 @@
                     <th scope="col">Email</th>
                     <th scope="col">
                       Role
+                      <select class="role_select w-26 text-medium border " aria-label="Default select example">
+                        <option value="0" selected>All role</option>
+                        <?php foreach ($roles as $role) { ?>
+                          <option value="<?= $role['name'] ?>"><?= $role['name'] ?></option>
+                        <?php } ?>
+                      </select>
                     </th>
                     <th scope="col">
                       Room
@@ -29,6 +35,15 @@
                         <option value="0" selected>All room</option>
                         <?php foreach ($rooms as $room) { ?>
                           <option value="<?= $room['name'] ?>"><?= $room['name'] ?></option>
+                        <?php } ?>
+                      </select>
+                    </th>
+                    <th scope="col">
+                      Position
+                      <select class="position_select w-26 text-medium border " aria-label="Default select example">
+                        <option value="0" selected>All position</option>
+                        <?php foreach ($positions as $position) { ?>
+                          <option value="<?= $position['name'] ?>"><?= $position['name'] ?></option>
                         <?php } ?>
                       </select>
                     </th>
@@ -43,9 +58,10 @@
                       <td><?= $user['email'] ?></td>
                       <td class="role_name"><?= $user['role_name'] ?></td>
                       <td class="room_name"><?= $user['room_name'] ?></td>
+                      <td class="position_name"><?= $user['position_name'] ?></td>
                       <td class="flex">
-                        <a href='/user/edit?id=<?= $user['id'] ?>' class='edit_btn flex justify-center items-center text-white text-lg bg-blue-600 hover:bg-blue-700 hover:text-white rounded-lg mx-2 p-2'>Edit</a>
-                        <a href='/user/delete?id=<?= $user['id'] ?>' class='delete_btn flex justify-center items-center text-white text-lg bg-red-600 hover:bg-red-700 hover:text-white rounded-lg mx-2 p-2'>Delete</a>
+                        <a href='/user/edit?id=<?= $user['id'] ?>' class='edit_btn flex justify-center items-center text-white bg-blue-600 hover:bg-blue-700 hover:text-white rounded-lg mx-2 p-1'>Edit</a>
+                        <a href='/user/delete?id=<?= $user['id'] ?>' class='delete_btn flex justify-center items-center text-white bg-red-600 hover:bg-red-700 hover:text-white rounded-lg mx-2 p-1'>Delete</a>
                       </td>
                     </tr>
                   <?php } ?>

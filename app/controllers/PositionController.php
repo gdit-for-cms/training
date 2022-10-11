@@ -5,24 +5,28 @@ namespace App\Controllers;
 use Core\Controller;
 use Core\View;
 use App\models\User;
-use App\models\Room;
-use Core\Http\Session;
+use App\models\Position;
 use Core\Http\Request;
 
-class RoomController extends Controller
+class PositionController extends Controller
 {
-    public array $data;
+    public $data = [];
+
+    protected function after()
+    {
+        View::render('admin/back-layouts/master.php', $this->data);
+    }
 
     public function indexAction()
     {   
         $this->data['allUsers'] = User::getAll();
-        $this->data['rooms'] = Room::All();
-        $this->data['content'] = 'room/index';
+        $this->data['positions'] = Position::All();
+        $this->data['content'] = 'position/index';
     }
 
     public function newAction()
     {   
-        $this->data['content'] = 'room/new';
+        $this->data['content'] = 'position/new';
     }
 
     public function createAction(Request $request)
@@ -32,12 +36,21 @@ class RoomController extends Controller
         $name = $post['name'];
         $description = $post['description'];
 
-        $room = new Room();
-        $room->insert(['name' => $name,
-                        'description' => $description]);
-        
-        header('Location: /admin/index');
-        exit;
+        $position = new Position();
+        $query = $position->table('position')->where('name', '=', $name)->get();
+        $numRows = count($query);
+
+        if ($numRows == 1) {
+            $this->data['error'] = showError('existed');
+            $this->data['content'] = '/position/new';
+            View::render('admin/back-layouts/master.php', $this->data);
+        } else {
+            $position->insert(['name' => $name,
+                               'description' => $description]);
+            header('Location: /admin/index');
+            exit;
+        }
+ 
     }
 
     public function editAction(Request $request)
@@ -58,7 +71,7 @@ class RoomController extends Controller
         $name = $get['name'];
         $description = $get['description'];
 
-        $room = new Room();
+        $room = new Position();
         $room->update(['name' => $name,
                        'description' => $description]
                         , "id = $id");
@@ -71,7 +84,7 @@ class RoomController extends Controller
     {
         $id = $request->getGet()['id'];
 
-        $room = new Room();
+        $room = new Position();
         $room->destroy("id = $id");
         
         header('Location: /admin/index');

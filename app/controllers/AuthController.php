@@ -12,7 +12,7 @@ use Core\Http\Request;
 class AuthController extends Controller 
 {   
     protected function before() {
-        if (checkUser()) {
+        if (checkAdmin()) {
             header('Location: /admin/index');
             exit;
         }
@@ -55,10 +55,9 @@ class AuthController extends Controller
             $request->saveUser($data);
             
             header('Location: /admin/index');
-
+            exit;
         } else {
             $this->data['error'] = showError('login');
-
             View::render('default/index.php', $this->data);
         }
     }
@@ -68,5 +67,4 @@ class AuthController extends Controller
         $request->deleteUser();
         header('Location: /auth/login');
     }
-    
 }

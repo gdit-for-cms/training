@@ -47,5 +47,15 @@
                 </div>
             </a>
         </li>
+        <li class="">
+            <a class="has-arrow" href="/position/index" aria-expanded="false">
+                <div class="nav_icon_small">
+                    <img src="img/menu-icon/dashboard.svg" alt="">
+                </div>
+                <div class="nav_title">
+                    <span>Position</span>
+                </div>
+            </a>
+        </li>
     </ul>
 </nav>
