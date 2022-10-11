@@ -11,6 +11,7 @@
     <link href="/css/back-css/bootstrap1.min.css" rel="stylesheet">
 
 </head>
+
 <body class="crm_body_bg">
     <?php require_once 'sidebar.php' ?>  
     <section class="main_content dashboard_part large_header_bg">

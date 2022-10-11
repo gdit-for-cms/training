@@ -4,7 +4,7 @@ function showError($errorName)
 {
     $errorArray = [
         "login" => 'Email or Password is incorrect',
-        "noWhitespace" => '"foo # bar" must not contain whitespace',
+        "create" => 'Create failed',
         "length" => null,
         "undefindError" => "Error undefind"
     ];

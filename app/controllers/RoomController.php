@@ -61,7 +61,7 @@ class RoomController extends Controller
     {   
         $id = $request->getGet()['id'];
 
-        $room = new Room();
+        $room = new User();
         $this->data['room'] = $room->table('room')->find($id, 'id, name, description');
 
         $this->data['content'] = 'room/edit';
