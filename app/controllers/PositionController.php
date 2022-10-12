@@ -7,15 +7,17 @@ use Core\View;
 use App\models\User;
 use App\models\Position;
 use Core\Http\Request;
+use Core\Http\ResponseTrait;
 
 class PositionController extends Controller
-{
+{   
+    use ResponseTrait;
     public $data = [];
 
     public function indexAction()
     {   
         $this->data['allUsers'] = User::getAllRelation();
-        $this->data['positions'] = Position::allPosition();
+        $this->data['positions'] = Position::all();
         $this->data['content'] = 'position/index';
     }
 
@@ -28,11 +30,10 @@ class PositionController extends Controller
     {
         $post = $request->getPost();
 
-        $name = $post['name'];
-        $description = $post['description'];
+        $name = $post->get('name');
+        $description = $post->get('description');
 
-        $position = new Position();
-        $query = $position->table('position')->where('name', '=', $name)->get();
+        $query = Position::getBy('name', '=', $name);
         $numRows = count($query);
 
         if ($numRows == 1) {
@@ -40,8 +41,14 @@ class PositionController extends Controller
             $this->data['content'] = '/position/new';
             View::render('admin/back-layouts/master.php', $this->data);
         } else {
-            $position->insert(['name' => $name,
-                               'description' => $description]);
+            try {
+                Position::create(['name' => $name,
+                                'description' => $description]);
+                return $this->successResponse();
+            } catch (\Throwable $th) {
+                return $this->errorResponse($th->getMessage());
+            };
+
             header('Location: /admin/index');
             exit;
         }
@@ -50,26 +57,28 @@ class PositionController extends Controller
 
     public function editAction(Request $request)
     {   
-        $id = $request->getGet()['id'];
+        $id = $request->getGet()->get('id');
 
-        $room = new User();
-        $this->data['room'] = $room->table('room')->find($id, 'id, name, description');
-
-        $this->data['content'] = 'room/edit';
+        $this->data['position'] = Position::getById($id, 'id, name, description');
+        $this->data['content'] = 'position/edit';
     }
 
     public function updateAction(Request $request)
     {
         $get = $request->getGet();
 
-        $id = $get['id'];
-        $name = $get['name'];
-        $description = $get['description'];
+        $id = $get->get('id');
+        $name = $get->get('name');
+        $description = $get->get('description');
 
-        $room = new Position();
-        $room->update(['name' => $name,
-                       'description' => $description]
-                        , "id = $id");
+        try {
+            Position::update(['name' => $name,
+                          'description' => $description]
+                          , "id = $id");
+            return $this->successResponse();
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        };
 
         header('Location: /admin/index');
         exit;
@@ -77,10 +86,14 @@ class PositionController extends Controller
 
     public function deleteAction(Request $request)
     {
-        $id = $request->getGet()['id'];
+        $id = $request->getGet()->get('id');
 
-        $room = new Position();
-        $room->destroy("id = $id");
+        try {
+            Position::destroy("id = $id");
+            return $this->successResponse();
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        };
         
         header('Location: /admin/index');
         exit;

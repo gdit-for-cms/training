@@ -10,26 +10,28 @@ use App\models\Role;
 use App\models\Room;
 use Core\Http\Request;
 use Core\Http\Response;
+use Core\Http\ResponseTrait;
 
 class UserController extends Controller
-{
+{   
+    use ResponseTrait;
     public array $data;
 
     public function indexAction()
     {   
         $this->data['allUsers'] = User::getAllRelation();
 
-        $this->data['allRooms'] =  Room::allRoom();
-        $this->data['allRoles'] =  Role::allRole();
-        $this->data['allPositions'] =  Position::allPosition();
+        $this->data['allRooms'] =  Room::all();
+        $this->data['allRoles'] =  Role::all();
+        $this->data['allPositions'] =  Position::all();
 
         $this->data['content'] = 'user/index';
     }
 
     public function newAction()
     {   
-        $this->data['allRole'] = Role::allRole();
-        $this->data['allRoom'] = Room::allRoom();
+        $this->data['allRole'] = Role::all();
+        $this->data['allRoom'] = Room::all();
 
         $this->data['content'] = 'user/new';
     }
@@ -47,21 +49,26 @@ class UserController extends Controller
         if ($name == '' || $role_id == '' || $email == '') {
             $this->data['error'] = showError('create');
             $this->data['content'] = 'user/new';
+
             view::render('admin/back-layouts/master.php', $this->data);
-            // exit;
         }
         if ($email != '') {
-            $query = User::getDataBy('email', '=', $email);
+            $query = User::getBy('email', '=', $email);
             $numRows = count($query);
             if ($numRows == 1) {
                 header('Location: /user/new');
                 exit;
             } else {
-                User::insertData(['name' => $name, 
+                try {
+                    User::create(['name' => $name, 
                                'email' => $email, 
                                'password' => $password, 
                                'role_id' => $role_id, 
                                'room_id' => $room_id]);
+                    return $this->successResponse();
+                } catch (\Throwable $th) {
+                    return $this->errorResponse($th->getMessage());
+                };
 
                 header('Location: /admin/index');
                 exit;
@@ -71,13 +78,14 @@ class UserController extends Controller
 
     public function edit(Request $request)
     {      
-        $id = $request->getGet()->get('id');
+        $id = $request->getGet()->all();
+        var_dump($request);
+        die;
+        $this->data['allRoles'] = Role::all();
+        $this->data['allRooms'] = Room::all();
+        $this->data['allPositions'] = Position::all();
         
-        $this->data['allRoles'] = Role::allRole();
-        $this->data['allRooms'] = Room::allRoom();
-        $this->data['allPositions'] = Position::allPosition();
-        
-        $this->data['user'] = User::getDataById($id, 'id, name, email, role_id, room_id, position_id');
+        $this->data['user'] = User::getById($id, 'id, name, email, role_id, room_id, position_id');
 
         $this->data['content'] = 'user/edit';
     }
@@ -95,13 +103,18 @@ class UserController extends Controller
         $position_id = $get->get('position');
 
         if ($email != '') {
-            User::updateData(['name' => $name,
+            try {
+                User::update(['name' => $name,
                               'password' => $password,
                               'email' => $email,
                               'role_id' => $role_id,
                               'room_id' => $room_id,
                               'position_id' => $position_id]
                               , "id = $id");
+                return $this->successResponse();
+            } catch (\Throwable $th) {
+                return $this->errorResponse($th->getMessage());
+            };
                            
             header('Location: /user/index');
             exit;
@@ -112,7 +125,7 @@ class UserController extends Controller
     {
         $id = $request->getGet()->get('id');
 
-        User::destroyData("id = $id");
+        User::destroy("id = $id");
 
         header('Location: /user/index');
         exit;

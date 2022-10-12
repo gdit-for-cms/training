@@ -34,8 +34,8 @@ class AuthController extends Controller
     {
         $post = $request->getPost();
 
-        $email = $post['email'];
-        $password = $post['password'];
+        $email = $post->get('email');
+        $password = $post->get('password');
 
         $user = new User();
         $inputUser = $user->table('user')
