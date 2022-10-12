@@ -86,7 +86,7 @@ class Request
      */
     public function getPost()
     {
-        $data = $this->getProtectedValue($this->post, 'container');
+        $data = $this->post;
 
         return $data;
     }
@@ -112,7 +112,7 @@ class Request
      */
     public function getGet()
     {
-        $data = $this->getProtectedValue($this->get, 'container');
+        $data = $this->get;
         
         return $data;
 
@@ -268,11 +268,6 @@ class Request
      *
      * @return array
      */
-    public function getProtectedValue($obj, $name) {
-        $array = (array)$obj;
-        $prefix = chr(0).'*'.chr(0);
-        return $array[$prefix.$name];
-    }
 
 }
 

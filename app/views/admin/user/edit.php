@@ -32,7 +32,7 @@
             <div class="col-9">
                 <select id="role" name="role" class="custom-select">
                     <!-- <option disabled selected value="0"> --select an role-- </option> -->
-                    <?php foreach ($allRole as $role) { ?>
+                    <?php foreach ($allRoles as $role) { ?>
                         <option <? if ($user['role_id'] == $role['id']) {
                                     echo 'Selected';
                                 } else {
@@ -47,7 +47,7 @@
             <div class="col-9">
                 <select id="room" name="room" class="custom-select">
                     <!-- <option disabled selected value="0"> --select an room-- </option>  -->
-                    <?php foreach ($allRoom as $room) { ?>
+                    <?php foreach ($allRooms as $room) { ?>
                         <option <? if ($user['room_id'] == $room['id']) {
                                     echo 'Selected';
                                 } else {
@@ -63,7 +63,7 @@
             <div class="col-9">
                 <select id="position" name="position" class="custom-select">
                     <!-- <option disabled selected value="0"> --select an room-- </option>  -->
-                    <?php foreach ($allPosition as $position) { ?>
+                    <?php foreach ($allPositions as $position) { ?>
                         <option <? if ($user['position_id'] == $position['id']) {
                                     echo 'Selected';
                                 } else {

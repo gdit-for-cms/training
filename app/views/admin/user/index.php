@@ -24,7 +24,7 @@
                       Role
                       <select class="role_select w-26 text-medium border " aria-label="Default select example">
                         <option value="0" selected>All role</option>
-                        <?php foreach ($roles as $role) { ?>
+                        <?php foreach ($allRoles as $role) { ?>
                           <option value="<?= $role['name'] ?>"><?= $role['name'] ?></option>
                         <?php } ?>
                       </select>
@@ -33,7 +33,7 @@
                       Room
                       <select class="room_select w-26 text-medium border " aria-label="Default select example">
                         <option value="0" selected>All room</option>
-                        <?php foreach ($rooms as $room) { ?>
+                        <?php foreach ($allRooms as $room) { ?>
                           <option value="<?= $room['name'] ?>"><?= $room['name'] ?></option>
                         <?php } ?>
                       </select>
@@ -42,7 +42,7 @@
                       Position
                       <select class="position_select w-26 text-medium border " aria-label="Default select example">
                         <option value="0" selected>All position</option>
-                        <?php foreach ($positions as $position) { ?>
+                        <?php foreach ($allPositions as $position) { ?>
                           <option value="<?= $position['name'] ?>"><?= $position['name'] ?></option>
                         <?php } ?>
                       </select>

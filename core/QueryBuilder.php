@@ -158,7 +158,7 @@ Trait QueryBuilder
         $this->selectColumn = $column;
         $sqlQuery = 
         "SELECT " . $this->selectColumn . 
-        " FROM " . $this->tableName . " " .
+        " FROM " . $this->_table . " " .
         $this->innerJoin . " " . 
         $this->where . " " . 
         $this->orderBy . " " . 
@@ -183,7 +183,7 @@ Trait QueryBuilder
     public function all()
     {
         $db = static::getDB();
-        $sqlQuery = "SELECT * FROM $this->tableName";
+        $sqlQuery = "SELECT * FROM $this->_table";
         $query = $db->query($sqlQuery);
 
         // Reset field
@@ -217,7 +217,7 @@ Trait QueryBuilder
     {
         $db = static::getDB();
         $this->selectColumn = $column;
-        $sqlQuery = "SELECT " . $this->selectColumn . " FROM " . $this->tableName . " " . $this->where;
+        $sqlQuery = "SELECT " . $this->selectColumn . " FROM " . $this->_table . " " . $this->where;
         $result = $db->query($sqlQuery);
 
         // Reset field

@@ -12,15 +12,10 @@ class PositionController extends Controller
 {
     public $data = [];
 
-    protected function after()
-    {
-        View::render('admin/back-layouts/master.php', $this->data);
-    }
-
     public function indexAction()
     {   
-        $this->data['allUsers'] = User::getAll();
-        $this->data['positions'] = Position::All();
+        $this->data['allUsers'] = User::getAllRelation();
+        $this->data['positions'] = Position::allPosition();
         $this->data['content'] = 'position/index';
     }
 

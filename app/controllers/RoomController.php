@@ -14,7 +14,7 @@ class RoomController extends Controller
 
     public function indexAction()
     {   
-        $this->data['allUsers'] = User::getAll();
+        $this->data['allUsers'] = User::getAllRelation();
         $this->data['rooms'] = Room::All();
         $this->data['content'] = 'room/index';
     }

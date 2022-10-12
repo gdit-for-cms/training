@@ -22,7 +22,7 @@ class User extends Model
      *
      * @return array
      */
-    public static function getAll()
+    public static function getAllRelation()
     {
         $db = static::getDB();
         $stmt = $db->query('SELECT u.id, u.name, u.email, u.room_id, u.position_id, role.name role_name, room.name room_name, position.name position_name
@@ -33,11 +33,28 @@ class User extends Model
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public static function getDataFollowRole($role_id)
-    {
-        $db = static::getDB();
-        $stmt = $db->query("SELECT * FROM user WHERE role_id = $role_id");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    public static function getDataBy($column, $operator, $value)
+    {   
+        return (new self)->where($column, $operator, $value)->get();
     }
 
+    public static function getDataById($id, $column)
+    {   
+        return (new self)->find($id, $column);
+    }
+
+    public static function insertData($data)
+    {
+        return (new self)->insert($data);
+    }
+
+    public static function updateData($data, $condition)
+    {
+        return (new self)->update($data, $condition);
+    }
+
+    public static function destroyData($condition)
+    {
+        return (new self)->destroy($condition);
+    }
 }

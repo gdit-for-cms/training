@@ -22,12 +22,36 @@ class Position extends Model
      * @return array
      */
 
-    public static function All()
+    public static function allPosition()
     {
         $db = static::getDB();
         $stmt = $db->query('SELECT * FROM `position` ');
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public static function getDataBy($column, $operator, $value)
+    {   
+        return (new self)->where($column, $operator, $value)->get();
+    }
+
+    public static function getDataById($id, $column)
+    {   
+        return (new self)->find($id, $column);
+    }
+
+    public static function insertData($data)
+    {
+        return (new self)->insert($data);
+    }
+
+    public static function updateData($data, $condition)
+    {
+        return (new self)->update($data, $condition);
+    }
+
+    public static function destroyData($condition)
+    {
+        return (new self)->destroy($condition);
+    }
 
 }

@@ -22,12 +22,33 @@ class Room extends Model
      * @return array
      */
 
-    public static function All()
+    public static function allRoom()
     {
-        $db = static::getDB();
-        $stmt = $db->query('SELECT * FROM `room` ');
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return (new self)->all();
     }
 
+    public static function insertData($data)
+    {
+        return (new self)->insert($data);
+    }
 
+    public static function getDataBy($column, $operator, $value)
+    {   
+        return (new self)->where($column, $operator, $value)->get();
+    }
+
+    public static function getDataById($id, $column)
+    {   
+        return (new self)->find($id, $column);
+    }
+
+    public static function updateData($data, $condition)
+    {
+        return (new self)->update($data, $condition);
+    }
+
+    public static function destroyData($condition)
+    {
+        return (new self)->destroy($condition);
+    }
 }
