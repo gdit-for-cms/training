@@ -42,4 +42,12 @@ class Topic extends Model
             'name' => $name, 
         ]);
     }
+
+    public static function delete($name)
+    {
+        $model = new Topic();
+        return self::insert([
+            'name' => $name, 
+        ]);
+    }
 }

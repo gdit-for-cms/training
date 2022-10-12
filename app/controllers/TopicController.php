@@ -6,18 +6,13 @@ use App\models\Topic;
 use Core\Controller;
 use Core\View;
 use Core\Http\Request;
+use Core\Http\Response;
 use Core\Http\ResponseTrait;
 
 class TopicController extends Controller
 {
     use ResponseTrait;
-    
     public array $data;
-
-    protected function after() 
-    {
-        View::render('admin/back-layouts/master.php', $this->data);
-    }
 
     public function listAction()
     {
@@ -35,16 +30,27 @@ class TopicController extends Controller
         try {
             $name = $request->getPost()['name'];
             Topic::create($name);
-            echo $this->successResponse();
+            return $this->successResponse();
         } catch (\Throwable $th) {
-            echo $this->errorResponse($th->getMessage());
+            return $this->errorResponse($th->getMessage());
         }
+    }
+
+    public function delete(Request $request)
+    {
+        // try {
+        //     $id = $request->getGet()->get('id');
+        //     // Topic::de($name);
+        //     echo $this->successResponse();
+        // } catch (\Throwable $th) {
+        //     echo $this->errorResponse($th->getMessage());
+        // }
     }
 
     public function apiCheckName(Request $request)
     {
         $name = $request->getGet()['name'];
         $check = Topic::checkExist($name);
-        echo $this->successResponse((int)$check['mycheck']);
+        return $this->successResponse((int)$check['mycheck']);
     }
 }

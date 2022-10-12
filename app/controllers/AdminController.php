@@ -19,6 +19,11 @@ class AdminController extends Controller
         $this->data['content'] = 'default/dashboard';
     }
 
+    public function test()
+    {   
+        View::render('admin/diff-file/test.php');
+    }
+
     public function diffAction()
     {
         $this->data['content'] = 'diff-file/diff';
@@ -57,19 +62,20 @@ class AdminController extends Controller
                 $variableGLOBALS1 = [];
                 $variableGLOBALS2 = [];
                 
-                list($variableInFile1, $variableGLOBALS1) = $this->ExecuteImportFile($before, $fh1, $variableInFile1, $variableGLOBALS1);
-                list($variableInFile2, $variableGLOBALS2) = $this->ExecuteImportFile($after, $fh2, $variableInFile2, $variableGLOBALS2);
+                list($variableInFile1, $variableGLOBALS1) = $this->executeImportFile($before, $fh1, $variableInFile1, $variableGLOBALS1);
+                list($variableInFile2, $variableGLOBALS2) = $this->executeImportFile($after, $fh2, $variableInFile2, $variableGLOBALS2);
                 
                 fclose($fh1);
-                fclose($fh2);   
+                fclose($fh2);
                 
-                // Get the array of variables in file1 
+                // call_user_func
+                // Get the array of variables in file1
                 require_once '../storage/inc/file1.inc';
                 $tempGlobal1 = [];
                 $globalsVarName1 = [];
                 list($globalsVarName1, $tempGlobal1) = setTempGlobal($variableGLOBALS1, $globalsVarName1, $tempGlobal1);
 
-                // Get the array of variables in file2 
+                // Get the array of variables in file2
                 require_once '../storage/inc/file2.inc';
                 $tempGlobal2 = [];
                 $globalsVarName2 = [];
@@ -93,9 +99,9 @@ class AdminController extends Controller
         }
     }
 
-    public function ExecuteImportFile($fileImport, $fileInit, $variableInFile, $variableGLOBALS) {
+    public function executeImportFile($fileImport, $fileInit, $variableInFile, $variableGLOBALS) {
         while (($line  = fgets($fileImport))) {
-            if (preg_match('/define\("(.+?)\", \"(.+?)\"/i', $line, $match)) {
+            if (preg_match('/define\("(.+?)\", \"(.+?)\)/i', $line, $match)) {
                 $i = 1 ;
                 if (isset($variableInFile[$match[1]])) {
                     $variableInFile[$match[1].'['.$i++.']'] = $match[2];
@@ -110,7 +116,7 @@ class AdminController extends Controller
 
             // Write data to init file
             if (!preg_match('/define\(/i', $line)) {
-                fwrite($fileInit, $line); 
+                fwrite($fileInit, $line);
             };
         }
 

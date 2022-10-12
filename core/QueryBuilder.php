@@ -117,10 +117,8 @@ Trait QueryBuilder
     {
         $arrColumns = array_filter(explode(',', $column));
         if(!empty($arrColumns) && count($arrColumns) >= 2 ){
-
             $this->orderBy = "ORDER BY". implode(', ', $arrColumns);
         }else {
-
             $this->orderBy = "ORDER BY" . $column . " " . $direction;
         }
         return $this;
@@ -158,7 +156,7 @@ Trait QueryBuilder
         $this->selectColumn = $column;
         $sqlQuery = 
         "SELECT " . $this->selectColumn . 
-        " FROM " . $this->tableName . " " .
+        " FROM " . $this->_table . " " .
         $this->innerJoin . " " . 
         $this->where . " " . 
         $this->orderBy . " " . 

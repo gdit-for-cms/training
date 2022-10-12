@@ -20,6 +20,9 @@ class AuthController extends Controller
         $this->data['title'] = 'Login';
     }
 
+    protected function after() {
+    }
+
     public function loginAction()
     {  
         View::render('admin/auth/login.php');

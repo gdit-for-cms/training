@@ -5,6 +5,7 @@ function checkName(objName) {
         data: { name: $(`#add-${objName}-name`).val() },
         dataType: 'json',
         success: function (response) {
+            console.log(response.data);
             if (response.data) {
                 Swal.fire(`${objName} has been exits`);
                 $(`#add-${objName}-name`).val('');
@@ -14,6 +15,7 @@ function checkName(objName) {
         }
     });
 }
+
 $(document).ready(function () {
     $('#topic-name').change(function () {
         $.ajax({
@@ -51,17 +53,19 @@ $(document).ready(function () {
             data: form.serialize(),
             dataType: 'json',
             success: function (response) {
+                console.log(response);
                 Swal.fire({
                     icon: 'success',
                     title: "Successfully",
                     showConfirmButton: false,
                     timer: 1500
                 });
-                setTimeout(() => {
-                    document.location.reload(true);
-                }, "1600");
+                // setTimeout(() => {
+                //     document.location.reload(true);
+                // }, "1600");
             },
             error: function (response) {
+                console.log(response.message);
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -69,6 +73,28 @@ $(document).ready(function () {
                 });
             }
         });
+    });
+
+    $('.delete-btn').click(function(e) {
+        let deleteID = $(this).data('id');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "/topic/delete?id=" + deleteID,
+                    success: function() {
+                        document.location.reload(true);
+                    }
+                });
+            }
+        })
     });
 });
 
