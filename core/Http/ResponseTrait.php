@@ -3,20 +3,28 @@ namespace Core\Http;
 
 trait ResponseTrait
 {
-    public function successResponse($data = [] , $message = '', $status = 200)
+    public function successResponse($data = [], $message = '')
     {
-        return json_encode([
+        $res = new Response;
+        $result = json_encode([
             'success' => true,
             'data' => $data,
             'message' => $message,
-        ] ,$status);
+        ]);
+        $res->setContent($result);
+        return $res->send();
     }
-    public function errorResponse($message = '' , $status = 404)
+
+    public function errorResponse($message = '')
     {
-        return json_encode([
+        $res = new Response;
+        $result = json_encode([
             'success' => false,
             'data' => [],
             'message' => $message,
-        ], $status);
+        ]);
+        $res->setContent($result);
+        $res->setStatus(400);
+        return $res->send();
     }
 }

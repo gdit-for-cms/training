@@ -2,7 +2,7 @@
 
 use Core\Http\Request;
 
-if (! function_exists('checkAdmin')) {
+if (!function_exists('checkAdmin')) {
      function checkAdmin() {
           $request = new Request;
           $admin = $request->getUser();

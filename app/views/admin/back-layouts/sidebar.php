@@ -57,7 +57,6 @@
                 </div>
             </a>
         </li>
-        
         <li class="">
             <a class="has-arrow" href="/question/list" aria-expanded="false">
                 <div class="nav_icon_small">
@@ -65,6 +64,16 @@
                 </div>
                 <div class="nav_title">
                     <span>Question</span>
+                </div>
+            </a>
+        </li>
+        <li class="">
+            <a class="has-arrow" href="/topic/list" aria-expanded="false">
+                <div class="nav_icon_small">
+                    <img src="" alt="">
+                </div>
+                <div class="nav_title">
+                    <span>Topic</span>
                 </div>
             </a>
         </li>

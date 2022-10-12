@@ -13,15 +13,17 @@ class HomeController extends Controller
     use ResponseTrait;
     public array $data;
 
-    protected function before() {
-        if (!checkUser()) {
+    protected function before() 
+    {
+        if (!checkAdmin()) {
             header('Location: /default/index');
             exit;
         }
         $this->data['title'] = 'Homepage';
     }
 
-    protected function after() {
+    protected function after() 
+    {
         View::render('homepage/front-layouts/master.php',$this->data);
     }
 
@@ -66,5 +68,4 @@ class HomeController extends Controller
         header('location: /home/homepage');
         exit;
     }
-
 }

@@ -12,7 +12,8 @@ class AuthController extends Controller
 {   
     public array $data;
 
-    protected function before() {
+    protected function before() 
+    {
         if (checkAdmin()) {
             header('Location: /admin/index');
             exit;
@@ -20,7 +21,8 @@ class AuthController extends Controller
         $this->data['title'] = 'Login';
     }
 
-    protected function after() {   
+    protected function after()
+    {
     }
 
     public function loginAction()

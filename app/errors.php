@@ -13,7 +13,4 @@ function showError($errorName)
     } else {
         return  $errorArray['undefindError'];
     }
-
 }
-
-?>
