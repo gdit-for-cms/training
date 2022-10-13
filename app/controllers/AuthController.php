@@ -5,7 +5,6 @@ namespace App\Controllers;
 use Core\Controller;
 use Core\View;
 use App\models\User;
-use Core\Http\Session;
 use Core\Http\Request;
 
 class AuthController extends Controller 
@@ -46,7 +45,7 @@ class AuthController extends Controller
         if (!$inputUser) {
             $this->data['error'] = showError('login');
 
-            View::render('default/index.php', $this->data);
+            View::render('admin/auth/login.php', $this->data);
             exit;
         }
 
@@ -65,13 +64,15 @@ class AuthController extends Controller
             exit;
         } else {
             $this->data['error'] = showError('login');
-            View::render('default/index.php', $this->data);
+            View::render('admin/auth/login.php', $this->data);
         }
     }
 
     public function logout(Request $request)
     {   
         $request->deleteUser();
+        
         header('Location: /auth/login');
+        exit;
     }
 }

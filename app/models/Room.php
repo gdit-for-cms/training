@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Core\Model;
-use PDO;
 use Core\QueryBuilder;
 
 /**
@@ -14,6 +13,7 @@ use Core\QueryBuilder;
 class Room extends Model
 {
     use QueryBuilder;
+
     private $_table = 'room';
 
     /**
@@ -22,9 +22,9 @@ class Room extends Model
      * @return array
      */
 
-    public static function all()
-    {
-        return (new self)->all();
+    public static function getAll()
+    {   
+        return (new self)->latest()->get();
     }
 
     public static function create($data)
@@ -42,12 +42,12 @@ class Room extends Model
         return (new self)->find($id, $column);
     }
 
-    public static function update($data, $condition)
+    public static function updateOne($data, $condition)
     {
         return (new self)->update($data, $condition);
     }
 
-    public static function destroy($condition)
+    public static function destroyOne($condition)
     {
         return (new self)->destroy($condition);
     }

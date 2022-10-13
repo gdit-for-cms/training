@@ -1,4 +1,5 @@
-
+const $ = document.querySelector.bind(document)
+const $$ = document.querySelectorAll.bind(document)
 
 const PAGE_STORAGE_KEY = 'PAGE ADMIN'
 let config = JSON.parse(localStorage.getItem(PAGE_STORAGE_KEY)) || {}
@@ -15,6 +16,7 @@ const modalRoomEle = $('#modal_room')
 const addMemberBtn = $$('.add_member_btn')
 const closeModalBtn = $('.close_modal_btn')
 const roomNameAddEles = $$('.room_name_add')
+const selectOptionEles = $$('.select_option') 
 
 
 function start() {
@@ -22,9 +24,7 @@ function start() {
     changeNav();
     sort(selectRoomEles, '.room_name', 'roomSort');
     sort(selectRoleEles, '.role_name', 'roleSort');
-    sort(selectPositionEles, '.position_name', 'positionSort');
-    // showAndCloseModal();
-    
+    sort(selectPositionEles, '.position_name', 'positionSort');    
 }
 
 start()
@@ -75,8 +75,12 @@ function loadNav(params) {
 }
 
 function sort(selectOption, itemName, sortName) {
-    // console.log(selectRoomEles.value);
     selectOption.addEventListener('change', () => {
+        selectOptionEles.forEach(ele => {
+            if (selectOption != ele) {
+                ele.value = 0
+            }
+        })
         setPage(sortName, selectOption.value)
         if (selectOption.value == 0) {
             userItemsEles.forEach(ele => {

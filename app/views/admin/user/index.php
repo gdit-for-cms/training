@@ -22,7 +22,7 @@
                     <th scope="col">Email</th>
                     <th scope="col">
                       Role
-                      <select class="role_select w-26 text-medium border " aria-label="Default select example">
+                      <select class="role_select select_option w-26 text-medium border " aria-label="Default select example">
                         <option value="0" selected>All role</option>
                         <?php foreach ($allRoles as $role) { ?>
                           <option value="<?= $role['name'] ?>"><?= $role['name'] ?></option>
@@ -31,7 +31,7 @@
                     </th>
                     <th scope="col">
                       Room
-                      <select class="room_select w-26 text-medium border " aria-label="Default select example">
+                      <select class="room_select select_option w-26 text-medium border " aria-label="Default select example">
                         <option value="0" selected>All room</option>
                         <?php foreach ($allRooms as $room) { ?>
                           <option value="<?= $room['name'] ?>"><?= $room['name'] ?></option>
@@ -40,7 +40,7 @@
                     </th>
                     <th scope="col">
                       Position
-                      <select class="position_select w-26 text-medium border " aria-label="Default select example">
+                      <select class="position_select select_option w-26 text-medium border " aria-label="Default select example">
                         <option value="0" selected>All position</option>
                         <?php foreach ($allPositions as $position) { ?>
                           <option value="<?= $position['name'] ?>"><?= $position['name'] ?></option>
@@ -73,3 +73,4 @@
       </div>
     </div>
   </div>
+  <script src="/js/back-js/dashboard.js"></script>

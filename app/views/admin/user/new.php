@@ -5,7 +5,7 @@
         </div>
     <?php } ?>
     <h1 class="text-4xl font-bold">NEW USER</h1>
-    <form class="w-1/2" action="/user/create" method="POST">
+    <form id="form_new_user" class="w-1/2" action="create" method="POST">
         <div class="form-group row">
             <label for="name" class="col-3 col-form-label">Name*</label>
             <div class="col-9">
@@ -16,7 +16,7 @@
         <div class="form-group row">
             <label for="email" class="col-3 col-form-label">Email*</label>
             <div class="col-9">
-                <input id="email" name="email" type="text" value="" class="form-control">
+                <input id="email" name="email" type="email" value="" class="form-control">
             </div>
         </div>
         <div class="form-group row">
@@ -55,9 +55,54 @@
             </div>
         </div>
         <div class="form-group row">
+            <label for="position" class="col-3 col-form-label">Position</label>
+            <div class="col-9">
+                <select id="position" name="position" class="custom-select">
+                    <!-- <option disabled selected value="0"> --select an position-- </option>  -->
+                    <?php foreach ($allPosition as $position) { ?>
+                        <option value="<?= $position['id'] ?>"><?= $position['name'] ?></option>
+                    <?php } ?>
+
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
             <div class="offset-3 col-9">
-                <button name="submit" type="submit" class="btn btn-primary">Submit</button>
+                <button id="submit" name="submit" type="submit" disabled class="btn btn-primary">Submit</button>
             </div>
         </div>
     </form>
 </div>
+<script>
+    // const $ = document.querySelector.bind(document)
+    // const $$ = document.querySelectorAll.bind(document)
+
+    const submitBtn = document.querySelector('#submit')
+    const nameInput = document.querySelector('#name')
+    const emailInput = document.querySelector('#email')
+    const passwordInput = document.querySelector('#password')
+    const confirmPasswordInput = document.querySelector('#confirmPassword')
+
+    function start() {
+        checkChangeInput(nameInput)
+        checkChangeInput(emailInput)
+        checkChangeInput(passwordInput)
+        checkChangeInput(confirmPasswordInput)
+    }
+    start()
+
+    function validate() {
+        if (nameInput.value.length <= 5 || emailInput.value == '' || passwordInput.value == '' || passwordInput.value != confirmPasswordInput.value) {
+            submitBtn.disabled = true;
+        } else {
+            submitBtn.disabled = false;
+        }
+    }
+
+    function checkChangeInput(input) {
+        input.addEventListener('keyup', () => {
+            validate()
+        })
+    }
+
+</script>

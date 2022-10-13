@@ -14,6 +14,7 @@ use Core\QueryBuilder;
 class Role extends Model
 {
     use QueryBuilder;
+    
     private $_table = 'role';
 
     /**
@@ -21,7 +22,7 @@ class Role extends Model
      *
      * @return array
      */
-    public static function all()
+    public static function getAll()
     {
         return (new self)->all();
     }
@@ -39,15 +40,5 @@ class Role extends Model
     public static function getById($id, $column)
     {   
         return (new self)->find($id, $column);
-    }
-
-    public static function update($data, $condition)
-    {
-        return (new self)->update($data, $condition);
-    }
-
-    public static function destroy($condition)
-    {
-        return (new self)->destroy($condition);
     }
 }
