@@ -7,15 +7,17 @@ use Core\View;
 use App\models\User;
 use App\models\Room;
 use Core\Http\Request;
+use Core\Http\ResponseTrait;
 
 class RoomController extends Controller
-{
+{   
+    use ResponseTrait;
     public array $data;
 
     public function indexAction()
     {   
         $this->data['allUsers'] = User::getAllRelation();
-        $this->data['rooms'] = Room::All();
+        $this->data['rooms'] = Room::all();
         $this->data['content'] = 'room/index';
     }
 
@@ -28,24 +30,26 @@ class RoomController extends Controller
     {
         $post = $request->getPost();
 
-        $name = $post['name'];
-        $description = $post['description'];
+        $name = $post->get('name');
+        $description = $post->get('description');
 
-        $room = new Room();
-        $room->insert(['name' => $name,
+        try {
+            Room::create(['name' => $name,
                         'description' => $description]);
-        
+            return $this->successResponse();
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        };
+    
         header('Location: /admin/index');
         exit;
     }
 
     public function editAction(Request $request)
     {   
-        $id = $request->getGet()['id'];
+        $id = $request->getGet()->get('id');
 
-        $room = new User();
-        $this->data['room'] = $room->table('room')->find($id, 'id, name, description');
-
+        $this->data['room'] = Room::getById($id, 'id, name, description');
         $this->data['content'] = 'room/edit';
     }
 
@@ -53,14 +57,18 @@ class RoomController extends Controller
     {
         $get = $request->getGet();
 
-        $id = $get['id'];
-        $name = $get['name'];
-        $description = $get['description'];
-
-        $room = new Room();
-        $room->update(['name' => $name,
-                       'description' => $description]
-                        , "id = $id");
+        $id = $get->get('id');
+        $name = $get->get('name');
+        $description = $get->get('description');
+        
+        try {
+            Room::update(['name' => $name,
+                          'description' => $description]
+                          , "id = $id");
+            return $this->successResponse();
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        };
 
         header('Location: /admin/index');
         exit;
@@ -68,10 +76,14 @@ class RoomController extends Controller
 
     public function deleteAction(Request $request)
     {
-        $id = $request->getGet()['id'];
+        $id = $request->getGet()->get('id');
 
-        $room = new Room();
-        $room->destroy("id = $id");
+        try {
+            Room::destroy("id = $id");
+            return $this->successResponse();
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        };
         
         header('Location: /admin/index');
         exit;

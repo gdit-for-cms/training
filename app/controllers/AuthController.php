@@ -5,7 +5,6 @@ namespace App\Controllers;
 use Core\Controller;
 use Core\View;
 use App\models\User;
-use Core\Http\Session;
 use Core\Http\Request;
 
 class AuthController extends Controller 
@@ -33,8 +32,9 @@ class AuthController extends Controller
     public function loginProcessAction(Request $request)
     {
         $post = $request->getPost();
-        $email = $post['email'];
-        $password = $post['password'];
+
+        $email = $post->get('email');
+        $password = $post->get('password');
 
         $user = new User();
         $inputUser = $user->table('user')

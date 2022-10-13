@@ -22,32 +22,32 @@ class Room extends Model
      * @return array
      */
 
-    public static function allRoom()
+    public static function all()
     {
         return (new self)->all();
     }
 
-    public static function insertData($data)
+    public static function create($data)
     {
         return (new self)->insert($data);
     }
 
-    public static function getDataBy($column, $operator, $value)
+    public static function getBy($column, $operator, $value)
     {   
         return (new self)->where($column, $operator, $value)->get();
     }
 
-    public static function getDataById($id, $column)
+    public static function getById($id, $column)
     {   
         return (new self)->find($id, $column);
     }
 
-    public static function updateData($data, $condition)
+    public static function update($data, $condition)
     {
         return (new self)->update($data, $condition);
     }
 
-    public static function destroyData($condition)
+    public static function destroy($condition)
     {
         return (new self)->destroy($condition);
     }
