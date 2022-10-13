@@ -1,4 +1,4 @@
-<?php
+n<?php
 
 namespace App\Controllers;
 
@@ -9,7 +9,6 @@ use App\models\User;
 use App\models\Role;
 use App\models\Room;
 use Core\Http\Request;
-use Core\Http\Response;
 
 class UserController extends Controller
 {

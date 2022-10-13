@@ -33,7 +33,6 @@ class AuthController extends Controller
     public function loginProcessAction(Request $request)
     {
         $post = $request->getPost();
-
         $email = $post['email'];
         $password = $post['password'];
 
