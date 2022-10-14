@@ -53,6 +53,7 @@ $(document).ready(function () {
     submitForm('#form_update_room');
     submitForm('#form_new_position');
     submitForm('#form_update_position');
+    submitForm('.add-form');
 
     $('#topic-name').change(function () {
         $.ajax({
@@ -66,52 +67,19 @@ $(document).ready(function () {
         });
     });
     
-    $('.edit-btn').click(function (e) {
-        let id = $(this).data('id');
+    $('.edit-topic-btn').click(function(e) {
         let name = $(this).data('name');
+        console.log(name);
         $('.box-lightbox').addClass('open');
+        $('#name').val(name);
     });
-
-    $('.js-lightbox-close').click(function (e) {
+    $('.js-lightbox-close').click(function(e) {
         $('.box-lightbox').removeClass('open');
     });
 
     $('#add-topic-name').change(function () {
         checkName('topic');
     });
-    submit('add-form');
-    // $('.add-form').submit(function (e) {
-    //     e.preventDefault();
-    //     var form = $(this);
-    //     var actionUrl = form.attr('action');
-    //     $.ajax({
-    //         type: "POST",
-    //         url: actionUrl,
-    //         data: form.serialize(),
-    //         dataType: 'json',
-    //         success: function (response) {
-    //             console.log(response);
-    //             Swal.fire({
-    //                 icon: 'success',
-    //                 title: "Successfully",
-    //                 showConfirmButton: false,
-    //                 timer: 1500
-    //             });
-    //             setTimeout(() => {
-    //                 document.location.reload(true);
-    //             }, "1600");
-    //         },
-    //         error: function (response) {
-    //             console.log(response.message);
-    //             Swal.fire({
-    //                 icon: 'error',
-    //                 title: 'Oops...',
-    //                 text: response.responseJSON.message,
-    //             });
-    //         }
-    //     });
-    // });
-
     $('.delete-btn').click(function(e) {
         let deleteID = $(this).data('id');
         Swal.fire({

@@ -17,9 +17,9 @@
               <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Email</th>
+                    <th scope="col-1">#</th>
+                    <th scope="col-3">Name</th>
+                    <th scope="col-3">Email</th>
                     <th scope="col">
                       Role
                       <select class="role_select select_option w-26 text-medium border " aria-label="Default select example">

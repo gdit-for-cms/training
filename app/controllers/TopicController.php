@@ -32,8 +32,8 @@ class TopicController extends Controller
     public function create(Request $request)
     {
         try {
-          $name = $request->getPost()->get('name');
-            Topic::create($name);
+            $name = $request->getPost()->get('name');
+            Topic::create(['name' => $name]);
             return $this->successResponse();
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
@@ -42,13 +42,13 @@ class TopicController extends Controller
 
     public function delete(Request $request)
     {
-        // try {
-        //     $id = $request->getGet()->get('id');
-        //     // Topic::de($name);
-        //     echo $this->successResponse();
-        // } catch (\Throwable $th) {
-        //     echo $this->errorResponse($th->getMessage());
-        // }
+        try {
+            $id = $request->getGet()->get('id');
+            Topic::delete($id);
+            echo $this->successResponse();
+        } catch (\Throwable $th) {
+            echo $this->errorResponse($th->getMessage());
+        }
     }
 
     public function apiCheckName(Request $request)

@@ -381,6 +381,7 @@ a {
 
 .container-compare {
     display: flex;
+
 }
 .container-compare .left, .container-compare .right {
     flex: 1;

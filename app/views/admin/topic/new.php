@@ -13,7 +13,7 @@
                     <form action="create" class="add-form">
                         <div class="row mb-3">
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" id="add-topic-name" name="name" placeholder="Topic name">
+                                <input type="text" class="form-control" id="add-topic-name" name="name" placeholder="Topic name" maxlength="125">
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary" id="add-topic-submit" disabled>Create</button>

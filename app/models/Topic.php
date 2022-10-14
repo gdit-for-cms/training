@@ -35,19 +35,13 @@ class Topic extends Model
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public static function create($name)
+    public static function create($data)
     {
-        $model = new Topic();
-        return $model->insert([
-            'name' => $name, 
-        ]);
+        return (new self)->insert($data);
     }
 
-    public static function delete($name)
+    public static function delete($id)
     {
-        // $model = new Topic();
-        // return self::insert([
-        //     'name' => $name, 
-        // ]);
+        return (new self)->destroy("id = $id");
     }
 }

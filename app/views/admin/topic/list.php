@@ -28,7 +28,7 @@
                                     <tr>
                                         <th scope="row"><?= $i++ ?></th>
                                         <td><?= $topic['name'] ?></td>
-                                        <td><a href="new" class="btn btn-outline-primary mb-3">Edit</a></td>
+                                        <td><a class="btn btn-outline-primary mb-3 edit-topic-btn" data-name="<?php echo $topic['name'] ?>">Edit</a></td>
                                         <td>
                                             <a class="btn btn-outline-danger mb-3 delete-btn" data-id="<?= $topic['id'] ?>">
                                                 Delete
