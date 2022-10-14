@@ -14,7 +14,7 @@
                             <div class="search_field">
                                 <input type="text" placeholder="Search">
                             </div>
-                            <button type="submit"> <img src="" alt=""> </button>
+                            <button type="submit"></button>
                         </form>
                     </div>
                 </div>

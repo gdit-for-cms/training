@@ -1,42 +1,134 @@
-<div id="room" name="room" class="mt-6 nav_content ">
-    <div class="panel panel-default">
-        <div class="panel-heading mb-10 flex items-center justify-between">
-            ROOM
-            <div>
-                <a href='/room/new' class='w-20 flex justify-center items-center text-white text-lg bg-green-600 hover:bg-green-700 hover:text-white rounded-lg mx-2 p-2'>Create</a>
-            </div>
+<div class="card_box box_shadow position-relative mb_30">
+    <div class="white_box_tittle ">
+        <div class="main-title2 flex items-center justify-between">
+            <h4 class="mb-2 nowrap">Room</h4>
+            <a href='/room/new'><button type="button" class="btn btn-success">Create</button></a>
         </div>
-        <hr>
-        <div class="panel-body">
+    </div>
+    <div class="box_body">
+        <div class="default-according" id="accordion2">
             <?php foreach ($rooms as $room) { ?>
-                <div class="panel panel-default">
-                    <div class="panel-heading flex justify-between items-center">
-                        <span class="room_name_main text-xl font-bold bg-white p-2 rounded-lg"><?= $room['name'] ?></span>
-                        <div class="flex justify-center items-center">
-                            <a href='/room/edit?id=<?= $room['id'] ?>' class='edit_btn flex justify-center items-center text-white bg-blue-600 hover:bg-blue-700 hover:text-white rounded-lg mx-2 p-1'>Edit</a>
-                            <a href='/room/delete?id=<?= $room['id'] ?>' class='delete_btn flex justify-center items-center text-white bg-red-600 hover:bg-red-700 hover:text-white rounded-lg mx-2 p-1'>Delete</a>
-                        </div>
+                <div class="card">
+                    <div class="card-header parpel_bg cursor-pointer" id="headingseven">
+                        <h5 class="mb-0  flex items-center justify-between">
+                            <button class="btn text_white collapsed" data-bs-toggle="collapse" data-bs-target="#collapseseven" aria-expanded="false">
+                                <div class="flex justify-center items-center">
+                                    <span class="icon-show font-bold text-2xl mr-4">+</span>
+                                    <?= $room['name'] ?>
+                                </div>
+                            </button>
+                            <div>
+                                <a href='/room/edit?id=<?= $room['id'] ?>' class="edit-btn"><button type="button" class="btn btn-info text-white">Edit</button></a>
+                                <a href='/room/delete?id=<?= $room['id'] ?>' class="delete-btn"><button type="button" class="btn btn-danger text-white">Delete</button></a>
+                            </div>
+                        </h5>
                     </div>
-                    <div class="panel-body">
-                        <div class="mb-4">
-                            <h3 class="font-bold text-lg">Description:</h3>
-                            <?= $room['description'] ?>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-lg mt-2">Member</h3>
-                            <div class="">
-                                <?php foreach ($allUsers as $user) { ?>
-                                <?php echo ($room['id'] == $user['room_id'] ?  '<span class="flex"> - ' . $user['name'] . '</span>' : '');
-                                } ?>
+                    <div class="table_room collapse" id="collapseseven" aria-labelledby="headingOne" data-parent="#accordion2" style="">
+                        <div class="card-body row justify-content-center">
+                            <div class="col-lg-6">
+                                <div class="card_box box_shadow position-relative mb_30     ">
+                                    <div class="white_box_tittle">
+                                        <div class="main-title2 ">
+                                            <h4 class="mb-2 nowrap ">Description</h4>
+                                        </div>
+                                    </div>
+                                    <div class="box_body">
+                                        <p class="f-w-400 ">
+                                            <?= empty($room['description']) ? 'Add description for room...' : $room['description'] ?>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="white_card box_shadow card_height_100 mb_30">
+                                    <div class="white_box_tittle">
+                                        <div class="main-title2 ">
+                                            <h4 class="mb-2 nowrap ">Member</h4>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive m-b-30 flex items-center justify-center">
+                                        <table class="table table-striped" style="width: 90% !important">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">Name</th>
+                                                    <th scope="col">Position</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                $i = 1;
+                                                foreach ($allUsers as $user) { ?>
+                                                    <?php if ($room['id'] == $user['room_id']) {
+                                                        echo '<tr style="padding:5px 30px 25px">
+                                                                    <th scope="row">' .  $i . '</th>
+                                                                    <td>' . $user['name'] . '</td>
+                                                                    <td>' . $user['position_name'] . '</td>
+                                                                </tr>';
+                                                        $i++;
+                                                    } else {
+                                                        echo '';
+                                                    } ?>
+                                                <?php } ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <!-- <div>
-                            <button class='add_member_btn w-36 mt-4 flex justify-center items-center text-white text-lg bg-green-600 hover:bg-green-700 hover:text-white rounded-lg my-2 p-2'>Add Member</button>
-                        </div> -->
-                        <hr>
                     </div>
                 </div>
             <?php } ?>
         </div>
     </div>
 </div>
+<script>
+    const cardHeaderEles = document.querySelectorAll('.card-header')
+    const editBtn = document.querySelectorAll('.edit-btn')
+    const deleteBtn = document.querySelectorAll('.delete-btn')
+    const bodyTableEles = document.getElementsByTagName('tbody')
+
+    function start() {
+        showTable()
+        preventDefault()
+        hiddenTable()
+    }
+
+    start()
+
+    function showTable() {
+        cardHeaderEles.forEach(ele => {
+            ele.addEventListener('click', () => {
+                ele.parentNode.querySelector('.table_room').classList.toggle('show')
+                if (ele.parentNode.querySelector('.table_room').classList.contains('show')) {
+                    ele.parentNode.querySelector('.icon-show').textContent = '-'
+                } else {
+                    ele.parentNode.querySelector('.icon-show').textContent = '+'
+                }
+            })
+        })
+    }
+
+    function preventDefault() {
+        editBtn.forEach(ele => {
+            ele.addEventListener('click', event => {
+                event.stopPropagation()
+            })
+        })
+        deleteBtn.forEach(ele => {
+            ele.addEventListener('click', event => {
+                event.stopPropagation()
+            })
+        })
+    };
+
+    function hiddenTable() {
+        console.log(bodyTableEles);
+        Array.prototype.slice.call(bodyTableEles).forEach(ele => {
+            if (ele.childNodes.length == 1) {
+                ele.parentNode.classList.add('hidden')
+                ele.parentNode.parentNode.innerHTML = '<div class="box_body"><p class="f-w-400 ">No memeber</p></div>'
+            }
+        })
+    }
+</script>

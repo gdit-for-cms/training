@@ -7,7 +7,7 @@
     <title><?= $title ?></title>
     <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
     <link href="/css/back-css/dashboard.css" rel="stylesheet">
-    <link href="/css/back-css/bootstrap1.min.css" rel="stylesheet">
+    <link href="/css/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link href="/css/back-css/style.css" rel="stylesheet">
 </head>
 <body class="crm_body_bg">

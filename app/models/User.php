@@ -58,4 +58,9 @@ class User extends Model
     {
         return (new self)->destroy($condition);
     }
+
+    public static function filter($role, $room, $position)
+    {
+        return (new self)->where('role_id', '=', $role)->where('room_id', '=', $room)->where('position_id', '=', $position)->get();
+    }
 }
