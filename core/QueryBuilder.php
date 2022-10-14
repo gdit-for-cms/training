@@ -119,7 +119,7 @@ Trait QueryBuilder
         if(!empty($arrColumns) && count($arrColumns) >= 2 ){
             $this->orderBy = "ORDER BY". implode(', ', $arrColumns);
         }else {
-            $this->orderBy = "ORDER BY" . $column . " " . $direction;
+            $this->orderBy = "ORDER BY" . " " . $column . " " . $direction;
         }
         return $this;
     }

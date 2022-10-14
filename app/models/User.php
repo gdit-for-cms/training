@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Core\Model;
 use PDO;
-use Core\Http\Session;
 use Core\QueryBuilder;
 
 /**
@@ -15,6 +14,7 @@ use Core\QueryBuilder;
 class User extends Model
 {
     use QueryBuilder;
+
     private $_table = 'user';
 
     /**
@@ -29,7 +29,8 @@ class User extends Model
                             FROM user AS u
                             JOIN role ON u.role_id = role.id
                             JOIN room ON u.room_id = room.id
-                            JOIN position ON u.position_id = position.id');
+                            JOIN position ON u.position_id = position.id
+                            ORDER BY u.id DESC');
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -48,12 +49,12 @@ class User extends Model
         return (new self)->insert($data);
     }
 
-    public static function update($data, $condition)
+    public static function updateOne($data, $condition)
     {
         return (new self)->update($data, $condition);
     }
 
-    public static function destroy($condition)
+    public static function destroyOne($condition)
     {
         return (new self)->destroy($condition);
     }

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Core\Model;
-use PDO;
 use Core\QueryBuilder;
 
 /**
@@ -14,6 +13,7 @@ use Core\QueryBuilder;
 class Position extends Model
 {
     use QueryBuilder;
+
     private $_table = 'position';
 
     /**
@@ -22,9 +22,9 @@ class Position extends Model
      * @return array
      */
 
-    public static function all()
+    public static function getAll()
     {
-        return (new self)->all();
+        return (new self)->latest()->get();
     }
 
     public static function getBy($column, $operator, $value)
@@ -42,12 +42,12 @@ class Position extends Model
         return (new self)->insert($data);
     }
 
-    public static function update($data, $condition)
+    public static function updateOne($data, $condition)
     {
         return (new self)->update($data, $condition);
     }
 
-    public static function destroy($condition)
+    public static function destroyOne($condition)
     {
         return (new self)->destroy($condition);
     }

@@ -14,9 +14,9 @@ function checkName(objName) {
             }
         }
     });
-}
-function submit(name) {
-    $(`.${name}`).submit(function (e) {
+};
+function submitForm(formId) {
+    $(formId).submit(function (e) {
         e.preventDefault();
         var form = $(this);
         var actionUrl = form.attr('action');
@@ -26,7 +26,6 @@ function submit(name) {
             data: form.serialize(),
             dataType: 'json',
             success: function (response) {
-                console.log(response);
                 Swal.fire({
                     icon: 'success',
                     title: "Successfully",
@@ -38,7 +37,6 @@ function submit(name) {
                 }, "1600");
             },
             error: function (response) {
-                console.log(response.message);
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -47,8 +45,15 @@ function submit(name) {
             }
         });
     });
-}
+};
 $(document).ready(function () {
+    submitForm('#form_new_user');
+    submitForm('#form_update_user');
+    submitForm('#form_new_room');
+    submitForm('#form_update_room');
+    submitForm('#form_new_position');
+    submitForm('#form_update_position');
+
     $('#topic-name').change(function () {
         $.ajax({
             type: "GET",
@@ -129,4 +134,6 @@ $(document).ready(function () {
         })
     });
 });
+
+
 

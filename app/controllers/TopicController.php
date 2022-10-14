@@ -2,17 +2,21 @@
 
 namespace App\Controllers;
 
-use App\models\Topic;
 use Core\Controller;
 use Core\View;
+use App\Models\Topic;
 use Core\Http\Request;
-use Core\Http\Response;
 use Core\Http\ResponseTrait;
 
 class TopicController extends Controller
 {
     use ResponseTrait;
     public array $data;
+
+    protected function after() 
+    {
+        View::render('admin/back-layouts/master.php', $this->data);
+    }
 
     public function listAction()
     {
@@ -28,7 +32,7 @@ class TopicController extends Controller
     public function create(Request $request)
     {
         try {
-            $name = $request->getPost()['name'];
+          $name = $request->getPost()->get('name');
             Topic::create($name);
             return $this->successResponse();
         } catch (\Throwable $th) {
@@ -49,7 +53,7 @@ class TopicController extends Controller
 
     public function apiCheckName(Request $request)
     {
-        $name = $request->getGet()['name'];
+        $name = $request->getGet()->get('name');
         $check = Topic::checkExist($name);
         return $this->successResponse((int)$check['mycheck']);
     }

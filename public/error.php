@@ -11,10 +11,10 @@
 
 <body>
     <main>
-        <?php if ($line) { ?>
+        <?php if ($line != '') { ?>
             <div class="row">
                 <div class="col-md-6 align-self-center">
-                    <h2>Message:<?php echo $message ?></h2>
+                    <h2>Message: <?php echo $message ?></h2>
                     <h3>Thrown in <?php echo $file ?> on line <?php echo $line ?></h3>
                     <a href="javascript:history.back()" class="btn green">Back</a>
                 </div>

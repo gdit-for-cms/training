@@ -4,24 +4,17 @@ namespace App\Controllers;
 
 use Core\Controller;
 use Core\View;
+use App\models\User;
+use App\models\Room;
+use Core\Http\Request;
 
 class AdminController extends Controller
 {
     public array $data;
 
-    protected function after() 
-    {
-        View::render('admin/back-layouts/master.php', $this->data);
-    }
-
     public function indexAction()
     {   
-        $this->data['content'] = 'default/dashboard';
-    }
-
-    public function test()
-    {   
-        View::render('admin/diff-file/test.php');
+        $this->data['content'] = 'admin/dashboard';
     }
 
     public function diffAction()
@@ -35,10 +28,8 @@ class AdminController extends Controller
 
             $fileAccept = array('application/octet-stream', 'application/inc', 'application/php');
 
-            if (is_uploaded_file($_FILES['file1']['tmp_name']) 
-                && is_uploaded_file($_FILES['file2']['tmp_name']) 
-                && in_array($_FILES['file1']['type'], $fileAccept) 
-                && in_array($_FILES['file2']['type'], $fileAccept)) {
+            if (is_uploaded_file($_FILES['file1']['tmp_name']) && is_uploaded_file($_FILES['file2']['tmp_name']) 
+            && in_array($_FILES['file1']['type'], $fileAccept) && in_array($_FILES['file2']['type'], $fileAccept)) {
 
                 $this->data['uploadStatus'] = 'success';
                 
@@ -127,6 +118,7 @@ class AdminController extends Controller
         } 
     }
 
+
     // public function getAry($line, $index, $data){
     //     for ($i = $line; $i < $index; $i++) {
     //         if (!preg_match('/^\)\;/i', $data[$line])) { 
@@ -139,7 +131,7 @@ class AdminController extends Controller
 
     public function executeImportFile($fileImport, $variableInFile, $variableGLOBALS) {
         while (($line  = fgets($fileImport))) {
-            if (preg_match('/define\("(.+?)\", \"(.+?)\)/i', $line, $match)) {
+            if (preg_match('/define\("(.+?)\", \"(.+?)\"/i', $line, $match)) {
                 $i = 1 ;
                 if (isset($variableInFile[$match[1]])) {
                     $variableInFile[$match[1].'['.$i++.']'] = $match[2];

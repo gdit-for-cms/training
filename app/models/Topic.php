@@ -45,9 +45,9 @@ class Topic extends Model
 
     public static function delete($name)
     {
-        $model = new Topic();
-        return self::insert([
-            'name' => $name, 
-        ]);
+        // $model = new Topic();
+        // return self::insert([
+        //     'name' => $name, 
+        // ]);
     }
 }
