@@ -19,7 +19,6 @@
         </div>
     </div>
     
-    <script type="text/javascript" src="/js/header.js"></script>
     <script src="/js/front-js/jquery.min.js"></script>
     <script src="/js/front-js/sweetalert2.all.min.js"></script>
     <!-- <script src="/js/back-js/dashboard.js"></script> -->

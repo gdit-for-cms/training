@@ -15,7 +15,39 @@ function checkName(objName) {
         }
     });
 }
-
+function submit(name) {
+    $(`.${name}`).submit(function (e) {
+        e.preventDefault();
+        var form = $(this);
+        var actionUrl = form.attr('action');
+        $.ajax({
+            type: "POST",
+            url: actionUrl,
+            data: form.serialize(),
+            dataType: 'json',
+            success: function (response) {
+                console.log(response);
+                Swal.fire({
+                    icon: 'success',
+                    title: "Successfully",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                setTimeout(() => {
+                    document.location.reload(true);
+                }, "1600");
+            },
+            error: function (response) {
+                console.log(response.message);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: response.responseJSON.message,
+                });
+            }
+        });
+    });
+}
 $(document).ready(function () {
     $('#topic-name').change(function () {
         $.ajax({
@@ -42,38 +74,38 @@ $(document).ready(function () {
     $('#add-topic-name').change(function () {
         checkName('topic');
     });
-
-    $('.add-form').submit(function (e) {
-        e.preventDefault();
-        var form = $(this);
-        var actionUrl = form.attr('action');
-        $.ajax({
-            type: "POST",
-            url: actionUrl,
-            data: form.serialize(),
-            dataType: 'json',
-            success: function (response) {
-                console.log(response);
-                Swal.fire({
-                    icon: 'success',
-                    title: "Successfully",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                // setTimeout(() => {
-                //     document.location.reload(true);
-                // }, "1600");
-            },
-            error: function (response) {
-                console.log(response.message);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: response.responseJSON.message,
-                });
-            }
-        });
-    });
+    submit('add-form');
+    // $('.add-form').submit(function (e) {
+    //     e.preventDefault();
+    //     var form = $(this);
+    //     var actionUrl = form.attr('action');
+    //     $.ajax({
+    //         type: "POST",
+    //         url: actionUrl,
+    //         data: form.serialize(),
+    //         dataType: 'json',
+    //         success: function (response) {
+    //             console.log(response);
+    //             Swal.fire({
+    //                 icon: 'success',
+    //                 title: "Successfully",
+    //                 showConfirmButton: false,
+    //                 timer: 1500
+    //             });
+    //             setTimeout(() => {
+    //                 document.location.reload(true);
+    //             }, "1600");
+    //         },
+    //         error: function (response) {
+    //             console.log(response.message);
+    //             Swal.fire({
+    //                 icon: 'error',
+    //                 title: 'Oops...',
+    //                 text: response.responseJSON.message,
+    //             });
+    //         }
+    //     });
+    // });
 
     $('.delete-btn').click(function(e) {
         let deleteID = $(this).data('id');

@@ -45,15 +45,7 @@ class AdminController extends Controller
                 // Read the import file contents
                 $before = fopen($_FILES['file1']['tmp_name'], 'r');
                 $after = fopen($_FILES['file2']['tmp_name'], 'r');
-
-                // Open 2 files init
-                $fh1 = fopen("../storage/inc/file1.inc", 'r+');
-                $fh2 = fopen("../storage/inc/file2.inc", 'r+');
                 
-                // Clear content in init file to 0 bits
-                ftruncate($fh1, 0);
-                ftruncate($fh2, 0);
-
                 // Set variables form import file
                 $variableInFile1 = [];
                 $variableInFile2 = [];
@@ -62,44 +54,90 @@ class AdminController extends Controller
                 $variableGLOBALS1 = [];
                 $variableGLOBALS2 = [];
                 
-                list($variableInFile1, $variableGLOBALS1) = $this->executeImportFile($before, $fh1, $variableInFile1, $variableGLOBALS1);
-                list($variableInFile2, $variableGLOBALS2) = $this->executeImportFile($after, $fh2, $variableInFile2, $variableGLOBALS2);
-                
-                fclose($fh1);
-                fclose($fh2);
-                
-                // call_user_func
-                // Get the array of variables in file1
-                require_once '../storage/inc/file1.inc';
-                $tempGlobal1 = [];
-                $globalsVarName1 = [];
-                list($globalsVarName1, $tempGlobal1) = setTempGlobal($variableGLOBALS1, $globalsVarName1, $tempGlobal1);
+                $findArray = [];
+                $inBefore = [];
 
-                // Get the array of variables in file2
-                require_once '../storage/inc/file2.inc';
-                $tempGlobal2 = [];
-                $globalsVarName2 = [];
-                list($globalsVarName2, $tempGlobal2) = setTempGlobal($variableGLOBALS2, $globalsVarName2, $tempGlobal2);
+                $data = file_get_contents($_FILES['file1']['tmp_name']); 
+                $data = explode("\n", $data); 
+                for ($line = 0; $line < count($data); $line++) { 
+                    if (preg_match('/setDefineArray\(\'(.+?)\', \$(.+?)\)/i', $data[$line], $match)) {
+                        $variableGLOBALS1[] = $match[1];
+                        $inBefore[$match[1]] = array($match[2] , $line);
+                    };
+                } 
 
-                $this->data['variableInFile1'] = $variableInFile1;
-                $this->data['variableInFile2'] = $variableInFile2;
-                $this->data['globalsVarName1'] = $globalsVarName1;
-                $this->data['globalsVarName2'] = $globalsVarName2;
-                $this->data['tempGlobal1'] = $tempGlobal1;
-                $this->data['tempGlobal2'] = $tempGlobal2;
-                
-                $this->data['content'] = 'diff-file/compare';
-                View::render('admin/back-layouts/master.php', $this->data);
+                foreach ($variableGLOBALS1 as $each) {
+                    $check = $inBefore[$each][0];
+                    $index = $inBefore[$each][1];
+                    for ($line = $index; $line > 0; $line--) { 
+                        if (preg_match('/\$' . $check . '( = array\()/i', $data[$line])) {
+                            for ($i = $line; $i < $index; $i++) {
+                               
+                                if (preg_match('/^\)\;/i', $data[$i])) { 
+                                    print_r($data[$i]);
+                                } else {
+                                    print_r($data[$i]);
+                                }
+                            }
+                            break;
+                        }
+                        
+                    }
+                }
+                // $a = $this->hehe($data, $arrIndex[0]);
+                // for ($line = 0; $line < $defineFncLine[0]; $line++) { 
+                //     if (preg_match('/\$(.+?)( = array\()/i', $data[$line] , $match)) {
+                //         $findArray[] = $line;
+                //         for ($i = $line + 1; $i < count($data); $i++) {
+                //             if (preg_match('/^\)\;/i', $data[$i])) { 
+                //                 break;
+                //             } else {
+                //                 $test[$i] = $data[$i];
+                //             }
+                //         }
+                //         $a = array_fill_keys($findArray, $test);
+                //     } else if (preg_match('/^\)\;/i', $data[$line])) { 
+                //         break;
+                //     }
+                // } 
+                // print_r($arrIndex);
+                // print_r($inBefore);
+                // print_r($variableGLOBALS1);
+                exit;
                
             } else {
                 $this->data['uploadStatus'] = 'failed';
                 $this->data['content'] = 'diff-file/compare';
-                View::render('admin/back-layouts/master.php', $this->data);
             }
         }
     }
+    public function hehe($data, $index){
+        for ($line = 0; $line < $index; $line++) { 
+            if (preg_match('/\$(.+?)( = array\()/i', $data[$line] , $match)) {
+                for ($i = $line + 1; $i < count($data); $i++) {
+                    if (preg_match('/^\)\;/i', $data[$i])) { 
+                        break;
+                    } else {
+                        $test[$i] = $data[$i];
+                    }
+                }
+            } else if (preg_match('/^\)\;/i', $data[$line])) { 
+                break;
+            }
+        } 
+    }
 
-    public function executeImportFile($fileImport, $fileInit, $variableInFile, $variableGLOBALS) {
+    // public function getAry($line, $index, $data){
+    //     for ($i = $line; $i < $index; $i++) {
+    //         if (!preg_match('/^\)\;/i', $data[$line])) { 
+    //             print_r($data[$line]);
+    //         } else {
+    //             break;
+    //         }
+    //     }
+    // }
+
+    public function executeImportFile($fileImport, $variableInFile, $variableGLOBALS) {
         while (($line  = fgets($fileImport))) {
             if (preg_match('/define\("(.+?)\", \"(.+?)\)/i', $line, $match)) {
                 $i = 1 ;
@@ -113,13 +151,16 @@ class AdminController extends Controller
             } else if (preg_match('/setDefineArray\(\'(.+?)\'/i', $line, $match)) {
                 $variableGLOBALS[] = $match[1];
             };
-
-            // Write data to init file
-            if (!preg_match('/define\(/i', $line)) {
-                fwrite($fileInit, $line);
-            };
         }
 
         return array($variableInFile, $variableGLOBALS);
+    }
+
+    public function getDefineArray($data, $line) {
+        if (preg_match('/setDefineArray\(\'(.+?)\'/i', $data[$line], $match)) {
+            // $variableGLOBALS[] = $match[1];
+            print_r($match);
+            echo $data[$line];
+        };
     }
 }
