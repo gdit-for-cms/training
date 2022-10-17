@@ -21,6 +21,7 @@ Trait QueryBuilder
     public function table($tableName)
     {
         $this->tableName = $tableName;
+        
         return $this;
     }
 
@@ -34,13 +35,14 @@ Trait QueryBuilder
      */
     public function where($column, $compare, $value)
     {
-        if(empty($this->where)){
+        if (empty($this->where)) {
             $this->operator = ' WHERE ';
-        }else {
+        } else {
             $this->operator = ' AND ';
         }
         $value = addslashes($value);
         $this->where .= "$this->operator $column $compare '$value'";
+
         return $this;
     }
 
@@ -54,12 +56,13 @@ Trait QueryBuilder
      */
     public function orWhere($column, $compare, $value)
     {
-        if(empty($this->where)){
+        if (empty($this->where)) {
             $this->operator = ' WHERE ';
-        }else {
+        } else {
             $this->operator = ' OR ';
         }
         $this->where .= "$this->operator $column $compare '$value'";
+
         return $this;
     }
 
@@ -72,13 +75,14 @@ Trait QueryBuilder
      */
     public function whereLike($column, $value)
     {
-        if(empty($this->where)){
+        if (empty($this->where)) {
             $this->operator = ' WHERE ';
-        }else {
+        } else {
             $this->operator = ' AND ';
         }
         $value = addslashes($value);
         $this->where .= "$this->operator $column LIKE '%$value%'";
+
         return $this;
     }
     /**
@@ -90,6 +94,7 @@ Trait QueryBuilder
     public function select($column = '*')
     {
         $this->selectColumn = $column;
+
         return $this;
     }
 
@@ -103,6 +108,7 @@ Trait QueryBuilder
     public function limit($number, $offset = 0)
     {
         $this->limit = "LIMIT " . $offset . ", " . $number;
+
         return $this;
     }
 
@@ -116,11 +122,12 @@ Trait QueryBuilder
     public function orderBy($column, $direction = 'asc')
     {
         $arrColumns = array_filter(explode(',', $column));
-        if(!empty($arrColumns) && count($arrColumns) >= 2 ){
+        if (!empty($arrColumns) && count($arrColumns) >= 2 ) {
             $this->orderBy = "ORDER BY". implode(', ', $arrColumns);
-        }else {
+        } else {
             $this->orderBy = "ORDER BY" . " " . $column . " " . $direction;
         }
+
         return $this;
     }
     /**
@@ -167,9 +174,10 @@ Trait QueryBuilder
         // Reset field
         $this->resetQuery();
 
-        if(!empty($result)){
+        if (!empty($result)) {
             return $result->fetchAll(PDO::FETCH_ASSOC);
         }
+
         return false;
     }
 
@@ -187,9 +195,10 @@ Trait QueryBuilder
         // Reset field
         $this->resetQuery();
 
-        if(!empty($query)){
+        if (!empty($query)) {
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
+
         return false;
     }
 
@@ -221,9 +230,10 @@ Trait QueryBuilder
         // Reset field
         $this->resetQuery();
 
-        if(!empty($result)){
+        if (!empty($result)) {
             return $result->fetch(PDO::FETCH_ASSOC);
         }
+
         return false;
     }
 
@@ -248,6 +258,7 @@ Trait QueryBuilder
     public function join($tableName, $relationship)
     {
         $this->innerJoin = "INNER JOIN" .$tableName. " ON " .$relationship." ";
+
         return $this;
     }
     
@@ -261,12 +272,12 @@ Trait QueryBuilder
     {
         $db = static::getDB();
         $tableName = $this->_table;
-        if(!empty($data)){
+        if (!empty($data)) {
             $columnStr = '';
             $valueStr = '';
             foreach($data as $key => $value){
-                $key = addslashes($key);
-                $value = addslashes($value);
+                $key = addslashes(htmlspecialchars($key));
+                $value = addslashes(htmlspecialchars($value));
                 $columnStr.= $key.',';
                 $valueStr.= "'".$value."',";
             }
@@ -276,7 +287,7 @@ Trait QueryBuilder
             $sqlQuery = "INSERT INTO " . $tableName . " (" . $columnStr . ")" . " VALUES " . "(" . $valueStr . ") " ;
             $result = $db->query($sqlQuery);
 
-            if($result){
+            if ($result) {
                 return true;
             }
         }
@@ -296,28 +307,27 @@ Trait QueryBuilder
         $db = static::getDB();
         $tableName = $this->_table; 
 
-        if(!empty($data)){
+        if (!empty($data)) {
             $updateStr = '';
-            foreach($data as $key => $value){
-                $key = addslashes($key);
-                $value = addslashes($value);
+            foreach ($data as $key => $value) {
+                $key = addslashes(htmlspecialchars($key));
+                $value = addslashes(htmlspecialchars($value));
                 $updateStr.= "$key = '$value',";
             }
             $updateStr = rtrim($updateStr, ',');
             
-            if(!empty($conditions)){
+            if (!empty($conditions)) {
                 $sqlQuery = "UPDATE " . $tableName . " SET " . $updateStr . " WHERE " . $conditions;
-            }else {
+            } else {
                 $sqlQuery = "UPDATE " . $tableName . " SET " . $updateStr ;
             }
-
             $result = $db->query($sqlQuery);
 
-            if($result){
+            if ($result) {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -339,7 +349,7 @@ Trait QueryBuilder
     }
 
      /**
-     * Execute the delete query (delete table).
+     * Execute the delete query (delete table). 
      *
      * @return boolean
      */

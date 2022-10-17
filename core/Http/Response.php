@@ -82,6 +82,7 @@ class Response
     {
         $this->sendHeaders();
         $this->sendContent();
+        
         return $this;
     }
 

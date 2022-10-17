@@ -12,6 +12,7 @@ trait ResponseTrait
             'message' => $message,
         ]);
         $res->setContent($result);
+        
         return $res->send();
     }
 
@@ -25,6 +26,7 @@ trait ResponseTrait
         ]);
         $res->setContent($result);
         $res->setStatus(400);
+
         return $res->send();
     }
 }
