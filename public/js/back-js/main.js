@@ -46,6 +46,7 @@ function submitForm(formId) {
         });
     });
 };
+
 $(document).ready(function () {
     submitForm('#form_new_user');
     submitForm('#form_update_user');
@@ -66,7 +67,7 @@ $(document).ready(function () {
             }
         });
     });
-    
+
     $('.edit-btn').click(function (e) {
         let id = $(this).data('id');
         let name = $(this).data('name');
@@ -80,7 +81,7 @@ $(document).ready(function () {
     $('#add-topic-name').change(function () {
         checkName('topic');
     });
-    
+
     // $('.add-form').submit(function (e) {
     //     e.preventDefault();
     //     var form = $(this);
@@ -113,7 +114,7 @@ $(document).ready(function () {
     //     });
     // });
 
-    $('.delete-btn').click(function(e) {
+    $('.delete-btn').click(function (e) {
         let deleteID = $(this).data('id');
         Swal.fire({
             title: 'Are you sure?',
@@ -127,7 +128,7 @@ $(document).ready(function () {
             if (result.isConfirmed) {
                 $.ajax({
                     url: "/topic/delete?id=" + deleteID,
-                    success: function() {
+                    success: function () {
                         document.location.reload(true);
                     }
                 });

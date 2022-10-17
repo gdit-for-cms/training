@@ -2,13 +2,12 @@
 
 namespace App\Controllers;
 
-use Core\Controller;
 use Core\View;
 use App\models\User;
 use App\models\Room;
 use Core\Http\Request;
 
-class AdminController extends Controller
+class AdminController extends AppController
 {
     public array $data;
 

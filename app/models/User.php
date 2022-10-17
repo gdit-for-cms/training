@@ -35,12 +35,12 @@ class User extends Model
     }
 
     public static function getBy($column, $operator, $value)
-    {   
+    {
         return (new self)->where($column, $operator, $value)->get();
     }
 
     public static function getById($id, $column)
-    {   
+    {
         return (new self)->find($id, $column);
     }
 
@@ -59,8 +59,42 @@ class User extends Model
         return (new self)->destroy($condition);
     }
 
-    public static function filter($role, $room, $position)
+    public static function filter($array)
     {
-        return (new self)->where('role_id', '=', $role)->where('room_id', '=', $room)->where('position_id', '=', $position)->get();
+        $db = static::getDB();
+        $condition = "";
+        // var_dump($array);
+        // exit;
+        foreach ($array as $key => $value) {
+            if ($condition != "") {
+                if ($key != 'search') {
+                    # code...
+                    $condition .= " AND ";
+                    $condition .= "$key = $value";
+                } else {
+                    $condition .= " AND ";
+                    $condition .= "(u.name LIKE '%$value%' OR u.email LIKE '%$value%')";
+                }
+            } else {
+                if ($key != 'search') {
+                    $condition .= "WHERE $key = $value";
+                } else {
+                    $condition .= "WHERE (u.name LIKE '%$value%' OR u.email LIKE '%$value%')";
+                }
+            }
+        } 
+
+        // echo $condition;
+        // exit;
+        $stmt = $db->query("SELECT u.id, u.name, u.email, u.room_id, u.position_id, role.name role_name, room.name room_name, position.name position_name
+                            FROM user AS u
+                            JOIN role ON u.role_id = role.id
+                            JOIN room ON u.room_id = room.id
+                            JOIN position ON u.position_id = position.id
+                            $condition
+                            ORDER BY u.id DESC");
+        // var_dump($stmt);
+        // exit;
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

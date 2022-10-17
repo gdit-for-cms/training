@@ -2,12 +2,11 @@
 
 namespace App\Controllers;
 
-use Core\Controller;
 use Core\View;
 use App\models\User;
 use Core\Http\Request;
 
-class AuthController extends Controller 
+class AuthController extends AppController 
 {   
     public array $data;
 

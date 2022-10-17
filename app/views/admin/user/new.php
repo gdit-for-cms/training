@@ -79,7 +79,7 @@
     start()
 
     function validate() {
-        if (nameInput.value.length <= 5 || emailInput.value == '' || passwordInput.value == '' || passwordInput.value != confirmPasswordInput.value) {
+        if (nameInput.value.length <= 0 || emailInput.value == '' || passwordInput.value == '' || passwordInput.value != confirmPasswordInput.value) {
             submitBtn.disabled = true;
         } else {
             submitBtn.disabled = false;

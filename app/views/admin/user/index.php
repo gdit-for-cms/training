@@ -10,6 +10,11 @@
         </div>
         <div class="white_card_body">
           <div class="table-responsive m-b-30">
+            <div class="flex col-4 mb-6">
+              <input id="search_input" type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+              <button id="search_btn" type="button" disabled class="btn btn-primary">search</button>
+              <button id="delete_search" type="button" class="btn btn-danger text-white ml-2">X</button>
+            </div>
             <table class="table table-striped">
               <thead>
                 <tr>
@@ -18,7 +23,7 @@
                   <th scope="col">Email</th>
                   <th scope="col">
                     Role
-                    <select class="role_select select_option w-26 text-medium border " aria-label="Default select example">
+                    <select class="role_select select_option w-26 text-medium border " name="role_id" aria-label="Default select example">
                       <option value="0" selected>All role</option>
                       <?php foreach ($allRoles as $role) { ?>
                         <option value="<?= $role['id'] ?>"><?= $role['name'] ?></option>
@@ -27,7 +32,7 @@
                   </th>
                   <th scope="col">
                     Room
-                    <select class="room_select select_option w-26 text-medium border " aria-label="Default select example">
+                    <select class="room_select select_option w-26 text-medium border " name="room_id" aria-label="Default select example">
                       <option value="0" selected>All room</option>
                       <?php foreach ($allRooms as $room) { ?>
                         <option value="<?= $room['id'] ?>"><?= $room['name'] ?></option>
@@ -36,7 +41,7 @@
                   </th>
                   <th scope="col">
                     Position
-                    <select class="position_select select_option w-26 text-medium border " aria-label="Default select example">
+                    <select class="position_select select_option w-26 text-medium border " name="position_id" aria-label="Default select example">
                       <option value="0" selected>All position</option>
                       <?php foreach ($allPositions as $position) { ?>
                         <option value="<?= $position['id'] ?>"><?= $position['name'] ?></option>
@@ -77,39 +82,52 @@
   const selectRoomEles = document.querySelector('.room_select')
   const selectRoleEles = document.querySelector('.role_select')
   const selectPositionEles = document.querySelector('.position_select')
+  const searchInput = document.querySelector('#search_input')
+  const searchBtn = document.querySelector('#search_btn')
+  const deleteSearchBtn = document.querySelector('#delete_search')
 
+  const PAGE_STORAGE_KEY = 'PAGE FILTER'
+  var config = JSON.parse(localStorage.getItem(PAGE_STORAGE_KEY)) || {}
 
   function start() {
-      sort(selectRoomEles, '.room_name', 'roomSort');
-      sort(selectRoleEles, '.role_name', 'roleSort');
-      sort(selectPositionEles, '.position_name', 'positionSort'); 
-      // filter()  
+    // sort(selectRoomEles, '.room_name', 'roomSort');
+    // sort(selectRoleEles, '.role_name', 'roleSort');
+    // sort(selectPositionEles, '.position_name', 'positionSort');
+    // filter()  
+    filterUser()
+    checkValueSearch()
+    deleteSearch()
   }
 
   start()
 
-  function sort(selectOption, itemName, sortName) {
-      selectOption.addEventListener('change', () => {
-          selectOptionEles.forEach(ele => {
-              if (selectOption != ele) {
-                  ele.value = 0
-              }
-          })
-          if (selectOption.value == 0) {
-              userItemsEles.forEach(ele => {
-                  ele.classList.remove('hidden')
-              })
-          } else {
-              userItemsEles.forEach(ele => {
-                  if (selectOption.value != ele.querySelector(itemName).textContent ) {
-                      ele.classList.add('hidden')
-                  } else {
-                      ele.classList.remove('hidden')
-                  }
-              })
-          }
+  function setFilter(key, value) {
+    config[key] = value
+    localStorage.setItem(PAGE_STORAGE_KEY, JSON.stringify(config))
+  }
 
+  function sort(selectOption, itemName, sortName) {
+    selectOption.addEventListener('change', () => {
+      selectOptionEles.forEach(ele => {
+        if (selectOption != ele) {
+          ele.value = 0
+        }
       })
+      if (selectOption.value == 0) {
+        userItemsEles.forEach(ele => {
+          ele.classList.remove('hidden')
+        })
+      } else {
+        userItemsEles.forEach(ele => {
+          if (selectOption.value != ele.querySelector(itemName).textContent) {
+            ele.classList.add('hidden')
+          } else {
+            ele.classList.remove('hidden')
+          }
+        })
+      }
+
+    })
   }
 
   function filter() {
@@ -117,6 +135,55 @@
       ele.addEventListener('change', () => {
         window.location.href = `filter?role_id=${selectRoleEles.value}&room_id=${selectRoomEles.value}&position_id=${selectPositionEles.value}`
       })
+    })
+  }
+
+  function filterUser() {
+    selectRoomEles.value = config.room_id
+    selectRoleEles.value = config.role_id
+    selectPositionEles.value = config.position_id
+    searchInput.value = config.search
+
+    selectOptionEles.forEach(ele => {
+      ele.addEventListener('change', (e) => {
+        setFilter(ele.name, ele.value)
+        let data = `${config.role_id == '0' ? '' : `role_id=${config.role_id}`}${config.room_id == '0' ? '' : `&room_id=${config.room_id}`}${config.position_id == '0' ? '' : `&position_id=${config.position_id}`}${config.search == '' ? '' : `&search=${config.search}`}`
+        e.preventDefault();
+        if (data.charAt(0) == '&') {
+          data = data.substring(1)
+        }
+        document.location.search = `?${data}`
+      });
+    })
+
+    searchBtn.addEventListener('click', () => {
+      setFilter('search', searchInput.value)
+      let data = `${config.role_id == '0' ? '' : `role_id=${config.role_id}`}${config.room_id == '0' ? '' : `&room_id=${config.room_id}`}${config.position_id == '0' ? '' : `&position_id=${config.position_id}`}${config.search == '' ? '' : `&search=${config.search}`}`
+      if (data.charAt(0) == '&') {
+        data = data.substring(1)
+      }
+      document.location.search = `?${data}`
+    })
+  };
+
+  function checkValueSearch() {
+    searchInput.addEventListener('keyup', () => {
+      if (searchInput.value.length == 0) {
+        searchBtn.disabled = true
+      } else {
+        searchBtn.disabled = false
+      }
+    })
+  }
+
+  function deleteSearch() {
+    deleteSearchBtn.addEventListener('click', () => {
+      setFilter('search', '')
+      let data = `${config.role_id == '0' ? '' : `role_id=${config.role_id}`}${config.room_id == '0' ? '' : `&room_id=${config.room_id}`}${config.position_id == '0' ? '' : `&position_id=${config.position_id}`}${config.search == '' ? '' : `&search=${config.search}`}`
+      if (data.charAt(0) == '&') {
+        data = data.substring(1)
+      }
+      document.location.search = `?${data}`
     })
   }
 </script>

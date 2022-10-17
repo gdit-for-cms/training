@@ -2,13 +2,14 @@
 
 namespace App\Controllers;
 
-use Core\Controller;
+// use AppController;
 use App\models\User;
 use App\models\Room;
 use Core\Http\Request;
 use Core\Http\ResponseTrait;
+// use App\Validate;
 
-class RoomController extends Controller
+class RoomController extends AppController
 {
     use ResponseTrait;
 
@@ -22,7 +23,7 @@ class RoomController extends Controller
     }
 
     public function newAction()
-    {
+    {   
         $this->data['content'] = 'room/new';
     }
 

@@ -2,13 +2,12 @@
 
 namespace App\Controllers;
 
-use Core\Controller;
 use App\models\User;
 use App\models\Position;
 use Core\Http\Request;
 use Core\Http\ResponseTrait;
 
-class PositionController extends Controller
+class PositionController extends AppController
 {
     use ResponseTrait;
 

@@ -3,23 +3,31 @@
 namespace App\Controllers;
 
 use App\Models\Position;
-use Core\Controller;
 use App\models\User;
 use App\models\Role;
 use App\models\Room;
 use Core\Http\Request;
 use Core\Http\ResponseTrait;
+use Core\View;
 
-
-class UserController extends Controller
+class UserController extends AppController
 {
     use ResponseTrait;
 
     public array $data;
 
-    public function indexAction()
-    {
-        $this->data['allUsers'] = User::getAllRelation();
+    public function indexAction(Request $request)
+    {   
+        $checkFilter = $request->getGet()->all();
+
+        if ($checkFilter > 1) {
+            $get = $request->getGet()->all();
+            array_shift($get);
+            
+            $this->data['allUsers'] = User::filter($get);
+        } else {
+            $this->data['allUsers'] = User::getAllRelation();
+        }
 
         $this->data['allRooms'] =  Room::getAll();
         $this->data['allRoles'] =  Role::getAll();
@@ -132,14 +140,9 @@ class UserController extends Controller
 
     public function filterAction(Request $request)
     {
-        $get = $request->getGet();
+        $post = $request->getPost()->all();
 
-        $role = $get->get('role_id');
-        $room = $get->get('room_id');
-        $position = $get->get('position_id');
-
-        $users = User::filter($role, $room, $position);
-        var_dump($get);
-        die;
+        $user = User::filter($post);
+        $this->data['allUsers'] = $user;
     }
 }
