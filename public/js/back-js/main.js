@@ -1,11 +1,10 @@
 function checkName(objName) {
     $.ajax({
         type: "GET",
-        url: "/" + objName + "/apiCheckName",
+        url: "apiCheckName",
         data: { name: $(`#add-${objName}-name`).val() },
         dataType: 'json',
         success: function (response) {
-            console.log(response.data);
             if (response.data) {
                 Swal.fire(`${objName} has been exits`);
                 $(`#add-${objName}-name`).val('');
@@ -54,24 +53,14 @@ $(document).ready(function () {
     submitForm('#form_new_position');
     submitForm('#form_update_position');
     submitForm('.add-form');
+    submitForm('.edit-form');
 
-    $('#topic-name').change(function () {
-        $.ajax({
-            type: "GET",
-            url: '',
-            data: { slug: $(this).val() },
-            dataType: 'json',
-            success: function (response) {
-                $('#submit-topic').attr('disabled', false);
-            }
-        });
-    });
-    
     $('.edit-topic-btn').click(function(e) {
         let name = $(this).data('name');
-        console.log(name);
+        let id = $(this).data('id');
         $('.box-lightbox').addClass('open');
-        $('#name').val(name);
+        $('#edit-topic-name').val(name);
+        $('#edit-topic-id').val(id);
     });
     $('.js-lightbox-close').click(function(e) {
         $('.box-lightbox').removeClass('open');
@@ -80,42 +69,7 @@ $(document).ready(function () {
     $('#add-topic-name').change(function () {
         checkName('topic');
     });
-<<<<<<< HEAD
-=======
     
-    // $('.add-form').submit(function (e) {
-    //     e.preventDefault();
-    //     var form = $(this);
-    //     var actionUrl = form.attr('action');
-    //     $.ajax({
-    //         type: "POST",
-    //         url: actionUrl,
-    //         data: form.serialize(),
-    //         dataType: 'json',
-    //         success: function (response) {
-    //             console.log(response);
-    //             Swal.fire({
-    //                 icon: 'success',
-    //                 title: "Successfully",
-    //                 showConfirmButton: false,
-    //                 timer: 1500
-    //             });
-    //             setTimeout(() => {
-    //                 document.location.reload(true);
-    //             }, "1600");
-    //         },
-    //         error: function (response) {
-    //             console.log(response.message);
-    //             Swal.fire({
-    //                 icon: 'error',
-    //                 title: 'Oops...',
-    //                 text: response.responseJSON.message,
-    //             });
-    //         }
-    //     });
-    // });
-
->>>>>>> 3c67ba7b9d39f4592215a21ac8c94bcfff5b9f31
     $('.delete-btn').click(function(e) {
         let deleteID = $(this).data('id');
         Swal.fire({
