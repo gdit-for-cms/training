@@ -27,14 +27,8 @@
                         <label for="floatingInput">Email address</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="text" name="password" class="form-control" id="floatingPassword" placeholder="Password">
+                        <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
                         <label for="floatingPassword">Password</label>
-                    </div>
-                    <div class="form-check mb-3">
-                        <input class="form-check-input" name="rememberPasswordCheck" type="checkbox" value="" id="rememberPasswordCheck">
-                        <label class="form-check-label" for="rememberPasswordCheck">
-                        Remember password
-                        </label>
                     </div>
                     <div class="d-grid">
                         <button class="btn btn-primary btn-login text-uppercase fw-bold" type="submit">Sign

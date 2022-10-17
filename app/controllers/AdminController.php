@@ -71,6 +71,7 @@ class AdminController extends Controller
         }
     }
 
+
     public function getVariableInFile($data, $globalInFile, $constInFile, $inFile)
     {
         for ($line = 0; $line < count($data); $line++) {
@@ -81,6 +82,7 @@ class AdminController extends Controller
                 $i = 2 ;
                 if (isset($constInFile[$match[1]])) {
                     $constInFile[$match[1] . '(' . $i++ . ')'] = $match[2];
+
                 } else {
                     $constInFile[$match[1]] = $match[2];
                 }

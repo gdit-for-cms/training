@@ -1,4 +1,4 @@
-n<?php
+<?php
 
 namespace App\Controllers;
 
@@ -30,9 +30,9 @@ class UserController extends Controller
 
     public function newAction()
     {
-        $this->data['allRole'] = Role::getAll();
-        $this->data['allRoom'] = Room::getAll();
-        $this->data['allPosition'] = Position::getAll();
+        $this->data['allRoles'] = Role::getAll();
+        $this->data['allRooms'] = Room::getAll();
+        $this->data['allPositions'] = Position::getAll();
 
         $this->data['content'] = 'user/new';
     }
@@ -83,32 +83,41 @@ class UserController extends Controller
     }
 
     public function update(Request $request)
-    {
-        try {
-            $post = $request->getPost();
-            $id = $post->get('id');
-            $name = $post->get('name');
-            $password = $post->get('password');
-            $email = $post->get('email');
-            $role_id = $post->get('role');
-            $room_id = $post->get('room');
-            $position_id = $post->get('position');
+    {   
+        $post = $request->getPost();
 
-            User::updateOne(
-                [
-                    'name' => $name,
-                    'password' => $password,
-                    'email' => $email,
-                    'role_id' => $role_id,
-                    'room_id' => $room_id,
-                    'position_id' => $position_id
-                ],
-                "id = $id");
-                
-            return $this->successResponse();
-        } catch (\Throwable $th) {
-            return $this->errorResponse($th->getMessage());
-        };
+        $id = $post->get('id');
+        $email = $post->get('email');
+
+        $userCheck = User::getBy('email', '=', $email);
+        $numRows = count($userCheck);
+
+        if ($numRows == 1 && $userCheck[0]['id'] != $id) {
+            return $this->errorResponse(showError('email existed'));
+        } else {
+            try {
+                $name = $post->get('name');
+                $password = $post->get('password');
+                $role_id = $post->get('role');
+                $room_id = $post->get('room');
+                $position_id = $post->get('position');
+    
+                User::updateOne(
+                    [
+                        'name' => $name,
+                        'password' => $password,
+                        'email' => $email,
+                        'role_id' => $role_id,
+                        'room_id' => $room_id,
+                        'position_id' => $position_id
+                    ],
+                    "id = $id");
+                    
+                return $this->successResponse();
+            } catch (\Throwable $th) {
+                return $this->errorResponse($th->getMessage());
+            };
+        }
     }
 
     public function deleteAction(Request $request)
@@ -119,5 +128,18 @@ class UserController extends Controller
 
         header('Location: /user/index');
         exit;
+    }
+
+    public function filterAction(Request $request)
+    {
+        $get = $request->getGet();
+
+        $role = $get->get('role_id');
+        $room = $get->get('room_id');
+        $position = $get->get('position_id');
+
+        $users = User::filter($role, $room, $position);
+        var_dump($get);
+        die;
     }
 }

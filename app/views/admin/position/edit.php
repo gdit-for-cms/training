@@ -1,25 +1,29 @@
-<div class="container min-h-screen bg-gray-200 flex flex-col items-center justify-center">
-    <h1 class="text-4xl font-bold">EDIT POSITION</h1>
-    <form id="form_update_position" class="w-1/2" action="update" method="PUT">
-        <div class="form-group row">
-            <label for="name" class="col-3 col-form-label">Name*</label>
-            <div class="col-9">
-                <input id="id" name="id" value="<?= $position['id'] ?>" type="hidden" class="form-control">
-                <input id="name" name="name" type="text" value="<?= $position['name'] ?>" class="form-control">
-            </div>
-        </div>
-            <div class="form-group row">
-                <label for="description" class="col-3 col-form-label">Description</label> 
-                <div class="col-9">
-                    <textarea id="description" name="description" type="text" class="form-control" style="height:150px;"><?= $position['description'] ?></textarea>
+<div class="col-lg-12">
+    <div class="white_card card_height_100 mb_30">
+        <div class="white_card_header">
+            <div class="box_header m-0">
+                <div class="main-title">
+                    <h3 class="m-0">Edit position</h3>
                 </div>
-            </div> 
-        <div class="form-group row">
-            <div class="offset-3 col-9">
-                <button id="submit" name="submit" type="submit" disabled class="btn btn-primary">Submit</button>
             </div>
         </div>
-    </form>
+        <div class="white_card_body">
+            <div class="card-body">
+                <form id="form_update_position" class="" action="update" method="PUT">
+                    <div class="mb-3">
+                        <label class="form-label" for="name">Name*</label>
+                        <input id="id" name="id" value="<?= $position['id'] ?>" type="hidden" class="form-control">
+                        <input type="text" class="form-control" name="name" id="name" value="<?= $position['name'] ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="description">Description</label>
+                        <textarea class="form-control" rows="3" name="description" id="description"><?= $position['description'] ?></textarea>
+                    </div>
+                    <button id="submit" type="submit" disabled class="btn btn-primary">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 <script>
     const submitBtn = document.querySelector('#submit')
