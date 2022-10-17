@@ -2,10 +2,7 @@
 
 namespace App\Controllers;
 
-use Core\Controller;
-use Core\View;
-
-class AdminController extends Controller
+class AdminController extends AppController
 {
     public array $data;
 
@@ -67,7 +64,7 @@ class AdminController extends Controller
                 $this->data['uploadStatus'] = 'Upload status: Failed';
             }
         } else {
-            $this->data['uploadStatus'] = 'chua import file!';
+            $this->data['uploadStatus'] = "you haven't imported the file yet.";
         }
     }
 
@@ -75,10 +72,10 @@ class AdminController extends Controller
     public function getVariableInFile($data, $globalInFile, $constInFile, $inFile)
     {
         for ($line = 0; $line < count($data); $line++) {
-            if (preg_match('/setDefineArray\(\'(.+?)\', \$(.+?)\)/i', $data[$line], $match)) {
+            if (preg_match('/^setDefineArray\(\'(.+?)\', \$(.+?)\)/i', $data[$line], $match)) {
                 $globalInFile[] = $match[1];
                 $inFile[$match[1]] = array($match[2] , $line);
-            } else if (preg_match('/define\("(.+?)\", (.+?)\)/i', $data[$line], $match)) {
+            } else if (preg_match('/^define\("(.+?)\", (.+?)\)/i', $data[$line], $match)) {
                 $i = 2 ;
                 if (isset($constInFile[$match[1]])) {
                     $constInFile[$match[1] . '(' . $i++ . ')'] = $match[2];
@@ -94,7 +91,7 @@ class AdminController extends Controller
             $inFile[$each][0] = array();
             $index = $inFile[$each][1];
             for ($line = $index; $line > 0; $line--) {
-                if (preg_match('/\$' . $check . '( = array\()/i', $data[$line])) {
+                if (preg_match('/^\$' . $check . '( = array\()/i', $data[$line])) {
                     for ($i = $line + 1; $i < $index; $i++) {
                         if (preg_match('/^\)\;/i', $data[$i])) {
                             break;
@@ -106,6 +103,7 @@ class AdminController extends Controller
                 }
             }
         }
+        
         return array($globalInFile, $constInFile, $inFile);
     }
 }

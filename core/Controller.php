@@ -57,11 +57,6 @@ abstract class Controller
      * @return void
      */
     protected function before() {
-        if (!checkAdmin()) {
-            header('Location: /auth/login');
-            exit;
-        }
-        $this->data['title'] = ucfirst($this->route_params['controller']);
     }
     
     /**
@@ -70,6 +65,5 @@ abstract class Controller
      * @return void
      */
     protected function after() {
-        View::render('admin/back-layouts/master.php', $this->data);
     }
 }

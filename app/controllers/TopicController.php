@@ -2,21 +2,14 @@
 
 namespace App\Controllers;
 
-use Core\Controller;
-use Core\View;
 use App\Models\Topic;
 use Core\Http\Request;
 use Core\Http\ResponseTrait;
 
-class TopicController extends Controller
+class TopicController extends AppController
 {
     use ResponseTrait;
     public array $data;
-
-    protected function after() 
-    {
-        View::render('admin/back-layouts/master.php', $this->data);
-    }
 
     public function listAction()
     {
@@ -40,14 +33,26 @@ class TopicController extends Controller
         }
     }
 
+    public function update(Request $request)
+    {
+        try {
+            $name = $request->getPost()->get('name');
+            $id = $request->getPost()->get('id');
+            Topic::updateTopic(['name' => $name], "id = $id");
+            return $this->successResponse();
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
     public function delete(Request $request)
     {
         try {
             $id = $request->getGet()->get('id');
             Topic::delete($id);
-            echo $this->successResponse();
+            return $this->successResponse();
         } catch (\Throwable $th) {
-            echo $this->errorResponse($th->getMessage());
+            return $this->errorResponse($th->getMessage());
         }
     }
 
@@ -55,6 +60,7 @@ class TopicController extends Controller
     {
         $name = $request->getGet()->get('name');
         $check = Topic::checkExist($name);
+        
         return $this->successResponse((int)$check['mycheck']);
     }
 }

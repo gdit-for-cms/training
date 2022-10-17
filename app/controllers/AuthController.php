@@ -36,6 +36,12 @@ class AuthController extends Controller
         $email = $post->get('email');
         $password = $post->get('password');
 
+        // if (strlen($email) >= 255 || strlen($password) >= 255){
+        //     $this->data['error'] = showError('login');
+        //     View::render('admin/auth/login.php', $this->data);
+        //     exit;
+        // }
+
         $user = new User();
         $inputUser = $user->table('user')
                      ->where('email', '=', $email)

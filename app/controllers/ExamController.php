@@ -2,20 +2,15 @@
 
 namespace App\Controllers;
 
-use Core\Controller;
-use Core\View;
+use App\Models\Exam;
 
-class ExamController extends Controller
+class ExamController extends AppController
 {
     public array $data;
 
-    protected function after() 
-    {
-        View::render('admin/back-layouts/master.php', $this->data);
-    }
-    
     public function listAction()
     {
+        $this->data['exams'] = Exam::all();
         $this->data['content'] = 'exam/list';
     }
 

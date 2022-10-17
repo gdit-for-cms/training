@@ -4,25 +4,21 @@
             <div class="white_card_header">
                 <div class="box_header m-0">
                     <div class="main-title">
-                        <h2 class="m-0">Add new topic</h2>
+                        <h2 class="m-0">Edit topic</h2>
                     </div>
                 </div>
             </div>
             <div class="white_card_body">
                 <div class="card-body">
-                    <form action="create" method="post" id="add-topic-form">
-                        <input type="hidden" name="id" class="form-control" id="id-cate" >
+                    <form action="update" method="post" class="edit-form">
+                        <input type="hidden" name="id" class="form-control" id="edit-topic-id" >
                         <div class="mb-3 col-md-6">
                             <label class="form-label" for="name">Name Category</label>
-                            <input type="text" name="name" class="form-control" id="name-cate" >
-                        </div>
-                        <div class="mb-3 col-md-6">
-                            <label class="form-label" for="slug">slug</label>
-                            <input type="text" name="slug" id="slug-cate" class="form-control" >
+                            <input type="text" name="name" class="form-control" id="edit-topic-name" >
                         </div>
                         <div class="model-footer">
                             <button type="button" class="btn btn-secondary js-lightbox-close" >Close</button>
-                            <button class="btn btn-primary" id="updateCategory" disabled>Change</button>
+                            <button type="submit" class="btn btn-primary" id="update-topic-submit" >Change</button>
                         </div>
                     </form>
                 </div>
