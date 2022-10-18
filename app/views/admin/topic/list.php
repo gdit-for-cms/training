@@ -44,7 +44,7 @@
                                         <td><?= $topic['name'] ?></td>
                                         <td><a class="btn btn-outline-primary mb-3 edit-topic-btn" data-name="<?php echo $topic['name'] ?>" data-id="<?php echo $topic['id'] ?>">Edit</a></td>
                                         <td>
-                                            <a class="btn btn-outline-danger mb-3 delete-btn" data-id="<?= $topic['id'] ?>">
+                                            <a class="btn btn-outline-danger mb-3 delete-topic" data-id="<?= $topic['id'] ?>">
                                                 Delete
                                             </a>
                                         </td>
