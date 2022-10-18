@@ -53,20 +53,20 @@
               </thead>
               <tbody>
                 <?php $i = 1;
-                foreach ($allUsers as $user) { ?>
-                  <tr class="user_items">
-                    <th scope="row"><?= $i;
-                                    $i++ ?></th>
-                    <td><?= $user['name'] ?></td>
-                    <td><?= $user['email'] ?></td>
-                    <td class="role_name"><?= $user['role_name'] ?></td>
-                    <td class="room_name"><?= $user['room_name'] ?></td>
-                    <td class="position_name"><?= $user['position_name'] ?></td>
-                    <td class="flex items-center justify-center">
-                      <a href='/user/edit?id=<?= $user['id'] ?>' class="edit_btn mr-2"><button type="button" class="btn btn-info text-white">Edit</button></a>
-                      <a href='/user/delete?id=<?= $user['id'] ?>' class="delete_btn"><button type="button" class="btn btn-danger text-white">Delete</button></a>
-                    </td>
-                  </tr>
+                  foreach ($allUsers as $user) { ?>
+                    <tr class="user_items">
+                      <th scope="row"><?= $i;
+                                      $i++ ?></th>
+                      <td><?= $user['name'] ?></td>
+                      <td><?= $user['email'] ?></td>
+                      <td class="role_name"><?= $user['role_name'] ?></td>
+                      <td class="room_name"><?= $user['room_name'] ?></td>
+                      <td class="position_name"><?= $user['position_name'] ?></td>
+                      <td class="flex items-center justify-center">
+                        <a href='/user/edit?id=<?= $user['id'] ?>' class="edit_btn mr-2"><button type="button" class="btn btn-info text-white">Edit</button></a>
+                        <a href='/user/delete?id=<?= $user['id'] ?>' class="delete_btn"><button type="button" class="btn btn-danger text-white">Delete</button></a>
+                      </td>
+                    </tr>
                 <?php } ?>
               </tbody>
             </table>
@@ -90,10 +90,6 @@
   var config = JSON.parse(localStorage.getItem(PAGE_STORAGE_KEY)) || {}
 
   function start() {
-    // sort(selectRoomEles, '.room_name', 'roomSort');
-    // sort(selectRoleEles, '.role_name', 'roleSort');
-    // sort(selectPositionEles, '.position_name', 'positionSort');
-    // filter()  
     filterUser()
     checkValueSearch()
     deleteSearch()
@@ -177,6 +173,11 @@
   }
 
   function deleteSearch() {
+    if (searchInput.value == '') {
+      deleteSearchBtn.disabled = true
+    } else {
+      deleteSearchBtn.disabled = false
+    }
     deleteSearchBtn.addEventListener('click', () => {
       setFilter('search', '')
       let data = `${config.role_id == '0' ? '' : `role_id=${config.role_id}`}${config.room_id == '0' ? '' : `&room_id=${config.room_id}`}${config.position_id == '0' ? '' : `&position_id=${config.position_id}`}${config.search == '' ? '' : `&search=${config.search}`}`

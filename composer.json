@@ -6,11 +6,13 @@
             "App\\": "app/",
             "App\\Controllers\\": "app/controllers/",
             "App\\Models\\": "app/models/",
+            "App\\Requests\\": "app/requests/",
             "App\\Services\\": "app/services/"
         },
         "files" : [
             "app/helpers.php",
-            "app/errors.php"
+            "app/errors.php",
+            "app/Validation.php"
         ]
     }
 }

@@ -2,12 +2,12 @@
 
 namespace App\Controllers;
 
-// use AppController;
+use App\Requests\AppRequest;
 use App\models\User;
 use App\models\Room;
 use Core\Http\Request;
 use Core\Http\ResponseTrait;
-// use App\Validate;
+use App\Validation;
 
 class RoomController extends AppController
 {
@@ -15,8 +15,14 @@ class RoomController extends AppController
 
     public array $data;
 
-    public function indexAction()
-    {
+    public function indexAction(AppRequest $appRequest)
+    {   
+        // $request = new AppRequest;
+        // // print_r($request);
+        // AppRequest::validate($request);
+        var_dump($appRequest);
+        exit;
+        // var_dump(Validation::validate());
         $this->data['allUsers'] = User::getAllRelation();
         $this->data['rooms'] = Room::getAll();
         $this->data['content'] = 'room/index';
@@ -24,6 +30,8 @@ class RoomController extends AppController
 
     public function newAction()
     {   
+        AppRequest::validate();
+        exit;
         $this->data['content'] = 'room/new';
     }
 
@@ -33,6 +41,10 @@ class RoomController extends AppController
 
         $name = $post->get('name');
         $description = $post->get('description');
+
+        // $request = new AppRequest;
+        // print_r($request);
+        // var_dump();
 
         $query = Room::getBy('name', '=', $name);
         $numRows = count($query);

@@ -15,9 +15,11 @@ set_exception_handler('Core\Error::exceptionHandler');
  */
 $router = new Core\Router();
 $request = new Core\Http\Request();
+$appRequest = new App\Requests\AppRequest();
 
 // Add the routes
 $router->add('', ['controller' => 'Auth', 'action' => 'login']);
 $router->add('{controller}/{action}');
     
+$router->dispatch($appRequest);
 $router->dispatch($request);
