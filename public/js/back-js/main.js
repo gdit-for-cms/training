@@ -84,7 +84,7 @@ $(document).ready(function () {
         $('#edit-topic-name').val(name);
         $('#edit-topic-id').val(id);
     });
- 
+
     $('.js-lightbox-close').click(function(e) {
         $('.box-lightbox').removeClass('open');
     });
@@ -143,8 +143,84 @@ $(document).ready(function () {
                     showConfirmButton: false,
                     timer: 1500
                 });
-                $('.add-exam-form').hide();
-                $('#add-exam-next-form').removeClass('d-none');
+                let examId = response.data[0].id;
+                setTimeout(() => {
+                    document.location.href = 'detail?id=' + examId;
+                }, "1600");
+            },
+            error: function (response) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: response.responseJSON.message,
+                });
+            }
+        });
+    });
+
+    $('.white_card_header .create-q-btn').click(function (e) {
+        $(this).closest('.white_card').find('.card-body').removeClass('d-none');
+    });
+
+    $('.text-textarea').hide();
+    $('.radio-checkbox').hide();
+    $('.q-type').change(function () {
+        var type = $(this).val();
+        switch (type) {
+            case 'Radio':
+                $(this).closest('.add-question-form').find('.text-textarea').hide();
+                $(this).closest('.add-question-form').find('.radio-checkbox').show();
+                $(this).closest('.add-question-form').find('.radio-checkbox .select-answer').attr('multiple', false);
+                break;
+            case 'Checkbox':
+                $(this).closest('.add-question-form').find('.text-textarea').hide();
+                $(this).closest('.add-question-form').find('.radio-checkbox').show();
+                $(this).closest('.add-question-form').find('.radio-checkbox .select-answer').attr('multiple', true);
+                break;
+            case 'Text':
+            case 'Textarea':
+                $(this).closest('.add-question-form').find('.text-textarea').show();
+                $(this).closest('.add-question-form').find('.radio-checkbox').hide();
+                break;
+            default:
+                break;
+        }
+    });
+    $('.add-question-name').change(function () {
+        var selector = $(this);
+        $.ajax({
+            type: "GET",
+            url: "/question/apiCheckName",
+            data: { name: selector.val() },
+            dataType: 'json',
+            success: function (response) {
+                if (response.data) {
+                    Swal.fire(`question title has been exits`);
+                    selector.val('');
+                } else {
+                    selector.closest('.radio-checkbox').find('.add-q-btn').attr('disabled', false);
+                }
+            }
+        });
+    });
+
+    $('.add-question-form').submit(function (e) {
+        e.preventDefault();
+        var form = $(this);
+        var actionUrl = form.attr('action');
+        $.ajax({
+            type: "POST",
+            url: actionUrl,
+            data: form.serialize(),
+            dataType: 'json',
+            success: function (response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: "Successfully",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                form.closest('.row').hide();
             },
             error: function (response) {
                 Swal.fire({

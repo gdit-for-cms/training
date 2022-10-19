@@ -41,6 +41,11 @@ class Exam extends Model
         return (new self)->update($data);
     }
 
+    public static function getId($name)
+    {
+        return (new self)->where('name', '=', $name)->get('id');
+    }
+
     public static function delete($id)
     {
         return (new self)->destroy("id = $id");

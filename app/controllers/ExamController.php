@@ -22,6 +22,11 @@ class ExamController extends AppController
         $this->data['content'] = 'exam/new';
     }
 
+    public function detailAction()
+    {
+        $this->data['content'] = 'exam/detail';
+    }
+
     public function create(Request $request)
     {
         try {
@@ -36,7 +41,9 @@ class ExamController extends AppController
                 'topic_id' => $topic_id,
                 'timelimit' => $timelimit,
             ]);
-            return $this->successResponse();
+
+            $id = Exam::getId($name);
+            return $this->successResponse($id);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
