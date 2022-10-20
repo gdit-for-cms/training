@@ -195,7 +195,7 @@ Trait QueryBuilder
         // Reset field
         $this->resetQuery();
 
-        if (!empty($query)) {
+        if ($query) {
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
 
