@@ -18,9 +18,10 @@ Trait QueryBuilder
      * @param  string  $tableName
      * @return $this
      */
-    public function table($tableName){
-
+    public function table($tableName)
+    {
         $this->tableName = $tableName;
+        
         return $this;
     }
 
@@ -32,14 +33,16 @@ Trait QueryBuilder
      * @param  string  $compare (Symbol)
      * @return $this
      */
-    public function where($column, $compare, $value){
-
-        if(empty($this->where)){
+    public function where($column, $compare, $value)
+    {
+        if (empty($this->where)) {
             $this->operator = ' WHERE ';
-        }else {
+        } else {
             $this->operator = ' AND ';
         }
+        $value = addslashes($value);
         $this->where .= "$this->operator $column $compare '$value'";
+
         return $this;
     }
 
@@ -51,14 +54,15 @@ Trait QueryBuilder
      * @param  string  $compare
      * @return $this
      */
-    public function orWhere($column, $compare, $value){
-
-        if(empty($this->where)){
+    public function orWhere($column, $compare, $value)
+    {
+        if (empty($this->where)) {
             $this->operator = ' WHERE ';
-        }else {
+        } else {
             $this->operator = ' OR ';
         }
         $this->where .= "$this->operator $column $compare '$value'";
+
         return $this;
     }
 
@@ -69,14 +73,16 @@ Trait QueryBuilder
      * @param  mixed  $value
      * @return $this
      */
-    public function whereLike($column, $value){
-
-        if(empty($this->where)){
+    public function whereLike($column, $value)
+    {
+        if (empty($this->where)) {
             $this->operator = ' WHERE ';
-        }else {
+        } else {
             $this->operator = ' AND ';
         }
+        $value = addslashes($value);
         $this->where .= "$this->operator $column LIKE '%$value%'";
+
         return $this;
     }
     /**
@@ -85,9 +91,10 @@ Trait QueryBuilder
      * @param  array|mixed  $columns
      * @return $this
      */
-    public function select($column = '*'){
-
+    public function select($column = '*')
+    {
         $this->selectColumn = $column;
+
         return $this;
     }
 
@@ -98,9 +105,10 @@ Trait QueryBuilder
      * @param  int  $offset
      * @return $this
      */
-    public function limit($number, $offset = 0){
-        
-        $this->limit = "LIMIT $offset, $number";
+    public function limit($number, $offset = 0)
+    {
+        $this->limit = "LIMIT " . $offset . ", " . $number;
+
         return $this;
     }
 
@@ -111,16 +119,15 @@ Trait QueryBuilder
      * @param  string  $direction
      * @return $this
      */
-    public function orderBy($column, $direction = 'asc'){
-
+    public function orderBy($column, $direction = 'asc')
+    {
         $arrColumns = array_filter(explode(',', $column));
-        if(!empty($arrColumns) && count($arrColumns) >= 2 ){
-
+        if (!empty($arrColumns) && count($arrColumns) >= 2 ) {
             $this->orderBy = "ORDER BY". implode(', ', $arrColumns);
-        }else {
-
-            $this->orderBy = "ORDER BY". $column." ".$direction;
+        } else {
+            $this->orderBy = "ORDER BY" . " " . $column . " " . $direction;
         }
+
         return $this;
     }
     /**
@@ -150,20 +157,27 @@ Trait QueryBuilder
      *
      * @return array
      */
-    public function get($column = '*'){
-
+    public function get($column = '*')
+    {
         $db = static::getDB();
         $this->selectColumn = $column;
-        $sqlQuery = "SELECT $this->selectColumn FROM $this->tableName $this->innerJoin $this->where $this->orderBy $this->limit";
+        $sqlQuery = 
+        "SELECT " . $this->selectColumn . 
+        " FROM " . $this->_table . " " .
+        $this->innerJoin . " " . 
+        $this->where . " " . 
+        $this->orderBy . " " . 
+        $this->limit;
         $sqlQuery = trim($sqlQuery);
-        $query = $db->query($sqlQuery);
-
+        $result = $db->query($sqlQuery);
+ 
         // Reset field
         $this->resetQuery();
 
-        if(!empty($query)){
-            return $query->fetchALl(PDO::FETCH_ASSOC);
+        if (!empty($result)) {
+            return $result->fetchAll(PDO::FETCH_ASSOC);
         }
+
         return false;
     }
 
@@ -172,18 +186,19 @@ Trait QueryBuilder
      *
      * @return array
      */
-    public function all(){
-
+    public function all()
+    {
         $db = static::getDB();
-        $sqlQuery = "SELECT * FROM $this->tableName";
+        $sqlQuery = "SELECT * FROM $this->_table";
         $query = $db->query($sqlQuery);
 
         // Reset field
         $this->resetQuery();
 
-        if(!empty($query)){
-            return $query->fetchALl(PDO::FETCH_ASSOC);
+        if (!empty($query)) {
+            return $query->fetchAll(PDO::FETCH_ASSOC);
         }
+
         return false;
     }
 
@@ -194,8 +209,8 @@ Trait QueryBuilder
      * @param  array  $column
      * @return mixed|static
      */
-    public function find($id, $column = '*'){
-    
+    public function find($id, $column = '*')
+    {
         return $this->where('id', '=', $id)->first($column);
     }
 
@@ -205,24 +220,25 @@ Trait QueryBuilder
      * @param  array|string  $column
      * @return object|static|null
      */
-    public function first($column = '*'){
-    
+    public function first($column = '*')
+    {
         $db = static::getDB();
         $this->selectColumn = $column;
-        $sqlQuery = "SELECT $this->selectColumn FROM $this->tableName $this->where";
-        $query = $db->query($sqlQuery);
+        $sqlQuery = "SELECT " . $this->selectColumn . " FROM " . $this->_table . " " . $this->where;
+        $result = $db->query($sqlQuery);
 
         // Reset field
         $this->resetQuery();
 
-        if(!empty($query)){
-            return $query->fetch(PDO::FETCH_ASSOC);
+        if (!empty($result)) {
+            return $result->fetch(PDO::FETCH_ASSOC);
         }
+
         return false;
     }
 
-    public function resetQuery(){
-    
+    public function resetQuery()
+    {
         $this->tableName = '';
         $this->where = '';
         $this->operator = '';
@@ -239,9 +255,10 @@ Trait QueryBuilder
      * @param  string  $tableName
      * @return $this
      */
-    public function join($tableName, $relationship){
-
+    public function join($tableName, $relationship)
+    {
         $this->innerJoin = "INNER JOIN" .$tableName. " ON " .$relationship." ";
+
         return $this;
     }
     
@@ -251,25 +268,26 @@ Trait QueryBuilder
      * @param  array|mixed  $data
      * @return boolean
      */
-    public function insert($data){
-        
+    public function insert($data)
+    {
         $db = static::getDB();
         $tableName = $this->_table;
-
-        if(!empty($data)){
+        if (!empty($data)) {
             $columnStr = '';
             $valueStr = '';
             foreach($data as $key => $value){
+                $key = addslashes(htmlspecialchars($key));
+                $value = addslashes(htmlspecialchars($value));
                 $columnStr.= $key.',';
                 $valueStr.= "'".$value."',";
             }
             $columnStr = rtrim($columnStr, ',');
             $valueStr = rtrim($valueStr, ',');
 
-            $sqlQuery = "INSERT INTO $tableName ($columnStr) VALUES ($valueStr)";
-            $query = $db->query($sqlQuery);
+            $sqlQuery = "INSERT INTO " . $tableName . " (" . $columnStr . ")" . " VALUES " . "(" . $valueStr . ") " ;
+            $result = $db->query($sqlQuery);
 
-            if($query){
+            if ($result) {
                 return true;
             }
         }
@@ -284,31 +302,32 @@ Trait QueryBuilder
      * @param  array|mixed  $conditions
      * @return boolean
      */
-    public function update($data , $conditions = ''){
-        
+    public function update($data , $conditions = '')
+    {
         $db = static::getDB();
-        $tableName = $this->_table;
+        $tableName = $this->_table; 
 
-        if(!empty($data)){
+        if (!empty($data)) {
             $updateStr = '';
-            foreach($data as $key => $value){
+            foreach ($data as $key => $value) {
+                $key = addslashes(htmlspecialchars($key));
+                $value = addslashes(htmlspecialchars($value));
                 $updateStr.= "$key = '$value',";
             }
             $updateStr = rtrim($updateStr, ',');
             
-            if(!empty($conditions)){
-                $sqlQuery = "UPDATE $tableName SET $updateStr WHERE $conditions";
-            }else {
-                $sqlQuery = "UPDATE $tableName SET $updateStr ";
+            if (!empty($conditions)) {
+                $sqlQuery = "UPDATE " . $tableName . " SET " . $updateStr . " WHERE " . $conditions;
+            } else {
+                $sqlQuery = "UPDATE " . $tableName . " SET " . $updateStr ;
             }
+            $result = $db->query($sqlQuery);
 
-            $query = $db->query($sqlQuery);
-
-            if($query){
+            if ($result) {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -319,40 +338,30 @@ Trait QueryBuilder
      * @return boolean
      */
     public function destroy($conditions){
-        
         $db = static::getDB();
         $tableName = $this->_table;
 
-        $sqlQuery = "DELETE FROM $tableName WHERE $conditions";
+        $sqlQuery = "DELETE FROM " . $tableName . " WHERE " . $conditions;
 
-        $query = $db->query($sqlQuery);
+        $result = $db->query($sqlQuery);
 
-        if($query){
-            return true;
-        }else {
-            return false;
-        }
+        return !!$result;
     }
 
      /**
-     * Execute the delete query (delete table).
+     * Execute the delete query (delete table). 
      *
      * @return boolean
      */
-    public function delete(){
-        
+    public function delete()
+    {
         $db = static::getDB();
         $tableName = $this->_table;
 
-        $sqlQuery = "DELETE FROM $tableName";
+        $sqlQuery = "DELETE FROM " . $tableName;
 
-        $query = $db->query($sqlQuery);
+        $result = $db->query($sqlQuery);
 
-        if($query){
-            return true;
-        }else {
-            return false;
-        }
+        return !!$result;
     }
 }
-
