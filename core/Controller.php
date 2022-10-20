@@ -38,7 +38,8 @@ abstract class Controller
      *
      * @return void
      */
-    public function __call($name, $args) {
+    public function __call($name, $args) 
+    {
         $method = $name . 'Action';
 
         if (method_exists($this, $method)) {
@@ -58,7 +59,7 @@ abstract class Controller
      */
     protected function before() {
     }
-
+    
     /**
      * After filter - called after an action method.
      *

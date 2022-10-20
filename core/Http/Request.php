@@ -229,8 +229,10 @@ class Request
      *
      * 
      */
-    public function saveUser($user){
+    public function saveUser($user)
+    {
         $this->session->user = $user;
+
         return $this;
     }
 
@@ -240,8 +242,10 @@ class Request
      *
      * 
      */
-    public function deleteUser(){
+    public function deleteUser()
+    {
         $this->session->user = null;
+
         return $this;
     }
 
@@ -251,8 +255,19 @@ class Request
      *
      * @return mixed
      */
-    public function getUser(){
+    public function getUser()
+    {
         return $this->session->user;
     }
+
+    /**
+     * Get the data form proteced request 
+     *
+     * @param  mixed  $obj
+     * @param  string  default:'container'
+     *
+     * @return array
+     */
+
 }
 

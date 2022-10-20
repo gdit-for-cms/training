@@ -18,7 +18,8 @@ class View
      *
      * @return void
      */
-    public static function render($view, $args = []) {
+    public static function render($view, $args = []) 
+    {
         extract($args, EXTR_SKIP);
 
         $file = dirname(__DIR__) . "/app/views/$view";  // relative to Core directory
