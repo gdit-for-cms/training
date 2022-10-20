@@ -7,7 +7,6 @@ use Core\View;
 
 class DefaultController extends Controller
 {
-
     /**
      * Show the index page
      *
@@ -17,6 +16,4 @@ class DefaultController extends Controller
     {
         View::render('default/index.php');
     }
-
-    
 }

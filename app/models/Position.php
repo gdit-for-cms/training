@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Core\Model;
-use PDO;
 use Core\QueryBuilder;
 
 /**
@@ -11,27 +10,21 @@ use Core\QueryBuilder;
  *
  * PHP version 7.0
  */
-class User extends Model
+class Position extends Model
 {
     use QueryBuilder;
 
-    private $_table = 'user';
+    private $_table = 'position';
 
     /**
      * Get all the users as an associative array
      *
      * @return array
      */
-    public static function getAllRelation()
+
+    public static function getAll()
     {
-        $db = static::getDB();
-        $stmt = $db->query('SELECT u.id, u.name, u.email, u.room_id, u.position_id, role.name role_name, room.name room_name, position.name position_name
-                            FROM user AS u
-                            JOIN role ON u.role_id = role.id
-                            JOIN room ON u.room_id = room.id
-                            JOIN position ON u.position_id = position.id
-                            ORDER BY u.id DESC');
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return (new self)->latest()->get();
     }
 
     public static function getBy($column, $operator, $value)
@@ -59,8 +52,4 @@ class User extends Model
         return (new self)->destroy($condition);
     }
 
-    public static function filter($role, $room, $position)
-    {
-        return (new self)->where('role_id', '=', $role)->where('room_id', '=', $room)->where('position_id', '=', $position)->get();
-    }
 }

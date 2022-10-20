@@ -86,7 +86,7 @@ class Request
      */
     public function getPost()
     {
-        $data = $this->getProtectedValue($this->post, 'container');
+        $data = $this->post;
 
         return $data;
     }
@@ -112,7 +112,7 @@ class Request
      */
     public function getGet()
     {
-        $data = $this->getProtectedValue($this->get, 'container');
+        $data = $this->get;
         
         return $data;
 
@@ -234,8 +234,10 @@ class Request
      *
      * 
      */
-    public function saveUser($user){
+    public function saveUser($user)
+    {
         $this->session->user = $user;
+
         return $this;
     }
 
@@ -245,8 +247,10 @@ class Request
      *
      * 
      */
-    public function deleteUser(){
+    public function deleteUser()
+    {
         $this->session->user = null;
+
         return $this;
     }
 
@@ -256,7 +260,8 @@ class Request
      *
      * @return mixed
      */
-    public function getUser(){
+    public function getUser()
+    {
         return $this->session->user;
     }
 
@@ -268,11 +273,6 @@ class Request
      *
      * @return array
      */
-    public function getProtectedValue($obj, $name) {
-        $array = (array)$obj;
-        $prefix = chr(0).'*'.chr(0);
-        return $array[$prefix.$name];
-    }
 
 }
 

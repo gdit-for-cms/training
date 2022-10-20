@@ -2,10 +2,15 @@
     "autoload": {
         "psr-4": {
             "Core\\": "core/",
+            "Storage\\": "storage/",
             "App\\": "app/",
             "App\\Controllers\\": "app/controllers/",
             "App\\Models\\": "app/models/",
             "App\\Services\\": "app/services/"
-        }
+        },
+        "files" : [
+            "app/helpers.php",
+            "app/errors.php"
+        ]
     }
 }

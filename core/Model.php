@@ -12,7 +12,6 @@ use App\Config;
  */
 abstract class Model
 {
-
     /**
      * Get the PDO database connection
      *
