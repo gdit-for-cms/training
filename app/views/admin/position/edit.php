@@ -19,7 +19,7 @@
                         <label class="form-label" for="description">Description</label>
                         <textarea class="form-control" rows="3" name="description" id="description"><?= $position['description'] ?></textarea>
                     </div>
-                    <button id="submit" type="submit" disabled class="btn btn-primary">Save</button>
+                    <button id="submit" type="submit" class="btn btn-primary">Save</button>
                 </form>
             </div>
         </div>
@@ -39,7 +39,7 @@
         checkChangeInput('keyup', nameInput)
         checkChangeInput('keyup', descriptionInput)
     }
-    start()
+    // start()
 
     function validate() {
         const dataUserCurrent = {

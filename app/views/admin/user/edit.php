@@ -32,7 +32,7 @@
                     <div class="row mb-3">
                         <div class="col-md-4">
                             <label class="form-label" for="role">Role</label>
-                            <select id="role" name="role" class="form-control">
+                            <select id="role" name="role_id" class="form-control">
                                 <?php foreach ($allRoles as $role) { ?>
                                     <option <?php if ($user['role_id'] == $role['id']) {
                                                 echo 'Selected';
@@ -44,7 +44,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label" for="room">Room</label>
-                            <select id="room" name="room" class="form-control">
+                            <select id="room" name="room_id" class="form-control">
                                 <?php foreach ($allRooms as $room) { ?>
                                     <option <? if ($user['room_id'] == $room['id']) {
                                                 echo 'Selected';
@@ -56,7 +56,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label" for="position">Position</label>
-                            <select id="position" name="position" class="form-control">
+                            <select id="position" name="position_id" class="form-control">
                                 <?php foreach ($allPositions as $position) { ?>
                                     <option <? if ($user['position_id'] == $position['id']) {
                                                 echo 'Selected';
@@ -67,7 +67,7 @@
                             </select>
                         </div>
                     </div>
-                    <button id="submit" type="submit" disabled class="btn btn-primary">Create</button>
+                    <button id="submit" type="submit" class="btn btn-primary">Create</button>
                 </form>
             </div>
         </div>
@@ -104,7 +104,7 @@
         checkChangeInput('change', roleInput)
         checkChangeInput('change', positionInput)
     }
-    start()
+    // start()
 
     function validate() {
         const dataUserCurrent = {

@@ -4,42 +4,27 @@ namespace App\Requests;
 
 use Core\Http\Request;
 use App\Validation;
+use Core\Http\ResponseTrait;
 
 class AppRequest extends Request
 {   
-//     protected $request;
+    use ResponseTrait;
 
-//     public function __construct(Request $request)
-//     {
-//         $this->request = $request;
-//     }
-    public static function validate()
+    public function validate($rules, $request, $method)
     {   
-        $rules = [
-            'price' => [
-                'required',
-                'numeric',
-                'filled',
-            ],
-            'name' => [
-                'required',
-                'string',
-                'filled',
-            ],
-            'description' => [
-                'max:500',
-            ],];
-        $request = new Request;
-        $post = $request->getPost()->all();
-
         $arrayRequest = [];
-        if (count($post) == 1) {
-            $arrayRequest = $post;
+        if ($method == 'post') {
+            $arrayRequest = $request->getPost()->all();
         } else {
             $get = $request->getGet()->all();
-            // foreach ($get as $value) {
-                $arrayRequest = $get;
-            // }
+            array_shift($get);
+            $arrayRequest = $get;
+        }
+        // var_dump($arrayRequest);
+        // exit;
+        if ($arrayRequest == []) {
+            header('Location: /room/new');
+            exit;
         }
 
         $ruleRequires = [];
@@ -48,32 +33,34 @@ class AppRequest extends Request
                 $ruleRequires[$keyRule] = $value;
             }
         }
-        // print_r($arrayRequest);
-        // print_r($ruleRequires);
-        // exit;
+
         $same = array_intersect(array_keys($ruleRequires), array_keys($arrayRequest));
-        print_r($same);
-        print_r(array_keys($rules));
-        // print_r($diff);
+
         if ($same) {
             $diff = array_diff(array_keys($ruleRequires), $same);
             if ($diff) {
-                    // print error require. (print theo array_value cua $diff)
-                
+                return ['error', $diff[array_key_first($diff)] => 'required'];
             } else {
                 foreach ($arrayRequest as $key1 => $value1) {
                     foreach ($rules as $key2 => $value2) {
                         if ($key1 == $key2) {
                             foreach ($value2 as $each) {
-                                if (str_contains($each, ':')) {
+                                if (strpos($each, ':') !== false) {
                                     $eachArray =  explode(':', $each);
-                                    call_user_func($eachArray[0], $eachArray[1]);
+                                    if (!call_user_func($eachArray[0], $eachArray[1], $value1)) {
+                                        return ['error', $key1 => $eachArray[0]];
+                                    }
+                                } else {
+                                    if (!call_user_func($each, $value1)) {
+                                        // return $this->errorResponse(($key1 . ":" . showError($each)));
+                                        return ['error', $key1 => $each];
+                                    }
                                 }
-                                call_user_func($each, $value1);
                             }
                         }
                     }
                 }
+                return $arrayRequest;
             }
         }
         

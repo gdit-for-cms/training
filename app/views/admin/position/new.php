@@ -18,7 +18,7 @@
                         <label class="form-label" for="description">Description</label>
                         <textarea class="form-control" rows="3" name="description" id="description" placeholder="Description..."></textarea>
                     </div>
-                    <button id="submit" type="submit" disabled class="btn btn-primary">Create</button>
+                    <button id="submit" type="submit" class="btn btn-primary">Create</button>
                 </form>
             </div>
         </div>
@@ -33,7 +33,7 @@
         checkChangeInput(nameInput)
         checkChangeInput(descriptionInput)
     }
-    start()
+    // start()
 
     function validate() {
         if (nameInput.value == '') {

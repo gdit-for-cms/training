@@ -167,7 +167,7 @@ Trait QueryBuilder
         // Reset field
         $this->resetQuery();
 
-        if(!empty($result)){
+        if($result){
             return $result->fetchAll(PDO::FETCH_ASSOC);
         }
         return false;
@@ -182,13 +182,13 @@ Trait QueryBuilder
     {
         $db = static::getDB();
         $sqlQuery = "SELECT * FROM $this->_table";
-        $query = $db->query($sqlQuery);
+        $result = $db->query($sqlQuery);
 
         // Reset field
         $this->resetQuery();
 
-        if(!empty($query)){
-            return $query->fetchAll(PDO::FETCH_ASSOC);
+        if($result){
+            return $result->fetchAll(PDO::FETCH_ASSOC);
         }
         return false;
     }
@@ -221,7 +221,7 @@ Trait QueryBuilder
         // Reset field
         $this->resetQuery();
 
-        if(!empty($result)){
+        if($result){
             return $result->fetch(PDO::FETCH_ASSOC);
         }
         return false;
@@ -265,8 +265,8 @@ Trait QueryBuilder
             $columnStr = '';
             $valueStr = '';
             foreach($data as $key => $value){
-                $key = addslashes($key);
-                $value = addslashes($value);
+                $key = $key;
+                $value = $value;
                 $columnStr.= $key.',';
                 $valueStr.= "'".$value."',";
             }

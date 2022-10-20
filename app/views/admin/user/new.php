@@ -31,7 +31,7 @@
                     <div class="row mb-3">
                         <div class="col-md-4">
                             <label class="form-label" for="role">Role</label>
-                            <select id="role" name="role" class="form-control">
+                            <select id="role" name="role_id" class="form-control">
                                 <?php foreach ($allRoles as $role) { ?>
                                     <option value="<?= $role['id'] ?>"><?= $role['name'] ?></option>
                                 <?php } ?>
@@ -39,7 +39,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label" for="room">Room</label>
-                            <select id="room" name="room" class="form-control">
+                            <select id="room" name="room_id" class="form-control">
                                 <?php foreach ($allRooms as $room) { ?>
                                     <option value="<?= $room['id'] ?>"><?= $room['name'] ?></option>
                                 <?php } ?>
@@ -47,14 +47,14 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label" for="position">Position</label>
-                            <select id="position" name="position" class="form-control">
+                            <select id="position" name="position_id" class="form-control">
                                 <?php foreach ($allPositions as $position) { ?>
                                     <option value="<?= $position['id'] ?>"><?= $position['name'] ?></option>
                                 <?php } ?>
                             </select>
                         </div>
                     </div>
-                    <button id="submit" type="submit" disabled class="btn btn-primary">Create</button>
+                    <button id="submit" type="submit" class="btn btn-primary">Create</button>
                 </form>
             </div>
         </div>
@@ -76,7 +76,7 @@
         checkChangeInput(passwordInput)
         checkChangeInput(confirmPasswordInput)
     }
-    start()
+    // start()
 
     function validate() {
         if (nameInput.value.length <= 0 || emailInput.value == '' || passwordInput.value == '' || passwordInput.value != confirmPasswordInput.value) {

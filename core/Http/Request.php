@@ -86,9 +86,7 @@ class Request
      */
     public function getPost()
     {
-        $data = $this->post;
-
-        return $data;
+        return $this->post;
     }
 
     /**
@@ -112,10 +110,7 @@ class Request
      */
     public function getGet()
     {
-        $data = $this->get;
-        
-        return $data;
-
+        return $this->get;
     }
 
     /**

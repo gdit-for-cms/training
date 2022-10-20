@@ -15,6 +15,35 @@ class User extends Model
 {
     use QueryBuilder;
 
+    public $rules = [
+        'name' => [
+            'required',
+            'string',
+            'filled',
+            'maxLen:20',
+            'minLen:5',
+        ],
+        'email' => [
+            'required',
+            'string',
+            'filled',
+        ],
+        'password' => [
+            'required',
+            'string',
+            'filled',
+        ],
+        'role_id' => [
+            'required',
+        ],
+        'room_id' => [
+            'required',
+        ],
+        'position_id' => [
+            'required',
+        ],
+    ];
+
     private $_table = 'user';
 
     /**
@@ -84,8 +113,6 @@ class User extends Model
             }
         } 
 
-        // echo $condition;
-        // exit;
         $stmt = $db->query("SELECT u.id, u.name, u.email, u.room_id, u.position_id, role.name role_name, room.name room_name, position.name position_name
                             FROM user AS u
                             JOIN role ON u.role_id = role.id
@@ -93,8 +120,39 @@ class User extends Model
                             JOIN position ON u.position_id = position.id
                             $condition
                             ORDER BY u.id DESC");
-        // var_dump($stmt);
-        // exit;
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function rules()
+    {
+        return [
+            'name' => [
+                'required',
+                'string',
+                'filled',
+                'maxLen:20',
+                'minLen:5',
+            ],
+            'email' => [
+                'required',
+                'string',
+                'filled',
+            ],
+            'password' => [
+                'required',
+                'string',
+                'filled',
+            ],
+            'role_id' => [
+                'required',
+            ],
+            'room_id' => [
+                'required',
+            ],
+            'position_id' => [
+                'required',
+            ],
+        ];
     }
 }

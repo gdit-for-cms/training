@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Requests\AppRequest;
 use App\Models\Position;
 use App\models\User;
 use App\models\Role;
@@ -37,7 +38,7 @@ class UserController extends AppController
     }
 
     public function newAction()
-    {
+    {   
         $this->data['allRoles'] = Role::getAll();
         $this->data['allRooms'] = Room::getAll();
         $this->data['allPositions'] = Position::getAll();
@@ -47,14 +48,19 @@ class UserController extends AppController
 
     public function create(Request $request)
     {
-        $post = $request->getPost();
+        $appRequest = new AppRequest;
+        $resultVali = $appRequest->validate(User::rules(), $request, 'post');
 
-        $name = $post->get('name');
-        $password = $post->get('password');
-        $email = $post->get('email');
-        $role_id = $post->get('role');
-        $room_id = $post->get('room');
-        $position_id = $post->get('position');
+        if (in_array('error', $resultVali)) {
+            return $this->errorResponse(showError($resultVali[array_key_last($resultVali)]) . " (" . array_key_last($resultVali) . ")");
+        } 
+
+        $name = $resultVali['name'];
+        $password = $resultVali['password'];
+        $email = $resultVali['email'];
+        $role_id = $resultVali['role_id'];
+        $room_id = $resultVali['room_id'];
+        $position_id = $resultVali['position_id'];
 
         $query = User::getBy('email', '=', $email);
         $numRows = count($query);
@@ -92,10 +98,37 @@ class UserController extends AppController
 
     public function update(Request $request)
     {   
-        $post = $request->getPost();
+        $appRequest = new AppRequest;
+        $resultVali = $appRequest->validate([
+            'name' => [
+                'required',
+                'string',
+                'filled',
+                'maxLen:20',
+                'minLen:5',
+            ],
+            'email' => [
+                'required',
+                'string',
+                'filled',
+            ],
+            'role_id' => [
+                'required',
+            ],
+            'room_id' => [
+                'required',
+            ],
+            'position_id' => [
+                'required',
+            ],
+        ], $request, 'post');
 
-        $id = $post->get('id');
-        $email = $post->get('email');
+        if (in_array('error', $resultVali)) {
+            return $this->errorResponse(showError($resultVali[array_key_last($resultVali)]) . " (" . array_key_last($resultVali) . ")");
+        } 
+
+        $id = $resultVali['id'];
+        $email =$resultVali['email'];
 
         $userCheck = User::getBy('email', '=', $email);
         $numRows = count($userCheck);
@@ -104,11 +137,11 @@ class UserController extends AppController
             return $this->errorResponse(showError('email existed'));
         } else {
             try {
-                $name = $post->get('name');
-                $password = $post->get('password');
-                $role_id = $post->get('role');
-                $room_id = $post->get('room');
-                $position_id = $post->get('position');
+                $name = $resultVali['name'];
+                $password = $resultVali['password'];
+                $role_id = $resultVali['role_id'];
+                $room_id = $resultVali['room_id'];
+                $position_id = $resultVali['position_id'];
     
                 User::updateOne(
                     [

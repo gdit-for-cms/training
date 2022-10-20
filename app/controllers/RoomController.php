@@ -15,13 +15,13 @@ class RoomController extends AppController
 
     public array $data;
 
-    public function indexAction(AppRequest $appRequest)
+    public function indexAction()
     {   
         // $request = new AppRequest;
         // // print_r($request);
         // AppRequest::validate($request);
-        var_dump($appRequest);
-        exit;
+        // var_dump($appRequest);
+        // exit;
         // var_dump(Validation::validate());
         $this->data['allUsers'] = User::getAllRelation();
         $this->data['rooms'] = Room::getAll();
@@ -30,21 +30,30 @@ class RoomController extends AppController
 
     public function newAction()
     {   
-        AppRequest::validate();
-        exit;
+        
         $this->data['content'] = 'room/new';
     }
 
     public function create(Request $request)
-    {
-        $post = $request->getPost();
+    {   
+        $appRequest = new AppRequest;
+        $resultVali = $appRequest->validate([
+            'name' => [
+                'required',
+                'string',
+                'filled',
+            ],
+            'description' => [
+                'string',
+            ],
+        ], $request, 'post');
 
-        $name = $post->get('name');
-        $description = $post->get('description');
+        if (in_array('error', $resultVali)) {
+            return $this->errorResponse(showError($resultVali[array_key_last($resultVali)]) . " (" . array_key_last($resultVali) . ")");
+        } 
 
-        // $request = new AppRequest;
-        // print_r($request);
-        // var_dump();
+        $name = $resultVali['name'];
+        $description = $resultVali['description'];
 
         $query = Room::getBy('name', '=', $name);
         $numRows = count($query);
@@ -76,12 +85,31 @@ class RoomController extends AppController
     }
 
     public function update(Request $request)
-    {
+    {   
+        $appRequest = new AppRequest;
+        $resultVali = $appRequest->validate([
+            'id' => [
+                'required',
+                'filled',
+            ],
+            'name' => [
+                'required',
+                'string',
+                'filled',
+            ],
+            'description' => [
+                'string',
+            ],
+        ], $request, 'post');
+
+        if (in_array('error', $resultVali)) {
+            return $this->errorResponse(showError($resultVali[array_key_last($resultVali)]) . " (" . array_key_last($resultVali) . ")");
+        } 
+
         try {
-            $post = $request->getPost();
-            $id = $post->get('id');
-            $name = $post->get('name');
-            $description = $post->get('description');
+            $id = $resultVali['id'];
+            $name = $resultVali['name'];
+            $description = $resultVali['description'];
 
             Room::updateOne(
                 [

@@ -14,12 +14,13 @@ set_exception_handler('Core\Error::exceptionHandler');
  * Routing
  */
 $router = new Core\Router();
+// $router1 = new Core\Router();
 $request = new Core\Http\Request();
-$appRequest = new App\Requests\AppRequest();
+// $appRequest = new App\Requests\AppRequest();
 
 // Add the routes
 $router->add('', ['controller' => 'Auth', 'action' => 'login']);
 $router->add('{controller}/{action}');
     
-$router->dispatch($appRequest);
+// $router1->dispatch($appRequest);
 $router->dispatch($request);

@@ -19,7 +19,7 @@
                         <label class="form-label" for="inputAddress2">Description</label>
                         <textarea class="form-control" rows="3" name="description" id="description"><?= $room['description'] ?></textarea>
                     </div>
-                    <button id="submit" type="submit" disabled class="btn btn-primary">Save</button>
+                    <button id="submit" type="submit" class="btn btn-primary">Save</button>
                 </form>
             </div>
         </div>
@@ -36,8 +36,8 @@
     }
 
     function start() {
-        checkChangeInput('keyup', nameInput)
-        checkChangeInput('keyup', descriptionInput)
+        // checkChangeInput('keyup', nameInput)
+        // checkChangeInput('keyup', descriptionInput)
     }
     start()
 

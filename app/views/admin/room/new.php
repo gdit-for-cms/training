@@ -9,7 +9,7 @@
         </div>
         <div class="white_card_body">
             <div class="card-body">
-                <form id="form_new_room" class="" action="create" method="POST">
+                <form id="form_new_room" class="" action="create?id=2" method="POST">
                     <div class="mb-3">
                         <label class="form-label" for="name">Name*</label>
                         <input type="text" class="form-control" name="name" id="name"  placeholder="Name...">
@@ -18,7 +18,7 @@
                         <label class="form-label" for="description">Description</label>
                         <textarea class="form-control" rows="3" name="description" id="description" placeholder="Description..."></textarea>
                     </div>
-                    <button id="submit" type="submit" disabled class="btn btn-primary">Create</button>
+                    <button id="submit" type="submit" class="btn btn-primary">Create</button>
                 </form>
             </div>
         </div>
@@ -30,8 +30,8 @@
     const descriptionInput = document.querySelector('#description')
 
     function start() {
-        checkChangeInput(nameInput)
-        checkChangeInput(descriptionInput)
+        // checkChangeInput(nameInput)
+        // checkChangeInput(descriptionInput)
     }
     start()
 

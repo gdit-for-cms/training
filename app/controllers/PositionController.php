@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Requests\AppRequest;
 use App\models\User;
 use App\models\Position;
 use Core\Http\Request;
@@ -27,10 +28,24 @@ class PositionController extends AppController
 
     public function create(Request $request)
     {
-        $post = $request->getPost();
+        $appRequest = new AppRequest;
+        $resultVali = $appRequest->validate([
+            'name' => [
+                'required',
+                'string',
+                'filled',
+            ],
+            'description' => [
+                'string',
+            ],
+        ], $request, 'post');
 
-        $name = $post->get('name');
-        $description = $post->get('description');
+        if (in_array('error', $resultVali)) {
+            return $this->errorResponse(showError($resultVali[array_key_last($resultVali)]) . " (" . array_key_last($resultVali) . ")");
+        } 
+
+        $name = $resultVali['name'];
+        $description = $resultVali['description'];
 
         $query = Position::getBy('name', '=', $name);
         $numRows = count($query);
@@ -61,13 +76,31 @@ class PositionController extends AppController
     }
 
     public function update(Request $request)
-    {
-        try {
-            $post = $request->getPost();
+    {   
+        $appRequest = new AppRequest;
+        $resultVali = $appRequest->validate([
+            'id' => [
+                'required',
+                'filled',
+            ],
+            'name' => [
+                'required',
+                'string',
+                'filled',
+            ],
+            'description' => [
+                'string',
+            ],
+        ], $request, 'post');
 
-            $id = $post->get('id');
-            $name = $post->get('name');
-            $description = $post->get('description');
+        if (in_array('error', $resultVali)) {
+            return $this->errorResponse(showError($resultVali[array_key_last($resultVali)]) . " (" . array_key_last($resultVali) . ")");
+        } 
+
+        try {
+            $id = $resultVali['id'];
+            $name = $resultVali['name'];
+            $description = $resultVali['description'];
 
             Position::updateOne(
                 [
