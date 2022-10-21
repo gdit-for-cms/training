@@ -49,16 +49,18 @@ class AdminController extends AppController
 
                 list($globalInFile1, $constInFile1, $inFile1) = $this->getVariableInFile($dataBefore, $globalInFile1, $constInFile1, $inFile1);
                 list($globalInFile2, $constInFile2, $inFile2) = $this->getVariableInFile($dataAfter, $globalInFile2, $constInFile2, $inFile2);
-
-                $this->data['constInFile1'] = $constInFile1;
-                $this->data['constInFile2'] = $constInFile2;
-                $this->data['globalInFile1'] = $globalInFile1;
-                $this->data['globalInFile2'] = $globalInFile2;
-                $this->data['inFile1'] = $inFile1;
-                $this->data['inFile2'] = $inFile2;
-
+                
+                // Check that the empty 
                 if ((empty($constInFile1) || empty($constInFile2)) && (empty($globalInFile1) || empty($globalInFile1))) {
                     $this->data['uploadStatus'] = 'Upload status: success. Nothing to compare';
+                } else {
+                    // Check a same variable name in 2 files.
+                    $arr = array_intersect($globalInFile1, $globalInFile2);
+                    $this->data['arr'] = $arr;
+                    $this->data['constInFile1'] = $constInFile1;
+                    $this->data['constInFile2'] = $constInFile2;
+                    $this->data['inFile1'] = $inFile1;
+                    $this->data['inFile2'] = $inFile2;
                 }
             } else {
                 $this->data['uploadStatus'] = 'Upload status: Failed';
