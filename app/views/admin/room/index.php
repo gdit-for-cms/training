@@ -19,11 +19,11 @@
                             </button>
                             <div>
                                 <a href='/room/edit?id=<?= $room['id'] ?>' class="edit-btn"><button type="button" class="btn btn-info text-white">Edit</button></a>
-                                <a href='/room/delete?id=<?= $room['id'] ?>' class="delete-btn"><button type="button" class="btn btn-danger text-white">Delete</button></a>
+                                <button type="button" data-id="<?= $room['id'] ?>" class="btn btn-danger delete-btn text-white">Delete</button>
                             </div>
                         </h5>
                     </div>
-                    <div class="table_room collapse" id="collapseseven" aria-labelledby="headingOne" data-parent="#accordion2" style="">
+                    <div class="table_room collapse" id="collapseseven" aria-labelledby="headingOne" data-parent="#accordion2">
                         <div class="card-body row justify-content-center">
                             <div class="col-lg-6">
                                 <div class="card_box box_shadow position-relative mb_30     ">
@@ -40,7 +40,7 @@
                                 </div>
                             </div>
                             <div class="col-lg-6">
-                                <div class="white_card box_shadow card_height_100 mb_30">
+                                <div class="white_card box_shadow card_height_100 mb_30" data-user="">
                                     <div class="white_box_tittle">
                                         <div class="main-title2 ">
                                             <h4 class="mb-2 nowrap ">Member</h4>
@@ -79,6 +79,30 @@
                     </div>
                 </div>
             <?php } ?>
+        </div>
+    </div>
+</div>
+<div class="box-lightbox">
+    <div class="col-lg-6">
+        <div class="white_card card_height_100 mb_30">
+            <div class="white_card_header">
+                <div class="box_header m-0">
+                    <div class="main-title">
+                        <h2 class="m-0">Add new topic</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="white_card_body">
+                <div class="card-body">
+                    <form action="create" method="post" id="add-topic-form">
+
+                        <div class="model-footer">
+                            <button type="button" class="btn btn-secondary js-lightbox-close" >Close</button>
+                            <button class="btn btn-primary" id="updateCategory" disabled>Change</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -123,12 +147,15 @@
     };
 
     function hiddenTable() {
-        console.log(bodyTableEles);
         Array.prototype.slice.call(bodyTableEles).forEach(ele => {
             if (ele.childNodes.length == 1) {
                 ele.parentNode.classList.add('hidden')
                 ele.parentNode.parentNode.innerHTML = '<div class="box_body"><p class="f-w-400 ">No memeber</p></div>'
             }
         })
+    }
+
+    function showModal(params) {
+
     }
 </script>

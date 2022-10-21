@@ -1,15 +1,14 @@
 <?php
-
     function string($value)
     {
-        // echo '123';
-        // exit;
         return is_string(($value));
     }
-    function required($value)
+
+    function required()
     {   
         return true;
     }
+
     function filled($value)
     {   
         if ($value != '') {
@@ -36,5 +35,3 @@
             return false;
         }
     }
-
-?>

@@ -12,12 +12,21 @@ class PositionController extends AppController
 {
     use ResponseTrait;
 
+    public $title = 'Vị trí';
+
+    public object $model;
+    
     public array $data;
+
+    public function __construct()
+    {
+        $this->model = new Position;
+    }
 
     public function indexAction()
     {
         $this->data['allUsers'] = User::getAllRelation();
-        $this->data['positions'] = Position::getAll();
+        $this->data['positions'] = $this->model->getAll();
         $this->data['content'] = 'position/index';
     }
 
@@ -29,16 +38,7 @@ class PositionController extends AppController
     public function create(Request $request)
     {
         $appRequest = new AppRequest;
-        $resultVali = $appRequest->validate([
-            'name' => [
-                'required',
-                'string',
-                'filled',
-            ],
-            'description' => [
-                'string',
-            ],
-        ], $request, 'post');
+        $resultVali = $appRequest->validate(Position::rules(), $request, 'post');
 
         if (in_array('error', $resultVali)) {
             return $this->errorResponse(showError($resultVali[array_key_last($resultVali)]) . " (" . array_key_last($resultVali) . ")");
@@ -47,14 +47,14 @@ class PositionController extends AppController
         $name = $resultVali['name'];
         $description = $resultVali['description'];
 
-        $query = Position::getBy('name', '=', $name);
+        $query = $this->model->getBy('name', '=', $name);
         $numRows = count($query);
 
         if ($numRows == 1) {
             return $this->errorResponse('Position has been exist');
         } else {
             try {
-                Position::create(
+                $this->model->create(
                     [
                         'name' => $name,
                         'description' => $description
@@ -71,27 +71,14 @@ class PositionController extends AppController
     {
         $id = $request->getGet()->get('id');
 
-        $this->data['position'] = Position::getById($id, 'id, name, description');
+        $this->data['position'] = $this->model->getById($id, 'id, name, description');
         $this->data['content'] = 'position/edit';
     }
 
     public function update(Request $request)
     {   
         $appRequest = new AppRequest;
-        $resultVali = $appRequest->validate([
-            'id' => [
-                'required',
-                'filled',
-            ],
-            'name' => [
-                'required',
-                'string',
-                'filled',
-            ],
-            'description' => [
-                'string',
-            ],
-        ], $request, 'post');
+        $resultVali = $appRequest->validate(Position::rules('add', ['id' => ['required', 'filled']]), $request, 'post');
 
         if (in_array('error', $resultVali)) {
             return $this->errorResponse(showError($resultVali[array_key_last($resultVali)]) . " (" . array_key_last($resultVali) . ")");
@@ -102,7 +89,7 @@ class PositionController extends AppController
             $name = $resultVali['name'];
             $description = $resultVali['description'];
 
-            Position::updateOne(
+            $this->model->updateOne(
                 [
                     'name' => $name,
                     'description' => $description
@@ -119,7 +106,7 @@ class PositionController extends AppController
     {
         $id = $request->getGet()->get('id');
 
-        Position::destroyOne("id = $id");
+        $this->model->destroyOne("id = $id");
 
         header('Location: /position/index');
         exit;

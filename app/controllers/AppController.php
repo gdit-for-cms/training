@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use Core\Controller;
-use Requests\AppRequest;
 use Core\View;
 
 class AppController extends Controller
@@ -13,14 +12,9 @@ class AppController extends Controller
             header('Location: /auth/login');
             exit;
         }
-        $this->data['title'] = ucfirst($this->route_params['controller']);
+        $this->data['title'] = $this->title;
     }
     
-    /**
-     * After filter - called after an action method.
-     *
-     * @return void
-     */
     protected function after() {
         View::render('admin/back-layouts/master.php', $this->data);
     }

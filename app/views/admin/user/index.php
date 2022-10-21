@@ -64,7 +64,7 @@
                       <td class="position_name"><?= $user['position_name'] ?></td>
                       <td class="flex items-center justify-center">
                         <a href='/user/edit?id=<?= $user['id'] ?>' class="edit_btn mr-2"><button type="button" class="btn btn-info text-white">Edit</button></a>
-                        <a href='/user/delete?id=<?= $user['id'] ?>' class="delete_btn"><button type="button" class="btn btn-danger text-white">Delete</button></a>
+                        <button type="button" data-id="<?= $user['id'] ?>" class="btn btn-danger delete-btn text-white">Delete</button>
                       </td>
                     </tr>
                 <?php } ?>

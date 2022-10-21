@@ -15,24 +15,27 @@ class UserController extends AppController
 {
     use ResponseTrait;
 
+    public $title = 'Người dùng';
+
+    public object $model;
+    
     public array $data;
+
+    public function __construct()
+    {
+        $this->model = new User;
+    }
 
     public function indexAction(Request $request)
     {   
-        $checkFilter = $request->getGet()->all();
+        $get = $request->getGet()->all();
 
-        if ($checkFilter > 1) {
-            $get = $request->getGet()->all();
-            array_shift($get);
-            
-            $this->data['allUsers'] = User::filter($get);
-        } else {
-            $this->data['allUsers'] = User::getAllRelation();
-        }
+        array_shift($get);
+        $this->data['allUsers'] = $this->model->getAllRelation($get);
 
-        $this->data['allRooms'] =  Room::getAll();
-        $this->data['allRoles'] =  Role::getAll();
-        $this->data['allPositions'] =  Position::getAll();
+        $this->data['allRoles'] = Role::getAll();
+        $this->data['allRooms'] = Room::getAll();
+        $this->data['allPositions'] = Position::getAll();
 
         $this->data['content'] = 'user/index';
     }
@@ -49,7 +52,7 @@ class UserController extends AppController
     public function create(Request $request)
     {
         $appRequest = new AppRequest;
-        $resultVali = $appRequest->validate(User::rules(), $request, 'post');
+        $resultVali = $appRequest->validate($this->model->rules(), $request, 'post');
 
         if (in_array('error', $resultVali)) {
             return $this->errorResponse(showError($resultVali[array_key_last($resultVali)]) . " (" . array_key_last($resultVali) . ")");
@@ -62,13 +65,13 @@ class UserController extends AppController
         $room_id = $resultVali['room_id'];
         $position_id = $resultVali['position_id'];
 
-        $query = User::getBy('email', '=', $email);
+        $query = $this->model->getBy('email', '=', $email);
         $numRows = count($query);
         if ($numRows == 1) {
             return $this->errorResponse('User has been exist');
         } else {
             try {
-                User::create(
+                $this->model->create(
                     [
                         'name' => $name,
                         'email' => $email,
@@ -85,13 +88,13 @@ class UserController extends AppController
     }
 
     public function editAction(Request $request)
-    {
+    {   
         $id = $request->getGet()->get('id');
 
         $this->data['allRoles'] = Role::getAll();
         $this->data['allRooms'] = Room::getAll();
         $this->data['allPositions'] = Position::getAll();
-        $this->data['user'] = User::getById($id, 'id, name, email, role_id, room_id, position_id');
+        $this->data['user'] = $this->model->getById($id, 'id, name, email, role_id, room_id, position_id');
 
         $this->data['content'] = 'user/edit';
     }
@@ -99,29 +102,7 @@ class UserController extends AppController
     public function update(Request $request)
     {   
         $appRequest = new AppRequest;
-        $resultVali = $appRequest->validate([
-            'name' => [
-                'required',
-                'string',
-                'filled',
-                'maxLen:20',
-                'minLen:5',
-            ],
-            'email' => [
-                'required',
-                'string',
-                'filled',
-            ],
-            'role_id' => [
-                'required',
-            ],
-            'room_id' => [
-                'required',
-            ],
-            'position_id' => [
-                'required',
-            ],
-        ], $request, 'post');
+        $resultVali = $appRequest->validate($this->model->rules('remove', ['password']), $request, 'post');
 
         if (in_array('error', $resultVali)) {
             return $this->errorResponse(showError($resultVali[array_key_last($resultVali)]) . " (" . array_key_last($resultVali) . ")");
@@ -130,7 +111,7 @@ class UserController extends AppController
         $id = $resultVali['id'];
         $email =$resultVali['email'];
 
-        $userCheck = User::getBy('email', '=', $email);
+        $userCheck = $this->model->getBy('email', '=', $email);
         $numRows = count($userCheck);
 
         if ($numRows == 1 && $userCheck[0]['id'] != $id) {
@@ -143,7 +124,7 @@ class UserController extends AppController
                 $room_id = $resultVali['room_id'];
                 $position_id = $resultVali['position_id'];
     
-                User::updateOne(
+                $this->model->updateOne(
                     [
                         'name' => $name,
                         'password' => $password,
@@ -165,17 +146,9 @@ class UserController extends AppController
     {
         $id = $request->getGet()->get('id');
 
-        User::destroyOne("id = $id");
+        $this->model->destroyOne("id = $id");
 
         header('Location: /user/index');
         exit;
-    }
-
-    public function filterAction(Request $request)
-    {
-        $post = $request->getPost()->all();
-
-        $user = User::filter($post);
-        $this->data['allUsers'] = $user;
     }
 }

@@ -27,18 +27,18 @@ class Role extends Model
         return (new self)->all();
     }
 
-    public static function insert($data)
+    public function insert($data)
     {
-        return (new self)->insert($data);
+        return $this->insert($data);
     }
 
-    public static function getBy($column, $operator, $value)
+    public function getBy($column, $operator, $value)
     {   
-        return (new self)->where($column, $operator, $value)->get();
+        return $this->where($column, $operator, $value)->get();
     }
 
-    public static function getById($id, $column)
+    public function getById($id, $column)
     {   
-        return (new self)->find($id, $column);
+        return $this->find($id, $column);
     }
 }

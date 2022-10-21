@@ -19,14 +19,14 @@
                             </button>
                             <div>
                                 <a href='/position/edit?id=<?= $position['id'] ?>' class="edit-btn"><button type="button" class="btn btn-info text-white">Edit</button></a>
-                                <a href='/position/delete?id=<?= $position['id'] ?>' class="delete-btn"><button type="button" class="btn btn-danger text-white">Delete</button></a>
+                                <button type="button" data-id="<?= $position['id'] ?>" class="btn btn-danger delete-btn text-white">Delete</button>
                             </div>
                         </h5>
                     </div>
-                    <div class="table_position collapse" id="collapseseven" aria-labelledby="headingOne" data-parent="#accordion2" style="">
+                    <div class="table_position collapse" id="collapseseven" aria-labelledby="headingOne" data-parent="#accordion2">
                         <div class="card-body row justify-content-center">
                             <div class="col-lg-6">
-                                <div class="card_box box_shadow position-relative mb_30     ">
+                                <div class="card_box box_shadow position-relative mb_30">
                                     <div class="white_box_tittle">
                                         <div class="main-title2 ">
                                             <h4 class="mb-2 nowrap ">Description</h4>
@@ -123,7 +123,6 @@
     };
 
     function hiddenTable() {
-        console.log(bodyTableEles);
         Array.prototype.slice.call(bodyTableEles).forEach(ele => {
             if (ele.childNodes.length == 1) {
                 ele.parentNode.classList.add('hidden')

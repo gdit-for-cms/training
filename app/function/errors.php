@@ -11,8 +11,8 @@ function showError($errorName)
         "string" => "This field must be string",
         "required" => "Missing a field",
         "filled" => "Please fil out this field",
-        "maxLen" => "Length this field is max",
-        "minLen" => "Length this field is min",
+        "maxLen" => "The entered text too long",
+        "minLen" => "The entered text too short",
     ];
     if ($errorArray[$errorName]) {
         return $errorArray[$errorName];
@@ -20,3 +20,4 @@ function showError($errorName)
         return  $errorArray['undefindError'];
     }
 }
+

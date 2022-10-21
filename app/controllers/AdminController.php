@@ -10,7 +10,7 @@ use Core\Http\Request;
 class AdminController extends AppController
 {
     public array $data;
-
+    public $title = 'Chủ';
     public function indexAction()
     {   
         $this->data['content'] = 'admin/dashboard';

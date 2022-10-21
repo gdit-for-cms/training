@@ -61,9 +61,6 @@
     </div>
 </div>
 <script>
-    // const $ = document.querySelector.bind(document)
-    // const $$ = document.querySelectorAll.bind(document)
-
     const submitBtn = document.querySelector('#submit')
     const nameInput = document.querySelector('#name')
     const emailInput = document.querySelector('#email')
@@ -71,12 +68,13 @@
     const confirmPasswordInput = document.querySelector('#confirmPassword')
 
     function start() {
-        checkChangeInput(nameInput)
-        checkChangeInput(emailInput)
-        checkChangeInput(passwordInput)
-        checkChangeInput(confirmPasswordInput)
+        // checkChangeInput(nameInput)
+        // checkChangeInput(emailInput)
+        // checkChangeInput(passwordInput)
+        // checkChangeInput(confirmPasswordInput)
+        checkConfirmPassword()
     }
-    // start()
+    start()
 
     function validate() {
         if (nameInput.value.length <= 0 || emailInput.value == '' || passwordInput.value == '' || passwordInput.value != confirmPasswordInput.value) {
@@ -89,6 +87,23 @@
     function checkChangeInput(input) {
         input.addEventListener('keyup', () => {
             validate()
+        })
+    }
+
+    function checkConfirmPassword() {
+        passwordInput.addEventListener('keyup', () => {
+            if (confirmPasswordInput.value != passwordInput.value) {
+                submitBtn.disabled = true
+            } else {
+                submitBtn.disabled = false
+            }
+        })
+        confirmPasswordInput.addEventListener('keyup', () => {
+            if (confirmPasswordInput.value != passwordInput.value) {
+                submitBtn.disabled = true
+            } else {
+                submitBtn.disabled = false
+            }
         })
     }
 </script>

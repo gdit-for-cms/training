@@ -27,28 +27,61 @@ class Room extends Model
         return (new self)->latest()->get();
     }
 
-    public static function create($data)
+    public function create($data)
     {
-        return (new self)->insert($data);
+        return $this->insert($data);
     }
 
-    public static function getBy($column, $operator, $value)
+    public function getBy($column, $operator, $value)
     {   
-        return (new self)->where($column, $operator, $value)->get();
+        return $this->where($column, $operator, $value)->get();
     }
 
-    public static function getById($id, $column)
+    public function getById($id, $column)
     {   
-        return (new self)->find($id, $column);
+        return $this->find($id, $column);
     }
 
-    public static function updateOne($data, $condition)
+    public function updateOne($data, $condition)
     {
-        return (new self)->update($data, $condition);
+        return $this->update($data, $condition);
     }
 
-    public static function destroyOne($condition)
+    public function destroyOne($condition)
     {
-        return (new self)->destroy($condition);
+        return $this->destroy($condition);
+    }
+
+    public static function rules($change = '', $value = [])
+    {   
+        $rules = [
+            'name' => [
+                'required',
+                'string',
+                'filled',
+            ],
+            'description' => [
+                'string',
+            ],
+        ];
+        switch ($change) {
+            case 'add':
+                return array_merge($rules, $value);
+                break;
+            case 'remove':
+                foreach ($value as $each) {
+                    if (array_key_exists($each, $rules)) {
+                        unset($rules[$each]);
+                    } 
+                } 
+                return $rules;
+                break;
+            case 'replace':
+                return $value;
+                break;
+            default:
+                return $rules;
+                break;
+        }
     }
 }

@@ -13,18 +13,21 @@ class RoomController extends AppController
 {
     use ResponseTrait;
 
+    public $title = 'Phòng';
+
+    public object $model;
+    
     public array $data;
+
+    public function __construct()
+    {
+        $this->model = new Room;
+    }
 
     public function indexAction()
     {   
-        // $request = new AppRequest;
-        // // print_r($request);
-        // AppRequest::validate($request);
-        // var_dump($appRequest);
-        // exit;
-        // var_dump(Validation::validate());
         $this->data['allUsers'] = User::getAllRelation();
-        $this->data['rooms'] = Room::getAll();
+        $this->data['rooms'] = $this->model->getAll();
         $this->data['content'] = 'room/index';
     }
 
@@ -37,16 +40,7 @@ class RoomController extends AppController
     public function create(Request $request)
     {   
         $appRequest = new AppRequest;
-        $resultVali = $appRequest->validate([
-            'name' => [
-                'required',
-                'string',
-                'filled',
-            ],
-            'description' => [
-                'string',
-            ],
-        ], $request, 'post');
+        $resultVali = $appRequest->validate(Room::rules(), $request, 'post');
 
         if (in_array('error', $resultVali)) {
             return $this->errorResponse(showError($resultVali[array_key_last($resultVali)]) . " (" . array_key_last($resultVali) . ")");
@@ -55,14 +49,14 @@ class RoomController extends AppController
         $name = $resultVali['name'];
         $description = $resultVali['description'];
 
-        $query = Room::getBy('name', '=', $name);
+        $query = $this->model->getBy('name', '=', $name);
         $numRows = count($query);
 
         if ($numRows == 1) {
             return $this->errorResponse('Room has been exist');
         } else {
             try {
-                Room::create(
+                $this->model->create(
                     [
                         'name' => $name,
                         'description' => $description
@@ -80,27 +74,14 @@ class RoomController extends AppController
     {
         $id = $request->getGet()->get('id');
 
-        $this->data['room'] = Room::getById($id, 'id, name, description');
+        $this->data['room'] = $this->model->getById($id, 'id, name, description');
         $this->data['content'] = 'room/edit';
     }
 
     public function update(Request $request)
     {   
         $appRequest = new AppRequest;
-        $resultVali = $appRequest->validate([
-            'id' => [
-                'required',
-                'filled',
-            ],
-            'name' => [
-                'required',
-                'string',
-                'filled',
-            ],
-            'description' => [
-                'string',
-            ],
-        ], $request, 'post');
+        $resultVali = $appRequest->validate(Room::rules('add', ['id' => ['required', 'filled']]), $request, 'post');
 
         if (in_array('error', $resultVali)) {
             return $this->errorResponse(showError($resultVali[array_key_last($resultVali)]) . " (" . array_key_last($resultVali) . ")");
@@ -111,7 +92,7 @@ class RoomController extends AppController
             $name = $resultVali['name'];
             $description = $resultVali['description'];
 
-            Room::updateOne(
+            $this->model->updateOne(
                 [
                     'name' => $name,
                     'description' => $description
@@ -129,7 +110,7 @@ class RoomController extends AppController
     {
         $id = $request->getGet()->get('id');
 
-        Room::destroyOne("id = $id");
+        $this->model->destroyOne("id = $id");
 
         header('Location: /room/index');
         exit;

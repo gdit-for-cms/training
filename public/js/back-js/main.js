@@ -47,6 +47,38 @@ function submitForm(formId) {
     });
 };
 
+function alertDelete() {
+    $('.delete-btn').click(function (e) {
+        let deleteID = $(this).data('id');
+        let pathName = window.location.pathname.split('/')[1]
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            // showDenyButton: true,
+            denyButtonColor: '#0000FF',
+            denyButtonText: 'Change room',
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/${pathName}/delete?id=${deleteID}`,
+                    success: function () {
+                        document.location.reload(true);
+                    }
+                });
+            } else if (result.isDenied) {
+                $('.box-lightbox').addClass('open');
+                console.log();
+                $('.box-lightbox')
+            }
+        })
+    });
+}
+
 $(document).ready(function () {
     submitForm('#form_new_user');
     submitForm('#form_update_user');
@@ -55,7 +87,8 @@ $(document).ready(function () {
     submitForm('#form_new_position');
     submitForm('#form_update_position');
     submitForm('.add-form');
-
+    alertDelete();
+    
     $('#topic-name').change(function () {
         $.ajax({
             type: "GET",
@@ -114,27 +147,27 @@ $(document).ready(function () {
     //     });
     // });
 
-    $('.delete-btn').click(function (e) {
-        let deleteID = $(this).data('id');
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: "/topic/delete?id=" + deleteID,
-                    success: function () {
-                        document.location.reload(true);
-                    }
-                });
-            }
-        })
-    });
+    // $('.delete-btn').click(function (e) {
+    //     let deleteID = $(this).data('id');
+    //     Swal.fire({
+    //         title: 'Are you sure?',
+    //         text: "You won't be able to revert this!",
+    //         icon: 'warning',
+    //         showCancelButton: true,
+    //         confirmButtonColor: '#d33',
+    //         cancelButtonColor: '#3085d6',
+    //         confirmButtonText: 'Yes, delete it!'
+    //     }).then((result) => {
+    //         if (result.isConfirmed) {
+    //             $.ajax({
+    //                 url: "/topic/delete?id=" + deleteID,
+    //                 success: function () {
+    //                     document.location.reload(true);
+    //                 }
+    //             });
+    //         }
+    //     })
+    // });
 });
 
 

@@ -12,7 +12,7 @@ class AppRequest extends Request
 
     public function validate($rules, $request, $method)
     {   
-        $arrayRequest = [];
+        $arrayRequest = array();
         if ($method == 'post') {
             $arrayRequest = $request->getPost()->all();
         } else {
@@ -20,14 +20,13 @@ class AppRequest extends Request
             array_shift($get);
             $arrayRequest = $get;
         }
-        // var_dump($arrayRequest);
-        // exit;
+
         if ($arrayRequest == []) {
             header('Location: /room/new');
             exit;
         }
 
-        $ruleRequires = [];
+        $ruleRequires = array();
         foreach ($rules as $keyRule => $value) {
             if (in_array('required', $value)) {
                 $ruleRequires[$keyRule] = $value;
@@ -47,12 +46,11 @@ class AppRequest extends Request
                             foreach ($value2 as $each) {
                                 if (strpos($each, ':') !== false) {
                                     $eachArray =  explode(':', $each);
-                                    if (!call_user_func($eachArray[0], $eachArray[1], $value1)) {
+                                    if (function_exists($eachArray[0]) && !call_user_func($eachArray[0], $eachArray[1], $value1)) {
                                         return ['error', $key1 => $eachArray[0]];
                                     }
                                 } else {
-                                    if (!call_user_func($each, $value1)) {
-                                        // return $this->errorResponse(($key1 . ":" . showError($each)));
+                                    if (function_exists($each) && !call_user_func($each, $value1)) {
                                         return ['error', $key1 => $each];
                                     }
                                 }
@@ -63,7 +61,5 @@ class AppRequest extends Request
                 return $arrayRequest;
             }
         }
-        
-
     }
 }
