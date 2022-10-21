@@ -17,4 +17,6 @@ class DefaultController extends Controller
     {
         View::render('default/index.php');
     }
+
+    
 }
