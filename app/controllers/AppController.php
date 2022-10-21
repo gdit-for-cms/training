@@ -7,10 +7,11 @@ use Core\View;
 
 class AppController extends Controller 
 {
+    
     /**
      * Before filter - called before an action method.
-     *
-     * @return void
+     * 
+     * @return title of the action  
      */
     protected function before() {
         if (!checkAdmin()) {

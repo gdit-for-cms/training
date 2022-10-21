@@ -16,51 +16,47 @@ class AdminController extends AppController
         $this->data['content'] = 'diff-file/diff';
     }
 
+    /**
+     * Import and compare two files
+     *
+     * @return view with status and variables
+     */
     public function compareAction()
     {
         $this->data['content'] = 'diff-file/compare';
 
         if (isset($_POST['importSubmit'])) {
 
-            $fileAccept = array('application/octet-stream');
+            $file_accept = array('application/octet-stream');
             
             if (!empty($_FILES['file1']['tmp_name']) && $_FILES['file1']['error'] === UPLOAD_ERR_OK 
                 && !empty($_FILES['file2']['tmp_name']) && $_FILES['file2']['error'] === UPLOAD_ERR_OK 
-                && in_array($_FILES['file1']['type'], $fileAccept) && in_array($_FILES['file2']['type'], $fileAccept)) {
+                && in_array($_FILES['file1']['type'], $file_accept) && in_array($_FILES['file2']['type'], $file_accept)) {
 
                 $this->data['uploadStatus'] = 'Upload status: success';
                 
                 // Set content in file import to array
-                $dataBefore = file_get_contents($_FILES['file1']['tmp_name']); 
-                $dataBefore = explode("\n", $dataBefore); 
+                $data_before = file_get_contents($_FILES['file1']['tmp_name']); 
+                $data_before = explode("\n", $data_before); 
 
-                $dataAfter = file_get_contents($_FILES['file2']['tmp_name']); 
-                $dataAfter = explode("\n", $dataAfter); 
+                $data_after = file_get_contents($_FILES['file2']['tmp_name']); 
+                $data_after = explode("\n", $data_after); 
 
                 // Set constants and variables in file
-                $constInFile1 = [];
-                $constInFile2 = [];
-
-                $globalInFile1 = [];
-                $globalInFile2 = [];
-
-                $inFile1 = [];
-                $inFile2 = [];
-
-                list($globalInFile1, $constInFile1, $inFile1) = $this->getVariableInFile($dataBefore, $globalInFile1, $constInFile1, $inFile1);
-                list($globalInFile2, $constInFile2, $inFile2) = $this->getVariableInFile($dataAfter, $globalInFile2, $constInFile2, $inFile2);
+                list($global_in_file1, $const_in_file1, $in_file1) = $this->getVariableInFile($data_before);
+                list($global_in_file2, $const_in_file2, $in_file2) = $this->getVariableInFile($data_after);
                 
                 // Check that the empty 
-                if ((empty($constInFile1) || empty($constInFile2)) && (empty($globalInFile1) || empty($globalInFile1))) {
+                if ((empty($const_in_file1) || empty($const_in_file2)) && (empty($global_in_file1) || empty($global_in_file1))) {
                     $this->data['uploadStatus'] = 'Upload status: success. Nothing to compare';
                 } else {
                     // Check a same variable name in 2 files.
-                    $arr = array_intersect($globalInFile1, $globalInFile2);
+                    $arr = array_intersect($global_in_file1, $global_in_file2);
                     $this->data['arr'] = $arr;
-                    $this->data['constInFile1'] = $constInFile1;
-                    $this->data['constInFile2'] = $constInFile2;
-                    $this->data['inFile1'] = $inFile1;
-                    $this->data['inFile2'] = $inFile2;
+                    $this->data['const_in_file1'] = $const_in_file1;
+                    $this->data['const_in_file2'] = $const_in_file2;
+                    $this->data['in_file1'] = $in_file1;
+                    $this->data['in_file2'] = $in_file2;
                 }
             } else {
                 $this->data['uploadStatus'] = 'Upload status: Failed';
@@ -70,35 +66,44 @@ class AdminController extends AppController
         }
     }
 
-
-    public function getVariableInFile($data, $globalInFile, $constInFile, $inFile)
+    /**
+     * Get the variable in import file 
+     *
+     * @param  array  $data, $global_in_file, $const_in_file, $in_file
+     * @return array $global_in_file, $const_in_file, $in_file
+     */
+    public function getVariableInFile($data, $global_in_file = [], $const_in_file = [], $in_file = [])
     {
+        // Check $data, $global_in_file, $const_in_file, $in_file
         for ($line = 0; $line < count($data); $line++) {
             if (preg_match('/^setDefineArray\(\'(.+?)\', \$(.+?)\)/i', $data[$line], $match)) {
-                $globalInFile[] = $match[1];
-                $inFile[$match[1]] = array($match[2] , $line);
+                $global_in_file[] = $match[1];
+                $in_file[$match[1]] = array($match[2] , $line);
             } else if (preg_match('/^define\("(.+?)\", (.+?)\)/i', $data[$line], $match)) {
                 $i = 2 ;
-                if (isset($constInFile[$match[1]])) {
-                    $constInFile[$match[1] . '(' . $i++ . ')'] = $match[2];
+                if (isset($const_in_file[$match[1]])) {
+                    $const_in_file[$match[1] . '(' . $i++ . ')'] = $match[2];
 
                 } else {
-                    $constInFile[$match[1]] = $match[2];
+                    $const_in_file[$match[1]] = $match[2];
                 }
             } 
         }
-        $globalInFile = array_unique($globalInFile);
-        foreach ($globalInFile as $each) {
-            $check = $inFile[$each][0];
-            $inFile[$each][0] = array();
-            $index = $inFile[$each][1];
+        // Removes duplicate values from an array 
+        $global_in_file = array_unique($global_in_file);
+        foreach ($global_in_file as $each) {
+            // The variable assigned to the global variable
+            $check = $in_file[$each][0];
+            // Line have setDefineArray function
+            $index = $in_file[$each][1];
+            $in_file[$each][0] = array();
             for ($line = $index; $line > 0; $line--) {
                 if (preg_match('/^\$' . $check . '( = array\()/i', $data[$line])) {
                     for ($i = $line + 1; $i < $index; $i++) {
                         if (preg_match('/^\)\;/i', $data[$i])) {
                             break;
                         } else {
-                            array_push($inFile[$each][0], $data[$i]);
+                            array_push($in_file[$each][0], $data[$i]);
                         }
                     }
                     break;
@@ -106,6 +111,6 @@ class AdminController extends AppController
             }
         }
         
-        return array($globalInFile, $constInFile, $inFile);
+        return array($global_in_file, $const_in_file, $in_file);
     }
 }
