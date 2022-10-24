@@ -46,7 +46,7 @@ class Room extends Model
     {
         return $this->update($data, $condition);
     }
-
+    
     public function destroyOne($condition)
     {
         return $this->destroy($condition);

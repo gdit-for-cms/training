@@ -115,4 +115,24 @@ class RoomController extends AppController
         header('Location: /room/index');
         exit;
     }
+
+    public function changeRoom(Request $request)
+    {
+        try {
+        $post = $request->getPost()->all();
+        $post = $post['data'];
+
+        $user = new User;
+        $arrayId = array();
+        foreach ($post as $key => $value) {
+            $room = $this->model->getBy('name', '=', $value);
+            $arrayId[$key] = (int)$room[0]['id'];
+        }
+            $user->updateMultiByName($arrayId, 'room_id');
+            return $this->successResponse();
+        } catch (\Throwable $th) {
+            
+            return $this->errorResponse($th->getMessage());
+        }
+    }
 }

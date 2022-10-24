@@ -111,4 +111,23 @@ class PositionController extends AppController
         header('Location: /position/index');
         exit;
     }
+
+    public function changePosition(Request $request)
+    {
+        try {
+        $post = $request->getPost()->all();
+        $post = $post['data'];
+
+        $user = new User;
+        $arrayId = array();
+        foreach ($post as $key => $value) {
+            $position = $this->model->getBy('name', '=', $value);
+            $arrayId[$key] = (int)$position[0]['id'];
+        }
+            $user->updateMultiByName($arrayId, 'position_id');
+            return $this->successResponse();
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
 }

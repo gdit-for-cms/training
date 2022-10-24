@@ -54,6 +54,27 @@ class User extends Model
         return $this->update($data, $condition);
     }
 
+    public function updateMultiByName($data, $column)
+    {
+        $conditionQuery = '';
+        $conditionValueName = '';
+        foreach ($data as $key => $value) {
+            $conditionQuery .= "WHEN '$key' THEN $value ";
+            if ($conditionValueName == '') {
+                $conditionValueName .= "'$key'";
+            } else {
+                $conditionValueName .= ", '$key'";
+            }
+        }
+        $db = static::getDB();
+        $stmt = $db->query("UPDATE user 
+                            SET `$column` = CASE `name` " . 
+                            $conditionQuery . 
+                            " ELSE `$column` END
+                            WHERE `name` IN ($conditionValueName)");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function destroyOne($condition)
     {
         return $this->destroy($condition);
