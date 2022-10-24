@@ -8,6 +8,7 @@
     <link href="/css/back-css/dashboard.css" rel="stylesheet">
     <link href="/css/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link href="/css/back-css/style.css" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body class="crm_body_bg">
     <?php require_once 'sidebar.php' ?>  

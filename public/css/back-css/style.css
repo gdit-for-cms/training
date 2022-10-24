@@ -389,3 +389,8 @@ a {
     border-right: 3px solid #000;
     font-size: 26px;
 }
+
+.warning-div {
+    background-color: #8fdff169;
+    margin: 16px 0;
+}
