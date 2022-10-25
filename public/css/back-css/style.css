@@ -381,16 +381,37 @@ a {
 
 .container-compare {
     display: flex;
+    color: #24292f;
+}
+.container-compare h4{
+    color :#0a3069;
 }
 .container-compare .left, .container-compare .right {
     flex: 1;
-    padding : 0 90px;
-    padding-bottom: 40px;
+    padding : 14px 80px;
     border-right: 3px solid #000;
-    font-size: 26px;
+    font-size: 24px;
+    position: relative;
+}
+.container-compare .line {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    font-size: 14px;
+    font-style: italic;
+    font-weight: 500;
+    color : #9c9ea1cf;
+}
+.warning-div {
+    background-color: #fffddd;
+    color : #57606a;
+    margin: 16px 0;
 }
 
-.warning-div {
-    background-color: #8fdff169;
-    margin: 16px 0;
+.warning-div h6 {
+    color: #57606a!important;
+}
+
+.warning-div h5 {
+    color: #b35900!important;
 }

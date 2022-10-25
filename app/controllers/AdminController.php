@@ -88,8 +88,6 @@ class AdminController extends AppController
     public function getVariableInFile($data, $global_in_file = [], $const_in_file = [], $in_file = [], $check_distinct = [])
     {
         // Check $data, $global_in_file, $const_in_file, $in_file
-        // $check_distinct['globals'] = [];
-        // $check_distinct['constants'] = [];
         for ($line = 0; $line < count($data); $line++) {
             if (preg_match('/^setDefineArray\(\'(.+?)\', \$(.+?)\)/i', $data[$line], $match)) {
                 if (isset($in_file[$match[1]])) {
@@ -125,20 +123,13 @@ class AdminController extends AppController
                                 $line_skip = $j;
                                 if (preg_match('/\)/i', $data[$j])) {
                                     break;
-                                } else if (preg_match('/\'(.+?)\' => (.+?),?/i', $data[$j], $matches)) {
-                                    $arr = explode('=>', rtrim(trim($data[$j]), ','));
-                                    $key = trim($arr[0]);
-                                    $value = trim($arr[1]);
-                                    $temp[trim($key, "'")] = trim($value, "'");
+                                } else if (preg_match('/\'(.+?)\' => (.+?),?/i', $data[$j])) {
+                                    $temp = setKeyValueArr($data[$j]);
                                 }
                             }
                             array_push($in_file[$each][0], $temp);
-                        } else if ($i > $line_skip && (preg_match('/\'(.+?)\' => (.+?),?/i', $data[$i], $matcarrs))) {
-                            $temp = array();
-                            $arr = explode('=>', rtrim(trim($data[$i]), ','));
-                            $key = trim($arr[0]);
-                            $value = trim($arr[1]);
-                            $temp[trim($key, "'")] = trim($value, "'");
+                        } else if ($i > $line_skip && (preg_match('/\'(.+?)\' => (.+?),?/i', $data[$i]))) {
+                            $temp = setKeyValueArr($data[$i]);
                             array_push($in_file[$each][0], $temp);
                         }
                     }

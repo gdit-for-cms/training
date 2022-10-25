@@ -40,3 +40,15 @@ if (!function_exists('setTempGlobal')) {
           return array($globalsVarName, $tempGlobal);
      }
 }
+
+if (!function_exists('setKeyValueArr')) {
+     function setKeyValueArr($arr) {
+        static $temp = array();
+        $arr = explode('=>', rtrim(trim($arr), ','));
+        $key = trim($arr[0]);
+        $value = trim($arr[1]);
+        $temp[trim($key, "'")] = trim($value, "'");
+
+        return $temp;
+     }
+}
