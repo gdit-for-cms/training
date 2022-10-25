@@ -53,24 +53,35 @@
               </thead>
               <tbody>
                 <?php $i = 1;
-                  foreach ($allUsers as $user) { ?>
-                    <tr class="user_items">
-                      <th scope="row"><?= $i;
-                                      $i++ ?></th>
-                      <td><?= $user['name'] ?></td>
-                      <td><?= $user['email'] ?></td>
-                      <td class="role_name"><?= $user['role_name'] ?></td>
-                      <td class="room_name"><?= $user['room_name'] ?></td>
-                      <td class="position_name"><?= $user['position_name'] ?></td>
-                      <td class="flex items-center justify-center">
-                        <a href='/user/edit?id=<?= $user['id'] ?>' class="edit_btn mr-2"><button type="button" class="btn btn-info text-white">Edit</button></a>
-                        <button type="button" data-id="<?= $user['id'] ?>" class="btn btn-danger delete-btn text-white">Delete</button>
-                      </td>
-                    </tr>
+                foreach ($allUsers as $user) { ?>
+                  <tr class="user_items">
+                    <th scope="row"><?= $i;
+                                    $i++ ?></th>
+                    <td><?= $user['name'] ?></td>
+                    <td><?= $user['email'] ?></td>
+                    <td class="role_name"><?= $user['role_name'] ?></td>
+                    <td class="room_name"><?= $user['room_name'] ?></td>
+                    <td class="position_name"><?= $user['position_name'] ?></td>
+                    <td class="flex items-center justify-center">
+                      <a href='/user/edit?id=<?= $user['id'] ?>' class="edit_btn mr-2"><button type="button" class="btn btn-info text-white">Edit</button></a>
+                      <button type="button" data-id="<?= $user['id'] ?>" class="btn btn-danger delete-btn text-white">Delete</button>
+                    </td>
+                  </tr>
                 <?php } ?>
               </tbody>
             </table>
           </div>
+        </div>
+        <div class="flex justify-center items-center">
+          <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              <li class="page-item cursor-pointer"><a class="page-link">Previous</a></li>
+              <?php for ($i = 1; $i <= $numbersOfPage; $i++) { ?>
+                <li class="page-item cursor-pointer"><a class="page-link"><?= $i ?></a></li>
+              <?php } ?>
+              <li class="page-item cursor-pointer"><a class="page-link">Next</a></li>
+            </ul>
+          </nav>
         </div>
       </div>
     </div>
@@ -85,6 +96,7 @@
   const searchInput = document.querySelector('#search_input')
   const searchBtn = document.querySelector('#search_btn')
   const deleteSearchBtn = document.querySelector('#delete_search')
+  const paginationEles = document.querySelectorAll('.page-item')
 
   const PAGE_STORAGE_KEY = 'PAGE FILTER'
   var config = JSON.parse(localStorage.getItem(PAGE_STORAGE_KEY)) || {}
@@ -126,24 +138,66 @@
     })
   }
 
-  function filter() {
-    selectOptionEles.forEach(ele => {
-      ele.addEventListener('change', () => {
-        window.location.href = `filter?role_id=${selectRoleEles.value}&room_id=${selectRoomEles.value}&position_id=${selectPositionEles.value}`
-      })
-    })
-  }
-
   function filterUser() {
     selectRoomEles.value = config.room_id
     selectRoleEles.value = config.role_id
     selectPositionEles.value = config.position_id
     searchInput.value = config.search
 
+    // if (document.location.search.includes('page=1')) {
+    //   document.location.search = document.location.search.replace('page=1', '')
+    // }
+
+    
+    paginationEles.forEach(ele => {
+      if (config.page == 1 && ele.getElementsByTagName('a')[0].textContent == 'Previous') {
+        ele.classList.add('d-none')
+      } else {
+        ele.classList.remove('hidden')
+      }
+  
+      if (config.page == paginationEles.length - 2 && ele.getElementsByTagName('a')[0].textContent == 'Next') {
+        ele.classList.add('hidden')
+      } else {
+        ele.classList.remove('hidden')
+      }
+
+      if (config.page == ele.getElementsByTagName('a')[0].textContent) {
+        ele.getElementsByTagName('a')[0].style.backgroundColor = '#C5C5C5'
+      }
+
+      ele.addEventListener('click', () => {
+        switch (ele.getElementsByTagName('a')[0].textContent) {
+          case 'Previous':
+            if (config.page == 1) {
+              setFilter('page', 1)             
+            } else {
+              setFilter('page', parseInt(config.page) - 1)
+            }
+            break;
+          case 'Next':
+            if (config.page == paginationEles.length - 2) {
+              setFilter('page', paginationEles.length - 2)
+            } else {
+              setFilter('page', parseInt(config.page) + 1)
+            }
+            break;
+          default:
+            setFilter('page', ele.getElementsByTagName('a')[0].textContent)
+            break;
+        }
+        let data = `${config.role_id == '0' ? '' : `role_id=${config.role_id}`}${config.room_id == '0' ? '' : `&room_id=${config.room_id}`}${config.position_id == '0' ? '' : `&position_id=${config.position_id}`}${config.search == '' ? '' : `&search=${config.search}`}${config.page == '' ? '' : `&page=${config.page}`}`
+        if (data.charAt(0) == '&') {
+          data = data.substring(1)
+        }
+        document.location.search = `?${data}`
+      })
+    })
+
     selectOptionEles.forEach(ele => {
       ele.addEventListener('change', (e) => {
         setFilter(ele.name, ele.value)
-        let data = `${config.role_id == '0' ? '' : `role_id=${config.role_id}`}${config.room_id == '0' ? '' : `&room_id=${config.room_id}`}${config.position_id == '0' ? '' : `&position_id=${config.position_id}`}${config.search == '' ? '' : `&search=${config.search}`}`
+        let data = `${config.role_id == '0' ? '' : `role_id=${config.role_id}`}${config.room_id == '0' ? '' : `&room_id=${config.room_id}`}${config.position_id == '0' ? '' : `&position_id=${config.position_id}`}${config.search == '' ? '' : `&search=${config.search}`}${config.page == '' ? '' : `&page=${config.page}`}`
         e.preventDefault();
         if (data.charAt(0) == '&') {
           data = data.substring(1)
@@ -154,7 +208,7 @@
 
     searchBtn.addEventListener('click', () => {
       setFilter('search', searchInput.value)
-      let data = `${config.role_id == '0' ? '' : `role_id=${config.role_id}`}${config.room_id == '0' ? '' : `&room_id=${config.room_id}`}${config.position_id == '0' ? '' : `&position_id=${config.position_id}`}${config.search == '' ? '' : `&search=${config.search}`}`
+      let data = `${config.role_id == '0' ? '' : `role_id=${config.role_id}`}${config.room_id == '0' ? '' : `&room_id=${config.room_id}`}${config.position_id == '0' ? '' : `&position_id=${config.position_id}`}${config.search == '' ? '' : `&search=${config.search}`}${config.page == '' ? '' : `&page=${config.page}`}`
       if (data.charAt(0) == '&') {
         data = data.substring(1)
       }

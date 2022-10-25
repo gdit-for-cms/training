@@ -49,6 +49,7 @@ function submitForm(formId) {
     });
 };
 
+
 function alertDelete() {
     $('.delete-btn').click(function (e) {
         let deleteID = $(this).data('id');
@@ -209,8 +210,21 @@ $(document).ready(function () {
     alertDelete();
     submitChange();
 
+    $('.card-header').click(function (e) {
+        let id = $(this).data('id')
+        $.ajax({
+            type: "POST",
+            url: '/api/users',
+            data: { id: id, page: 1 },
+            dataType: 'json',
+            success: function (response) {
+                
+            }
+        });
+    });
 
     $('#topic-name').change(function () {
+
         $.ajax({
             type: "GET",
             url: '',

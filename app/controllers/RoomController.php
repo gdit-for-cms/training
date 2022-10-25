@@ -26,10 +26,14 @@ class RoomController extends AppController
 
     public function indexAction()
     {   
-        $this->data['allUsers'] = User::getAllRelation();
+        $results = User::getAllRelation();
+        $this->data['allUsers'] = $results['results'];
+
         $this->data['rooms'] = $this->model->getAll();
         $this->data['content'] = 'room/index';
     }
+
+
 
     public function newAction()
     {   
@@ -62,7 +66,6 @@ class RoomController extends AppController
                         'description' => $description
                     ]
                 );
-
                 return $this->successResponse();
             } catch (\Throwable $th) {
                 return $this->errorResponse($th->getMessage());

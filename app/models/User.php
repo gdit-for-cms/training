@@ -22,26 +22,47 @@ class User extends Model
      *
      * @return array
      */
-    // public static function getAllRelation()
-    // {
-    //     $db = static::getDB();
-    //     $stmt = $db->query('SELECT u.id, u.name, u.email, u.room_id, u.position_id, role.name role_name, room.name room_name, position.name position_name
-    //                         FROM user AS u
-    //                         JOIN role ON u.role_id = role.id
-    //                         JOIN room ON u.room_id = room.id
-    //                         JOIN position ON u.position_id = position.id
-    //                         ORDER BY u.id DESC');
-    //     return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    // }
-
-    public function getBy($column, $operator, $value)
+    public function getAll()
     {
-        return $this->where($column, $operator, $value)->get();
+        return $this->all();
+    }
+
+    public function getBy($column, $operator, $value, $selectColumn = "*")
+    {
+        return $this->where($column, $operator, $value)->get($selectColumn);
     }
 
     public function getById($id, $column)
     {
         return $this->find($id, $column);
+    }
+
+    public function getByRelation($array = array(), $name, $resultsPerPage = 5)
+    {      
+        $id = $array['id'];
+        
+        if (!isset($post['page'])) {
+            $post['page'] = '1';
+        }
+
+        $pageFirstResult = ((int)$array['page'] - 1)*$resultsPerPage;
+        $limitQuery = 'LIMIT ' . $pageFirstResult . ',' . $resultsPerPage;
+
+        $db = static::getDB();
+
+        $query = "SELECT u.id, u.name, u.email, u.room_id, u.position_id, role.name role_name, room.name room_name, position.name position_name
+                FROM user AS u
+                JOIN role ON u.role_id = role.id
+                JOIN room ON u.room_id = room.id
+                JOIN position ON u.position_id = position.id
+                WHERE u.$name = $id
+                ORDER BY u.id DESC";
+
+        $stmtCount = $db->query($query);
+        $numbersOfPage = count($stmtCount->fetchAll(PDO::FETCH_ASSOC));
+        $stmt = $db->query($query . " " . $limitQuery);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return ['numbersOfPage' => $numbersOfPage, 'results' => $results];
     }
 
     public function create($data)
@@ -80,38 +101,50 @@ class User extends Model
         return $this->destroy($condition);
     }
 
-    public static function getAllRelation($array = array())
+    public static function getAllRelation($array = array(), $resultsPerPage = 10)
     {
         $db = static::getDB();
-        $condition = "";
+        $conditionQuery = "";
 
+        if (!isset($array['page'])) {
+            $array['page'] = '1';
+        }
+        
+        $pageFirstResult = ((int)$array['page'] - 1)*$resultsPerPage;
+        $limitQuery = 'LIMIT ' . $pageFirstResult . ',' . $resultsPerPage;
+
+        unset($array['page']);
         foreach ($array as $key => $value) {
-            if ($condition != "") {
+            if ($conditionQuery != "") {
                 if ($key != 'search') {
-                    $condition .= " AND ";
-                    $condition .= "$key = $value";
+                    $conditionQuery .= " AND ";
+                    $conditionQuery .= "$key = $value";
                 } else {
-                    $condition .= " AND ";
-                    $condition .= "(u.name LIKE '%$value%' OR u.email LIKE '%$value%')";
+                    $conditionQuery .= " AND ";
+                    $conditionQuery .= "(u.name LIKE '%$value%' OR u.email LIKE '%$value%')";
                 }
             } else {
                 if ($key != 'search') {
-                    $condition .= "WHERE $key = $value";
+                    $conditionQuery .= "WHERE $key = $value";
                 } else {
-                    $condition .= "WHERE (u.name LIKE '%$value%' OR u.email LIKE '%$value%')";
+                    $conditionQuery .= "WHERE (u.name LIKE '%$value%' OR u.email LIKE '%$value%')";
                 }
             }
         } 
 
-        $stmt = $db->query("SELECT u.id, u.name, u.email, u.room_id, u.position_id, role.name role_name, room.name room_name, position.name position_name
-                            FROM user AS u
-                            JOIN role ON u.role_id = role.id
-                            JOIN room ON u.room_id = room.id
-                            JOIN position ON u.position_id = position.id
-                            $condition
-                            ORDER BY u.id DESC");
+        $query = "SELECT u.id, u.name, u.email, u.room_id, u.position_id, role.name role_name, room.name room_name, position.name position_name
+                FROM user AS u
+                JOIN role ON u.role_id = role.id
+                JOIN room ON u.room_id = room.id
+                JOIN position ON u.position_id = position.id
+                $conditionQuery
+                ORDER BY u.id DESC";
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmtCount = $db->query($query);
+        $numbersOfPage = count($stmtCount->fetchAll(PDO::FETCH_ASSOC));
+        $stmt = $db->query($query . " " . $limitQuery);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return ['numbersOfPage' => $numbersOfPage, 'results' => $results];
     }
 
     public function rules($change = '', $value = [])

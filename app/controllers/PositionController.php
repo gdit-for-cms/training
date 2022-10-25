@@ -25,7 +25,10 @@ class PositionController extends AppController
 
     public function indexAction()
     {
-        $this->data['allUsers'] = User::getAllRelation();
+        $user = new User;
+
+        // $results = $this->model->getAllRelation($get);
+        $this->data['allUsers'] = $user->getAll();
         $this->data['positions'] = $this->model->getAll();
         $this->data['content'] = 'position/index';
     }

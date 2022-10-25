@@ -9,7 +9,7 @@
         <div class="default-according" id="accordion2">
             <?php foreach ($rooms as $room) { ?>
                 <div class="card" data-name="<?= $room['name'] ?>">
-                    <div class="card-header parpel_bg cursor-pointer" id="headingseven">
+                    <div class="card-header parpel_bg cursor-pointer" id="headingseven" data-id="<?= $room['id'] ?>">
                         <h5 class="mb-0  flex items-center justify-between">
                             <button class="btn text_white collapsed" data-bs-toggle="collapse" data-bs-target="#collapseseven" aria-expanded="false">
                                 <div class="flex justify-center items-center">
@@ -56,20 +56,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody class="body_table_main">
-                                                <?php
-                                                $i = 1;
-                                                foreach ($allUsers as $user) { ?>
-                                                    <?php if ($room['id'] == $user['room_id']) {
-                                                        echo '<tr style="padding:5px 30px 25px">
-                                                                    <th scope="row">' .  $i . '</th>
-                                                                    <td>' . $user['name'] . '</td>
-                                                                    <td>' . $user['position_name'] . '</td>
-                                                                </tr>';
-                                                        $i++;
-                                                    } else {
-                                                        echo '';
-                                                    } ?>
-                                                <?php } ?>
+                                                
                                             </tbody>
                                         </table>
                                     </div>
@@ -83,7 +70,7 @@
     </div>
 </div>
 <div class="box-lightbox">
-    <div class="col-lg-6">
+    <div class="col-lg-4">
         <div class="white_card card_height_100 mb_30">
             <div class="white_card_header">
                 <div class="box_header m-0">

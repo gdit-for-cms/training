@@ -163,7 +163,6 @@ Trait QueryBuilder
         $this->limit;
         $sqlQuery = trim($sqlQuery);
         $result = $db->query($sqlQuery);
- 
         // Reset field
         $this->resetQuery();
 

@@ -28,10 +28,19 @@ class UserController extends AppController
 
     public function indexAction(Request $request)
     {   
+        $resultsPerPage = 3;
+        
         $get = $request->getGet()->all();
-
+        if (!isset($get['page'])) {
+            $get['page'] = '1';
+        }
         array_shift($get);
-        $this->data['allUsers'] = $this->model->getAllRelation($get);
+        $results = $this->model->getAllRelation($get, $resultsPerPage);
+        $this->data['allUsers'] = $results['results'];
+        $numbersOfResult = $results['numbersOfPage'];
+
+        $numbersOfPage = ceil($numbersOfResult/$resultsPerPage);
+        $this->data['numbersOfPage'] = $numbersOfPage;
 
         $this->data['allRoles'] = Role::getAll();
         $this->data['allRooms'] = Room::getAll();
