@@ -7,6 +7,7 @@
                 <button id="delete_search" type="button" class="btn btn-danger text-white ml-2">X</button>
                 </div>
         </div>
+        <div class="div-globals">
         <?php
         $backroundSame = 'background-color: #e6ffec; border-top: 1px solid #ccc;';
         $backroundDiff = 'background-color: #ffebe9; border-top: 1px solid #ccc;';
@@ -70,30 +71,33 @@
                             <? } ?>   
                         </div>
                     </div>
-        <?php }}}; 
-        // Check and comepare a same Constant name in 2 files.
-        if (!empty($const_in_file1) && !empty($const_in_file2)) {
-                foreach ($const_in_file1 as $key1 => $value1) {
-                    foreach ($const_in_file2 as $key2 => $value2) { 
-                        if ($key1 == $key2 && $value1 == $value2) { ?>
-                            <div class="container-compare" style="<?= $backroundSame ?>">
-                                <div class="left">
-                                    <span ><?= $key1 ?> : <?= $value1 ?></span></br>
+        <?php }}}; ?>
+        </div>
+        <div class="div-consts">
+            <!-- Check and comepare a same Constant name in 2 files. -->
+        <?  if (!empty($const_in_file1) && !empty($const_in_file2)) {
+                    foreach ($const_in_file1 as $key1 => $value1) {
+                        foreach ($const_in_file2 as $key2 => $value2) { 
+                            if ($key1 == $key2 && $value1 == $value2) { ?>
+                                <div class="container-compare" style="<?= $backroundSame ?>">
+                                    <div class="left">
+                                        <span ><?= $key1 ?> : <?= $value1 ?></span></br>
+                                    </div>
+                                    <div class="right">
+                                        <span ><?= $key2 ?> : <?= $value2 ?></span></br>
+                                    </div>
                                 </div>
-                                <div class="right">
-                                    <span ><?= $key2 ?> : <?= $value2 ?></span></br>
+                    <?php } else if ($key1 == $key2 && $value1 !== $value2) { ?>
+                                <div class="container-compare" style="<?= $backroundDiff ?>">
+                                    <div class="left">
+                                        <span style=<?= $color_diff_blob ?>><?= $key1 ?> : <?= $value1 ?></span></br>
+                                    </div>
+                                    <div class="right">
+                                        <span style=<?= $color_diff_blob ?>><?= $key2 ?> : <?= $value2 ?></span></br>
+                                    </div>
                                 </div>
-                            </div>
-                <?php } else if ($key1 == $key2 && $value1 !== $value2) { ?>
-                            <div class="container-compare" style="<?= $backroundDiff ?>">
-                                <div class="left">
-                                    <span style=<?= $color_diff_blob ?>><?= $key1 ?> : <?= $value1 ?></span></br>
-                                </div>
-                                <div class="right">
-                                    <span style=<?= $color_diff_blob ?>><?= $key2 ?> : <?= $value2 ?></span></br>
-                                </div>
-                            </div>
-        <?php }}}}; ?>
+            <?php }}}}; ?>
+        </div>
     </div>
 </div>
 

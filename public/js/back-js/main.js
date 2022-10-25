@@ -48,7 +48,26 @@ function submitForm(formId) {
 };
 
 $(document).ready(function () {
-    
+    $('#select-show').change(function () {
+        var type = $(this).val();
+        console.log(type);
+        switch (type) {
+            case 'Globals':
+                $(this).closest('.add-question-form').find('.text-textarea').hide();
+                $(this).closest('.add-question-form').find('.radio-checkbox').show();
+                $(this).closest('.add-question-form').find('.radio-checkbox .select-answer').attr('multiple', false);
+                break;
+            case 'Constants':
+                $(this).closest('.add-question-form').find('.text-textarea').hide();
+                $(this).closest('.add-question-form').find('.radio-checkbox').show();
+                $(this).closest('.add-question-form').find('.radio-checkbox .select-answer').attr('multiple', true);
+                break;
+            case 'All':
+            
+            default:
+                break;
+        }
+    });
 });
 
 
