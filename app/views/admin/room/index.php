@@ -56,9 +56,18 @@
                                                 </tr>
                                             </thead>
                                             <tbody class="body_table_main">
-                                                
+
                                             </tbody>
                                         </table>
+                                    </div>
+                                    <div class="flex justify-center items-center">
+                                        <nav aria-label="Page navigation example">
+                                            <ul class="pagination">
+                                                <li class="page-item cursor-pointer"><a class="page-link">Previous</a></li>
+                                                    
+                                                <li class="page-item cursor-pointer"><a class="page-link">Next</a></li>
+                                            </ul>
+                                        </nav>
                                     </div>
                                 </div>
                             </div>
@@ -112,7 +121,7 @@
     function start() {
         showTable()
         preventDefault()
-        hiddenTable()
+        // hiddenTable()
     }
 
     start()

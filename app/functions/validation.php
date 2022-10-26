@@ -2,7 +2,12 @@
 if (!function_exists('string')) {
     function string($value)
     {
-        return is_string(($value));
+        $pattern = '/[a-z0-9]/i';
+        if (preg_match($pattern, $value)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 

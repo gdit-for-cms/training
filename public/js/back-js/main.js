@@ -49,7 +49,6 @@ function submitForm(formId) {
     });
 };
 
-
 function alertDelete() {
     $('.delete-btn').click(function (e) {
         let deleteID = $(this).data('id');
@@ -91,7 +90,7 @@ function alertDelete() {
                         var optionArray = []
                         $('.total_modal h2').text($(this).parents('.card').data('name'))
                         document.querySelectorAll('.card').forEach(function (ele) {
-    
+
                             if (ele.getAttribute('data-name') != $('.total_modal h2').text()) {
                                 optionArray.push(ele.getAttribute('data-name'))
                             }
@@ -104,7 +103,7 @@ function alertDelete() {
                         })
                         optionEle = htmlsOption.join('')
                         var htmlsTable = arrayTable.map((item, index) => {
-    
+
                             return `
                                     <tr>
                                         <th scope="row">${index + 1}</th>
@@ -116,7 +115,7 @@ function alertDelete() {
                                         </td>
                                     </tr>
                                 `
-    
+
                         })
                         const bodyTable = document.querySelector('.table_change_body')
                         bodyTable.innerHTML = htmlsTable.join('')
@@ -199,6 +198,83 @@ function submitChange(params) {
     })
 }
 
+function changePage(currentPage) {
+    let page
+    $('.page-item-child').click(function (e) {
+        var currentPage
+        let id = $(this).parents('.card')[0].querySelector('.card-header').getAttribute('data-id')
+
+        var paginationEles = $(this).parents('.pagination').children()
+
+        switch ($(this)[0].textContent) {
+            case 'Previous':
+                if (page > 1) {
+                    page = currentPage - 1
+                    $(this).parents('.pagination').children()[page].style.backgroundColor = '#C5C5C5'
+                }
+                break;
+            case 'Next':
+                if (page < paginationEles.length - 2) {
+                    page += 1
+                    $(this).parents('.pagination').children()[page].style.backgroundColor = '#C5C5C5'
+                }
+                break;
+
+            default:
+                page = $(this)[0].textContent
+                break;
+        }
+        let tableMain = $(this).parents('.card')[0].querySelector('.body_table_main')
+        $.ajax({
+            type: "POST",
+            url: '/api/users',
+            data: { id: id, page: page },
+            dataType: 'json',
+            success: function (response) {
+                renderMember(response, tableMain)
+                currentPage = response.data.page
+                paginationEles.each(function (i, e) {
+                    e.querySelector('a').removeAttribute('style')
+                    if (e.querySelector('a').textContent == currentPage) {
+                        e.querySelector('a').style.backgroundColor = '#C5C5C5'
+                    }
+                })
+            },
+            error: function (response) {
+            }
+        });
+    })
+}
+
+function renderMember(response, tableMain, paginationMain = '') {
+    var data = response.data.results
+    var numbersOfPage = response.data.numbersOfPage
+    var htmlsTable = data.map((item, index) => {
+        return `
+                <tr>
+                    <th scope="row">${index + 1}</th>
+                    <td>${item.name}</td>
+                    <td>${item.position_name}</td>
+                </tr>
+            `
+    })
+    tableMain.innerHTML = htmlsTable.join('')
+    if (paginationMain != '') {
+        var htmlsPagina = ''
+        for (let i = 1; i <= parseInt(numbersOfPage); i++) {
+            htmlsPagina += `
+                        <li class="page-item-child cursor-pointer"><a class="page-link">${i}</a></li>
+                    `
+        }
+        // console.log(htmlsPagina);
+        paginationMain.innerHTML = `
+                        <li class="page-item-child cursor-pointer"><a class="page-link">Previous</a></li>
+                        ${htmlsPagina}
+                        <li class="page-item-child cursor-pointer"><a class="page-link">Next</a></li>
+                    `
+    }
+}
+
 $(document).ready(function () {
     submitForm('#form_new_user');
     submitForm('#form_update_user');
@@ -210,21 +286,110 @@ $(document).ready(function () {
     alertDelete();
     submitChange();
 
+
     $('.card-header').click(function (e) {
+        var cpage
         let id = $(this).data('id')
+        let tableMain = $(this).parents('.card')[0].querySelector('.body_table_main');
+        let paginationMain = $(this).parents('.card')[0].querySelector('.pagination')
         $.ajax({
             type: "POST",
             url: '/api/users',
             data: { id: id, page: 1 },
             dataType: 'json',
             success: function (response) {
-                
+                // renderMember(response, tableMain, paginationMain)
+                var data = response.data.results
+                var numbersOfPage = response.data.numbersOfPage
+                var htmlsTable = data.map((item, index) => {
+                    return `
+                <tr>
+                    <th scope="row">${index + 1}</th>
+                    <td>${item.name}</td>
+                    <td>${item.position_name}</td>
+                </tr>
+            `
+                })
+                tableMain.innerHTML = htmlsTable.join('')
+                if (paginationMain != '') {
+                    var htmlsPagina = ''
+                    for (let i = 1; i <= parseInt(numbersOfPage); i++) {
+                        htmlsPagina += `
+                        <li class="page-item-child cursor-pointer"><a class="page-link">${i}</a></li>
+                    `
+                    }
+                    // console.log(htmlsPagina);
+                    paginationMain.innerHTML = `
+                        <li class="page-item-child cursor-pointer"><a class="page-link">Previous</a></li>
+                        ${htmlsPagina}
+                        <li class="page-item-child cursor-pointer"><a class="page-link">Next</a></li>
+                    `
+                }
+                cpage = response.data.page
+                console.log(cpage);
+
+
+                // changePage();
+
+                $('.pagination a').click(function (e) {
+                    var page
+                    let id = $(this).parents('.card')[0].querySelector('.card-header').getAttribute('data-id')
+
+                    var paginationEles = $(this).parents('.pagination').children()
+
+                    // switch ($(this)[0].textContent) {
+                    //     case 'Previous':
+                    //         if (cpage > 1) {
+                    //             page = cpage - 1
+                    //             $(this).parents('.pagination').children()[page].style.backgroundColor = '#C5C5C5'
+                    //         }
+                    //         break;
+                    //     case 'Next':
+                    //         if (cpage < paginationEles.length - 2) {
+                    //             page = cpage + 1
+                    //             $(this).parents('.pagination').children()[page].style.backgroundColor = '#C5C5C5'
+                    //         }
+                    //         break;
+                    //     default:
+                    //         page = $(this)[0].textContent
+                    //         break;
+                    // }
+                    if ($(this).text().trim() == 'Next') {
+                        page = parseInt(cpage) + 1;
+                        console.log(page);
+                    } else if ($(this).text().trim() == 'Previous') {
+                        page = parseInt(cpage) - 1;
+                    } else {
+                        page = $(this).text();
+                    };
+                    let tableMain = $(this).parents('.card')[0].querySelector('.body_table_main')
+                    $.ajax({
+                        type: "POST",
+                        url: '/api/users',
+                        data: { id: id, page: page },
+                        dataType: 'json',
+                        success: function (response) {
+                            renderMember(response, tableMain)
+                            cpage = response.data.page
+                            paginationEles.each(function (i, e) {
+                                e.querySelector('a').removeAttribute('style')
+                                if (e.querySelector('a').textContent == cpage) {
+                                    e.querySelector('a').style.backgroundColor = '#C5C5C5'
+                                }
+                            })
+                        },
+                        error: function (response) {
+                        }
+                    });
+                })
+            },
+            error: function (response) {
+                console.log(response);
             }
         });
     });
 
     $('#topic-name').change(function () {
-
         $.ajax({
             type: "GET",
             url: '',
@@ -235,8 +400,6 @@ $(document).ready(function () {
             }
         });
     });
-
-
 
     $('.edit-btn').click(function (e) {
         let id = $(this).data('id');

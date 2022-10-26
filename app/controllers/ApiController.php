@@ -16,8 +16,10 @@ class ApiController extends AppController
         $post = $request->getPost()->all();
         $user = new User;
         $data = $user->getByRelation($post, 'room_id', $resultsPerPage);
-        // var_dump($data);
-        // exit;
+        // $numbersOfPage = $data['numbersOfPage'];
+        $numbersOfPage = ceil($data['numbersOfPage']/$resultsPerPage);
+        $data['numbersOfPage'] = $numbersOfPage;
+        $data['page'] = $post['page'];
         return $this->successResponse($data);
     }
 }
