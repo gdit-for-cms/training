@@ -1,74 +1,59 @@
-function checkName(objName) {
-    $.ajax({
-        type: "GET",
-        url: "/" + objName + "/apiCheckName",
-        data: { name: $(`#add-${objName}-name`).val() },
-        dataType: 'json',
-        success: function (response) {
-            console.log(response.data);
-            if (response.data) {
-                Swal.fire(`${objName} has been exits`);
-                $(`#add-${objName}-name`).val('');
-            } else {
-                $(`#add-${objName}-submit`).attr('disabled', false);
-            }
-        }
-    });
-};
-function submitForm(formId) {
-    $(formId).submit(function (e) {
-        e.preventDefault();
-        var form = $(this);
-        var actionUrl = form.attr('action');
-        $.ajax({
-            type: "POST",
-            url: actionUrl,
-            data: form.serialize(),
-            dataType: 'json',
-            success: function (response) {
-                Swal.fire({
-                    icon: 'success',
-                    title: "Successfully",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                setTimeout(() => {
-                    document.location.reload(true);
-                }, "1600");
-            },
-            error: function (response) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: response.responseJSON.message,
-                });
-            }
-        });
-    });
-};
-
 $(document).ready(function () {
     $('#select-show').change(function () {
         var type = $(this).val();
-        console.log(type);
         switch (type) {
             case 'Globals':
-                $(this).closest('.add-question-form').find('.text-textarea').hide();
-                $(this).closest('.add-question-form').find('.radio-checkbox').show();
-                $(this).closest('.add-question-form').find('.radio-checkbox .select-answer').attr('multiple', false);
+                $('.div-globals').show();
+                $('.div-consts').hide();
                 break;
             case 'Constants':
-                $(this).closest('.add-question-form').find('.text-textarea').hide();
-                $(this).closest('.add-question-form').find('.radio-checkbox').show();
-                $(this).closest('.add-question-form').find('.radio-checkbox .select-answer').attr('multiple', true);
+                $('.div-globals').hide();
+                $('.div-consts').show();
                 break;
-            case 'All':
-            
             default:
+                $('.div-globals').show();
+                $('.div-consts').show();
                 break;
         }
     });
+    $('.div-value').show();
+    $('.div-text').hide();
+    $('#compare-text').click(function () {
+        $('.div-text').show();
+        $('.div-value').hide();
+        $('.div-search').hide();
+    });
+
+    $('#compare-value').click(function () {
+        $('.div-text').hide();
+        $('.div-value').show();
+    });
+
+    $('#search_input').keyup(function () {
+       
+        if ($(this).val().length == 0) {
+            $('#search_btn').prop('disabled', true);
+        } else {
+            $('#search_btn').prop('disabled', false);
+        }
+    });
+
+    $('#search_btn').click(function () {
+        let search = $('#search_input').val();
+        const variables = document.querySelectorAll('.var-name')
+        variables.forEach(function(ele) {
+            ele.parentNode.classList.remove('d-none');
+            if (!ele.textContent.includes(search)) {
+                ele.parentNode.classList.add('d-none');
+            }
+        })
+    });
+
+    $('#delete_search').click(function () {
+        $('#search_input').val('');
+        const variables = document.querySelectorAll('.var-name')
+        variables.forEach(function(ele) {
+            ele.parentNode.classList.remove('d-none');
+        })
+    });
 });
-
-
-

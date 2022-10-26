@@ -2,8 +2,12 @@
 
 namespace App\Controllers;
 
+use Core\Http\Request;
+use Core\Http\ResponseTrait;
+
 class AdminController extends AppController
 {
+    use ResponseTrait;
     public array $data;
 
     public function indexAction()
@@ -57,6 +61,10 @@ class AdminController extends AppController
                 $warning_in_file1 = array_count_values($check_distinct_in_file1);
                 $warning_in_file2 = array_count_values($check_distinct_in_file2);
 
+                // Set constants and variables in file by text
+                $by_text1 = $this->compareByText($data_before, $global_in_file1);
+                $by_text2 = $this->compareByText($data_after, $global_in_file2);
+
                 // Check that the empty 
                 if ((empty($const_in_file1) || empty($const_in_file2)) && (empty($global_in_file1) || empty($global_in_file1))) {
                     $this->data['uploadStatus'] = 'Upload status: success. Nothing to compare';
@@ -66,6 +74,8 @@ class AdminController extends AppController
                     $this->data['arr'] = $arr;
                     $this->data['in_file1'] = $in_file1;
                     $this->data['in_file2'] = $in_file2;
+                    $this->data['by_text1'] = $by_text1;
+                    $this->data['by_text2'] = $by_text2;
                     $this->data['const_in_file1'] = $const_in_file1;
                     $this->data['const_in_file2'] = $const_in_file2;
                     $this->data['warning_in_file1'] = $warning_in_file1;
@@ -107,17 +117,15 @@ class AdminController extends AppController
         // Removes duplicate values from an array 
         $global_in_file = array_unique($global_in_file);
         foreach ($global_in_file as $each) {
-            // The variable assigned to the global variable
-            $check = $in_file[$each][0];
-            // Line have setDefineArray function
-            $index = $in_file[$each][1];
+            $check = $in_file[$each][0];    // The variable assigned to the global variable.
+            $index = $in_file[$each][1];    // Line have setDefineArray function.
             $in_file[$each][0] = array();
             for ($line = $index; $line > 0; $line--) {
                 if (preg_match('/^\$' . $check . '( = array\()/i', $data[$line])) {
                     for ($i = $line + 1, $line_skip = $i; $i < $index; $i++) {
                         if (preg_match('/^\)\;/i', $data[$i])) {
                             break;
-                        // Set value to the variable
+                        // Set value to the variable.
                         } else if (preg_match('/(array\()/i', $data[$i])) {
                             for ($j = $i + 1; $j < $index; $j++) {
                                 $line_skip = $j;
@@ -139,5 +147,43 @@ class AdminController extends AppController
         }
 
         return array($global_in_file, $const_in_file, $in_file, $check_distinct);
+    }
+
+    /**
+     * Same as above(getVariableInFile) but set variable value by text instead
+     *
+     * @param  array  $data (aray content in file import)
+     * @param  array  $global_in_file
+     * @return array $global_in_file, $const_in_file, $in_file
+     */
+    public function compareByText($data, $global_in_file, $in_file = [])
+    {
+        for ($line = 0; $line < count($data); $line++) {
+            if (preg_match('/^setDefineArray\(\'(.+?)\', \$(.+?)\)/i', $data[$line], $match)) {
+                if (!isset($in_file[$match[1]])) {
+                    $in_file[$match[1]] = array($match[2] , $line);
+                }
+            }
+        }
+        foreach ($global_in_file as $each) {
+            $check = $in_file[$each][0];    // The variable assigned to the global variable.
+            $index = $in_file[$each][1];    // Line have setDefineArray function.
+            $in_file[$each][0] = array();
+            for ($line = $index; $line > 0; $line--) {
+                if (preg_match('/^\$' . $check . '( = array\()/i', $data[$line])) {
+                    for ($i = $line + 1; $i < $index; $i++) {
+                        if (preg_match('/^\)\;/i', $data[$i])) {
+                            break;
+                        } else {
+                            $result = str_replace(' ', '&nbsp;', $data[$i]);
+                            array_push($in_file[$each][0], $result);
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        
+        return $in_file;
     }
 }
