@@ -32,7 +32,7 @@ class User extends Model
         return $this->where($column, $operator, $value)->get($selectColumn);
     }
 
-    public function getById($id, $column)
+    public function getById($id, $column = '*')
     {
         return $this->find($id, $column);
     }
@@ -62,6 +62,7 @@ class User extends Model
         $numbersOfPage = count($stmtCount->fetchAll(PDO::FETCH_ASSOC));
         $stmt = $db->query($query . " " . $limitQuery);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
         return ['numbersOfPage' => $numbersOfPage, 'results' => $results];
     }
 
@@ -121,24 +122,24 @@ class User extends Model
                     $conditionQuery .= "$key = $value";
                 } else {
                     $conditionQuery .= " AND ";
-                    $conditionQuery .= "(u.name LIKE '%$value%' OR u.email LIKE '%$value%')";
+                    $conditionQuery .= '(u.name LIKE \'%' . $value . '%\' OR u.email LIKE \'%' . $value . '%\')';
                 }
             } else {
                 if ($key != 'search') {
                     $conditionQuery .= "WHERE $key = $value";
                 } else {
-                    $conditionQuery .= "WHERE (u.name LIKE '%$value%' OR u.email LIKE '%$value%')";
+                    $conditionQuery .= 'WHERE (u.name LIKE \'%' . $value . '%\' OR u.email LIKE \'%' . $value . '%\')';
                 }
             }
         } 
 
-        $query = "SELECT u.id, u.name, u.email, u.room_id, u.position_id, role.name role_name, room.name room_name, position.name position_name
+        $query = 'SELECT u.id, u.name, u.email, u.room_id, u.position_id, role.name role_name, room.name room_name, position.name position_name
                 FROM user AS u
                 JOIN role ON u.role_id = role.id
                 JOIN room ON u.room_id = room.id
-                JOIN position ON u.position_id = position.id
-                $conditionQuery
-                ORDER BY u.id DESC";
+                JOIN position ON u.position_id = position.id '
+                . $conditionQuery .
+                ' ORDER BY u.id DESC';
 
         $stmtCount = $db->query($query);
         $numbersOfPage = count($stmtCount->fetchAll(PDO::FETCH_ASSOC));
@@ -152,19 +153,19 @@ class User extends Model
         $rules = [
             'name' => [
                 'required',
-                'string',
+                'name',
                 'filled',
                 'maxLen:20',
                 'minLen:5',
             ],
             'email' => [
                 'required',
-                'string',
+                'email',
                 'filled',
             ],
             'password' => [
                 'required',
-                'string',
+                'password',
                 'filled',
             ],
             'role_id' => [
@@ -181,10 +182,21 @@ class User extends Model
             case 'add':
                 return array_merge($rules, $value);
                 break;
-            case 'remove':
+            case 'remove_key':
                 foreach ($value as $each) {
                     if (array_key_exists($each, $rules)) {
                         unset($rules[$each]);
+                    } 
+                } 
+                return $rules;
+                break;
+            case 'remove_value':
+                foreach ($value as $key => $valueKey) {
+                    if (array_key_exists($key, $rules)) {
+                        foreach ($valueKey as $each) {
+                            $keyvalue = array_search($each, $rules[$key]);
+                            unset($rules[$key][$keyvalue]);
+                        }
                     } 
                 } 
                 return $rules;

@@ -37,7 +37,7 @@ class Room extends Model
         return $this->where($column, $operator, $value)->get();
     }
 
-    public function getById($id, $column)
+    public function getById($id, $column = '*')
     {   
         return $this->find($id, $column);
     }
@@ -57,11 +57,11 @@ class Room extends Model
         $rules = [
             'name' => [
                 'required',
-                'string',
+                'name',
                 'filled',
             ],
             'description' => [
-                'string',
+                'max:2000',
             ],
         ];
         switch ($change) {

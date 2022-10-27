@@ -9,22 +9,22 @@
         <div class="default-according" id="accordion2">
             <?php foreach ($positions as $position) { ?>
                 <div class="card" data-name="<?= $position['name'] ?>">
-                    <div class="card-header parpel_bg cursor-pointer" id="headingseven">
-                        <h5 class="mb-0  flex items-center justify-between">
+                    <div class="card-header parpel_bg cursor-pointer" id="headingseven" data-id="<?= $position['id'] ?>">
+                        <h5 class="mb-0 flex items-center justify-between">
                             <button class="btn text_white collapsed" data-bs-toggle="collapse" data-bs-target="#collapseseven" aria-expanded="false">
                                 <div class="flex justify-center items-center">
                                     <span class="icon-show font-bold text-2xl mr-4">+</span>
                                     <?= $position['name'] ?>
                                 </div>
                             </button>
-                            <div>
-                                <a href='/position/edit?id=<?= $position['id'] ?>' class="edit-btn"><button type="button" class="btn btn-info text-white">Edit</button></a>
-                                <button type="button" data-id="<?= $position['id'] ?>" class="btn btn-danger delete-btn text-white">Delete</button>
-                            </div>
                         </h5>
                     </div>
                     <div class="table_position collapse" id="collapseseven" aria-labelledby="headingOne" data-parent="#accordion2">
-                        <div class="card-body row justify-content-center">
+                        <div class="d-flex justify-content-end mt-2 mr-6">
+                            <a href='/position/edit?id=<?= $position['id'] ?>' class="edit-btn"><button type="button" class="btn btn-info text-white mr-2">Edit</button></a>
+                            <button type="button" data-id="<?= $position['id'] ?>" class="btn btn-danger delete-btn text-white">Delete</button>
+                        </div>
+                        <div class="card-body row justify-content-center" style="padding-top: 25px;">
                             <div class="col-lg-6">
                                 <div class="card_box box_shadow position-relative mb_30">
                                     <div class="white_box_tittle">
@@ -46,7 +46,7 @@
                                             <h4 class="mb-2 nowrap ">Member</h4>
                                         </div>
                                     </div>
-                                    <div class="table-responsive m-b-30 flex items-center justify-center">
+                                    <div class="table_member_body table-responsive m-b-30 flex flex-col items-center justify-center">
                                         <table id="table_<?= $position['id'] ?>" class="table table-striped" style="width: 90% !important">
                                             <thead>
                                                 <tr>
@@ -56,22 +56,16 @@
                                                 </tr>
                                             </thead>
                                             <tbody class="body_table_main">
-                                                <?php
-                                                $i = 1;
-                                                foreach ($allUsers as $user) { ?>
-                                                    <?php if ($position['id'] == $user['position_id']) {
-                                                        echo '<tr style="padding:5px 30px 25px">
-                                                                    <th scope="row">' .  $i . '</th>
-                                                                    <td>' . $user['name'] . '</td>
-                                                                    <td>' . $user['room_name'] . '</td>
-                                                                </tr>';
-                                                        $i++;
-                                                    } else {
-                                                        echo '';
-                                                    } ?>
-                                                <?php } ?>
+                                                
                                             </tbody>
                                         </table>
+                                        <div class="flex justify-center items-center">
+                                            <nav aria-label="Page navigation example">
+                                                <ul class="pagination">
+
+                                                </ul>
+                                            </nav>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -124,7 +118,7 @@
     function start() {
         showTable()
         preventDefault()
-        hiddenTable()
+        // hiddenTable()
     }
 
     start()

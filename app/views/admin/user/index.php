@@ -139,23 +139,25 @@
   }
 
   function filterUser() {
+    if (localStorage.getItem("PAGE FILTER") === null) {
+      selectOptionEles.forEach(ele => {
+        setFilter(ele.name, 0)
+      })
+      setFilter('search', searchInput.value)
+      setFilter('page', 1)
+    }
     selectRoomEles.value = config.room_id
     selectRoleEles.value = config.role_id
     selectPositionEles.value = config.position_id
     searchInput.value = config.search
 
-    // if (document.location.search.includes('page=1')) {
-    //   document.location.search = document.location.search.replace('page=1', '')
-    // }
-
-    
     paginationEles.forEach(ele => {
       if (config.page == 1 && ele.getElementsByTagName('a')[0].textContent == 'Previous') {
         ele.classList.add('d-none')
       } else {
         ele.classList.remove('hidden')
       }
-  
+
       if (config.page == paginationEles.length - 2 && ele.getElementsByTagName('a')[0].textContent == 'Next') {
         ele.classList.add('hidden')
       } else {
@@ -170,7 +172,7 @@
         switch (ele.getElementsByTagName('a')[0].textContent) {
           case 'Previous':
             if (config.page == 1) {
-              setFilter('page', 1)             
+              setFilter('page', 1)
             } else {
               setFilter('page', parseInt(config.page) - 1)
             }
@@ -196,6 +198,7 @@
 
     selectOptionEles.forEach(ele => {
       ele.addEventListener('change', (e) => {
+        setFilter('page', 1)
         setFilter(ele.name, ele.value)
         let data = `${config.role_id == '0' ? '' : `role_id=${config.role_id}`}${config.room_id == '0' ? '' : `&room_id=${config.room_id}`}${config.position_id == '0' ? '' : `&position_id=${config.position_id}`}${config.search == '' ? '' : `&search=${config.search}`}${config.page == '' ? '' : `&page=${config.page}`}`
         e.preventDefault();
@@ -207,6 +210,10 @@
     })
 
     searchBtn.addEventListener('click', () => {
+      setFilter('page', 1)
+      selectOptionEles.forEach(ele => {
+        setFilter(ele.name, 0)
+      })
       setFilter('search', searchInput.value)
       let data = `${config.role_id == '0' ? '' : `role_id=${config.role_id}`}${config.room_id == '0' ? '' : `&room_id=${config.room_id}`}${config.position_id == '0' ? '' : `&position_id=${config.position_id}`}${config.search == '' ? '' : `&search=${config.search}`}${config.page == '' ? '' : `&page=${config.page}`}`
       if (data.charAt(0) == '&') {
@@ -234,6 +241,9 @@
     }
     deleteSearchBtn.addEventListener('click', () => {
       setFilter('search', '')
+      selectOptionEles.forEach(ele => {
+        setFilter(ele.name, 0)
+      })
       let data = `${config.role_id == '0' ? '' : `role_id=${config.role_id}`}${config.room_id == '0' ? '' : `&room_id=${config.room_id}`}${config.position_id == '0' ? '' : `&position_id=${config.position_id}`}${config.search == '' ? '' : `&search=${config.search}`}`
       if (data.charAt(0) == '&') {
         data = data.substring(1)

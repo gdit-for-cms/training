@@ -37,7 +37,6 @@ class RoomController extends AppController
 
     public function newAction()
     {   
-        
         $this->data['content'] = 'room/new';
     }
 
@@ -83,6 +82,21 @@ class RoomController extends AppController
 
     public function update(Request $request)
     {   
+        $post = $request->getPost()->all();
+        
+        $checkRoom = $this->model->getById($post['id']);
+        $changeData = false;
+        foreach ($post as $key => $value) {
+            if ($checkRoom[$key] != $value) {
+                $changeData = true;
+                break;
+            }
+        }
+
+        if (!$changeData) {
+            return $this->errorResponse('Nothing to update');
+        }
+
         $appRequest = new AppRequest;
         $resultVali = $appRequest->validate(Room::rules('add', ['id' => ['required', 'filled']]), $request, 'post');
 
@@ -122,19 +136,18 @@ class RoomController extends AppController
     public function changeRoom(Request $request)
     {
         try {
-        $post = $request->getPost()->all();
-        $post = $post['data'];
+            $post = $request->getPost()->all();
+            $post = $post['data'];
 
-        $user = new User;
-        $arrayId = array();
-        foreach ($post as $key => $value) {
-            $room = $this->model->getBy('name', '=', $value);
-            $arrayId[$key] = (int)$room[0]['id'];
-        }
+            $user = new User;
+            $arrayId = array();
+            foreach ($post as $key => $value) {
+                $room = $this->model->getBy('name', '=', $value);
+                $arrayId[$key] = (int)$room[0]['id'];
+            }
             $user->updateMultiByName($arrayId, 'room_id');
             return $this->successResponse();
         } catch (\Throwable $th) {
-            
             return $this->errorResponse($th->getMessage());
         }
     }

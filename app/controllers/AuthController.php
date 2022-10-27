@@ -39,6 +39,7 @@ class AuthController extends AppController
         $inputUser = $user->table('user')
                      ->where('email', '=', $email)
                      ->where('password', '=', $password)
+                     ->where('role_id', '=', 1)
                      ->first();
 
         if (!$inputUser) {
@@ -47,24 +48,18 @@ class AuthController extends AppController
             View::render('admin/auth/login.php', $this->data);
             exit;
         }
+        $data = [
+            'name' => $inputUser['name'],
+            'email' => $inputUser['email'],
+            'role_id' => $inputUser['role_id'],
+            'room_id' => $inputUser['room_id'],
+        ];
+        
+        $request->saveUser($data);
+        
+        header('Location: /admin/index');
+        exit;
 
-        $this->currentUser = $inputUser;
-        if ($this->currentUser['role_id'] == 1) {
-            $data = [
-                'name' => $this->currentUser['name'],
-                'email' => $this->currentUser['email'],
-                'role_id' => $this->currentUser['role_id'],
-                'room_id' => $this->currentUser['room_id'],
-            ];
-            
-            $request->saveUser($data);
-            
-            header('Location: /admin/index');
-            exit;
-        } else {
-            $this->data['error'] = showError('login');
-            View::render('admin/auth/login.php', $this->data);
-        }
     }
 
     public function logout(Request $request)

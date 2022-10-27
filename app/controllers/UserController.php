@@ -110,8 +110,26 @@ class UserController extends AppController
 
     public function update(Request $request)
     {   
+        $post = $request->getPost()->all();
+        
+        $checkUser = $this->model->getById($post['id']);
+        $changeData = false;
+        foreach ($post as $key => $value) {
+            if ($post['password'] == '' && $key != 'password' && $checkUser[$key] != $value) {
+                $changeData = true;
+                break;
+            } else if ($post['password'] != '' && $checkUser[$key] != $value) {
+                $changeData = true;
+                break;
+            }
+        }
+
+        if (!$changeData) {
+            return $this->errorResponse('Nothing to update');
+        }
+
         $appRequest = new AppRequest;
-        $resultVali = $appRequest->validate($this->model->rules('remove', ['password']), $request, 'post');
+        $resultVali = $appRequest->validate($this->model->rules('remove_value', ['password' => ['required', 'filled', 'password']]), $request, 'post');
 
         if (in_array('error', $resultVali)) {
             return $this->errorResponse(showError($resultVali[array_key_last($resultVali)]) . " (" . array_key_last($resultVali) . ")");

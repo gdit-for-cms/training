@@ -26,7 +26,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label" for="confirmPassword">Confirm Password*</label>
-                            <input id="confirmPassword" name="confirmPassword" type="password" class="form-control">
+                            <input id="confirmPassword" type="password" class="form-control">
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -67,7 +67,7 @@
                             </select>
                         </div>
                     </div>
-                    <button id="submit" type="submit" class="btn btn-primary">Create</button>
+                    <button id="submit" type="submit" class="btn btn-primary">Save</button>
                 </form>
             </div>
         </div>
@@ -96,15 +96,16 @@
     const dataUpdate = new Object();
 
     function start() {
-        checkChangeInput('keyup', nameInput)
-        checkChangeInput('keyup', emailInput)
-        checkChangeInput('keyup', passwordInput)
-        checkChangeInput('keyup', confirmPasswordInput)
-        checkChangeInput('change', roomInput)
-        checkChangeInput('change', roleInput)
-        checkChangeInput('change', positionInput)
+        // checkChangeInput('keyup', nameInput)
+        // checkChangeInput('keyup', emailInput)
+        // checkChangeInput('keyup', passwordInput)
+        // checkChangeInput('keyup', confirmPasswordInput)
+        // checkChangeInput('change', roomInput)
+        // checkChangeInput('change', roleInput)
+        // checkChangeInput('change', positionInput)
+        checkConfirmPassword()
     }
-    // start()
+    start()
 
     function validate() {
         const dataUserCurrent = {
@@ -147,5 +148,26 @@
         }
 
         return true;
+    }
+
+    function checkConfirmPassword() {
+        passwordInput.addEventListener('keyup', () => {
+            if (confirmPasswordInput.value != passwordInput.value) {
+                submitBtn.disabled = true
+            } else {
+                submitBtn.disabled = false
+            }
+        })
+        confirmPasswordInput.addEventListener('keyup', () => {
+            if (confirmPasswordInput.value != passwordInput.value) {
+                submitBtn.disabled = true
+            } else {
+                submitBtn.disabled = false
+            }
+        })
+    }
+
+    function checkDiffDataUpdate(params) {
+        
     }
 </script>

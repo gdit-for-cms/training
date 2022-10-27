@@ -25,10 +25,9 @@ class PositionController extends AppController
 
     public function indexAction()
     {
-        $user = new User;
-
-        // $results = $this->model->getAllRelation($get);
-        $this->data['allUsers'] = $user->getAll();
+        $results = User::getAllRelation();
+        $this->data['allUsers'] = $results['results'];
+        
         $this->data['positions'] = $this->model->getAll();
         $this->data['content'] = 'position/index';
     }
@@ -80,6 +79,21 @@ class PositionController extends AppController
 
     public function update(Request $request)
     {   
+        $post = $request->getPost()->all();
+        
+        $checkPosition = $this->model->getById($post['id']);
+        $changeData = false;
+        foreach ($post as $key => $value) {
+            if ($checkPosition[$key] != $value) {
+                $changeData = true;
+                break;
+            }
+        }
+
+        if (!$changeData) {
+            return $this->errorResponse('Nothing to update');
+        }
+
         $appRequest = new AppRequest;
         $resultVali = $appRequest->validate(Position::rules('add', ['id' => ['required', 'filled']]), $request, 'post');
 

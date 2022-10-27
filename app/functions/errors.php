@@ -13,6 +13,9 @@ function showError($errorName)
         "filled" => "Please fil out this field",
         "maxLen" => "The entered text too long",
         "minLen" => "The entered text too short",
+        "email" => "The entered text must be email format",
+        "name" => "The entered text must be name format",
+        "password" => "The entered text must be password format",
     ];
     if ($errorArray[$errorName]) {
         return $errorArray[$errorName];
