@@ -15,80 +15,49 @@
                     if (!empty($diff)) {
                         $key_diff = array_keys($diff); ?>
                         <!-- Return result(difference).  -->
-                        <div class="container-compare" style="<?= $backroundDiff ?>">
+                        <div class="container-compare" style="<?php echo $backroundDiff; ?>">
                             <div class="left">
-                                <h4 class="var-name"><?= $name ?>[<?= $i ?>]</h4>
-                                <span class="line">(line in file : <?= $in_file1[$name][1] ?>)</span>
-                                <? foreach ($in_file1[$name][0][$i] as $key =>$value) { $style = ''; ?>
-                                    <? if (in_array($key, $key_diff)) { $style = $color_diff_blob; } ?>
-                                        <span style=<?= $style ?>><?= $key ?> : <?= $value ?></span></br>
-                                <? } ?>   
+                                <?php renderArrayWithCompare($in_file1, $in_file1[$name][0][$i], $name, $color_diff_blob, $key_diff); ?>  
                             </div>
                             <div class="right">
-                                <h4 class="var-name"><?= $name ?>[<?= $i ?>]</h4>
-                                <span class="line">(line in file : <?= $in_file2[$name][1] ?>)</span>
-                                <? foreach ($in_file2[$name][0][$i] as $key =>$value) { $style = ''; ?>
-                                    <? if (in_array($key, $key_diff)) { $style = $color_diff_blob; } ?>
-                                        <span style=<?= $style ?>><?= $key ?> : <?= $value ?></span></br>
-                                <? } ?>   
+                                <?php renderArrayWithCompare($in_file2, $in_file2[$name][0][$i], $name, $color_diff_blob, $key_diff); ?>
                             </div>
                         </div>
-                    <? } else { ?>
+                    <?php } else { ?>
                         <!-- Return result(same).  -->
-                        <div class="container-compare" style="<?= $backroundSame ?>">
+                        <div class="container-compare" style="<?php echo $backroundSame; ?>">
                             <div class="left">
-                                <h4 class="var-name"><?= $name ?>[<?= $i ?>]</h4>
-                                <? renderArray($in_file1[$name][0][$i]) ?>
+                                <h4 class="var-name"><?php echo $name; ?>[<?php echo $i; ?>]</h4>
+                                <?php renderArray($in_file1[$name][0][$i]); ?>
                             </div>
                             <div class="right">
-                                <h4 class="var-name"><?= $name ?>[<?= $i ?>]</h4>
-                                <? renderArray($in_file2[$name][0][$i]) ?>
+                                <h4 class="var-name"><?php echo $name; ?>[<?php echo $i; ?>]</h4>
+                                <?php renderArray($in_file2[$name][0][$i]); ?>
                             </div>
                         </div>
                 <?php }} } else { ?>
                     <!-- Return result(diff).  -->
-                    <div class="container-compare" style="<?= $backroundDiff ?>">
+                    <div class="container-compare" style="<?php echo $backroundDiff; ?>">
                         <div class="left">
-                            <h4 class="var-name"><?= $name ?></h4>
-                            <span class="line">(line in file : <?= $in_file1[$name][1] ?>)</span>
-                            <? for($i = 0 ; $i < count($in_file1[$name][0]); $i++) {
+                            <h4 class="var-name"><?php echo $name; ?></h4>
+                            <span class="line">(line in file : <?php echo $in_file1[$name][1]; ?>)</span>
+                            <?php for($i = 0 ; $i < count($in_file1[$name][0]); $i++) {
                                 renderArray($in_file1[$name][0][$i]);  ?>
-                            <? } ?>
+                            <?php } ?>
                         </div>
                         <div class="right">
-                            <h4 class="var-name"><?= $name ?></h4>
-                            <span class="line">(line in file : <?= $in_file2[$name][1] ?>)</span>
-                            <? for($i = 0 ; $i < count($in_file2[$name][0]); $i++) {
+                            <h4 class="var-name"><?php echo $name; ?></h4>
+                            <span class="line">(line in file : <?php echo $in_file2[$name][1]; ?>)</span>
+                            <?php for($i = 0 ; $i < count($in_file2[$name][0]); $i++) {
                                 renderArray($in_file2[$name][0][$i]);  ?>
-                            <? } ?>   
+                            <?php } ?>   
                         </div>
                     </div>
         <?php }}}; ?>
     </div>
     <div class="div-consts">
         <!-- Check and comepare a same Constant name in 2 files. -->
-        <?  if (!empty($const_in_file1) && !empty($const_in_file2)) {
-                foreach ($const_in_file1 as $key1 => $value1) {
-                    foreach ($const_in_file2 as $key2 => $value2) { 
-                        if ($key1 == $key2 && $value1 == $value2) { ?>
-                            <div class="container-compare" style="<?= $backroundSame ?>">
-                                <div class="left">
-                                    <span class="var-name"><?= $key1 ?> : <?= $value1 ?></span></br>
-                                </div>
-                                <div class="right">
-                                    <span class="var-name"><?= $key2 ?> : <?= $value2 ?></span></br>
-                                </div>
-                            </div>
-                <?php } else if ($key1 == $key2 && $value1 !== $value2) { ?>
-                            <div class="container-compare" style="<?= $backroundDiff ?>">
-                                <div class="left">
-                                    <span class="var-name" style=<?= $color_diff_blob ?>><?= $key1 ?> : <?= $value1 ?></span></br>
-                                </div>
-                                <div class="right">
-                                    <span class="var-name" style=<?= $color_diff_blob ?>><?= $key2 ?> : <?= $value2 ?></span></br>
-                                </div>
-                            </div>
-        <?php }}}}; ?>
+        <?php renderDivConst($backroundSame, $backroundDiff, $color_diff_blob, $const_in_file1, $const_in_file2); ?>
     </div>
 </div>
 

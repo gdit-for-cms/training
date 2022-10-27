@@ -20,7 +20,7 @@
                             <input type="file" name="file2" accept=".php, .inc" id="file2" />
                         </div>
                         <div class="col-md-4 mb-3">
-                            <input type="submit" class="btn btn-primary" name="importSubmit" value="Import">
+                            <input type="submit" class="btn btn-primary" id="submit-file" name="importSubmit" value="Import" disabled>
                         </div>
                     </form>
                 </div>

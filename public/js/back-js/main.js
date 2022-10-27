@@ -1,4 +1,6 @@
 $(document).ready(function () {
+    const file1 = document.getElementById('file1');
+    const file2 = document.getElementById('file1')
     $('#select-show').change(function () {
         var type = $(this).val();
         switch (type) {
@@ -56,4 +58,23 @@ $(document).ready(function () {
             ele.parentNode.classList.remove('d-none');
         })
     });
+    $('#file1').change(function () {
+        updateSubmitBtn();
+    });
+
+    $('#file2').change(function () {
+        updateSubmitBtn();
+    });
 });
+
+
+function updateSubmitBtn() {
+    const file1Value = file1.value.trim();
+    const file2Value = file2.value.trim();
+    debugger;
+    if (file1Value && file2Value) {
+        $('#submit-file').prop('disabled', false);
+    } else {
+        $('#submit-file').prop('disabled', true);
+    }
+}

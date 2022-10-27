@@ -11,15 +11,15 @@
                 </div>
                 <div class="card-body mx-3 d-flex">
                     <div class="col-3 ">
-                        <h3><?= $uploadStatus ?></h3>
+                        <h3>Upload status: <?php echo $uploadStatus; ?></h3>
                         <!-- Show warning in import file -->
-                        <? if (!empty($warning_in_file1) || !empty($warning_in_file2)) { ?>
+                        <?php if (!empty($warning_in_file1) || !empty($warning_in_file2)) { ?>
                             <div class="warning-div px-3 mb-3">
                                 <i class='bx bxs-message-alt-error' style="color: #ff0000; font-size:32px;"></i>
-                                <? warning($warning_in_file1, 1) ?>
-                                <? warning($warning_in_file2, 2) ?>
+                                <?php warning($warning_in_file1, 1) ?>
+                                <?php warning($warning_in_file2, 2) ?>
                             </div>
-                        <? } ?>
+                        <?php } ?>
                         <div class="mb-3 px-3">
                             <h4 class="card-title font-18 mt-3">Compare by</h4>
                             <div class="input-group">
@@ -44,22 +44,61 @@
                             </div>
                         </div>
                     </div>
-                    <? require_once 'value.php' ?>
-                    <? require_once 'text.php' ?>
+                    <?php require_once 'value.php' ?>
+                    <?php require_once 'text.php' ?>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<? function warning($warning_in_file, $file) {
+<!-- All render function -->
+<?php function warning($warning_in_file, $file) {
     if ($warning_in_file) { ?>
-        <h5>Warning : Duplicate variable in file <?= $file ?></h5>
-        <? foreach ($warning_in_file as $key => $value) { ?>
-            <h6><?= $key ?> : <?= $value ?> frequency</h6>
-<? }}} ?>
+        <h5>Warning : Duplicate variable in file <?php echo $file; ?></h5>
+        <?php foreach ($warning_in_file as $key => $value) { ?>
+            <h6><?php echo $key; ?> : <?php echo $value; ?> frequency</h6>
+<?php }}} ?>
 
-<? function renderArray($array) {
+<?php function renderArray($array, $text = false) {
     foreach ($array as $key => $value) { ?>
-        <span><?= $key ?> : <?= $value ?></span></br>
-<? }} ?>
+        <?php if ($text) {?>
+            <span ><?php echo $value; ?></span></br>
+        <?php } else { ?>
+            <span><?php echo $key; ?> : <?php echo $value; ?></span></br>
+<?php }}} ?>
+
+<?php function renderArrayWithCompare($main, $array, $name, $color, $key_diff, $text = false) { ?>
+    <h4 class="var-name"><?php echo $name; ?></h4>
+    <span class="line">(line in file : <?php echo $main[$name][1]; ?>)</span>
+    <?php foreach ($array as $key =>$value) { $style = ''; 
+            if (in_array($key, $key_diff)) { $style = $color; } 
+                if ($text) { ?>
+                    <span style=<?php echo $style; ?>><?php echo $value; ?></span></br>
+                <?php } else { ?>   
+                    <span style=<?php echo $style; ?>><?php echo $key; ?> : <?php echo $value; ?></span></br>
+<?php }}} ?>   
+
+<?php function renderDivConst($backroundSame, $backroundDiff, $color_diff_blob, $const_in_file1, $const_in_file2) { 
+    if (!empty($const_in_file1) && !empty($const_in_file2)) {
+        foreach ($const_in_file1 as $key1 => $value1) {
+            foreach ($const_in_file2 as $key2 => $value2) { 
+                if ($key1 == $key2 && $value1 == $value2) { ?>
+                    <div class="container-compare" style="<?php echo $backroundSame; ?>">
+                        <div class="left">
+                            <span class="var-name"><?php echo $key1; ?> : <?php echo $value1; ?></span></br>
+                        </div>
+                        <div class="right">
+                            <span class="var-name"><?php echo $key2; ?> : <?php echo $value2; ?></span></br>
+                        </div>
+                    </div>
+        <?php } else if ($key1 == $key2 && $value1 !== $value2) { ?>
+                    <div class="container-compare" style="<?php echo $backroundDiff; ?>">
+                        <div class="left">
+                            <span class="var-name" style=<?php echo $color_diff_blob; ?>><?php echo $key1; ?> : <?php echo $value1; ?></span></br>
+                        </div>
+                        <div class="right">
+                            <span class="var-name" style=<?php echo $color_diff_blob; ?>><?php echo $key2; ?> : <?php echo $value2; ?></span></br>
+                        </div>
+                    </div>
+<?php }}}}}; ?>
