@@ -13,10 +13,7 @@ class DefaultController extends Controller
      *
      * @return void
      */
-    public function indexAction()
-    {
+    public function indexAction() {
         View::render('default/index.php');
     }
-
-    
 }

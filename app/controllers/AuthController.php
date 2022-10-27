@@ -11,8 +11,7 @@ class AuthController extends Controller
 {   
     public array $data;
 
-    protected function before() 
-    {
+    protected function before() {
         if (checkAdmin()) {
             header('Location: /admin/index');
             exit;
@@ -20,27 +19,18 @@ class AuthController extends Controller
         $this->data['title'] = 'Login';
     }
 
-    protected function after()
-    {
+    protected function after() {
     }
 
-    public function loginAction()
-    {  
+    public function loginAction() {  
         View::render('admin/auth/login.php');
     }
 
-    public function loginProcessAction(Request $request)
-    {
+    public function loginProcessAction(Request $request) {
         $post = $request->getPost();
 
         $email = $post->get('email');
         $password = $post->get('password');
-
-        // if (strlen($email) >= 255 || strlen($password) >= 255){
-        //     $this->data['error'] = showError('login');
-        //     View::render('admin/auth/login.php', $this->data);
-        //     exit;
-        // }
 
         $user = new User();
         $inputUser = $user->table('user')
@@ -74,8 +64,7 @@ class AuthController extends Controller
         }
     }
 
-    public function logout(Request $request)
-    {   
+    public function logout(Request $request) {   
         $request->deleteUser();
         
         header('Location: /auth/login');

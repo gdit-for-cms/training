@@ -41,13 +41,13 @@ Trait QueryBuilder
             $this->operator = ' AND ';
         }
         $value = addslashes($value);
-        $this->where .= "$this->operator $column $compare '$value'";
+        $this->where .= $this->operator . ' ' . $column . ' ' . $compare . ' \'' . $value . '\'';
 
         return $this;
     }
 
     /**
-     * Add an "or where" clause to the query.
+     * Add an 'or where' clause to the query.
      *
      * @param  string|array  $column
      * @param  mixed  $value
@@ -61,13 +61,13 @@ Trait QueryBuilder
         } else {
             $this->operator = ' OR ';
         }
-        $this->where .= "$this->operator $column $compare '$value'";
+        $this->where .= $this->operator . ' ' . $column . ' ' . $compare . ' \'' . $value . '\'';
 
         return $this;
     }
 
     /**
-     * Add an "where like" clause to the query.
+     * Add an 'where like' clause to the query.
      *
      * @param  string|array  $column
      * @param  mixed  $value
@@ -81,7 +81,7 @@ Trait QueryBuilder
             $this->operator = ' AND ';
         }
         $value = addslashes($value);
-        $this->where .= "$this->operator $column LIKE '%$value%'";
+        $this->where .= $this->operator . ' ' . $column . ' LIKE ' . '\'%' . $value . '%\'';
 
         return $this;
     }
@@ -107,7 +107,7 @@ Trait QueryBuilder
      */
     public function limit($number, $offset = 0)
     {
-        $this->limit = "LIMIT " . $offset . ", " . $number;
+        $this->limit = 'LIMIT ' . $offset . ', ' . $number;
 
         return $this;
     }
@@ -123,15 +123,15 @@ Trait QueryBuilder
     {
         $arrColumns = array_filter(explode(',', $column));
         if (!empty($arrColumns) && count($arrColumns) >= 2 ) {
-            $this->orderBy = "ORDER BY". implode(', ', $arrColumns);
+            $this->orderBy = 'ORDER BY'. implode(', ', $arrColumns);
         } else {
-            $this->orderBy = "ORDER BY" . " " . $column . " " . $direction;
+            $this->orderBy = 'ORDER BY' . ' ' . $column . ' ' . $direction;
         }
 
         return $this;
     }
     /**
-     * Add an "order by" clause for a timestamp to the query.
+     * Add an 'order by' clause for a timestamp to the query.
      * 
      * @param  string  $column
      * @return $this
@@ -142,7 +142,7 @@ Trait QueryBuilder
     }
 
     /**
-     * Add an "order by" clause for a timestamp to the query.
+     * Add an 'order by' clause for a timestamp to the query.
      *
      * @param  string  $column
      * @return $this
@@ -153,7 +153,7 @@ Trait QueryBuilder
     }
 
     /**
-     * Execute the query as a "select" statement.
+     * Execute the query as a 'select' statement.
      *
      * @return array
      */
@@ -162,11 +162,11 @@ Trait QueryBuilder
         $db = static::getDB();
         $this->selectColumn = $column;
         $sqlQuery = 
-        "SELECT " . $this->selectColumn . 
-        " FROM " . $this->_table . " " .
-        $this->innerJoin . " " . 
-        $this->where . " " . 
-        $this->orderBy . " " . 
+        'SELECT ' . $this->selectColumn . 
+        ' FROM ' . $this->_table . ' ' .
+        $this->innerJoin . ' ' . 
+        $this->where . ' ' . 
+        $this->orderBy . ' ' . 
         $this->limit;
         $sqlQuery = trim($sqlQuery);
         $result = $db->query($sqlQuery);
@@ -189,7 +189,7 @@ Trait QueryBuilder
     public function all()
     {
         $db = static::getDB();
-        $sqlQuery = "SELECT * FROM $this->_table";
+        $sqlQuery = 'SELECT * FROM $this->_table';
         $query = $db->query($sqlQuery);
 
         // Reset field
@@ -224,7 +224,7 @@ Trait QueryBuilder
     {
         $db = static::getDB();
         $this->selectColumn = $column;
-        $sqlQuery = "SELECT " . $this->selectColumn . " FROM " . $this->_table . " " . $this->where;
+        $sqlQuery = 'SELECT ' . $this->selectColumn . ' FROM ' . $this->_table . ' ' . $this->where;
         $result = $db->query($sqlQuery);
 
         // Reset field
@@ -257,7 +257,7 @@ Trait QueryBuilder
      */
     public function join($tableName, $relationship)
     {
-        $this->innerJoin = "INNER JOIN" .$tableName. " ON " .$relationship." ";
+        $this->innerJoin = 'INNER JOIN' .$tableName. ' ON ' .$relationship.' ';
 
         return $this;
     }
@@ -278,13 +278,13 @@ Trait QueryBuilder
             foreach($data as $key => $value){
                 $key = addslashes(htmlspecialchars($key));
                 $value = addslashes(htmlspecialchars($value));
-                $columnStr.= $key.',';
-                $valueStr.= "'".$value."',";
+                $columnStr.= $key . ',';
+                $valueStr.= '\'' . $value . '\',';
             }
             $columnStr = rtrim($columnStr, ',');
             $valueStr = rtrim($valueStr, ',');
 
-            $sqlQuery = "INSERT INTO " . $tableName . " (" . $columnStr . ")" . " VALUES " . "(" . $valueStr . ") " ;
+            $sqlQuery = 'INSERT INTO ' . $tableName . ' (' . $columnStr . ')' . ' VALUES ' . '(' . $valueStr . ') ' ;
             $result = $db->query($sqlQuery);
 
             if ($result) {
@@ -312,14 +312,14 @@ Trait QueryBuilder
             foreach ($data as $key => $value) {
                 $key = addslashes(htmlspecialchars($key));
                 $value = addslashes(htmlspecialchars($value));
-                $updateStr.= "$key = '$value',";
+                $updateStr.= $key . '=' . '\'' . $value . '\',';
             }
             $updateStr = rtrim($updateStr, ',');
             
             if (!empty($conditions)) {
-                $sqlQuery = "UPDATE " . $tableName . " SET " . $updateStr . " WHERE " . $conditions;
+                $sqlQuery = 'UPDATE ' . $tableName . ' SET ' . $updateStr . ' WHERE ' . $conditions;
             } else {
-                $sqlQuery = "UPDATE " . $tableName . " SET " . $updateStr ;
+                $sqlQuery = 'UPDATE ' . $tableName . ' SET ' . $updateStr ;
             }
             $result = $db->query($sqlQuery);
 
@@ -341,7 +341,7 @@ Trait QueryBuilder
         $db = static::getDB();
         $tableName = $this->_table;
 
-        $sqlQuery = "DELETE FROM " . $tableName . " WHERE " . $conditions;
+        $sqlQuery = 'DELETE FROM ' . $tableName . ' WHERE ' . $conditions;
 
         $result = $db->query($sqlQuery);
 
@@ -358,7 +358,7 @@ Trait QueryBuilder
         $db = static::getDB();
         $tableName = $this->_table;
 
-        $sqlQuery = "DELETE FROM " . $tableName;
+        $sqlQuery = 'DELETE FROM ' . $tableName;
 
         $result = $db->query($sqlQuery);
 
