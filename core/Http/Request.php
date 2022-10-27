@@ -84,9 +84,7 @@ class Request
      */
     public function getPost()
     {
-        $data = $this->getProtectedValue($this->post, 'container');
-
-        return $data;
+        return $this->post;
     }
 
     /**
@@ -110,10 +108,7 @@ class Request
      */
     public function getGet()
     {
-        $data = $this->getProtectedValue($this->get, 'container');
-        
-        return $data;
-
+        return $this->get;
     }
 
     /**
