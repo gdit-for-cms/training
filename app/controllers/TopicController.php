@@ -11,19 +11,16 @@ class TopicController extends AppController
     use ResponseTrait;
     public array $data;
 
-    public function listAction()
-    {
+    public function listAction() {
         $this->data['topics'] = Topic::all();
         $this->data['content'] = 'topic/list';
     }
 
-    public function newAction()
-    {
+    public function newAction() {
         $this->data['content'] = 'topic/new';
     }
 
-    public function create(Request $request)
-    {
+    public function create(Request $request) {
         try {
             $name = $request->getPost()->get('name');
             Topic::create(['name' => $name]);
@@ -33,8 +30,7 @@ class TopicController extends AppController
         }
     }
 
-    public function update(Request $request)
-    {
+    public function update(Request $request) {
         try {
             $name = $request->getPost()->get('name');
             $id = $request->getPost()->get('id');
@@ -45,8 +41,7 @@ class TopicController extends AppController
         }
     }
 
-    public function delete(Request $request)
-    {
+    public function delete(Request $request) {
         try {
             $id = $request->getGet()->get('id');
             Topic::delete($id);
@@ -56,8 +51,7 @@ class TopicController extends AppController
         }
     }
 
-    public function apiCheckName(Request $request)
-    {
+    public function apiCheckName(Request $request) {
         $name = $request->getGet()->get('name');
         $check = Topic::checkExist($name);
         

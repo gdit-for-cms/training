@@ -10,8 +10,7 @@ class ApiController extends AppController
 {
     use ResponseTrait;
 
-    public function topics(Request $request)
-    {
+    public function topics(Request $request) {
         $request = $request->getGet();
         $topic = new Topic();
         $query = $topic->table('topic');

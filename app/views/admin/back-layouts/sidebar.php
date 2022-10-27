@@ -67,15 +67,5 @@
                 </div>
             </a>
         </li>
-        <li class="">
-            <a class="has-arrow" href="/admin/diff" aria-expanded="false">
-                <div class="nav_icon_small">
-                    <img src="" alt="">
-                </div>
-                <div class="nav_title">
-                    <span>Diff-file</span>
-                </div>
-            </a>
-        </li>
     </ul>
 </nav>

@@ -11,24 +11,20 @@ class ExamController extends AppController
     use ResponseTrait;
     public array $data;
 
-    public function listAction()
-    {
+    public function listAction() {
         $this->data['exams'] = Exam::all();
         $this->data['content'] = 'exam/list';
     }
 
-    public function newAction()
-    {
+    public function newAction() {
         $this->data['content'] = 'exam/new';
     }
 
-    public function detailAction()
-    {
+    public function detailAction() {
         $this->data['content'] = 'exam/detail';
     }
 
-    public function create(Request $request)
-    {
+    public function create(Request $request) {
         try {
             $name = $request->getPost()->get('name');
             $count_q = $request->getPost()->get('count_q');
@@ -49,8 +45,7 @@ class ExamController extends AppController
         }
     }
 
-    public function delete(Request $request)
-    {
+    public function delete(Request $request) {
         try {
             $id = $request->getGet()->get('id');
             Exam::delete($id);

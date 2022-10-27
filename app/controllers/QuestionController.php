@@ -11,19 +11,16 @@ class QuestionController extends AppController
     use ResponseTrait;
     public array $data;
 
-    public function listAction()
-    {
+    public function listAction() {
         // $this->data['exams'] = Exam::all();
         $this->data['content'] = 'question/list';
     }
 
-    public function newAction()
-    {
+    public function newAction() {
         $this->data['content'] = 'exam/new';
     }
 
-    public function create(Request $request)
-    {
+    public function create(Request $request) {
         try {
             $type = $request->getPost()->get('type');
             $name = $request->getPost()->get('name');
@@ -39,8 +36,7 @@ class QuestionController extends AppController
         }
     }
 
-    public function apiCheckName(Request $request)
-    {
+    public function apiCheckName(Request $request) {
         $name = $request->getGet()->get('name');
         $check = Question::checkExist($name);
         

@@ -40,15 +40,15 @@
                                 <?php $i = 1;
                                 foreach ($topics as $topic) { ?>
                                     <tr>
-                                        <th scope="row"><?= $i++ ?></th>
-                                        <td><?= $topic['name'] ?></td>
+                                        <th scope="row"><?php echo $i++ ?></th>
+                                        <td><?php echo $topic['name'] ?></td>
                                         <td><a class="btn btn-outline-primary mb-3 edit-topic-btn" data-name="<?php echo $topic['name'] ?>" data-id="<?php echo $topic['id'] ?>">Edit</a></td>
                                         <td>
-                                            <a class="btn btn-outline-danger mb-3 delete-topic" data-id="<?= $topic['id'] ?>">
+                                            <a class="btn btn-outline-danger mb-3 delete-topic" data-id="<?php echo $topic['id'] ?>">
                                                 Delete
                                             </a>
                                         </td>
-                                        <td><?= $topic['created_at'] ?></td>
+                                        <td><?php echo $topic['created_at'] ?></td>
                                     </tr>
                                 <?php } ?>
                             </tbody>

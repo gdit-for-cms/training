@@ -6,8 +6,7 @@ class AdminController extends AppController
 {
     public array $data;
 
-    public function indexAction()
-    {   
+    public function indexAction() {
         $this->data['content'] = 'admin/dashboard';
     }
 }

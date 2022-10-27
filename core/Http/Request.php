@@ -6,8 +6,6 @@ use Core\Http\Bag\Files;
 use Core\Http\Bag\Post;
 use Core\Http\Bag\Get;
 
-
-
 /**
  * 
  * The HTTP request

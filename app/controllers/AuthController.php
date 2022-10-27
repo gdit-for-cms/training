@@ -11,8 +11,7 @@ class AuthController extends Controller
 {   
     public array $data;
 
-    protected function before() 
-    {
+    protected function before() {
         if (checkAdmin()) {
             header('Location: /admin/index');
             exit;
@@ -20,32 +19,22 @@ class AuthController extends Controller
         $this->data['title'] = 'Login';
     }
 
-    protected function after()
-    {
+    protected function after() {
     }
 
-    public function loginAction()
-    {  
+    public function loginAction() {  
         View::render('admin/auth/login.php');
     }
 
-    public function loginProcessAction(Request $request)
-    {
-        $post = $request->getPost();
-
-        $email = $post->get('email');
-        $password = $post->get('password');
-
-        // if (strlen($email) >= 255 || strlen($password) >= 255){
-        //     $this->data['error'] = showError('login');
-        //     View::render('admin/auth/login.php', $this->data);
-        //     exit;
-        // }
-
+    public function loginProcessAction(Request $request) {
+        $email = $request->getPost()->get('email');
+        $password = $request->getPost()->get('password');
+        
         $user = new User();
         $inputUser = $user->table('user')
                      ->where('email', '=', $email)
                      ->where('password', '=', $password)
+                     ->where('role_id', '=', 1)
                      ->first();
 
         if (!$inputUser) {
@@ -53,29 +42,21 @@ class AuthController extends Controller
 
             View::render('admin/auth/login.php', $this->data);
             exit;
-        }
-
-        $this->currentUser = $inputUser;
-        if ($this->currentUser['role_id'] == 1) {
-            $data = [
-                'name' => $this->currentUser['name'],
-                'email' => $this->currentUser['email'],
-                'role_id' => $this->currentUser['role_id'],
-                'room_id' => $this->currentUser['room_id'],
-            ];
-            
-            $request->saveUser($data);
-            
-            header('Location: /admin/index');
-            exit;
-        } else {
-            $this->data['error'] = showError('login');
-            View::render('admin/auth/login.php', $this->data);
-        }
+        } 
+        $data = [
+            'name' => $inputUser['name'],
+            'email' => $inputUser['email'],
+            'role_id' => $inputUser['role_id'],
+            'room_id' => $inputUser['room_id'],
+        ];
+        
+        $request->saveUser($data);
+        
+        header('Location: /admin/index');
+        exit;
     }
 
-    public function logout(Request $request)
-    {   
+    public function logout(Request $request) {   
         $request->deleteUser();
         
         header('Location: /auth/login');
