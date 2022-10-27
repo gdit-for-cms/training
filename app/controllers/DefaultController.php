@@ -16,4 +16,6 @@ class DefaultController extends Controller
     public function indexAction() {
         View::render('default/index.php');
     }
+
+    
 }

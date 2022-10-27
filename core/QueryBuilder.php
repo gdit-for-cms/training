@@ -174,7 +174,7 @@ Trait QueryBuilder
         // Reset field
         $this->resetQuery();
 
-        if (!empty($result)) {
+        if ($result) {
             return $result->fetchAll(PDO::FETCH_ASSOC);
         }
 
@@ -195,7 +195,7 @@ Trait QueryBuilder
         // Reset field
         $this->resetQuery();
 
-        if (!empty($query)) {
+        if ($query) {
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
 
@@ -230,7 +230,7 @@ Trait QueryBuilder
         // Reset field
         $this->resetQuery();
 
-        if (!empty($result)) {
+        if ($result) {
             return $result->fetch(PDO::FETCH_ASSOC);
         }
 
