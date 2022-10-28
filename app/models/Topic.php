@@ -21,33 +21,28 @@ class Topic extends Model
      *
      * @return string
      */
-    public static function checkExist($name)
-    {
+    public static function checkExist($name) {
         $db = static::getDB();
         $name = addslashes(htmlspecialchars($name));
         $stmt = $db->query("SELECT EXISTS(SELECT * FROM `topic` WHERE name = '$name') AS mycheck LIMIT 1")->fetch(PDO::FETCH_ASSOC);
         return $stmt;
     }
 
-    public static function all()
-    {
+    public static function all() {
         $db = static::getDB();
         $stmt = $db->query('SELECT * FROM `topic` ');
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public static function create($data)
-    {
+    public static function create($data) {
         return (new self)->insert($data);
     }
 
-    public static function updateTopic($data, $condition)
-    {
+    public static function updateTopic($data, $condition) {
         return (new self)->update($data, $condition);
     }
 
-    public static function delete($id)
-    {
+    public static function delete($id) {
         return (new self)->destroy("id = $id");
     }
 }

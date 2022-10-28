@@ -20,7 +20,10 @@ class ExamController extends AppController
         $this->data['content'] = 'exam/new';
     }
 
-    public function detailAction() {
+    public function detailAction(Request $request) {
+        $id = $request->getGet()->get('id'); 
+        $this->data['questions'] = Exam::getCountQuestion($id);
+        $this->data['created'] = Exam::getCreatedQuestion($id);
         $this->data['content'] = 'exam/detail';
     }
 
