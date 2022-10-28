@@ -14,8 +14,8 @@ if (!function_exists('checkAdmin')) {
      }
 }
 
-if (!function_exists('setKeyValueArr')) {
-     function setKeyValueArr($arr) {
+if (!function_exists('setKeyValueAry')) {
+     function setKeyValueAry($arr) {
         static $temp = array();
         $arr = explode('=>', rtrim(trim($arr), ','));
         $key = trim($arr[0]);

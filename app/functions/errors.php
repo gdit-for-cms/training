@@ -7,11 +7,11 @@ function showError($errorName)
         "create" => 'Create failed',
         "existed" => 'Object has been exist',
         "email existed" => 'Email has been exist',
-        "undefindError" => "Error undefind",
+        "undefinedError" => "Error undefined",
     ];
     if ($errorArray[$errorName]) {
         return $errorArray[$errorName];
     } else {
-        return  $errorArray['undefindError'];
+        return  $errorArray['undefinedError'];
     }
 }
