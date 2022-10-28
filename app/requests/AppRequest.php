@@ -12,53 +12,56 @@ class AppRequest extends Request
 
     public function validate($rules, $request, $method)
     {   
-        $arrayRequest = array();
+        $req_method_ary = array();
         if ($method == 'post') {
-            $arrayRequest = $request->getPost()->all();
+            $req_method_ary = $request->getPost()->all();
         } else {
-            $get = $request->getGet()->all();
-            array_shift($get);
-            $arrayRequest = $get;
+            $get_ary = $request->getGet()->all();
+            array_shift($get_ary);
+            $req_method_ary = $get_ary;
         }
 
-        if ($arrayRequest == []) {
+        if ($req_method_ary == []) {
             header('Location: /room/new');
             exit;
         }
 
-        $ruleRequires = array();
-        foreach ($rules as $keyRule => $value) {
+        $rule_requires = array();
+        foreach ($rules as $key_rule => $value) {
             if (in_array('required', $value)) {
-                $ruleRequires[$keyRule] = $value;
+                $rule_requires[$key_rule] = $value;
             }
         }
 
-        $same = array_intersect(array_keys($ruleRequires), array_keys($arrayRequest));
+        $same = array_intersect(array_keys($rule_requires), array_keys($req_method_ary));
 
         if ($same) {
-            $diff = array_diff(array_keys($ruleRequires), $same);
+            $diff = array_diff(array_keys($rule_requires), $same);
             if ($diff) {
-                return ['error', $diff[array_key_first($diff)] => 'required'];
+                $results_ary = array('error', $diff[array_key_first($diff)] => 'required');
+                return $results_ary;
             } else {
-                foreach ($arrayRequest as $key1 => $value1) {
+                foreach ($req_method_ary as $key1 => $value1) {
                     foreach ($rules as $key2 => $value2) {
                         if ($key1 == $key2) {
                             foreach ($value2 as $each) {
                                 if (strpos($each, ':') !== false) {
-                                    $eachArray =  explode(':', $each);
-                                    if (function_exists($eachArray[0]) && !call_user_func($eachArray[0], $eachArray[1], $value1)) {
-                                        return ['error', $key1 => $eachArray[0]];
+                                    $each_ary =  explode(':', $each);
+                                    if (function_exists($each_ary[0]) && !call_user_func($each_ary[0], $each_ary[1], $value1)) {
+                                        $results_ary = array('error', $key1 => $each_ary[0]);
+                                        return $results_ary;
                                     }
                                 } else {
                                     if (function_exists($each) && !call_user_func($each, $value1)) {
-                                        return ['error', $key1 => $each];
+                                        $results_ary = array('error', $key1 => $each);
+                                        return $results_ary;
                                     }
                                 }
                             }
                         }
                     }
                 }
-                return $arrayRequest;
+                return $req_method_ary;
             }
         }
     }

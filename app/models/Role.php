@@ -11,8 +11,7 @@ use Core\QueryBuilder;
  *
  * PHP version 7.0
  */
-class Role extends Model
-{
+class Role extends Model {
     use QueryBuilder;
     
     private $_table = 'role';
@@ -22,23 +21,19 @@ class Role extends Model
      *
      * @return array
      */
-    public static function getAll()
-    {
+    public static function getAll() {
         return (new self)->all();
     }
 
-    public function insert($data)
-    {
+    public function insert($data) {
         return $this->insert($data);
     }
 
-    public function getBy($column, $operator, $value)
-    {   
+    public function getBy($column, $operator, $value) {
         return $this->where($column, $operator, $value)->get();
     }
 
-    public function getById($id, $column)
-    {   
+    public function getById($id, $column) {
         return $this->find($id, $column);
     }
 }

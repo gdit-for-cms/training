@@ -1,13 +1,12 @@
 <?php
 
-function showError($errorName)
-{
-    $errorArray = [
+function showError($errorName) {
+    $error_ary = [
         "login" => 'Email or Password is incorrect',
         "create" => 'Create failed',
         "existed" => 'Object has been exist',
         "email existed" => 'Email has been exist',
-        "undefindError" => "Error undefind",
+        "undefined_error" => "Error undefined",
         "string" => "This field must be string",
         "required" => "Missing a field",
         "filled" => "Please fil out this field",
@@ -17,10 +16,10 @@ function showError($errorName)
         "name" => "The entered text must be name format",
         "password" => "The entered text must be password format",
     ];
-    if ($errorArray[$errorName]) {
-        return $errorArray[$errorName];
+    if ($error_ary[$errorName]) {
+        return $error_ary[$errorName];
     } else {
-        return  $errorArray['undefindError'];
+        return  $error_ary['undefined_error'];
     }
 }
 

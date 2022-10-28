@@ -4,12 +4,12 @@ use Core\Http\Request;
 
 if (!function_exists('checkAdmin')) {
      function checkAdmin() {
-          $request = new Request;
-          $admin = $request->getUser();
-          if ($admin !== null && $admin['role_id'] == 1) {
-               return true;
+          $obj_request = new Request;
+          $admin_ary = $obj_request->getUser();
+          if ($admin_ary !== null && $admin_ary['role_id'] == 1) {
+               return TRUE;
           } else {
-               return false;
+               return FALSE;
           } 
      }
 }

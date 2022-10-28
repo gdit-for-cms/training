@@ -9,13 +9,13 @@ use Core\Http\Request;
 
 class AdminController extends AppController
 {
-    public array $data;
+    public array $data_ary;
 
     public $title = 'Chủ';
     
     public function indexAction()
     {   
-        $this->data['content'] = 'admin/dashboard';
+        $this->data_ary['content'] = 'admin/dashboard';
     }
 
     public function diffAction()

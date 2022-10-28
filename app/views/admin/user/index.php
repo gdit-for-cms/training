@@ -25,7 +25,7 @@
                     Role
                     <select class="role_select select_option w-26 text-medium border " name="role_id" aria-label="Default select example">
                       <option value="0" selected>All role</option>
-                      <?php foreach ($allRoles as $role) { ?>
+                      <?php foreach ($all_roles as $role) { ?>
                         <option value="<?= $role['id'] ?>"><?= $role['name'] ?></option>
                       <?php } ?>
                     </select>
@@ -34,7 +34,7 @@
                     Room
                     <select class="room_select select_option w-26 text-medium border " name="room_id" aria-label="Default select example">
                       <option value="0" selected>All room</option>
-                      <?php foreach ($allRooms as $room) { ?>
+                      <?php foreach ($all_rooms as $room) { ?>
                         <option value="<?= $room['id'] ?>"><?= $room['name'] ?></option>
                       <?php } ?>
                     </select>
@@ -43,7 +43,7 @@
                     Position
                     <select class="position_select select_option w-26 text-medium border " name="position_id" aria-label="Default select example">
                       <option value="0" selected>All position</option>
-                      <?php foreach ($allPositions as $position) { ?>
+                      <?php foreach ($all_positions as $position) { ?>
                         <option value="<?= $position['id'] ?>"><?= $position['name'] ?></option>
                       <?php } ?>
                     </select>
@@ -53,7 +53,7 @@
               </thead>
               <tbody>
                 <?php $i = 1;
-                foreach ($allUsers as $user) { ?>
+                foreach ($all_users as $user) { ?>
                   <tr class="user_items">
                     <th scope="row"><?= $i;
                                     $i++ ?></th>
@@ -76,7 +76,7 @@
           <nav aria-label="Page navigation example">
             <ul class="pagination">
               <li class="page-item cursor-pointer"><a class="page-link">Previous</a></li>
-              <?php for ($i = 1; $i <= $numbersOfPage; $i++) { ?>
+              <?php for ($i = 1; $i <= $numbers_of_page; $i++) { ?>
                 <li class="page-item cursor-pointer"><a class="page-link"><?= $i ?></a></li>
               <?php } ?>
               <li class="page-item cursor-pointer"><a class="page-link">Next</a></li>

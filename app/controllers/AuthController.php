@@ -6,30 +6,26 @@ use Core\View;
 use App\models\User;
 use Core\Http\Request;
 
-class AuthController extends AppController 
-{   
+class AuthController extends AppController {
     public array $data;
 
-    protected function before() 
-    {
+    protected function before() {
         if (checkAdmin()) {
             header('Location: /admin/index');
             exit;
         }
+        
         $this->data['title'] = 'Login';
     }
 
-    protected function after()
-    {
+    protected function after() {
     }
 
-    public function loginAction()
-    {  
+    public function loginAction() {
         View::render('admin/auth/login.php');
     }
 
-    public function loginProcessAction(Request $request)
-    {
+    public function loginProcessAction(Request $request) {
         $post = $request->getPost();
 
         $email = $post->get('email');
@@ -48,6 +44,7 @@ class AuthController extends AppController
             View::render('admin/auth/login.php', $this->data);
             exit;
         }
+
         $data = [
             'name' => $inputUser['name'],
             'email' => $inputUser['email'],
@@ -62,8 +59,7 @@ class AuthController extends AppController
 
     }
 
-    public function logout(Request $request)
-    {   
+    public function logout(Request $request) {
         $request->deleteUser();
         
         header('Location: /auth/login');

@@ -22,7 +22,7 @@
                     <div class="header_notification_warp d-flex align-items-center">
                     </div>
                     <div class="profile_info">
-                        <img src="" alt="#">
+                        <img src="https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg" alt="#">
                         <div class="profile_info_iner">
                             <div class="profile_info_details">
                                 <a href="#">My Profile</a>

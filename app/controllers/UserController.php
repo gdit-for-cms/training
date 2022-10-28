@@ -9,78 +9,71 @@ use App\models\Role;
 use App\models\Room;
 use Core\Http\Request;
 use Core\Http\ResponseTrait;
-use Core\View;
 
-class UserController extends AppController
-{
+class UserController extends AppController {
     use ResponseTrait;
 
     public $title = 'Người dùng';
 
-    public object $model;
+    public object $obj_model;
     
-    public array $data;
+    public array $data_ary;
 
-    public function __construct()
-    {
-        $this->model = new User;
+    public function __construct() {
+        $this->obj_model = new User;
     }
 
-    public function indexAction(Request $request)
-    {   
-        $resultsPerPage = 3;
+    public function indexAction(Request $request) {   
+        $get_ary = $request->getGet()->all();
         
-        $get = $request->getGet()->all();
-        if (!isset($get['page'])) {
-            $get['page'] = '1';
+        $results_per_page = 3;
+        array_shift($get_ary);
+        $results_ary = $this->obj_model->getAllRelation($get_ary, $results_per_page);
+        $this->data_ary['all_users'] = $results_ary['results'];
+        $numbers_of_result = $results_ary['numbers_of_page'];
+
+        $numbers_of_page = ceil($numbers_of_result/$results_per_page);
+        $this->data_ary['numbers_of_page'] = $numbers_of_page;
+
+        $this->data_ary['all_roles'] = Role::getAll();
+        $this->data_ary['all_rooms'] = Room::getAll();
+        $this->data_ary['all_positions'] = Position::getAll();
+
+        $this->data_ary['content'] = 'user/index';
+    }
+
+    public function newAction() {   
+        $this->data_ary['all_roles'] = Role::getAll();
+        $this->data_ary['all_rooms'] = Room::getAll();
+        $this->data_ary['all_positions'] = Position::getAll();
+
+        $this->data_ary['content'] = 'user/new';
+    }
+
+    public function create(Request $request) {
+        $app_request = new AppRequest;
+        $result_vali_ary = $app_request->validate($this->obj_model->rules(), $request, 'post');
+
+        if (in_array('error', $result_vali_ary)) {
+            $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
+            return $this->errorResponse($message_error);
         }
-        array_shift($get);
-        $results = $this->model->getAllRelation($get, $resultsPerPage);
-        $this->data['allUsers'] = $results['results'];
-        $numbersOfResult = $results['numbersOfPage'];
 
-        $numbersOfPage = ceil($numbersOfResult/$resultsPerPage);
-        $this->data['numbersOfPage'] = $numbersOfPage;
+        $name = $result_vali_ary['name'];
+        $password = $result_vali_ary['password'];
+        $email = $result_vali_ary['email'];
+        $role_id = $result_vali_ary['role_id'];
+        $room_id = $result_vali_ary['room_id'];
+        $position_id = $result_vali_ary['position_id'];
 
-        $this->data['allRoles'] = Role::getAll();
-        $this->data['allRooms'] = Room::getAll();
-        $this->data['allPositions'] = Position::getAll();
+        $user_check_ary = $this->obj_model->getBy('email', '=', $email);
+        $num_rows = count($user_check_ary);
 
-        $this->data['content'] = 'user/index';
-    }
-
-    public function newAction()
-    {   
-        $this->data['allRoles'] = Role::getAll();
-        $this->data['allRooms'] = Room::getAll();
-        $this->data['allPositions'] = Position::getAll();
-
-        $this->data['content'] = 'user/new';
-    }
-
-    public function create(Request $request)
-    {
-        $appRequest = new AppRequest;
-        $resultVali = $appRequest->validate($this->model->rules(), $request, 'post');
-
-        if (in_array('error', $resultVali)) {
-            return $this->errorResponse(showError($resultVali[array_key_last($resultVali)]) . " (" . array_key_last($resultVali) . ")");
-        } 
-
-        $name = $resultVali['name'];
-        $password = $resultVali['password'];
-        $email = $resultVali['email'];
-        $role_id = $resultVali['role_id'];
-        $room_id = $resultVali['room_id'];
-        $position_id = $resultVali['position_id'];
-
-        $query = $this->model->getBy('email', '=', $email);
-        $numRows = count($query);
-        if ($numRows == 1) {
+        if ($num_rows == 1) {
             return $this->errorResponse('User has been exist');
         } else {
             try {
-                $this->model->create(
+                $this->obj_model->create(
                     [
                         'name' => $name,
                         'email' => $email,
@@ -89,6 +82,7 @@ class UserController extends AppController
                         'room_id' => $room_id,
                         'position_id' => $position_id
                     ]);
+
                 return $this->successResponse();
             } catch (\Throwable $th) {
                 return $this->errorResponse($th->getMessage());
@@ -96,62 +90,62 @@ class UserController extends AppController
         }
     }
 
-    public function editAction(Request $request)
-    {   
+    public function editAction(Request $request) {
         $id = $request->getGet()->get('id');
 
-        $this->data['allRoles'] = Role::getAll();
-        $this->data['allRooms'] = Room::getAll();
-        $this->data['allPositions'] = Position::getAll();
-        $this->data['user'] = $this->model->getById($id, 'id, name, email, role_id, room_id, position_id');
+        $this->data_ary['all_roles'] = Role::getAll();
+        $this->data_ary['all_rooms'] = Room::getAll();
+        $this->data_ary['all_positions'] = Position::getAll();
+        $this->data_ary['user'] = $this->obj_model->getById($id, 'id, name, email, role_id, room_id, position_id');
 
-        $this->data['content'] = 'user/edit';
+        $this->data_ary['content'] = 'user/edit';
     }
 
-    public function update(Request $request)
-    {   
-        $post = $request->getPost()->all();
+    public function update(Request $request) {   
+        $post_ary = $request->getPost()->all();
         
-        $checkUser = $this->model->getById($post['id']);
-        $changeData = false;
-        foreach ($post as $key => $value) {
-            if ($post['password'] == '' && $key != 'password' && $checkUser[$key] != $value) {
-                $changeData = true;
+        $check_user = $this->obj_model->getById($post_ary['id']);
+        $change_data_flg = false;
+
+        foreach ($post_ary as $key => $value) {
+            if ($post_ary['password'] == '' && $key != 'password' && $check_user[$key] != $value) {
+                $change_data_flg = true;
                 break;
-            } else if ($post['password'] != '' && $checkUser[$key] != $value) {
-                $changeData = true;
+            } else if ($post_ary['password'] != '' && $check_user[$key] != $value) {
+                $change_data_flg = true;
                 break;
             }
         }
-
-        if (!$changeData) {
+        if (!$change_data_flg) {
             return $this->errorResponse('Nothing to update');
         }
 
-        $appRequest = new AppRequest;
-        $resultVali = $appRequest->validate($this->model->rules('remove_value', ['password' => ['required', 'filled', 'password']]), $request, 'post');
+        $app_request = new AppRequest;
+        $rules_ary = $this->obj_model->rules('remove_value', ['password' => ['required', 'filled', 'password']]);
+        $result_vali_ary = $app_request->validate($rules_ary, $request, 'post');
 
-        if (in_array('error', $resultVali)) {
-            return $this->errorResponse(showError($resultVali[array_key_last($resultVali)]) . " (" . array_key_last($resultVali) . ")");
+        if (in_array('error', $result_vali_ary)) {
+            $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
+            return $this->errorResponse($message_error);
         } 
 
-        $id = $resultVali['id'];
-        $email =$resultVali['email'];
+        $id = $result_vali_ary['id'];
+        $email =$result_vali_ary['email'];
 
-        $userCheck = $this->model->getBy('email', '=', $email);
-        $numRows = count($userCheck);
+        $user_check = $this->obj_model->getBy('email', '=', $email);
+        $num_rows = count($user_check);
 
-        if ($numRows == 1 && $userCheck[0]['id'] != $id) {
+        if ($num_rows == 1 && $user_check[0]['id'] != $id) {
             return $this->errorResponse(showError('email existed'));
         } else {
             try {
-                $name = $resultVali['name'];
-                $password = $resultVali['password'];
-                $role_id = $resultVali['role_id'];
-                $room_id = $resultVali['room_id'];
-                $position_id = $resultVali['position_id'];
+                $name = $result_vali_ary['name'];
+                $password = $result_vali_ary['password'];
+                $role_id = $result_vali_ary['role_id'];
+                $room_id = $result_vali_ary['room_id'];
+                $position_id = $result_vali_ary['position_id'];
     
-                $this->model->updateOne(
+                $this->obj_model->updateOne(
                     [
                         'name' => $name,
                         'password' => $password,
@@ -169,11 +163,10 @@ class UserController extends AppController
         }
     }
 
-    public function deleteAction(Request $request)
-    {
+    public function deleteAction(Request $request) {
         $id = $request->getGet()->get('id');
 
-        $this->model->destroyOne("id = $id");
+        $this->obj_model->destroyOne("id = $id");
 
         header('Location: /user/index');
         exit;

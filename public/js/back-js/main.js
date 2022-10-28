@@ -57,7 +57,6 @@ function submitForm(formId) {
 function alertDelete() {
     $('.delete-btn').click(function (e) {
         let deleteID = $(this).data('id');
-        console.log($(this).parents('.card')[0].querySelector('.table_member_body').childNodes.length);
         let pathName = window.location.pathname.split('/')[1]
         if (window.location.pathname.split('/')[1] != 'user') {
             if ($(this).parents('.card')[0].querySelector('.table_member_body').childNodes.length == 1) {
@@ -92,40 +91,49 @@ function alertDelete() {
                     cancelButtonColor: '#3085d6',
                 }).then((result) => {
                     if (result.isDenied) {
-                        $('.box-lightbox').addClass('open');
-                        var optionArray = []
-                        $('.total_modal h2').text($(this).parents('.card').data('name'))
-                        document.querySelectorAll('.card').forEach(function (ele) {
-
-                            if (ele.getAttribute('data-name') != $('.total_modal h2').text()) {
-                                optionArray.push(ele.getAttribute('data-name'))
+                        let pathName = window.location.pathname.split('/')[1]
+                        let id = $(this).data('id')
+                        let name = $(this).parents('.card').data('name')
+                        $.ajax({
+                            type: "POST",
+                            url: '/api/users',
+                            data: { method: 'all', name_field: `${pathName}_id`, id: id },
+                            dataType: 'json',
+                            success: function (response) {
+                                var arrayTable = response.data
+                                $('.box-lightbox').addClass('open');
+                                var optionArray = []
+                                $('.total_modal h2').text(name)
+                                document.querySelectorAll('.card').forEach(function (ele) {
+                                    if (ele.getAttribute('data-name') != name) {
+                                        optionArray.push(ele.getAttribute('data-name'))
+                                    }
+                                })
+                                var optionEle = ''
+                                var htmlsOption = optionArray.map(item => {
+                                    return `<option value="${item}">${item}</option>`
+                                })
+                                optionEle = htmlsOption.join('')
+                                var htmlsTable = arrayTable.map((item, index) => {
+        
+                                    return `
+                                            <tr>
+                                                <th scope="row">${index + 1}</th>
+                                                <td>${item.name}</td>
+                                                <td class="select">
+                                                    <select class="select_change_option w-26 text-medium border " aria-label="Default select example">
+                                                        ${optionEle}
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        `
+        
+                                })
+                                const bodyTable = document.querySelector('.table_change_body')
+                                bodyTable.innerHTML = htmlsTable.join('')
                             }
                         })
-                        idTable = $(this).parents('.card')[0].querySelector('table').id
-                        arrayTable = convertTableToArray(idTable)
-                        var optionEle = ''
-                        var htmlsOption = optionArray.map(item => {
-                            return `<option value="${item}">${item}</option>`
-                        })
-                        console.log(arrayTable);
-                        optionEle = htmlsOption.join('')
-                        var htmlsTable = arrayTable.map((item, index) => {
 
-                            return `
-                                    <tr>
-                                        <th scope="row">${index + 1}</th>
-                                        <td>${item[0]}</td>
-                                        <td class="select">
-                                            <select class="select_change_option w-26 text-medium border " aria-label="Default select example">
-                                                ${optionEle}
-                                            </select>
-                                        </td>
-                                    </tr>
-                                `
-
-                        })
-                        const bodyTable = document.querySelector('.table_change_body')
-                        bodyTable.innerHTML = htmlsTable.join('')
                     }
                 })
             }
@@ -207,7 +215,7 @@ function submitChange(params) {
 
 function renderMember(response, tableMain, paginationMain = '') {
     var data = response.data.results
-    var numbersOfPage = response.data.numbersOfPage
+    var numbersOfPage = response.data.numbers_of_page
     var htmlsTable = data.map((item, index) => {
         return `
                 <tr>
@@ -259,11 +267,11 @@ $(document).ready(function () {
         $.ajax({
             type: "POST",
             url: '/api/users',
-            data: { nameField: `${pathName}_id`, id: id, page: config[name] },
+            data: { name_field: `${pathName}_id`, id: id, page: config[name] },
             dataType: 'json',
             success: function (response) {
                 var data = response.data.results
-                var numbersOfPage = response.data.numbersOfPage
+                var numbersOfPage = response.data.numbers_of_page
                 if (numbersOfPage == 0) {
                     tableMemberBodyEle.innerHTML = `<div class="box_body"><p class="f-w-400 ">No memeber</p></div>`
                 } else {
@@ -342,7 +350,7 @@ $(document).ready(function () {
                     $.ajax({
                         type: "POST",
                         url: '/api/users',
-                        data: { nameField: `${pathName}_id`, id: id, page: page },
+                        data: { name_field: `${pathName}_id`, id: id, page: page },
                         dataType: 'json',
                         success: function (response) {
                             renderMember(response, tableMain)

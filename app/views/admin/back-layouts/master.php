@@ -15,12 +15,14 @@
     <section class="main_content dashboard_part large_header_bg">
         <?php require_once 'header.php' ?>
         <div class="main_content_iner overly_inner ">
-            <?php require_once '../app/views/admin/'.$content.'.php'?> 
+            <?php require_once '../app/views/admin/' . $content . '.php'?> 
         </div>
     </div>
     
     <script src="/js/front-js/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="/js/front-js/sweetalert2.all.min.js"></script>
     <script src="/js/back-js/main.js"></script>
+    <script src="/js/boostrap/bootstrap.min.js"></script>
 </body>
 </html>

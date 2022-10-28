@@ -47,7 +47,7 @@
                                         </div>
                                     </div>
                                     <div class="table_member_body table-responsive m-b-30 flex flex-col items-center justify-center">
-                                        <table id="table_<?= $position['id'] ?>" class="table table-striped" style="width: 90% !important">
+                                        <table id="<?= $position['id'] ?>" class="table table-striped" style="width: 90% !important">
                                             <thead>
                                                 <tr>
                                                     <th scope="col">#</th>

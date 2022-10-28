@@ -8,55 +8,50 @@ use App\models\Position;
 use Core\Http\Request;
 use Core\Http\ResponseTrait;
 
-class PositionController extends AppController
-{
+class PositionController extends AppController {
     use ResponseTrait;
 
     public $title = 'Vị trí';
 
-    public object $model;
+    public object $obj_model;
     
-    public array $data;
+    public array $data_ary;
 
-    public function __construct()
-    {
-        $this->model = new Position;
+    public function __construct() {
+        $this->obj_model = new Position;
     }
 
-    public function indexAction()
-    {
-        $results = User::getAllRelation();
-        $this->data['allUsers'] = $results['results'];
+    public function indexAction() {
+        $results_ary = User::getAllRelation();
         
-        $this->data['positions'] = $this->model->getAll();
-        $this->data['content'] = 'position/index';
+        $this->data_ary['positions'] = $this->obj_model->getAll();
+        $this->data_ary['content'] = 'position/index';
     }
 
-    public function newAction()
-    {
-        $this->data['content'] = 'position/new';
+    public function newAction() {
+        $this->data_ary['content'] = 'position/new';
     }
 
-    public function create(Request $request)
-    {
-        $appRequest = new AppRequest;
-        $resultVali = $appRequest->validate(Position::rules(), $request, 'post');
+    public function create(Request $request) {
+        $app_request = new AppRequest;
+        $result_vali_ary = $app_request->validate(Position::rules(), $request, 'post');
 
-        if (in_array('error', $resultVali)) {
-            return $this->errorResponse(showError($resultVali[array_key_last($resultVali)]) . " (" . array_key_last($resultVali) . ")");
+        if (in_array('error', $result_vali_ary)) {
+            $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
+            return $this->errorResponse($message_error);
         } 
 
-        $name = $resultVali['name'];
-        $description = $resultVali['description'];
+        $name = $result_vali_ary['name'];
+        $description = $result_vali_ary['description'];
 
-        $query = $this->model->getBy('name', '=', $name);
-        $numRows = count($query);
+        $position_check_ary = $this->obj_model->getBy('name', '=', $name);
+        $num_rows = count($position_check_ary);
 
-        if ($numRows == 1) {
+        if ($num_rows == 1) {
             return $this->errorResponse('Position has been exist');
         } else {
             try {
-                $this->model->create(
+                $this->obj_model->create(
                     [
                         'name' => $name,
                         'description' => $description
@@ -69,44 +64,44 @@ class PositionController extends AppController
         }
     }
 
-    public function editAction(Request $request)
-    {
+    public function editAction(Request $request) {
         $id = $request->getGet()->get('id');
 
-        $this->data['position'] = $this->model->getById($id, 'id, name, description');
-        $this->data['content'] = 'position/edit';
+        $this->data_ary['position'] = $this->obj_model->getById($id, 'id, name, description');
+        $this->data_ary['content'] = 'position/edit';
     }
 
-    public function update(Request $request)
-    {   
-        $post = $request->getPost()->all();
+    public function update(Request $request) {   
+        $post_ary = $request->getPost()->all();
         
-        $checkPosition = $this->model->getById($post['id']);
-        $changeData = false;
-        foreach ($post as $key => $value) {
-            if ($checkPosition[$key] != $value) {
-                $changeData = true;
+        $check_position = $this->obj_model->getById($post_ary['id']);
+        $change_data_flg = false;
+        foreach ($post_ary as $key => $value) {
+            if ($check_position[$key] != $value) {
+                $change_data_flg = true;
                 break;
             }
         }
 
-        if (!$changeData) {
+        if (!$change_data_flg) {
             return $this->errorResponse('Nothing to update');
         }
 
-        $appRequest = new AppRequest;
-        $resultVali = $appRequest->validate(Position::rules('add', ['id' => ['required', 'filled']]), $request, 'post');
+        $app_request = new AppRequest;
+        $rules_ary = Position::rules('add', ['id' => ['required', 'filled']]);
+        $result_vali_ary = $app_request->validate($rules_ary, $request, 'post');
 
-        if (in_array('error', $resultVali)) {
-            return $this->errorResponse(showError($resultVali[array_key_last($resultVali)]) . " (" . array_key_last($resultVali) . ")");
+        if (in_array('error', $result_vali_ary)) {
+            $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
+            return $this->errorResponse($message_error);
         } 
 
         try {
-            $id = $resultVali['id'];
-            $name = $resultVali['name'];
-            $description = $resultVali['description'];
+            $id = $result_vali_ary['id'];
+            $name = $result_vali_ary['name'];
+            $description = $result_vali_ary['description'];
 
-            $this->model->updateOne(
+            $this->obj_model->updateOne(
                 [
                     'name' => $name,
                     'description' => $description
@@ -119,30 +114,28 @@ class PositionController extends AppController
         };
     }
 
-    public function delete(Request $request)
-    {
+    public function delete(Request $request) {
         $id = $request->getGet()->get('id');
 
-        $this->model->destroyOne("id = $id");
+        $this->obj_model->destroyOne("id = $id");
 
         header('Location: /position/index');
         exit;
     }
 
-    public function changePosition(Request $request)
-    {
+    public function changePosition(Request $request) {
         try {
-        $post = $request->getPost()->all();
-        $post = $post['data'];
+            $post_ary = $request->getPost()->all();
+            $post_ary = $post_ary['data'];
 
-        $user = new User;
-        $arrayId = array();
-        foreach ($post as $key => $value) {
-            $position = $this->model->getBy('name', '=', $value);
-            $arrayId[$key] = (int)$position[0]['id'];
-        }
-            $user->updateMultiByName($arrayId, 'position_id');
-            return $this->successResponse();
+            $obj_user = new User;
+            $array_id_ary = array();
+            foreach ($post_ary as $key => $value) {
+                $position = $this->obj_model->getBy('name', '=', $value);
+                $array_id_ary[$key] = (int)$position[0]['id'];
+            }
+                $obj_user->updateMultiByName($array_id_ary, 'position_id');
+                return $this->successResponse();
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

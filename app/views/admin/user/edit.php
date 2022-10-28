@@ -33,7 +33,7 @@
                         <div class="col-md-4">
                             <label class="form-label" for="role">Role</label>
                             <select id="role" name="role_id" class="form-control">
-                                <?php foreach ($allRoles as $role) { ?>
+                                <?php foreach ($all_roles as $role) { ?>
                                     <option <?php if ($user['role_id'] == $role['id']) {
                                                 echo 'Selected';
                                             } else {
@@ -45,7 +45,7 @@
                         <div class="col-md-4">
                             <label class="form-label" for="room">Room</label>
                             <select id="room" name="room_id" class="form-control">
-                                <?php foreach ($allRooms as $room) { ?>
+                                <?php foreach ($all_rooms as $room) { ?>
                                     <option <? if ($user['room_id'] == $room['id']) {
                                                 echo 'Selected';
                                             } else {
@@ -57,7 +57,7 @@
                         <div class="col-md-4">
                             <label class="form-label" for="position">Position</label>
                             <select id="position" name="position_id" class="form-control">
-                                <?php foreach ($allPositions as $position) { ?>
+                                <?php foreach ($all_positions as $position) { ?>
                                     <option <? if ($user['position_id'] == $position['id']) {
                                                 echo 'Selected';
                                             } else {
