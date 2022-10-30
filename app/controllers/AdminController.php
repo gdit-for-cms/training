@@ -46,28 +46,28 @@ class AdminController extends AppController
                 $data_after = explode("\n", $data_after);
 
                 // Set constants and variables in file.
-                list($global_in_file1, $const_in_file1, $in_file1, $check_distinct_in_file1) = $this->setVariable($data_before);
-                list($global_in_file2, $const_in_file2, $in_file2, $check_distinct_in_file2) = $this->setVariable($data_after);
+                list($glo_in_file1, $const_in_file1, $in_file1, $check_distinct_in_file1) = $this->setVariable($data_before);
+                list($glo_in_file2, $const_in_file2, $in_file2, $check_distinct_in_file2) = $this->setVariable($data_after);
                 
                 // Check duplicate variables and constants in file.
                 $warning_in_file1 = array_count_values($check_distinct_in_file1);
                 $warning_in_file2 = array_count_values($check_distinct_in_file2);
 
                 // Set constants and variables in file by text.
-                $by_text1 = $this->setVariableByText($data_before, $global_in_file1);
-                $by_text2 = $this->setVariableByText($data_after, $global_in_file2);
+                $by_text1 = $this->setVariableByText($data_before, $glo_in_file1);
+                $by_text2 = $this->setVariableByText($data_after, $glo_in_file2);
 
                 // Check that the empty.
-                if ((empty($const_in_file1) || empty($const_in_file2)) && (empty($global_in_file1) || empty($global_in_file2))) {
+                if ((empty($const_in_file1) || empty($const_in_file2)) && (empty($glo_in_file1) || empty($glo_in_file2))) {
                     $this->data['uploadStatus'] = 'Success. No variable found';
                 } else {
                     // Check a same variable name in 2 files.
-                    $global_ary = array_intersect($global_in_file1, $global_in_file2);
+                    $glo_ary = array_intersect($glo_in_file1, $glo_in_file2);
                     $const_ary = array_intersect($const_in_file1, $const_in_file2);
-                    if (empty($global_ary) && empty($const_ary)) {
+                    if (empty($glo_ary) && empty($const_ary)) {
                         $this->data['uploadStatus'] = 'Success. Nothing to compare';
                     } else {
-                        $this->data['arr'] = $global_ary;
+                        $this->data['arr'] = $glo_ary;
                         $this->data['in_file1'] = $in_file1;
                         $this->data['in_file2'] = $in_file2;
                         $this->data['by_text1'] = $by_text1;
@@ -89,17 +89,17 @@ class AdminController extends AppController
     /**
      * Get the variable in import file
      *
-     * @param  array  $data, $global_in_file, $const_in_file, $in_file
-     * @return array $global_in_file, $const_in_file, $in_file
+     * @param  array  $data, $glo_in_file, $const_in_file, $in_file
+     * @return array $glo_in_file, $const_in_file, $in_file
      */
-    public function setVariable($data, $global_in_file = [], $const_in_file = [], $in_file = [], $check_distinct = []) {
-        // Check $data, $global_in_file, $const_in_file, $in_file
+    public function setVariable($data, $glo_in_file = [], $const_in_file = [], $in_file = [], $check_distinct = []) {
+        // Check $data, $glo_in_file, $const_in_file, $in_file
         for ($line = 0; $line < count($data); $line++) {
             if (preg_match('/^setDefineArray\(\'(.+?)\', \$(.+?)\)/i', $data[$line], $match)) {
                 if (isset($in_file[$match[1]])) {
                     array_push($check_distinct, $match[1]);
                 } else {
-                    array_push($global_in_file, $match[1]);
+                    array_push($glo_in_file, $match[1]);
                     $in_file[$match[1]] = array($match[2], $line);
                 }
             } else if (preg_match('/^define\("(.+?)\", (.+?)\)/i', $data[$line], $match)) {
@@ -111,9 +111,9 @@ class AdminController extends AppController
             }
         }
         // Removes duplicate values from an array.
-        $global_in_file = array_unique($global_in_file);
-        foreach ($global_in_file as $each) {
-            // The variable assigned to the global variable.
+        $glo_in_file = array_unique($glo_in_file);
+        foreach ($glo_in_file as $each) {
+            // The variable assigned to the glo variable.
             $check = $in_file[$each][0]; 
             // Line have setDefineArray function. 
             $index = $in_file[$each][1]; 
@@ -144,17 +144,17 @@ class AdminController extends AppController
             }
         }
 
-        return array($global_in_file, $const_in_file, $in_file, $check_distinct);
+        return array($glo_in_file, $const_in_file, $in_file, $check_distinct);
     }
 
     /**
      * Same as above(getVariable) but set variable value by text instead
      *
-     * @param  array  $data (array content in file import)
-     * @param  array  $global_in_file
-     * @return array $global_in_file, $const_in_file, $in_file
+     * @param  array  $data (array content in file upload)
+     * @param  array  $glo_in_file
+     * @return array  $in_file
      */
-    public function setVariableByText($data, $global_in_file, $in_file = []) {
+    public function setVariableByText($data, $glo_in_file, $in_file = []) {
         for ($line = 0; $line < count($data); $line++) {
             if (preg_match('/^setDefineArray\(\'(.+?)\', \$(.+?)\)/i', $data[$line], $match)) {
                 if (!isset($in_file[$match[1]])) {
@@ -162,7 +162,7 @@ class AdminController extends AppController
                 }
             }
         }
-        foreach ($global_in_file as $each) {
+        foreach ($glo_in_file as $each) {
             // The variable assigned to the global variable.
             $check = $in_file[$each][0];
             // Line have setDefineArray function.   
