@@ -79,11 +79,11 @@
                     <span style=<?php echo $style; ?>><?php echo $key; ?> : <?php echo $value; ?></span></br>
 <?php }}} ?>   
 
-<?php function renderDivConst($backroundSame, $backroundDiff, $color_diff_blob, $const_in_file1, $const_in_file2) { 
+<?php function renderDivConst($color_diff_blob, $const_in_file1, $const_in_file2) { 
     foreach ($const_in_file1 as $key1 => $value1) {
         foreach ($const_in_file2 as $key2 => $value2) { 
             if ($key1 == $key2 && $value1 == $value2) { ?>
-                <div class="container-compare" style="<?php echo $backroundSame; ?>">
+                <div class="container-compare background-same">
                     <div class="left">
                         <span class="var-name"><?php echo $key1; ?> : <?php echo $value1; ?></span></br>
                     </div>
@@ -92,7 +92,7 @@
                     </div>
                 </div>
     <?php } else if ($key1 == $key2 && $value1 !== $value2) { ?>
-                <div class="container-compare" style="<?php echo $backroundDiff; ?>">
+                <div class="container-compare background-diff">
                     <div class="left">
                         <span class="var-name" style=<?php echo $color_diff_blob; ?>><?php echo $key1; ?> : <?php echo $value1; ?></span></br>
                     </div>
@@ -100,4 +100,5 @@
                         <span class="var-name" style=<?php echo $color_diff_blob; ?>><?php echo $key2; ?> : <?php echo $value2; ?></span></br>
                     </div>
                 </div>
+            </div>
 <?php }}}}; ?>

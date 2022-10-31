@@ -383,6 +383,20 @@ a {
     display: flex;
     color: #24292f;
 }
+
+.background-diff {
+    background-color: #ffebe9; 
+    border-top: 1px solid #ccc;
+}
+
+.background-same {
+    background-color: #e6ffec;
+    border-top: 1px solid #ccc;
+}
+.container-file1,  .container-file2 {
+    background-color: #0d1117;
+    color: #c9d1d9;
+}
 .container-compare h4{
     color :#0a3069;
 }
