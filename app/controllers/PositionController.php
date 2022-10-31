@@ -76,6 +76,7 @@ class PositionController extends AppController {
         
         $check_position = $this->obj_model->getById($post_ary['id']);
         $change_data_flg = false;
+        
         foreach ($post_ary as $key => $value) {
             if ($check_position[$key] != $value) {
                 $change_data_flg = true;

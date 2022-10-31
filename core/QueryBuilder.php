@@ -264,8 +264,8 @@ Trait QueryBuilder
             $columnStr = '';
             $valueStr = '';
             foreach($data as $key => $value){
-                $key = $key;
-                $value = $value;
+                $key = addslashes($key);
+                $value = addslashes($value);
                 $columnStr.= $key.',';
                 $valueStr.= "'".$value."',";
             }

@@ -25,6 +25,10 @@
         </div>
     </div>
 </div>
+<script src="/ckeditor/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace( 'description' );
+</script>
 <script>
     const submitBtn = document.querySelector('#submit')
     const nameInput = document.querySelector('#name')

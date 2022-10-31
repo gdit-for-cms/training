@@ -46,6 +46,7 @@ class AuthController extends AppController {
         }
 
         $data = [
+            'id' => $inputUser['id'],
             'name' => $inputUser['name'],
             'email' => $inputUser['email'],
             'role_id' => $inputUser['role_id'],

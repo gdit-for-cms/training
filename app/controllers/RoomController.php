@@ -21,7 +21,7 @@ class RoomController extends AppController {
         $this->obj_model = new Room;
     }
 
-    public function indexAction() {   
+    public function indexAction() {
         $results_ary = User::getAllRelation();
 
         $this->data_ary['rooms'] = $this->obj_model->getAll();

@@ -12,10 +12,23 @@ class AdminController extends AppController
     public array $data_ary;
 
     public $title = 'Chủ';
+
+    public function __construct() {
+        $this->obj_model = new User;
+    }
     
     public function indexAction()
     {   
         $this->data_ary['content'] = 'admin/dashboard';
+    }
+
+    public function showAction(Request $request) {
+        $user = $request->getUser();
+        $user_ary = $this->obj_model->getById($user['id'])[0];
+        // var_dump($user_ary);
+        // exit;
+        $this->data_ary['content'] = 'show';
+        $this->data_ary['user'] = $user_ary;
     }
 
     public function diffAction()

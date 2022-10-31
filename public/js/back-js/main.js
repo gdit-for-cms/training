@@ -22,36 +22,123 @@ function checkName(objName) {
 };
 
 function submitForm(formId) {
-    $(formId).submit(function (e) {
-        e.preventDefault();
-        var form = $(this);
-        var actionUrl = form.attr('action');
-        $.ajax({
-            type: "POST",
-            url: actionUrl,
-            data: form.serialize(),
-            dataType: 'json',
-            success: function (response) {
-                Swal.fire({
-                    icon: 'success',
-                    title: "Successfully",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                setTimeout(() => {
-                    document.location.reload(true);
-                }, "1600");
-            },
-            error: function (response) {
-                console.log(response);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: response.responseJSON.message,
+    var pathName = window.location.pathname.split('/')[1]
+    var content = ''
+    $(formId).parents('.card-body').children('#submit').click(function (e) {
+        const name = document.getElementById('name');
+        if (pathName == 'user') {
+            const email = document.getElementById('email');
+            const role_select = document.getElementById('role');
+            const room_select = document.getElementById('room');
+            const position_select = document.getElementById('position');
+            content = `
+                    <div class="d-flex justify-content-center align-items-center w-full">
+                        <div class="d-flex flex-col justify-content-center align-items-start">
+                            <span class="mb-2">
+                                <span class="font-bold">Name: </span>
+                                ${name.value}
+                            </span>
+                            <span class="mb-2">
+                                <span class="font-bold">Email: </span>
+                                ${email.value}
+                            </span>
+                            <span class="mb-2">
+                                <span class="font-bold">Role: </span>
+                                ${role_select.options[role_select.selectedIndex].textContent}
+                            </span>
+                            <span class="mb-2">
+                                <span class="font-bold">Room: </span>
+                                ${room_select.options[room_select.selectedIndex].textContent}
+                            </span>
+                            <span class="mb-2">
+                                <span class="font-bold">Position: </span>
+                                ${position_select.options[position_select.selectedIndex].textContent}
+                            </span>
+                        </div>
+                    </div>`
+        } else {
+            content = `
+                    <div class="d-flex justify-content-center align-items-center w-full">
+                        <div class="d-flex flex-col justify-content-center align-items-start">
+                            <span class="mb-2">
+                                <span class="font-bold">Name: </span>
+                                ${name.value}
+                            </span>
+                        </div>
+                    </div>`
+        }
+        Swal.fire({
+            title: 'Are you sure?',
+            html: content,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var form = $(formId);
+                var actionUrl = form.attr('action');
+                console.log(form.serialize());
+                $.ajax({
+                    type: "POST",
+                    url: actionUrl,
+                    data: form.serialize(),
+                    dataType: 'json',
+                    success: function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: "Successfully",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        setTimeout(() => {
+                            document.location.reload(true);
+                        }, "1600");
+                    },
+                    error: function (response) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: response.responseJSON.message,
+                        });
+                    }
                 });
             }
-        });
-    });
+        })
+    })
+    // $('#submit_confirm_btn').click(function (e) {
+    //     var form = $(formId);
+    //     var actionUrl = form.attr('action');
+    //     console.log(form.serialize());
+    //     $.ajax({
+    //         type: "POST",
+    //         url: actionUrl,
+    //         data: form.serialize(),
+    //         dataType: 'json',
+    //         success: function (response) {
+    //             Swal.fire({
+    //                 icon: 'success',
+    //                 title: "Successfully",
+    //                 showConfirmButton: false,
+    //                 timer: 1500
+    //             });
+    //             setTimeout(() => {
+    //                 document.location.reload(true);
+    //             }, "1600");
+    //         },
+    //         error: function (response) {
+    //             Swal.fire({
+    //                 icon: 'error',
+    //                 title: 'Oops...',
+    //                 text: response.responseJSON.message,
+    //             });
+    //         }
+    //     });
+    // })
+    // $(formId).submit(function (e) {
+    //     e.preventDefault();
+    // });
 };
 
 function alertDelete() {
@@ -62,7 +149,7 @@ function alertDelete() {
             if ($(this).parents('.card')[0].querySelector('.table_member_body').childNodes.length == 1) {
                 Swal.fire({
                     title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
+                    text: "You won't be able to revert this!<br/>nasdhad",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
@@ -115,7 +202,7 @@ function alertDelete() {
                                 })
                                 optionEle = htmlsOption.join('')
                                 var htmlsTable = arrayTable.map((item, index) => {
-        
+
                                     return `
                                             <tr>
                                                 <th scope="row">${index + 1}</th>
@@ -127,7 +214,7 @@ function alertDelete() {
                                                 </td>
                                             </tr>
                                         `
-        
+
                                 })
                                 const bodyTable = document.querySelector('.table_change_body')
                                 bodyTable.innerHTML = htmlsTable.join('')
@@ -141,6 +228,9 @@ function alertDelete() {
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
+                // html: 'You can use <b>bold text</b>, <br>' +
+                // '<a href="//sweetalert2.github.io">links</a> ' +
+                // 'and other HTML tags',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
@@ -242,6 +332,139 @@ function renderMember(response, tableMain, paginationMain = '') {
     }
 }
 
+function sortPagination(cardHeader) {
+    let pathName = window.location.pathname.split('/')[1]
+    var name = cardHeader.parents('.card').data('name');
+    const PAGE_STORAGE_KEY = `PAGE PAGINATION ${pathName.toUpperCase()}`
+    var config = JSON.parse(localStorage.getItem(PAGE_STORAGE_KEY)) || {}
+    let id = cardHeader.data('id')
+    let tableMemberBodyEle = cardHeader.parents('.card')[0].querySelector('.table_member_body');
+    let tableMain = cardHeader.parents('.card')[0].querySelector('.body_table_main');
+    let paginationMain = cardHeader.parents('.card')[0].querySelector('.pagination')
+
+    setLocalStorage(PAGE_STORAGE_KEY, config, name, 1)
+    $.ajax({
+        type: "POST",
+        url: '/api/users',
+        data: { name_field: `${pathName}_id`, id: id, page: config[name] },
+        dataType: 'json',
+        success: function (response) {
+            var data = response.data.results
+            var numbersOfPage = response.data.numbers_of_page
+            if (numbersOfPage == 0) {
+                tableMemberBodyEle.innerHTML = `<div class="box_body"><p class="f-w-400 ">No memeber</p></div>`
+            } else {
+                var htmlsTable = data.map((item, index) => {
+                    return `
+                            <tr>
+                            <th scope="row">${index + 1}</th>
+                            <td>${item.name}</td>
+                            <td>${pathName == 'room' ? item.position_name : item.room_name}</td>
+                            </tr>
+                            `
+                })
+                tableMain.innerHTML = htmlsTable.join('')
+            }
+            if (paginationMain != '' && numbersOfPage != 0) {
+                var htmlsPagina = ''
+                for (let i = 1; i <= parseInt(numbersOfPage); i++) {
+                    htmlsPagina += `
+                        <li class="page-item-child cursor-pointer"><a class="page-link">${i}</a></li>
+                        `
+                }
+                paginationMain.innerHTML = `
+                    <li class="page-item-child previous-pagination cursor-pointer"><a class="page-link">Previous</a></li>
+                    ${htmlsPagina}
+                    <li class="page-item-child next-pagination cursor-pointer"><a class="page-link">Next</a></li>
+                    `
+            }
+
+            tableMemberBodyEle.querySelectorAll('.page-item-child a').forEach(ele => {
+                if (ele.textContent == 1) {
+                    ele.style.backgroundColor = '#C5C5C5'
+                }
+            })
+            if (config[name] == 1 && tableMemberBodyEle.querySelector('.previous-pagination') != null) {
+                tableMemberBodyEle.querySelector('.previous-pagination').classList.add('d-none');
+            } else if (tableMemberBodyEle.querySelector('.previous-pagination') != null) {
+                tableMemberBodyEle.querySelector('.previous-pagination').classList.remove('d-none');
+            }
+
+            if (numbersOfPage == 1 && tableMemberBodyEle.querySelector('.previous-pagination') != null) {
+                tableMemberBodyEle.querySelector('.next-pagination').classList.add('d-none')
+            }
+
+            setLocalStorage(PAGE_STORAGE_KEY, config, name, response.data.page)
+
+            $('.pagination a').click(function (e) {
+                let name = ($(this).parents('.card').data('name'));
+                var page
+                let id = $(this).parents('.card')[0].querySelector('.card-header').getAttribute('data-id')
+
+                var paginationEles = $(this).parents('.pagination').children()
+
+                if ($(this).text().trim() == 'Next') {
+                    page = parseInt(config[name]) + 1;
+                } else if ($(this).text().trim() == 'Previous') {
+                    page = parseInt(config[name]) - 1;
+                } else {
+                    page = $(this).text();
+                };
+
+                setLocalStorage(PAGE_STORAGE_KEY, config, name, page)
+                let lengthPagina = $(this).parents('.pagination').children().length;
+                if (config[name] == lengthPagina - 2) {
+                    $(this).parents('.pagination')[0].querySelector('.next-pagination').classList.add('d-none');
+                } else {
+                    $(this).parents('.pagination')[0].querySelector('.next-pagination').classList.remove('d-none');
+                }
+
+                if (config[name] == 1) {
+                    $(this).parents('.pagination')[0].querySelector('.previous-pagination').classList.add('d-none');
+                } else {
+                    $(this).parents('.pagination')[0].querySelector('.previous-pagination').classList.remove('d-none');
+                }
+
+                let tableMain = $(this).parents('.card')[0].querySelector('.body_table_main')
+                $.ajax({
+                    type: "POST",
+                    url: '/api/users',
+                    data: { name_field: `${pathName}_id`, id: id, page: page },
+                    dataType: 'json',
+                    success: function (response) {
+                        renderMember(response, tableMain)
+                        paginationEles.each(function (i, e) {
+                            e.querySelector('a').removeAttribute('style')
+                            if (e.querySelector('a').textContent == config[name]) {
+                                e.querySelector('a').style.backgroundColor = '#C5C5C5'
+                            }
+                        })
+                    },
+                    error: function (response) {
+                    }
+                });
+            })
+        },
+        error: function (response) {
+        }
+    });
+}
+
+function sortAll(data, tableMain, pathName, paginationMain) {
+    console.log(data);
+    var htmlsTable = data.map((item, index) => {
+        return `
+                <tr>
+                <th scope="row">${index + 1}</th>
+                <td>${item.name}</td>
+                <td>${pathName == 'room' ? item.position_name : item.room_name}</td>
+                </tr>
+                `
+    })
+    tableMain.innerHTML = htmlsTable.join('')
+    paginationMain.innerHTML = ''
+}
+
 $(document).ready(function () {
     submitForm('#form_new_user');
     submitForm('#form_update_user');
@@ -254,121 +477,36 @@ $(document).ready(function () {
     submitChange();
 
     $('.card-header').click(function (e) {
+        sortPagination($(this))
+    });
+
+    $('.btn_sort').click(function (e) {
         let pathName = window.location.pathname.split('/')[1]
-        var name = $(this).parents('.card').data('name');
-        const PAGE_STORAGE_KEY = `PAGE PAGINATION ${pathName.toUpperCase()}`
-        var config = JSON.parse(localStorage.getItem(PAGE_STORAGE_KEY)) || {}
-        let id = $(this).data('id')
-        let tableMemberBodyEle = $(this).parents('.card')[0].querySelector('.table_member_body');
-        let tableMain = $(this).parents('.card')[0].querySelector('.body_table_main');
+        let id = $(this).parents('.card').children('.card-header').data('id')
+        let tableMain = $(this).parents('.card')[0].querySelector('.body_table_main')
         let paginationMain = $(this).parents('.card')[0].querySelector('.pagination')
 
-        setLocalStorage(PAGE_STORAGE_KEY, config, name, 1)
-        $.ajax({
-            type: "POST",
-            url: '/api/users',
-            data: { name_field: `${pathName}_id`, id: id, page: config[name] },
-            dataType: 'json',
-            success: function (response) {
-                var data = response.data.results
-                var numbersOfPage = response.data.numbers_of_page
-                if (numbersOfPage == 0) {
-                    tableMemberBodyEle.innerHTML = `<div class="box_body"><p class="f-w-400 ">No memeber</p></div>`
-                } else {
-                    var htmlsTable = data.map((item, index) => {
-                        return `
-                            <tr>
-                            <th scope="row">${index + 1}</th>
-                            <td>${item.name}</td>
-                            <td>${ pathName == 'room' ? item.position_name : item.room_name}</td>
-                            </tr>
-                            `
-                    })
-                    tableMain.innerHTML = htmlsTable.join('')
+        $(this).attr('disabled', 'true')
+        $(this).addClass('bg-gray-300 pe-none')
+
+        if ($(this).hasClass('btn_sort-all')) {
+            $(this).parents('.btn_sort_group').children('.btn_sort-pagi').removeAttr('disabled')
+            $(this).parents('.btn_sort_group').children('.btn_sort-pagi').removeClass('bg-gray-300 pe-none')
+            $.ajax({
+                type: "POST",
+                url: '/api/users',
+                data: { name_field: `${pathName}_id`, id: id, page: 'all' },
+                dataType: 'json',
+                success: function (response) {
+                    var data = response.data
+                    sortAll(data, tableMain, pathName, paginationMain);
                 }
-                if (paginationMain != '' && numbersOfPage != 0) {
-                    var htmlsPagina = ''
-                    for (let i = 1; i <= parseInt(numbersOfPage); i++) {
-                        htmlsPagina += `
-                        <li class="page-item-child cursor-pointer"><a class="page-link">${i}</a></li>
-                        `
-                    }
-                    paginationMain.innerHTML = `
-                    <li class="page-item-child previous-pagination cursor-pointer"><a class="page-link">Previous</a></li>
-                    ${htmlsPagina}
-                    <li class="page-item-child next-pagination cursor-pointer"><a class="page-link">Next</a></li>
-                    `
-                }
-
-                tableMemberBodyEle.querySelectorAll('.page-item-child a').forEach( ele => {
-                    if (ele.textContent == 1) {
-                        ele.style.backgroundColor = '#C5C5C5'
-                    }
-                })
-                if (config[name] == 1 && tableMemberBodyEle.querySelector('.previous-pagination') != null) {
-                    tableMemberBodyEle.querySelector('.previous-pagination').classList.add('d-none');
-                } else if (tableMemberBodyEle.querySelector('.previous-pagination') != null) {
-                    tableMemberBodyEle.querySelector('.previous-pagination').classList.remove('d-none');
-                }
-
-                if (numbersOfPage == 1 && tableMemberBodyEle.querySelector('.previous-pagination') != null) {
-                    tableMemberBodyEle.querySelector('.next-pagination').classList.add('d-none')
-                }
-
-                setLocalStorage(PAGE_STORAGE_KEY, config, name, response.data.page)
-
-                $('.pagination a').click(function (e) {
-                    let name = ($(this).parents('.card').data('name'));
-                    var page
-                    let id = $(this).parents('.card')[0].querySelector('.card-header').getAttribute('data-id')
-
-                    var paginationEles = $(this).parents('.pagination').children()
-
-                    if ($(this).text().trim() == 'Next') {
-                        page = parseInt(config[name]) + 1;
-                    } else if ($(this).text().trim() == 'Previous') {
-                        page = parseInt(config[name]) - 1;
-                    } else {
-                        page = $(this).text();
-                    };
-
-                    setLocalStorage(PAGE_STORAGE_KEY, config, name, page)
-                    let lengthPagina = $(this).parents('.pagination').children().length;
-                    if (config[name] == lengthPagina - 2) {
-                        $(this).parents('.pagination')[0].querySelector('.next-pagination').classList.add('d-none');
-                    } else {
-                        $(this).parents('.pagination')[0].querySelector('.next-pagination').classList.remove('d-none');
-                    }
-
-                    if (config[name] == 1) {
-                        $(this).parents('.pagination')[0].querySelector('.previous-pagination').classList.add('d-none');
-                    } else {
-                        $(this).parents('.pagination')[0].querySelector('.previous-pagination').classList.remove('d-none');
-                    }
-
-                    let tableMain = $(this).parents('.card')[0].querySelector('.body_table_main')
-                    $.ajax({
-                        type: "POST",
-                        url: '/api/users',
-                        data: { name_field: `${pathName}_id`, id: id, page: page },
-                        dataType: 'json',
-                        success: function (response) {
-                            renderMember(response, tableMain)
-                            paginationEles.each(function (i, e) {
-                                e.querySelector('a').removeAttribute('style')
-                                if (e.querySelector('a').textContent == config[name]) {
-                                    e.querySelector('a').style.backgroundColor = '#C5C5C5'
-                                }
-                            })
-                        },
-                        error: function (response) {
-                        }
-                    });
-                })
-            },
-            error: function (response) {
-            }
-        });
+            })
+        } else {
+            $(this).parents('.btn_sort_group').children('.btn_sort-all').removeAttr('disabled')
+            $(this).parents('.btn_sort_group').children('.btn_sort-all').removeClass('bg-gray-300 pe-none')
+            sortPagination($(this).parents('.card').children('.card-header'))
+        }
     });
 
     $('#topic-name').change(function () {

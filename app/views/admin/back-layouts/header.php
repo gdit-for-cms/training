@@ -25,7 +25,7 @@
                         <img src="https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg" alt="#">
                         <div class="profile_info_iner">
                             <div class="profile_info_details">
-                                <a href="#">My Profile</a>
+                                <a href="/admin/show">My Profile</a>
                                 <a href="#">Settings</a>
                                 <a href="/auth/logout">Log Out</a>
                             </div>

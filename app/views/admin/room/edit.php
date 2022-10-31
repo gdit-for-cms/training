@@ -19,12 +19,38 @@
                         <label class="form-label" for="inputAddress2">Description</label>
                         <textarea class="form-control" rows="3" name="description" id="description"><?= $room['description'] ?></textarea>
                     </div>
-                    <button id="submit" type="submit" class="btn btn-primary">Save</button>
                 </form>
+                <button id="submit" type="submit" class="btn btn-primary">Save</button>
             </div>
         </div>
     </div>
 </div>
+<div class="box-lightbox">
+    <div class="col-lg-4">
+        <div class="white_card card_height_100 mb_30">
+            <div class="white_card_header">
+                <div class="box_header m-0">
+                    <div class="main-title total_modal">
+                        <h2 class="m-0">Confirm Information</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="white_card_body">
+                <div class="card-body">
+
+                    <div class="model-footer">
+                        <button type="button" class="btn btn-secondary js-lightbox-close">Close</button>
+                        <button class="btn btn-primary" id="submit_confirm_btn">Change</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/ckeditor/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace( 'description' );
+</script>
 <script>
     const submitBtn = document.querySelector('#submit')
     const nameInput = document.querySelector('#name')

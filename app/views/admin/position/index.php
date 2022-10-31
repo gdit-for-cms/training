@@ -46,6 +46,14 @@
                                             <h4 class="mb-2 nowrap ">Member</h4>
                                         </div>
                                     </div>
+                                    <div class="btn_sort_group d-flex justify-content-end align-items-center text-white mt-2 mr-2">
+                                        <button type="button" disabled class="btn_sort btn_sort-pagi bg-gray-300 pe-none rounded border d-flex justify-content-end align-items-cente ml-2 hover:bg-gray-300">
+                                            <box-icon name='list-plus'></box-icon>
+                                        </button>    
+                                        <button type="button" class="btn_sort btn_sort-all rounded border d-flex justify-content-end align-items-cente ml-2 hover:bg-gray-300">
+                                            <box-icon name='list-ul'></box-icon>
+                                        </button>
+                                    </div>
                                     <div class="table_member_body table-responsive m-b-30 flex flex-col items-center justify-center">
                                         <table id="<?= $position['id'] ?>" class="table table-striped" style="width: 90% !important">
                                             <thead>

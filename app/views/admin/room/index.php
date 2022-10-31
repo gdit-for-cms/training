@@ -46,6 +46,14 @@
                                             <h4 class="mb-2 nowrap ">Member</h4>
                                         </div>
                                     </div>
+                                    <div class="btn_sort_group d-flex justify-content-end align-items-center text-white mt-2 mr-2">
+                                        <button type="button" disabled class="btn_sort btn_sort-pagi bg-gray-300 pe-none rounded border d-flex justify-content-end align-items-cente ml-2 hover:bg-gray-300">
+                                            <box-icon name='list-plus'></box-icon>
+                                        </button>    
+                                        <button type="button" class="btn_sort btn_sort-all rounded border d-flex justify-content-end align-items-cente ml-2 hover:bg-gray-300">
+                                            <box-icon name='list-ul'></box-icon>
+                                        </button>
+                                    </div>
                                     <div class="table_member_body table-responsive m-b-30 flex flex-col items-center justify-center">
                                         <table id="table_<?= $room['id'] ?>" class="table table-striped" style="width: 90% !important">
                                             <thead>
@@ -107,29 +115,6 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<div class="w-90">
-    <p>
-      <a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Toggle first element</a>
-      <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Toggle second element</button>
-      <button class="btn btn-primary" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="multiCollapseExample1 multiCollapseExample2">Toggle both elements</button>
-    </p>
-    <div class="row">
-      <div class="col">
-        <div class="collapse multi-collapse" id="multiCollapseExample1">
-          <div class="card card-body">
-            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="collapse multi-collapse" id="multiCollapseExample2">
-          <div class="card card-body">
-            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-          </div>
-        </div>
-      </div>
     </div>
 </div>
 
