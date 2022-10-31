@@ -11,14 +11,14 @@
                     // Compares array against arrays and returns the difference.
                     $diff = array_diff_assoc($by_text1[$name][0], $by_text2[$name][0]);
                     if (!empty($diff)) {
-                        $keyDiff = array_keys($diff); ?>
-                        <!-- Return result(difference).  -->
+                        $key_diff = array_keys($diff); ?>
+                        <!-- Return result(difference).  -->                
                         <div class="container-compare" style="<?php echo $backroundDiff; ?>">
                             <div class="left">
                                 <?php renderArrayWithCompare($by_text1, $by_text1[$name][0], $name, $color_diff_blob, $key_diff, $text = true); ?>   
                             </div>
                             <div class="right">
-                                <?php renderArrayWithCompare($by_text2, $by_text2[$name][0], $name, $color_diff_blob, $key_diff, $text = true); ?>     
+                                <?php renderArrayWithCompare($by_text2, $by_text2[$name][0], $name, $color_diff_blob, $key_diff, $text = true); ?> 
                             </div>
                         </div>
                     <?php } else { ?>
@@ -51,7 +51,9 @@
     </div>
     <div class="div-consts">
         <!-- Check and comepare a same Constant name in 2 files. -->
-        <?php renderDivConst($backroundSame, $backroundDiff, $color_diff_blob, $const_in_file1, $const_in_file2); ?>
+        <?php if (!empty($const_in_file1) && !empty($const_in_file2)) { 
+            renderDivConst($backroundSame, $backroundDiff, $color_diff_blob, $const_in_file1, $const_in_file2); 
+        } ?>
     </div>
 </div>
 

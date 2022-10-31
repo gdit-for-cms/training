@@ -71,7 +71,7 @@
 <?php function renderArrayWithCompare($main, $array, $name, $color, $key_diff, $text = false) { ?>
     <h4 class="var-name"><?php echo $name; ?></h4>
     <span class="line">(line in file : <?php echo $main[$name][1]; ?>)</span>
-    <?php foreach ($array as $key =>$value) { $style = ''; 
+    <?php foreach ($array as $key => $value) { $style = ''; 
             if (in_array($key, $key_diff)) { $style = $color; } 
                 if ($text) { ?>
                     <span style=<?php echo $style; ?>><?php echo $value; ?></span></br>
@@ -80,25 +80,24 @@
 <?php }}} ?>   
 
 <?php function renderDivConst($backroundSame, $backroundDiff, $color_diff_blob, $const_in_file1, $const_in_file2) { 
-    if (!empty($const_in_file1) && !empty($const_in_file2)) {
-        foreach ($const_in_file1 as $key1 => $value1) {
-            foreach ($const_in_file2 as $key2 => $value2) { 
-                if ($key1 == $key2 && $value1 == $value2) { ?>
-                    <div class="container-compare" style="<?php echo $backroundSame; ?>">
-                        <div class="left">
-                            <span class="var-name"><?php echo $key1; ?> : <?php echo $value1; ?></span></br>
-                        </div>
-                        <div class="right">
-                            <span class="var-name"><?php echo $key2; ?> : <?php echo $value2; ?></span></br>
-                        </div>
+    foreach ($const_in_file1 as $key1 => $value1) {
+        foreach ($const_in_file2 as $key2 => $value2) { 
+            if ($key1 == $key2 && $value1 == $value2) { ?>
+                <div class="container-compare" style="<?php echo $backroundSame; ?>">
+                    <div class="left">
+                        <span class="var-name"><?php echo $key1; ?> : <?php echo $value1; ?></span></br>
                     </div>
-        <?php } else if ($key1 == $key2 && $value1 !== $value2) { ?>
-                    <div class="container-compare" style="<?php echo $backroundDiff; ?>">
-                        <div class="left">
-                            <span class="var-name" style=<?php echo $color_diff_blob; ?>><?php echo $key1; ?> : <?php echo $value1; ?></span></br>
-                        </div>
-                        <div class="right">
-                            <span class="var-name" style=<?php echo $color_diff_blob; ?>><?php echo $key2; ?> : <?php echo $value2; ?></span></br>
-                        </div>
+                    <div class="right">
+                        <span class="var-name"><?php echo $key2; ?> : <?php echo $value2; ?></span></br>
                     </div>
-<?php }}}}}; ?>
+                </div>
+    <?php } else if ($key1 == $key2 && $value1 !== $value2) { ?>
+                <div class="container-compare" style="<?php echo $backroundDiff; ?>">
+                    <div class="left">
+                        <span class="var-name" style=<?php echo $color_diff_blob; ?>><?php echo $key1; ?> : <?php echo $value1; ?></span></br>
+                    </div>
+                    <div class="right">
+                        <span class="var-name" style=<?php echo $color_diff_blob; ?>><?php echo $key2; ?> : <?php echo $value2; ?></span></br>
+                    </div>
+                </div>
+<?php }}}}; ?>

@@ -57,12 +57,9 @@
     </div>
     <div class="div-consts">
         <!-- Check and comepare a same Constant name in 2 files. -->
-        <?php renderDivConst($backroundSame, $backroundDiff, $color_diff_blob, $const_in_file1, $const_in_file2); ?>
+        <?php if (!empty($const_in_file1) && !empty($const_in_file2)) { 
+            renderDivConst($backroundSame, $backroundDiff, $color_diff_blob, $const_in_file1, $const_in_file2); 
+        } ?>
     </div>
 </div>
-
-
-
-
-
 
