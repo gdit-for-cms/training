@@ -57,6 +57,10 @@ class AdminController extends AppController
                 $by_text1 = $this->setVariableByText($data_before, $glo_in_file1);
                 $by_text2 = $this->setVariableByText($data_after, $glo_in_file2);
 
+                // Set constants and variables in file by text with line number.
+                list($globals_file1, $constants_file1) = $this->setVariableWithLine($data_before, $glo_in_file1);
+                list($globals_file2, $constants_file2) = $this->setVariableWithLine($data_after, $glo_in_file2);
+
                 // Check that the empty.
                 if ((empty($const_in_file1) || empty($const_in_file2)) && (empty($glo_in_file1) || empty($glo_in_file2))) {
                     $this->data['uploadStatus'] = 'Success. No variable found';
@@ -66,7 +70,15 @@ class AdminController extends AppController
                     $const_ary = array_intersect($const_in_file1, $const_in_file2);
                     if (empty($glo_ary) && empty($const_ary)) {
                         $this->data['uploadStatus'] = 'Success. Nothing to compare';
+                        $this->data['warning_in_file1'] = $warning_in_file1;
+                        $this->data['warning_in_file2'] = $warning_in_file2;
+                        // return all globals and constants in 2 files.
+                        $this->data['globals_file1'] = $globals_file1;
+                        $this->data['globals_file2'] = $globals_file2;
+                        $this->data['constants_file1'] = $constants_file1;
+                        $this->data['constants_file2'] = $constants_file2;
                     } else {
+                        // return a same globals and constants in 2 files.
                         $this->data['arr'] = $glo_ary;
                         $this->data['in_file1'] = $in_file1;
                         $this->data['in_file2'] = $in_file2;
@@ -76,6 +88,12 @@ class AdminController extends AppController
                         $this->data['const_in_file2'] = $const_in_file2;
                         $this->data['warning_in_file1'] = $warning_in_file1;
                         $this->data['warning_in_file2'] = $warning_in_file2;
+
+                        // return all globals and constants in 2 files.
+                        $this->data['globals_file1'] = $globals_file1;
+                        $this->data['globals_file2'] = $globals_file2;
+                        $this->data['constants_file1'] = $constants_file1;
+                        $this->data['constants_file2'] = $constants_file2;
                     }
                 }
             } else {
@@ -158,7 +176,7 @@ class AdminController extends AppController
         for ($line = 0; $line < count($data); $line++) {
             if (preg_match('/^setDefineArray\(\'(.+?)\', \$(.+?)\)/i', $data[$line], $match)) {
                 if (!isset($in_file[$match[1]])) {
-                    $in_file[$match[1]] = array($match[2] , $line);
+                    $in_file[$match[1]] = array($match[2], $line);
                 }
             }
         }
@@ -184,5 +202,48 @@ class AdminController extends AppController
         }
         
         return $in_file;
+    }
+
+    /**
+     * Set variable value by text with line number
+     *
+     * @param  array  $data (array content in file upload)
+     * @param  array  $glo_in_file
+     * @return array  $globals_ary, $constants_ary
+     */
+    public function setVariableWithLine($data, $glo_in_file, $globals_ary = [], $constants_ary = []) {
+        for ($line = 0; $line < count($data); $line++) {
+            if (preg_match('/^setDefineArray\(\'(.+?)\', \$(.+?)\)/i', $data[$line], $match)) {
+                if (!isset($globals_ary[$match[1]])) {
+                    $globals_ary[$match[1]] = array($match[2], $line);
+                }
+            } else if (preg_match('/^define\("(.+?)\", (.+?)\)/i', $data[$line], $match)) {
+                if (!isset($constants_ary[$match[1]])) {
+                    $constants_ary[$match[1]] = array($match[2], $line);
+                }
+            }
+        }
+        foreach ($glo_in_file as $each) {
+            // The variable assigned to the global variable.
+            $check = $globals_ary[$each][0];
+            // Line have setDefineArray function.   
+            $index = $globals_ary[$each][1];
+            $globals_ary[$each][0] = array();
+            for ($line = $index; $line > 0; $line--) {
+                if (preg_match('/^\$' . $check . '( = array\()/i', $data[$line])) {
+                    for ($i = $line + 1; $i < $index; $i++) {
+                        if (preg_match('/^\)\;/i', $data[$i])) {
+                            break;
+                        } else {
+                            $result = str_replace(' ', '&nbsp;', $data[$i]);
+                            $globals_ary[$each][0][$i] = $result;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        
+        return array($globals_ary, $constants_ary);
     }
 }

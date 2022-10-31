@@ -1,5 +1,5 @@
 <div class="col-9 mx-2 div-value">
-    <div class="div-globals">
+    <div class="div-global">
         <?php $color_diff_blob = 'background-color:rgba(255,129,130,0.4);';
         // Check and compare a same variable name in 2 files.
         if (isset($arr)) {
@@ -52,11 +52,10 @@
                     </div>
             <?php }}}; ?>
     </div>
-    <div class="div-consts">
-        <!-- Check and comepare a same Constant name in 2 files. -->
+    <div class="div-const">
+        <!-- Check and compare a same Constant name in 2 files. -->
         <?php if (!empty($const_in_file1) && !empty($const_in_file2)) { 
             renderDivConst($color_diff_blob, $const_in_file1, $const_in_file2); 
         } ?>
     </div>
 </div>
-

@@ -373,12 +373,10 @@ a {
     margin-right: 6px;
 }
 
-
-
 .textdanger{
     color: rgb(234, 118, 118)!important;
 }
-
+/*  DISPLAY - COMPARE */
 .container-compare {
     display: flex;
     color: #24292f;
@@ -394,28 +392,54 @@ a {
     border-top: 1px solid #ccc;
 }
 .container-file1,  .container-file2 {
+    flex-grow: 1;
     background-color: #0d1117;
     color: #c9d1d9;
 }
 .container-compare h4{
     color :#0a3069;
+    font-size: 1.2rem!important;
 }
 .container-compare .left, .container-compare .right {
     flex: 1;
     padding : 14px 80px;
     border-right: 3px solid #000;
-    font-size: 24px;
+    font-size: 1rem;
+    font-family: ui-monospace,monospace;
     position: relative;
 }
 .container-compare .line {
     position: absolute;
     right: 16px;
     top: 16px;
-    font-size: 14px;
+    font-size: 0.8rem;
     font-style: italic;
     font-weight: 500;
     color : #9c9ea1cf;
 }
+
+.card-body .col-9 {
+    height: 80vh;
+    overflow-y: scroll;
+	float: left;
+}
+
+.card-body .col-9::-webkit-scrollbar-track {
+	background: #f1f1f1; 
+}
+
+.card-body .col-9::-webkit-scrollbar {
+	width: 8px;
+}
+
+.card-body .col-9::-webkit-scrollbar-thumb {
+	background: #888; 
+}
+
+.card-body .col-9::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+}
+
 .warning-div {
     background-color: #fffddd;
     color : #57606a;
@@ -428,4 +452,71 @@ a {
 
 .warning-div h5 {
     color: #b35900!important;
+}
+
+
+/*  show all variable */
+.all-table{
+    width: 100%;
+    border-collapse: separate;
+}
+
+table {
+    border-spacing: 0 !important;
+}
+
+.blob-num {
+    position: relative;
+    width: 1%;
+    min-width: 50px;
+    padding-right: 10px;
+    padding-left: 10px;
+    font-family: ui-monospace,monospace;
+    font-size: 12px;
+    line-height: 20px;
+    color: #6e7681;
+    text-align: right;
+    white-space: nowrap;
+    vertical-align: top;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.blob-code {
+    position: relative;
+    padding-right: 10px;
+    padding-left: 10px;
+    line-height: 20px;
+    vertical-align: top;
+}
+
+
+.blob-code-context {
+    padding-left: 22px;
+    font-size: 14px;
+    font-family: ui-monospace,monospace;
+}
+
+.blob-name {
+    font-size: 14px!important;
+    color: #a5d6ff!important;
+    font-family: ui-monospace,monospace;
+}
+
+.blob-const {
+    font-size: 14px!important;
+    color: #ec8e2c!important;
+    font-family: ui-monospace,monospace;
+}
+.note {
+    font-size: 0.8rem;
+    font-style: italic;
+    font-weight: 500;
+    color : #9c9ea1c4;
+}
+
+.th-line {
+    text-align: center;
+    font-family: ui-monospace,monospace;
 }

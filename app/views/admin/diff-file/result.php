@@ -20,22 +20,30 @@
                                 <?php warning($warning_in_file2, 2) ?>
                             </div>
                         <?php } ?>
-                        <div class="mb-3 px-3">
+                        <div class="mb-3 px-3 ">
                             <h4 class="card-title font-18 mt-3">Compare by</h4>
                             <div class="input-group">
                                 <button type="button" class="btn btn-outline-primary mb-3" id="compare-text">TEXT</button>
                                 <button type="button" class="btn btn-outline-success mb-3" id="compare-value">VALUE</button>
                             </div>
                         </div>
-                        <div class="input-group mb-3 px-3">
-                            <label class="input-group-text" for="select-show">Show</label>
-                            <select class="form-select select-answer" id="select-show">
+                        <div class="input-group mb-3 px-3 ">
+                            <label class="input-group-text" for="select-filter">Filter</label>
+                            <select class="form-select select-answer" id="select-filter">
                                 <option selected="">All</option>
                                 <option>Globals</option>
                                 <option>Constants</option>
                             </select>
                         </div>
-                        <div class="input-group mb-3 px-3">
+                        <div class="input-group mb-3 px-3 ">
+                            <label class="input-group-text" for="select-show">Show</label>
+                            <select class="form-select select-answer" id="select-show">
+                                <option selected="">All</option>
+                                <option>Diff</option>
+                                <option>Same</option>
+                            </select>
+                        </div>
+                        <div class="input-group mb-3 px-3 ">
                             <h4 class="card-title font-18 mt-3">Search variable in result</h4>
                             <div class="d-flex justify-content-end mb-2">
                                 <input id="search_input" type="search" name="search" class="form-control rounded" placeholder="Search..." aria-label="Search">
@@ -43,9 +51,13 @@
                                 <button id="delete_search" type="button" class="btn btn-danger text-white ml-2">X</button>
                             </div>
                         </div>
+                        <div class="mb-3 px-3 ">
+                            <button type="button" class="btn btn-outline-info mb-3" id="compare-all">Show all variables</button>
+                        </div>
                     </div>
                     <?php require_once 'value.php' ?>
                     <?php require_once 'text.php' ?>
+                    <?php require_once 'all.php' ?>
                 </div>
             </div>
         </div>
@@ -100,5 +112,4 @@
                         <span class="var-name" style=<?php echo $color_diff_blob; ?>><?php echo $key2; ?> : <?php echo $value2; ?></span></br>
                     </div>
                 </div>
-            </div>
 <?php }}}}; ?>

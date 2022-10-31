@@ -1,34 +1,60 @@
 $(document).ready(function () {
     const file1 = document.getElementById('file1');
     const file2 = document.getElementById('file1')
-    $('#select-show').change(function () {
+    $('#select-filter').change(function () {
         var type = $(this).val();
         switch (type) {
             case 'Globals':
-                $('.div-globals').show();
-                $('.div-consts').hide();
+                $('.div-global').show();
+                $('.div-const').hide();
                 break;
             case 'Constants':
-                $('.div-globals').hide();
-                $('.div-consts').show();
+                $('.div-global').hide();
+                $('.div-const').show();
                 break;
             default:
-                $('.div-globals').show();
-                $('.div-consts').show();
+                $('.div-global').show();
+                $('.div-const').show();
+                break;
+        }
+    });
+    $('#select-show').change(function () {
+        var type = $(this).val();
+        switch (type) {
+            case 'Same':
+                $('.background-same').show();
+                $('.background-diff').hide();
+                break;
+            case 'Diff':
+                $('.background-same').hide();
+                $('.background-diff').show();
+                break;
+            default:
+                $('.background-same').show();
+                $('.background-diff').show();
                 break;
         }
     });
     $('.div-value').show();
     $('.div-text').hide();
+    $('.div-all').hide();
     $('#compare-text').click(function () {
         $('.div-text').show();
         $('.div-value').hide();
-        $('.div-search').hide();
+        $('.div-all').hide();
     });
 
     $('#compare-value').click(function () {
         $('.div-text').hide();
+        $('.div-all').hide();
         $('.div-value').show();
+    });
+
+    $('#compare-all').click(function () {
+        console.log(1);
+        $('.div-text').hide();
+        $('.div-all').show();
+        $('.div-value').hide();
     });
 
     $('#search_input').keyup(function () {

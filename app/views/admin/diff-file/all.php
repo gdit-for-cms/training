@@ -1,52 +1,90 @@
-<div class="col-9 mx-2 div-value">
-    <div class="div-globals">
+<div class="col-9 mx-2 div-all">
+    <div class="div-global">
         <div class="d-flex">
             <div class="container-file1">
-                <?php renderAllGlobals($in_file1) ?>
+                <table class="all-table" data-tab-size="8">
+                    <thead >
+                        <tr>
+                            <th class="th-line"></th>
+                            <th class="th-line">File 1</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php renderAllGlobals($globals_file1); ?>
+                    </tbody>
+                </table>
             </div>
             <div class="container-file2">
-                <?php renderAllGlobals($in_file2) ?>
+                <table class="all-table" data-tab-size="8">
+                    <thead >
+                        <tr>
+                            <th class="th-line"></th>
+                            <th class="th-line">File 2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php renderAllGlobals($globals_file2); ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div class="div-consts">
+    <div class="div-const">
         <div class="d-flex">
             <div class="container-file1">
-                <?php renderArray($const_in_file1) ?>
+                <table class="all-table" data-tab-size="8">
+                    <thead >
+                        <tr>
+                            <th class="th-line"></th>
+                            <th class="th-line">File 1 (constants)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php renderAllConstant($constants_file1); ?>
+                    </tbody>
+                </table>
             </div>
             <div class="container-file2">
-                <?php renderArray($const_in_file2) ?>
+                <table class="all-table" data-tab-size="8">
+                    <thead >
+                        <tr>
+                            <th class="th-line"></th>
+                            <th class="th-line">File 2 (constants)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php renderAllConstant($constants_file2); ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
 
 
-<?php function renderAllGlobals($in_file) {
-    foreach($in_file as $name => $value) { ?>
-        <div class="background">
-            <?php for($i = 0; $i < count($in_file[$name][0]); $i++) { ?>
-                <h4 class="var-name"><?php echo $name; ?></h4>
-                <?php  foreach ($in_file[$name][0][$i] as $key => $value) { ?>
-                    <span><?php echo $key; ?> : <?php echo $value; ?></span></br>
-                <?php } ?>
-        </div>
-<?php }}} ?>
+<?php function renderAllGlobals($globals_ary) {
+    foreach($globals_ary as $name => $key) { ?>
+        <tr>
+            <td class="blob-num"><?php echo $globals_ary[$name][1]; ?></td>
+            <td class="blob-code blob-code-context blob-name"><?php echo $name; ?> <span class="note">(array)</span></td>
+        </tr>
+        
+        <?php  foreach ($globals_ary[$name][0] as $key => $value) { ?>
+            <tr>
+                <td class="blob-num"><?php echo $key; ?></td>
+                <td class="blob-code blob-code-context"><?php echo $value; ?></td>
+            </tr>
+<?php }}}; ?>
 
-<!-- lam giong nhu github.
-chia table : co td tr
-
-globals = array(
-    'name' => array(
-        line1 => text,
-        line2 => text,
-    )
-)
-
-
-
--->
-
-
-
-
+<?php function renderAllConstant($constant_ary) {
+    foreach($constant_ary as $name => $key) { ?>
+        <tr>
+            <td class="blob-num"><?php echo $constant_ary[$name][1]; ?></td>
+            <td class="blob-code blob-code-context blob-const"><?php echo $name; ?></td>
+        </tr>
+        <tr>
+            <td class="blob-num"></td>
+            <td class="blob-code blob-code-context"><?php echo $constant_ary[$name][0]; ?></td>
+        </tr>
+        
+<?php }}; ?>
