@@ -12,6 +12,9 @@
                 <div class="card-body mx-3 d-flex">
                     <div class="col-3 ">
                         <h3>Upload status: <?php echo $uploadStatus; ?></h3>
+                        <?php if (!empty($test)) { ?>
+                            <h3><?php print_r($test) ; ?></h3>
+                            <?php } ?>
                         <!-- Show warning in import file -->
                         <?php if (!empty($warning_in_file1) || !empty($warning_in_file2)) { ?>
                             <div class="warning-div px-3 mb-3">
@@ -54,10 +57,19 @@
                         <div class="mb-3 px-3 ">
                             <button type="button" class="btn btn-outline-info mb-3" id="compare-all">Show all variables</button>
                         </div>
+                        <div class="mb-3 px-3 ">
+                            <h4 class="card-title font-18 mt-3">Export</h4>
+                            <div class="input-group">
+                                <button type="button" class="btn btn-outline-primary mb-3" id="export-file1">File 1</button>
+                                <button type="button" class="btn btn-outline-success mb-3" id="export-file2">File 2</button>
+                                <button type="button" class="btn btn-outline-primary mb-3" id="export-select">Select</button>
+                            </div>
+                        </div>
                     </div>
                     <?php require_once 'value.php' ?>
                     <?php require_once 'text.php' ?>
                     <?php require_once 'all.php' ?>
+                    <?php require_once 'export_select.php' ?>
                 </div>
             </div>
         </div>
