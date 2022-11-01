@@ -20,6 +20,7 @@
                 <tr>
                   <th scope="col">#</th>
                   <th scope="col">Name</th>
+                  <th scope="col">Gender</th>
                   <th scope="col">Email</th>
                   <th scope="col">
                     Role
@@ -58,6 +59,7 @@
                     <th scope="row"><?= $i;
                                     $i++ ?></th>
                     <td><?= $user['name'] ?></td>
+                    <td><?= $user['gender'] ?></td>
                     <td><?= $user['email'] ?></td>
                     <td class="role_name"><?= $user['role_name'] ?></td>
                     <td class="room_name"><?= $user['room_name'] ?></td>

@@ -472,6 +472,8 @@ $(document).ready(function () {
     submitForm('#form_update_room');
     submitForm('#form_new_position');
     submitForm('#form_update_position');
+    // submitForm('#form_upload_avatar');
+
     submitForm('.add-form');
     alertDelete();
     submitChange();
@@ -508,6 +510,43 @@ $(document).ready(function () {
             sortPagination($(this).parents('.card').children('.card-header'))
         }
     });
+
+    $('#form_upload_avatar').submit(function (e) {
+        e.preventDefault();
+        var form = $(this);
+        var formData = new FormData(form[0]);
+        var actionUrl = form.attr('action');
+        console.log(form[0]);
+        $.ajax({
+            type: "POST",
+            url: actionUrl,
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            success: function (response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: "Successfully",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                setTimeout(() => {
+                    document.location.reload(true);
+                }, "1600");
+            },
+            error: function (response) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: response.responseJSON.message,
+                });
+                setTimeout(() => {
+                    document.location.href = '/auth/logout'
+                }, "1600");
+            }
+        });
+    })
 
     $('#topic-name').change(function () {
         $.ajax({

@@ -51,6 +51,7 @@ class AuthController extends AppController {
             'email' => $inputUser['email'],
             'role_id' => $inputUser['role_id'],
             'room_id' => $inputUser['room_id'],
+            'avatar_image' => $inputUser['avatar_image'],
         ];
         
         $request->saveUser($data);
