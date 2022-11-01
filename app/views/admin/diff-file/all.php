@@ -10,7 +10,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php renderAllGlobals($globals_file1); ?>
+                        <?php if (!empty($globals_file1)) { 
+                            renderAllGlobals($globals_file1); 
+                        } ?>
                     </tbody>
                 </table>
             </div>
@@ -23,7 +25,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php renderAllGlobals($globals_file2); ?>
+                        <?php if (!empty($globals_file2)) { 
+                            renderAllGlobals($globals_file2); 
+                        } ?>
                     </tbody>
                 </table>
             </div>
@@ -40,7 +44,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php renderAllConstant($constants_file1); ?>
+                        <?php if (!empty($constants_file1)) { 
+                            renderAllConstant($constants_file1); 
+                        } ?>
                     </tbody>
                 </table>
             </div>
@@ -53,7 +59,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php renderAllConstant($constants_file2); ?>
+                        <?php if (!empty($constants_file2)) { 
+                            renderAllConstant($constants_file2); 
+                        } ?>
                     </tbody>
                 </table>
             </div>
@@ -63,13 +71,13 @@
 
 
 <?php function renderAllGlobals($globals_ary) {
-    foreach($globals_ary as $name => $key) { ?>
+    foreach ($globals_ary as $name => $key) { ?>
         <tr>
             <td class="blob-num"><?php echo $globals_ary[$name][1]; ?></td>
             <td class="blob-code blob-code-context blob-name"><?php echo $name; ?> <span class="note">(array)</span></td>
         </tr>
         
-        <?php  foreach ($globals_ary[$name][0] as $key => $value) { ?>
+        <?php foreach ($globals_ary[$name][0] as $key => $value) { ?>
             <tr>
                 <td class="blob-num"><?php echo $key; ?></td>
                 <td class="blob-code blob-code-context"><?php echo $value; ?></td>
@@ -77,7 +85,7 @@
 <?php }}}; ?>
 
 <?php function renderAllConstant($constant_ary) {
-    foreach($constant_ary as $name => $key) { ?>
+    foreach ($constant_ary as $name => $key) { ?>
         <tr>
             <td class="blob-num"><?php echo $constant_ary[$name][1]; ?></td>
             <td class="blob-code blob-code-context blob-const"><?php echo $name; ?></td>

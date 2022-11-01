@@ -1,3 +1,11 @@
+function hideAll() {
+    $('.div-text').hide();
+    $('.div-value').hide();
+    $('.div-all').hide();
+    $('.div-export-1').hide();
+    $('.div-export-2').hide();
+}
+
 $(document).ready(function () {
     const file1 = document.getElementById('file1');
     const file2 = document.getElementById('file1')
@@ -38,23 +46,29 @@ $(document).ready(function () {
     $('.div-value').show();
     $('.div-text').hide();
     $('.div-all').hide();
+    $('.div-export-1').hide();
     $('#compare-text').click(function () {
+        hideAll();
         $('.div-text').show();
-        $('.div-value').hide();
-        $('.div-all').hide();
     });
 
     $('#compare-value').click(function () {
-        $('.div-text').hide();
-        $('.div-all').hide();
+        hideAll();
         $('.div-value').show();
     });
 
     $('#compare-all').click(function () {
-        console.log(1);
-        $('.div-text').hide();
+        hideAll();
         $('.div-all').show();
-        $('.div-value').hide();
+    });
+
+    $('#export-file1').click(function () {
+        hideAll();
+        $('.div-export-1').show();
+    });
+    $('#export-file2').click(function () {
+        hideAll();
+        $('.div-export-2').show();
     });
 
     $('#search_input').keyup(function () {
@@ -91,8 +105,49 @@ $(document).ready(function () {
     $('#file2').change(function () {
         updateSubmitBtn();
     });
-});
 
+    const data = {};
+
+    data['file1']= {};
+    data['file2']= {};
+
+    
+    $('.container-file1 .click-btn').click(function () {
+        let hehe = $(this).text();
+        let line = $(this).data('id');
+        data['file1'][hehe] = line;
+    });
+
+    $('.container-file2 .click-btn').click(function () {
+        let hehe = $(this).text();
+        let line = $(this).data('id');
+        data['file2'][hehe] = line;
+    });
+
+    $('#export-2').click(function () {
+        $.each( $('.check-ok'), function( index, ele ) {
+            if (ele.checked) {
+                let hehe = ele.parentNode.childNodes[3].childNodes[0].data;
+                let line = $(ele).parents('tr').find('.blob-num').text();
+                data['file1'][hehe] = line;
+            }
+        });
+        console.log(data);
+        $.ajax({
+            type: "post",
+            url: "export",
+            data: {
+                data : data
+            },
+            dataType: 'json',
+            success: function (response) {
+                
+            }
+        });
+    });
+    
+    
+});
 
 function updateSubmitBtn() {
     const file1Value = file1.value.trim();
@@ -104,3 +159,5 @@ function updateSubmitBtn() {
         $('#submit-file').prop('disabled', true);
     }
 }
+
+

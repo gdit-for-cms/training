@@ -11,7 +11,7 @@ class AppController extends Controller
     /**
      * Before filter - called before an action method.
      * 
-     * @return title of the action  
+     * @return void  
      */
     protected function before() {
         if (!checkAdmin()) {

@@ -54,10 +54,19 @@
                         <div class="mb-3 px-3 ">
                             <button type="button" class="btn btn-outline-info mb-3" id="compare-all">Show all variables</button>
                         </div>
+                        <div class="mb-3 px-3 ">
+                            <h4 class="card-title font-18 mt-3">Export</h4>
+                            <div class="input-group">
+                                <button type="button" class="btn btn-outline-primary mb-3" id="export-file1">File 1</button>
+                                <button type="button" class="btn btn-outline-success mb-3" id="export-file2">File 2</button>
+                            </div>
+                        </div>
                     </div>
                     <?php require_once 'value.php' ?>
                     <?php require_once 'text.php' ?>
                     <?php require_once 'all.php' ?>
+                    <?php require_once 'export_file1.php' ?>
+                    <?php require_once 'export_file2.php' ?>
                 </div>
             </div>
         </div>

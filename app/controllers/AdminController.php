@@ -18,6 +18,20 @@ class AdminController extends AppController
         $this->data['content'] = 'diff-file/diff';
     }
 
+    public function testAction() {
+        $this->data['content'] = 'diff-file/test';
+    }
+
+    public function exportAction(Request $request) {
+        var_dump(1);
+        $data = $request->getPost()->get('data');
+        $test= $data['file1'];
+        var_dump($test);
+        exit;
+        die;
+        $this->data['content'] = 'diff-file/export';
+    }
+
     /**
      * Import and compare two files
      *
@@ -68,6 +82,8 @@ class AdminController extends AppController
                     // Check a same variable name in 2 files.
                     $glo_ary = array_intersect($glo_in_file1, $glo_in_file2);
                     $const_ary = array_intersect($const_in_file1, $const_in_file2);
+
+
                     if (empty($glo_ary) && empty($const_ary)) {
                         $this->data['uploadStatus'] = 'Success. Nothing to compare';
                         $this->data['warning_in_file1'] = $warning_in_file1;
@@ -245,5 +261,26 @@ class AdminController extends AppController
         }
         
         return array($globals_ary, $constants_ary);
+    }
+
+    /**
+     * Get all lines where it defines the variable
+     *
+     * @param  array  $globals_ary
+     * @param  array  $constants_ary
+     * @return array  $export_arr
+     */
+    public function getLineToExport($export_arr = [], $globals_ary, $constants_ary) {
+        foreach ($globals_ary as $name => $key) {
+            array_push($export_arr, $globals_ary[$name][1]);
+            foreach ($globals_ary[$name][0] as $line => $value) {
+                array_push($export_arr, $line);
+            }
+        }
+        foreach ($constants_ary as $name => $key) {
+            array_push($export_arr, $globals_ary[$name][1]);
+        }
+
+        return sort($export_arr);
     }
 }
