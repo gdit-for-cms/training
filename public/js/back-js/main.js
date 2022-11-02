@@ -228,9 +228,6 @@ function alertDelete() {
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
-                // html: 'You can use <b>bold text</b>, <br>' +
-                // '<a href="//sweetalert2.github.io">links</a> ' +
-                // 'and other HTML tags',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
@@ -516,7 +513,7 @@ $(document).ready(function () {
         var form = $(this);
         var formData = new FormData(form[0]);
         var actionUrl = form.attr('action');
-        console.log(form[0]);
+        // console.log(actionUrl);
         $.ajax({
             type: "POST",
             url: actionUrl,
@@ -541,11 +538,53 @@ $(document).ready(function () {
                     title: 'Oops...',
                     text: response.responseJSON.message,
                 });
-                setTimeout(() => {
-                    document.location.href = '/auth/logout'
-                }, "1600");
+                if (response.responseJSON.message == 'dang nhap qua han') {
+                    setTimeout(() => {
+                        document.location.href = '/auth/logout'
+                    }, "1600");
+                }
             }
         });
+    })
+
+    $('#remove_avatar').click(function (e) {
+        e.preventDefault();
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: 'deleteAvatar',
+                    dataType: 'json',
+                    success: function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: "Successfully",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        setTimeout(() => {
+                            document.location.reload(true);
+                        }, "1600");
+                    },
+                    error: function (response) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: response.responseJSON.message,
+                        });
+                    }
+                });
+
+            }
+        })
     })
 
     $('#topic-name').change(function () {

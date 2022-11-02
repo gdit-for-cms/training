@@ -27,7 +27,9 @@ class AdminController extends AppController
     }
 
     public function showAction(Request $request)
-    {
+    {   
+        // var_dump($_SESSION);
+        // exit;
         $user = $request->getUser();
         $user_ary = $this->obj_model->getById($user['id'])[0];
 
@@ -39,22 +41,20 @@ class AdminController extends AppController
     {
         try {
             $image_file = $request->getFiles()->get('image');
+
+            if (empty($image_file['name'])) {
+                return $this->errorResponse('Undefined image');
+            }
+
             $user = $request->getUser();
             $id = $user['id'];
-            // var_dump($user['id']);
-            // exit;
-            // Image not defined, let's exit
-            // if (!isset($image_file)) {
-            //     die('No file uploaded.');
-            // }
 
-            // Move the temp image file to the images/ directory
             $before_avatar = $user['avatar_image'];
+
             $image_dir = 'ckfinder/userfiles/images/avatars/';
             $name = $id . '_' . date("Y-m-d_h-i-s") . '_' . $image_file['name'];
             move_uploaded_file($image_file["tmp_name"], $image_dir . $name);
-            // echo(date("Y-m-d_h-i-s"));
-            // exit;
+
             $this->obj_model->updateOne(
                 [
                     'avatar_image' => $image_dir . $name,
@@ -64,12 +64,37 @@ class AdminController extends AppController
             $user['avatar_image'] = $image_dir . $name;
             $request->saveUser($user);
 
-            unlink($before_avatar);
+            if (!empty($before_avatar)) {
+                unlink($before_avatar);
+            }
 
             return $this->successResponse();
         } catch (\Throwable $th) {
             return $this->errorResponse('dang nhap qua han');
         };
+    }
+
+    public function deleteAvatar(Request $request)
+    {
+        $user = $request->getUser();
+        if (empty($user['avatar_image'])) {
+            return $this->errorResponse('Please update avatar');
+        }
+        $id = $user['id'];
+
+        $before_avatar = $this->obj_model->getById($id);
+        $before_avatar = $before_avatar[0]['avatar_image'];
+        $this->obj_model->updateOne(
+            [
+                'avatar_image' => NULL,
+            ],
+            "id = $id"
+        );
+        $user['avatar_image'] = '';
+        $request->saveUser($user);
+
+        unlink($before_avatar);
+        return $this->successResponse();
     }
 
     public function diffAction()

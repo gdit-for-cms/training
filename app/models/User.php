@@ -35,7 +35,7 @@ class User extends Model
     public function getById($id)
     {
         $db = static::getDB();
-        $query = 'SELECT u.id, u.name, u.email, u.room_id, u.position_id, u.gender, u.avatar_image, role.name role_name, room.name room_name, position.name position_name
+        $query = 'SELECT u.id, u.name, u.email, u.role_id, u.room_id, u.position_id, u.gender, u.avatar_image, role.name role_name, room.name room_name, position.name position_name
                     FROM user AS u
                     JOIN role ON u.role_id = role.id
                     JOIN room ON u.room_id = room.id
@@ -178,7 +178,7 @@ class User extends Model
                 'required',
                 'name',
                 'filled',
-                'maxLen:20',
+                'maxLen:50',
                 'minLen:5',
             ),
             'email' => array(

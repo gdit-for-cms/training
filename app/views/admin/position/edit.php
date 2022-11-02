@@ -16,6 +16,10 @@
                         <input type="text" class="form-control" name="name" id="name" value="<?= $position['name'] ?>">
                     </div>
                     <div class="mb-3">
+                        <label class="form-label" for="responsibility">Responsibility*</label>
+                        <input type="text" class="form-control" name="responsibility" id="responsibility" value="<?= $position['name'] ?>">
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label" for="description">Description</label>
                         <textarea class="form-control" rows="3" name="description" id="description"><?= $position['description'] ?></textarea>
                     </div>

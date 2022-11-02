@@ -26,7 +26,7 @@ class UserController extends AppController {
     public function indexAction(Request $request) {   
         $get_ary = $request->getGet()->all();
         
-        $results_per_page = 3;
+        $results_per_page = 10;
         array_shift($get_ary);
         $results_ary = $this->obj_model->getAllRelation($get_ary, $results_per_page);
         $this->data_ary['all_users'] = $results_ary['results'];
@@ -93,10 +93,12 @@ class UserController extends AppController {
     public function editAction(Request $request) {
         $id = $request->getGet()->get('id');
 
+        $user_ary = $this->obj_model->getById($id);
+
         $this->data_ary['all_roles'] = Role::getAll();
         $this->data_ary['all_rooms'] = Room::getAll();
         $this->data_ary['all_positions'] = Position::getAll();
-        $this->data_ary['user'] = $this->obj_model->getById($id, 'id, name, email, role_id, room_id, position_id');
+        $this->data_ary['user'] = $user_ary[0];
 
         $this->data_ary['content'] = 'user/edit';
     }
@@ -104,7 +106,9 @@ class UserController extends AppController {
     public function update(Request $request) {   
         $post_ary = $request->getPost()->all();
         
-        $check_user = $this->obj_model->getById($post_ary['id']);
+        $check_user = $this->obj_model->getBy('id', '=', $post_ary['id'])[0];
+        // var_dump($check_user);
+        // exit;
         $change_data_flg = false;
 
         foreach ($post_ary as $key => $value) {
@@ -144,17 +148,28 @@ class UserController extends AppController {
                 $role_id = $result_vali_ary['role_id'];
                 $room_id = $result_vali_ary['room_id'];
                 $position_id = $result_vali_ary['position_id'];
-    
-                $this->obj_model->updateOne(
-                    [
-                        'name' => $name,
-                        'password' => $password,
-                        'email' => $email,
-                        'role_id' => $role_id,
-                        'room_id' => $room_id,
-                        'position_id' => $position_id
-                    ],
-                    "id = $id");
+                if (empty($password)) {
+                    $this->obj_model->updateOne(
+                        [
+                            'name' => $name,
+                            'email' => $email,
+                            'role_id' => $role_id,
+                            'room_id' => $room_id,
+                            'position_id' => $position_id
+                        ],
+                        "id = $id");
+                } else {
+                    $this->obj_model->updateOne(
+                        [
+                            'name' => $name,
+                            'password' => $password,
+                            'email' => $email,
+                            'role_id' => $role_id,
+                            'room_id' => $room_id,
+                            'position_id' => $position_id
+                        ],
+                        "id = $id");
+                }
                     
                 return $this->successResponse();
             } catch (\Throwable $th) {

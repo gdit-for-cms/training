@@ -22,11 +22,14 @@
                     <div class="header_notification_warp d-flex align-items-center">
                     </div>
                     <div class="profile_info">
-                        <img src="https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg" alt="#">
-                        <div class="profile_info_iner">
+                        <?php if ($_SESSION['user']['avatar_image'] == '') { ?>
+                            <div class="rounded-circle border cursor-pointer flex items-center justify-center w-10 h-10 bg-gray-600 text-sm text-white font-bold align-middle"><?php echo strtoupper(substr($_SESSION['user']['name'], 0, 1)) ?></div>
+                        <?php } else { ?>
+                            <img src="/<?php echo $_SESSION['user']['avatar_image'] ?>" class="rounded-circle cursor-pointer border" alt="example placeholder" />
+                        <?php } ?>
+                        <div class="profile_info_iner border" style="top: 60px; right: -5px;">
                             <div class="profile_info_details">
                                 <a href="/admin/show">My Profile</a>
-                                <a href="#">Settings</a>
                                 <a href="/auth/logout">Log Out</a>
                             </div>
                         </div>
