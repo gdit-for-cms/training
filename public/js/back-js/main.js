@@ -2,8 +2,9 @@ function hideAll() {
     $('.div-text').hide();
     $('.div-value').hide();
     $('.div-all').hide();
-    $('.div-export-1').hide();
-    $('.div-export-2').hide();
+    $('.div-export').hide();
+    $('#compare-value').removeClass('hovered');
+    $('#compare-text').removeClass('hovered');
 }
 
 $(document).ready(function () {
@@ -43,18 +44,22 @@ $(document).ready(function () {
                 break;
         }
     });
+
     $('.div-value').show();
     $('.div-text').hide();
     $('.div-all').hide();
-    $('.div-export-1').hide();
+    $('.div-export').hide();
+    $('#compare-value').addClass('hovered');
     $('#compare-text').click(function () {
         hideAll();
         $('.div-text').show();
+        $(this).addClass('hovered');
     });
 
     $('#compare-value').click(function () {
         hideAll();
         $('.div-value').show();
+        $(this).addClass('hovered');
     });
 
     $('#compare-all').click(function () {
@@ -62,14 +67,12 @@ $(document).ready(function () {
         $('.div-all').show();
     });
 
-    $('#export-file1').click(function () {
+    $('#export-select').click(function () {
         hideAll();
-        $('.div-export-1').show();
+        $('.div-export').show();
     });
-    $('#export-file2').click(function () {
-        hideAll();
-        $('.div-export-2').show();
-    });
+
+    
 
     $('#search_input').keyup(function () {
        
@@ -106,24 +109,6 @@ $(document).ready(function () {
         updateSubmitBtn();
     });
 
-    const data = {};
-
-    data['file1']= {};
-    data['file2']= {};
-
-    
-    $('.container-file1 .click-btn').click(function () {
-        let hehe = $(this).text();
-        let line = $(this).data('id');
-        data['file1'][hehe] = line;
-    });
-
-    $('.container-file2 .click-btn').click(function () {
-        let hehe = $(this).text();
-        let line = $(this).data('id');
-        data['file2'][hehe] = line;
-    });
-
     $('#export-2').click(function () {
         $.each( $('.check-ok'), function( index, ele ) {
             if (ele.checked) {
@@ -145,8 +130,25 @@ $(document).ready(function () {
             }
         });
     });
-    
-    
+
+    $('#export-file1').click(function () {
+        Swal.fire({
+            title: 'Choose type of file',
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonColor: '#198754',
+            denyButtonColor: '#0d6efd',
+            confirmButtonText: 'php',
+            denyButtonText: `inc`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    ajaxExport('php');
+                } else if (result.isDenied) {
+                    ajaxExport('inc');
+                }
+            })
+    });
+
 });
 
 function updateSubmitBtn() {
@@ -159,5 +161,18 @@ function updateSubmitBtn() {
         $('#submit-file').prop('disabled', true);
     }
 }
-
+function ajaxExport(extension) {
+    $.ajax({
+        type: "POST",
+        url: "export",
+        data: {
+            data : export_file1,
+            ext : extension,
+        },
+        dataType: 'json',
+        success: function (response) {
+            
+        }
+    });
+}
 

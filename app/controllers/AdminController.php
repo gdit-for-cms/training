@@ -3,7 +3,9 @@
 namespace App\Controllers;
 
 use Core\Http\Request;
+use Core\Http\Response;
 use Core\Http\ResponseTrait;
+use Core\View;
 
 class AdminController extends AppController
 {
@@ -18,18 +20,29 @@ class AdminController extends AppController
         $this->data['content'] = 'diff-file/diff';
     }
 
-    public function testAction() {
-        $this->data['content'] = 'diff-file/test';
+    public function test() {
+        View::render('admin/diff-file/test.php');
     }
 
-    public function exportAction(Request $request) {
-        var_dump(1);
-        $data = $request->getPost()->get('data');
-        $test= $data['file1'];
-        var_dump($test);
-        exit;
-        die;
-        $this->data['content'] = 'diff-file/export';
+    public function export(Request $request) {
+        $f = fopen('php://memory', 'w'); 
+        $fh = file_get_contents('../storage/cache/file1.cache.php'); 
+        $fh = explode("\n", $fh);
+
+        foreach($fh as $each) {
+            fwrite($f , $each);
+        }
+
+        fseek($f, 0); 
+        
+        // Set headers to download file rather than displayed 
+        header('Content-Type: text/plain'); 
+        header("Content-Disposition: attachment; filename=data.php"); 
+        
+        // Output all remaining data on a file pointer 
+        fpassthru($f);
+  
+        fclose($f);
     }
 
     /**
@@ -72,27 +85,33 @@ class AdminController extends AppController
                 $by_text2 = $this->setVariableByText($data_after, $glo_in_file2);
 
                 // Set constants and variables in file by text with line number.
-                list($globals_file1, $constants_file1) = $this->setVariableWithLine($data_before, $glo_in_file1);
-                list($globals_file2, $constants_file2) = $this->setVariableWithLine($data_after, $glo_in_file2);
+                list($globals_file1, $constants_file1, $export_file1) = $this->setVariableWithLine($data_before, $glo_in_file1);
+                list($globals_file2, $constants_file2, $export_file2) = $this->setVariableWithLine($data_after, $glo_in_file2);
 
                 // Check that the empty.
                 if ((empty($const_in_file1) || empty($const_in_file2)) && (empty($glo_in_file1) || empty($glo_in_file2))) {
                     $this->data['uploadStatus'] = 'Success. No variable found';
                 } else {
+                    // return warning variable in 2 files.
+                    $this->data['warning_in_file1'] = $warning_in_file1;
+                    $this->data['warning_in_file2'] = $warning_in_file2;
+
+                    // return array of data for export.
+                    $this->data['export_file1'] = $export_file1;
+                    $this->data['export_file2'] = $export_file2;
+
+                    // return all globals and constants in 2 files.
+                    $this->data['globals_file1'] = $globals_file1;
+                    $this->data['globals_file2'] = $globals_file2;
+                    $this->data['constants_file1'] = $constants_file1;
+                    $this->data['constants_file2'] = $constants_file2;
+
                     // Check a same variable name in 2 files.
                     $glo_ary = array_intersect($glo_in_file1, $glo_in_file2);
                     $const_ary = array_intersect($const_in_file1, $const_in_file2);
 
-
                     if (empty($glo_ary) && empty($const_ary)) {
                         $this->data['uploadStatus'] = 'Success. Nothing to compare';
-                        $this->data['warning_in_file1'] = $warning_in_file1;
-                        $this->data['warning_in_file2'] = $warning_in_file2;
-                        // return all globals and constants in 2 files.
-                        $this->data['globals_file1'] = $globals_file1;
-                        $this->data['globals_file2'] = $globals_file2;
-                        $this->data['constants_file1'] = $constants_file1;
-                        $this->data['constants_file2'] = $constants_file2;
                     } else {
                         // return a same globals and constants in 2 files.
                         $this->data['arr'] = $glo_ary;
@@ -102,14 +121,6 @@ class AdminController extends AppController
                         $this->data['by_text2'] = $by_text2;
                         $this->data['const_in_file1'] = $const_in_file1;
                         $this->data['const_in_file2'] = $const_in_file2;
-                        $this->data['warning_in_file1'] = $warning_in_file1;
-                        $this->data['warning_in_file2'] = $warning_in_file2;
-
-                        // return all globals and constants in 2 files.
-                        $this->data['globals_file1'] = $globals_file1;
-                        $this->data['globals_file2'] = $globals_file2;
-                        $this->data['constants_file1'] = $constants_file1;
-                        $this->data['constants_file2'] = $constants_file2;
                     }
                 }
             } else {
@@ -123,7 +134,7 @@ class AdminController extends AppController
     /**
      * Get the variable in import file
      *
-     * @param  array  $data, $glo_in_file, $const_in_file, $in_file
+     * @param  array  $data
      * @return array $glo_in_file, $const_in_file, $in_file
      */
     public function setVariable($data, $glo_in_file = [], $const_in_file = [], $in_file = [], $check_distinct = []) {
@@ -221,66 +232,61 @@ class AdminController extends AppController
     }
 
     /**
-     * Set variable value by text with line number
+     * Set variable value by text with line number and set array of data for export
      *
      * @param  array  $data (array content in file upload)
      * @param  array  $glo_in_file
-     * @return array  $globals_ary, $constants_ary
+     * @return array  $globals_ary, $constants_ary, $export_file
      */
-    public function setVariableWithLine($data, $glo_in_file, $globals_ary = [], $constants_ary = []) {
+    public function setVariableWithLine($data, $glo_in_file) {
+        $globals_ary = array();
+        $constants_ary = array();
+        $line_export_ary = array();
+        $export_file = array();
+
         for ($line = 0; $line < count($data); $line++) {
             if (preg_match('/^setDefineArray\(\'(.+?)\', \$(.+?)\)/i', $data[$line], $match)) {
                 if (!isset($globals_ary[$match[1]])) {
                     $globals_ary[$match[1]] = array($match[2], $line);
+                    array_push($line_export_ary, $line);
                 }
             } else if (preg_match('/^define\("(.+?)\", (.+?)\)/i', $data[$line], $match)) {
                 if (!isset($constants_ary[$match[1]])) {
                     $constants_ary[$match[1]] = array($match[2], $line);
+                    array_push($export_file, $data[$line]);
                 }
             }
         }
         foreach ($glo_in_file as $each) {
             // The variable assigned to the global variable.
             $check = $globals_ary[$each][0];
-            // Line have setDefineArray function.   
+            // Line contain setDefineArray function.   
             $index = $globals_ary[$each][1];
             $globals_ary[$each][0] = array();
             for ($line = $index; $line > 0; $line--) {
                 if (preg_match('/^\$' . $check . '( = array\()/i', $data[$line])) {
+                    array_push($line_export_ary, $line);
                     for ($i = $line + 1; $i < $index; $i++) {
                         if (preg_match('/^\)\;/i', $data[$i])) {
+                            array_push($line_export_ary, $i);
                             break;
                         } else {
                             $result = str_replace(' ', '&nbsp;', $data[$i]);
                             $globals_ary[$each][0][$i] = $result;
+                            array_push($line_export_ary, $i);
                         }
                     }
                     break;
                 }
             }
         }
-        
-        return array($globals_ary, $constants_ary);
-    }
 
-    /**
-     * Get all lines where it defines the variable
-     *
-     * @param  array  $globals_ary
-     * @param  array  $constants_ary
-     * @return array  $export_arr
-     */
-    public function getLineToExport($export_arr = [], $globals_ary, $constants_ary) {
-        foreach ($globals_ary as $name => $key) {
-            array_push($export_arr, $globals_ary[$name][1]);
-            foreach ($globals_ary[$name][0] as $line => $value) {
-                array_push($export_arr, $line);
-            }
-        }
-        foreach ($constants_ary as $name => $key) {
-            array_push($export_arr, $globals_ary[$name][1]);
+        // Set array of data for export
+        sort($line_export_ary);
+        foreach ($line_export_ary as $line) {
+            array_push($export_file, $data[$line]);
         }
 
-        return sort($export_arr);
+        return array($globals_ary, $constants_ary, $export_file);
     }
 }

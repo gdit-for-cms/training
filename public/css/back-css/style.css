@@ -547,3 +547,16 @@ table {
     text-align: center;
     font-family: ui-monospace,monospace;
 }
+
+#compare-value.hovered {
+    color: #fff!important;
+    background-color: #198754!important;
+    border-color: #198754!important;
+}
+
+
+#compare-text.hovered {
+    color: #fff!important;
+    background-color: #0d6efd!important;
+    border-color: #0d6efd!important;
+}
