@@ -554,9 +554,13 @@ table {
     border-color: #198754!important;
 }
 
-
 #compare-text.hovered {
     color: #fff!important;
     background-color: #0d6efd!important;
     border-color: #0d6efd!important;
+}
+
+.div-custom {
+    display: flex;
+    flex-direction: column;
 }

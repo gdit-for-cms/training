@@ -2,14 +2,45 @@ function hideAll() {
     $('.div-text').hide();
     $('.div-value').hide();
     $('.div-all').hide();
-    $('.div-export').hide();
     $('#compare-value').removeClass('hovered');
     $('#compare-text').removeClass('hovered');
 }
 
+function updateSubmitBtn() {
+    const file1Value = file1.value.trim();
+    const file2Value = file2.value.trim();
+    debugger;
+    if (file1Value && file2Value) {
+        $('#submit-file').prop('disabled', false);
+    } else {
+        $('#submit-file').prop('disabled', true);
+    }
+}
+
+function exportFile(name) {
+    $(`#export-${name}`).click(function () {
+        Swal.fire({
+            title: 'Choose type of file',
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonColor: '#198754',
+            denyButtonColor: '#0d6efd',
+            confirmButtonText: 'php',
+            denyButtonText: `inc`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.open('export?name=' + name + '&ext=php')
+                } else if (result.isDenied) {
+                    window.open('export?name=' + name + '&ext=inc')
+                }
+            })
+    });
+}
+
 $(document).ready(function () {
     const file1 = document.getElementById('file1');
-    const file2 = document.getElementById('file1')
+    const file2 = document.getElementById('file2');
+    // Filter
     $('#select-filter').change(function () {
         var type = $(this).val();
         switch (type) {
@@ -45,10 +76,10 @@ $(document).ready(function () {
         }
     });
 
+    // Show result 
     $('.div-value').show();
     $('.div-text').hide();
     $('.div-all').hide();
-    $('.div-export').hide();
     $('#compare-value').addClass('hovered');
     $('#compare-text').click(function () {
         hideAll();
@@ -67,13 +98,7 @@ $(document).ready(function () {
         $('.div-all').show();
     });
 
-    $('#export-select').click(function () {
-        hideAll();
-        $('.div-export').show();
-    });
-
-    
-
+    // Search
     $('#search_input').keyup(function () {
        
         if ($(this).val().length == 0) {
@@ -101,6 +126,8 @@ $(document).ready(function () {
             ele.parentNode.classList.remove('d-none');
         })
     });
+
+    // Check submit button on upload file
     $('#file1').change(function () {
         updateSubmitBtn();
     });
@@ -131,48 +158,17 @@ $(document).ready(function () {
         });
     });
 
-    $('#export-file1').click(function () {
-        Swal.fire({
-            title: 'Choose type of file',
-            showDenyButton: true,
-            showCancelButton: true,
-            confirmButtonColor: '#198754',
-            denyButtonColor: '#0d6efd',
-            confirmButtonText: 'php',
-            denyButtonText: `inc`,
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    ajaxExport('php');
-                } else if (result.isDenied) {
-                    ajaxExport('inc');
-                }
-            })
+    // Export
+    exportFile('file1');
+    exportFile('file2');
+
+    $('#export-select').click(function(e) {
+        $('.box-lightbox').addClass('open');
     });
 
+    $('.js-lightbox-close').click(function(e) {
+        $('.box-lightbox').removeClass('open');
+    });
 });
 
-function updateSubmitBtn() {
-    const file1Value = file1.value.trim();
-    const file2Value = file2.value.trim();
-    debugger;
-    if (file1Value && file2Value) {
-        $('#submit-file').prop('disabled', false);
-    } else {
-        $('#submit-file').prop('disabled', true);
-    }
-}
-function ajaxExport(extension) {
-    $.ajax({
-        type: "POST",
-        url: "export",
-        data: {
-            data : export_file1,
-            ext : extension,
-        },
-        dataType: 'json',
-        success: function (response) {
-            
-        }
-    });
-}
 

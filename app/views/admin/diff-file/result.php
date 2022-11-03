@@ -76,11 +76,6 @@
     </div>
 </div>
 
-<script type="text/javascript">
-    const export_file1 = <?php echo json_encode($export_file1); ?>;
-    const export_file2 = <?php echo json_encode($export_file2); ?>;
-</script>
-
 <!-- All render function -->
 <?php function warning($warning_in_file, $file) {
     if ($warning_in_file) { ?>

@@ -25,11 +25,22 @@ class AdminController extends AppController
     }
 
     public function export(Request $request) {
-        $f = fopen('php://memory', 'w'); 
-        $fh = file_get_contents('../storage/cache/file1.cache.php'); 
-        $fh = explode("\n", $fh);
+        $name = $request->getGet()->get('name');
+        $extension = $request->getGet()->get('ext');
 
-        foreach($fh as $each) {
+        $file_name = "diff_file_" . time() . '.' . $extension;
+
+        $f = fopen('php://memory', 'w'); 
+
+        if ($name == 'file1') {
+            $data = $_SESSION['data_export1'];
+        } else if ($name == 'file2') {
+            $data = $_SESSION['data_export2'];
+        }
+
+        fwrite($f , "<?php \r");
+        foreach($data as $each) {
+            
             fwrite($f , $each);
         }
 
@@ -37,7 +48,7 @@ class AdminController extends AppController
         
         // Set headers to download file rather than displayed 
         header('Content-Type: text/plain'); 
-        header("Content-Disposition: attachment; filename=data.php"); 
+        header("Content-Disposition: attachment; filename=$file_name"); 
         
         // Output all remaining data on a file pointer 
         fpassthru($f);
@@ -50,7 +61,7 @@ class AdminController extends AppController
      *
      * @return view with status and variables
      */
-    public function compareAction() {
+    public function compareAction(Request $request) {
         $this->data['content'] = 'diff-file/result';
 
         if (isset($_POST['importSubmit'])) {
@@ -92,6 +103,11 @@ class AdminController extends AppController
                 if ((empty($const_in_file1) || empty($const_in_file2)) && (empty($glo_in_file1) || empty($glo_in_file2))) {
                     $this->data['uploadStatus'] = 'Success. No variable found';
                 } else {
+                    // Session
+                    $session = $request->getSession();
+                    $session->data_export1 = $export_file1;
+                    $session->data_export2 = $export_file2;
+                   
                     // return warning variable in 2 files.
                     $this->data['warning_in_file1'] = $warning_in_file1;
                     $this->data['warning_in_file2'] = $warning_in_file2;
@@ -282,6 +298,7 @@ class AdminController extends AppController
         }
 
         // Set array of data for export
+        $line_export_ary = array_unique($line_export_ary);
         sort($line_export_ary);
         foreach ($line_export_ary as $line) {
             array_push($export_file, $data[$line]);
