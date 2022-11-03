@@ -33,6 +33,10 @@ class Position extends Model {
         return $this->find($id, $column);
     }
 
+    public static function getColAccessById($id) {
+        return (new self)->find($id, 'access_page');
+    }
+
     public function create($data) {
         return $this->insert($data);
     }

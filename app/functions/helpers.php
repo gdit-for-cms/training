@@ -1,6 +1,7 @@
 <?php
 
 use Core\Http\Request;
+use App\Models\Position;
 
 if (!function_exists('checkAdmin')) {
      function checkAdmin() {
@@ -11,6 +12,36 @@ if (!function_exists('checkAdmin')) {
           } else {
                return FALSE;
           } 
+     }
+}
+
+if (!function_exists('isLogged')) {
+     function isLogged() {
+          $obj_request = new Request;
+          $admin_ary = $obj_request->getUser();
+          // var_dump($admin_ary);
+          // exit;
+          if (isset($admin_ary)) {
+               return TRUE;
+          } else {
+               return FALSE;
+          } 
+     }
+}
+
+if (!function_exists('checkAccess')) {
+     function checkAccess($controller) {
+          $obj_request = new Request;
+          $user_position = $obj_request->getUser()['position_id'];
+
+          $access_page =  Position::getColAccessById($user_position)['access_page'];
+          $access_page = explode(',', $access_page);
+
+          if (in_array($controller, $access_page)) {
+               return TRUE;
+          } else {
+               return FALSE;
+          }
      }
 }
 

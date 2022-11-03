@@ -15,6 +15,17 @@
                         <input type="text" class="form-control" name="name" id="name" value="" placeholder="Name...">
                     </div>
                     <div class="mb-3">
+                        <label class="form-label" for="responsibility">Pages allowed to access*</label>
+                        <?php foreach($pages as $page) { ?>
+                            <div class="form-check">
+                                <input class="form-check-input" name="pages[]" type="checkbox" value="<?php echo $page ?>" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    <?php echo $page ?>
+                                </label>
+                            </div>
+                        <?php } ?>
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label" for="description">Description</label>
                         <textarea class="form-control" rows="3" name="description" id="description" placeholder="Description..."></textarea>
                     </div>
@@ -48,7 +59,7 @@
 </div>
 <script src="/ckeditor/ckeditor.js"></script>
 <script>
-    CKEDITOR.replace( 'description' );
+    CKEDITOR.replace('description');
 </script>
 <script>
     const submitBtn = document.querySelector('#submit')
@@ -74,5 +85,4 @@
             validate()
         })
     }
-
 </script>
