@@ -136,26 +136,59 @@ $(document).ready(function () {
         updateSubmitBtn();
     });
 
-    $('#export-2').click(function () {
-        $.each( $('.check-ok'), function( index, ele ) {
-            if (ele.checked) {
-                let hehe = ele.parentNode.childNodes[3].childNodes[0].data;
+    // Find duplicate variables name in 2 files.
+    const toFindDuplicates = arr => arr.filter((item, index) => arr.indexOf(item) !== index)
+    var list = [];
+    $('.check-ok').each(function( index, ele ) {
+        let check_name = $(this).parents('tr').find('.blob-code-inner').text();
+            list.push(check_name);
+    });
+    var duplicateEle = toFindDuplicates(list);
+    
+    // Change type of element when it's in duplicateEle.
+    $('.check-ok').each(function( index, ele ) {
+        let check_name = $(this).parents('tr').find('.blob-code-inner').text();
+            if (jQuery.inArray(check_name, duplicateEle) !== -1) {
+                $(this).prop("type", "radio");
+                $(this).prop("name", check_name);
+            }
+    });
+    
+    // Export selected variables
+    $('#export-btn').click(function () {
+        var not_pick1 = [];
+        var not_pick2 = [];
+        $.each( $('.container-file1 .check-ok'), function( index, ele ) {
+            if (!ele.checked) {
                 let line = $(ele).parents('tr').find('.blob-num').text();
-                data['file1'][hehe] = line;
+                not_pick1.push(line);
             }
         });
-        console.log(data);
-        $.ajax({
-            type: "post",
-            url: "export",
-            data: {
-                data : data
-            },
-            dataType: 'json',
-            success: function (response) {
-                
+        $.each( $('.container-file2 .check-ok'), function( index, ele ) {
+            if (!ele.checked) {
+                let line = $(ele).parents('tr').find('.blob-num').text();
+                not_pick2.push(line);
             }
         });
+       
+        var arrStr1 = encodeURIComponent(JSON.stringify(not_pick1));
+        var arrStr2 = encodeURIComponent(JSON.stringify(not_pick2));
+
+        Swal.fire({
+            title: 'Choose type of file',
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonColor: '#198754',
+            denyButtonColor: '#0d6efd',
+            confirmButtonText: 'php',
+            denyButtonText: `inc`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.open('exportSelect?file1=' + arrStr1 + '&file2=' + arrStr2 + '&ext=php')
+                } else if (result.isDenied) {
+                    window.open('exportSelect?file1=' + arrStr1 + '&file2=' + arrStr2 + '&ext=inc')
+                }
+            })
     });
 
     // Export
@@ -170,5 +203,3 @@ $(document).ready(function () {
         $('.box-lightbox').removeClass('open');
     });
 });
-
-

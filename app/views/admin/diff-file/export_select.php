@@ -19,26 +19,13 @@
                                             <thead>
                                                 <tr>
                                                     <th class="th-line"></th>
-                                                    <th class="th-line">File 2</th>
+                                                    <th class="th-line">File 1</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php if (!empty($globals_file1)) {
-                                                    foreach ($globals_file1 as $name => $key) { ?>
-                                                        <tr>
-                                                            <td class="blob-num"><?php echo $globals_file1[$name][1]; ?></td>
-                                                            <td class="blob-code blob-code-context ">
-                                                                <input type="checkbox" class="check-ok add-line-comment" name="hehe">
-                                                                <span class="blob-code-inner blob-name "><?php echo $name; ?> <span class="note">(array)</span> </span>
-                                                            </td>
-                                                        </tr>
-
-                                                        <?php foreach ($globals_file1[$name][0] as $key => $value) { ?>
-                                                            <tr>
-                                                                <td class="blob-num"><?php echo $key; ?></td>
-                                                                <td class="blob-code blob-code-context"><?php echo $value; ?></td>
-                                                            </tr>
-                                                <?php }}}; ?>
+                                                <?php if (!empty($globals_file1)) { 
+                                                    renderAllGlobals($globals_file1, $export = TRUE); 
+                                                } ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -51,22 +38,9 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php if (!empty($globals_file2)) {
-                                                    foreach ($globals_file2 as $name => $key) { ?>
-                                                        <tr>
-                                                            <td class="blob-num"><?php echo $globals_file2[$name][1]; ?></td>
-                                                            <td class="blob-code blob-code-context ">
-                                                                <input type="checkbox" class="check-ok add-line-comment" name="hehe">
-                                                                <span class="blob-code-inner blob-name "><?php echo $name; ?> <span class="note">(array)</span> </span>
-                                                            </td>
-                                                        </tr>
-
-                                                        <?php foreach ($globals_file2[$name][0] as $key => $value) { ?>
-                                                            <tr>
-                                                                <td class="blob-num"><?php echo $key; ?></td>
-                                                                <td class="blob-code blob-code-context"><?php echo $value; ?></td>
-                                                            </tr>
-                                                <?php }}}; ?>
+                                                <?php if (!empty($globals_file2)) { 
+                                                    renderAllGlobals($globals_file2, $export = TRUE); 
+                                                } ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -83,7 +57,9 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php if (!empty($constants_file1)) { renderAllConstant($constants_file1); } ?>
+                                                <?php if (!empty($constants_file1)) { 
+                                                    renderAllConstant($constants_file1, $export = TRUE); 
+                                                } ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -96,7 +72,9 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php if (!empty($constants_file2)) { renderAllConstant($constants_file2); } ?>
+                                                <?php if (!empty($constants_file2)) { 
+                                                    renderAllConstant($constants_file2, $export = TRUE); 
+                                                } ?>
                                             </tbody>
                                         </table>
                                     </div>

@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use Core\Http\Request;
-use Core\Http\Response;
 use Core\Http\ResponseTrait;
 use Core\View;
 
@@ -20,10 +19,10 @@ class AdminController extends AppController
         $this->data['content'] = 'diff-file/diff';
     }
 
-    public function test() {
-        View::render('admin/diff-file/test.php');
-    }
-
+    /**
+     * Output a file containing the variables from file upload.
+     * Note: Not use AJAX for this method. Call it by "href" and it will automatically return the output file.
+     */
     public function export(Request $request) {
         $name = $request->getGet()->get('name');
         $extension = $request->getGet()->get('ext');
@@ -39,18 +38,61 @@ class AdminController extends AppController
         }
 
         fwrite($f , "<?php \r");
-        foreach($data as $each) {
+        foreach($data as $key => $value) {
             
-            fwrite($f , $each);
+            fwrite($f , $value);
         }
 
         fseek($f, 0); 
         
-        // Set headers to download file rather than displayed 
+        // Set headers to download file rather than displayed.
         header('Content-Type: text/plain'); 
         header("Content-Disposition: attachment; filename=$file_name"); 
         
-        // Output all remaining data on a file pointer 
+        // Output all remaining data on a file pointer.
+        fpassthru($f);
+  
+        fclose($f);
+    }
+
+    /**
+     * Output a file containing the variables to export that have been selected from view.
+     * Note: Not use AJAX for this method. Call it by "href" and it will automatically return the output file.
+     */
+    public function exportSelect(Request $request) {
+        $extension = $request->getGet()->get('ext');
+        $not_pick_line1 = $request->getGet()->get('file1');
+        $not_pick_line2 = $request->getGet()->get('file2');
+        
+        $not_pick_line1 = json_decode($not_pick_line1);
+        $not_pick_line2 = json_decode($not_pick_line2);
+
+        $file_name = "diff_file_" . time() . '.' . $extension;
+
+        $f = fopen('php://memory', 'w'); 
+
+        $data_export1  = $_SESSION['data_export1'];
+        $data_export2  = $_SESSION['data_export2'];
+
+        $data1 = $this->setDataForExport($data_export1, $not_pick_line1);
+        $data2 = $this->setDataForExport($data_export2, $not_pick_line2);
+
+        fwrite($f , "<?php \r");
+        foreach($data1 as $key => $val) {
+            fwrite($f , $val);
+        }
+
+        foreach($data2 as $key => $val) {
+            fwrite($f , $val);
+        }
+
+        fseek($f, 0); 
+        
+        // Set headers to download file rather than displayed.
+        header('Content-Type: text/plain'); 
+        header("Content-Disposition: attachment; filename=$file_name"); 
+        
+        // Output all remaining data on a file pointer.
         fpassthru($f);
   
         fclose($f);
@@ -179,7 +221,7 @@ class AdminController extends AppController
             // Line have setDefineArray function. 
             $index = $in_file[$each][1]; 
             $in_file[$each][0] = array();
-            for ($line = $index; $line > 0; $line--) {
+            for ($line = $index; $line >= 0; $line--) {
                 if (preg_match('/^\$' . $check . '( = array\()/i', $data[$line])) {
                     for ($i = $line + 1, $line_skip = $i; $i < $index; $i++) {
                         if (preg_match('/^\)\;/i', $data[$i])) {
@@ -229,7 +271,7 @@ class AdminController extends AppController
             // Line have setDefineArray function.   
             $index = $in_file[$each][1];
             $in_file[$each][0] = array();
-            for ($line = $index; $line > 0; $line--) {
+            for ($line = $index; $line >= 0; $line--) {
                 if (preg_match('/^\$' . $check . '( = array\()/i', $data[$line])) {
                     for ($i = $line + 1; $i < $index; $i++) {
                         if (preg_match('/^\)\;/i', $data[$i])) {
@@ -257,19 +299,18 @@ class AdminController extends AppController
     public function setVariableWithLine($data, $glo_in_file) {
         $globals_ary = array();
         $constants_ary = array();
-        $line_export_ary = array();
         $export_file = array();
 
         for ($line = 0; $line < count($data); $line++) {
             if (preg_match('/^setDefineArray\(\'(.+?)\', \$(.+?)\)/i', $data[$line], $match)) {
                 if (!isset($globals_ary[$match[1]])) {
                     $globals_ary[$match[1]] = array($match[2], $line);
-                    array_push($line_export_ary, $line);
+                    $export_file[$line] = $data[$line];
                 }
             } else if (preg_match('/^define\("(.+?)\", (.+?)\)/i', $data[$line], $match)) {
                 if (!isset($constants_ary[$match[1]])) {
                     $constants_ary[$match[1]] = array($match[2], $line);
-                    array_push($export_file, $data[$line]);
+                    $export_file[$line] = $data[$line];
                 }
             }
         }
@@ -279,17 +320,17 @@ class AdminController extends AppController
             // Line contain setDefineArray function.   
             $index = $globals_ary[$each][1];
             $globals_ary[$each][0] = array();
-            for ($line = $index; $line > 0; $line--) {
+            for ($line = $index; $line >= 0; $line--) {
                 if (preg_match('/^\$' . $check . '( = array\()/i', $data[$line])) {
-                    array_push($line_export_ary, $line);
+                    $export_file[$line] = $data[$line];
                     for ($i = $line + 1; $i < $index; $i++) {
                         if (preg_match('/^\)\;/i', $data[$i])) {
-                            array_push($line_export_ary, $i);
+                            $export_file[$i] = $data[$i];
                             break;
                         } else {
                             $result = str_replace(' ', '&nbsp;', $data[$i]);
                             $globals_ary[$each][0][$i] = $result;
-                            array_push($line_export_ary, $i);
+                            $export_file[$i] = $data[$i];
                         }
                     }
                     break;
@@ -298,12 +339,58 @@ class AdminController extends AppController
         }
 
         // Set array of data for export
-        $line_export_ary = array_unique($line_export_ary);
-        sort($line_export_ary);
-        foreach ($line_export_ary as $line) {
-            array_push($export_file, $data[$line]);
-        }
+        ksort($export_file);
 
         return array($globals_ary, $constants_ary, $export_file);
+    }
+
+    /**
+     * Set array data for export without the line from array($not_pick_line)
+     *
+     * @param  array  $data_session (array content from export data)
+     * @param  array  $not_pick_line (lines containing variables that you don't want to export)
+     * @return array  $result
+     */
+    public function setDataForExport($data_session, $not_pick_line) {
+        $data = array();
+        $result = array();
+        $temp = array();
+
+        foreach ($data_session as $key => $value) {
+            if (!in_array($key, $not_pick_line)) {
+                array_push($data, $value);
+            }
+        }
+
+        for ($line = 0; $line < count($data); $line++) {
+            if (preg_match('/^setDefineArray\(\'(.+?)\', \$(.+?)\)/i', $data[$line], $match)) {
+                $result[$line] = $data[$line];
+                $temp[$match[1]] = array($match[2], $line);
+            } else if (preg_match('/^define\("(.+?)\", (.+?)\)/i', $data[$line], $match)) {
+                $result[$line] = $data[$line];
+            }
+        } 
+        
+        foreach ($temp as $each) {
+            $check = $each[0];
+            $index = $each[1];
+            for ($j = $index; $j >= 0 ; $j = $j - 1) {
+                if (preg_match('/^\$' . $check . '( = array\()/i', $data[$j])) {
+                    $result[$j] = $data[$j];
+                    for ($i = $j + 1; $i < $index; $i++) {
+                        if (preg_match('/^\)\;/i', $data[$i])) {
+                            $result[$i] = $data[$i];
+                            break;
+                        } else {
+                            $result[$i] = $data[$i];
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        ksort($result);
+
+        return $result;
     }
 }
