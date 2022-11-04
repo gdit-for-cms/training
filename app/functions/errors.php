@@ -14,7 +14,9 @@ function showError($errorName) {
         "minLen" => "The entered text too short",
         "email" => "The entered text must be email format",
         "name" => "The entered text must be name format",
+        "gender" => "'gender' you selected does not exist",
         "password" => "The entered text must be password format",
+        "pageExisted" => "'page' you selected does not exist"
     ];
     if ($error_ary[$errorName]) {
         return $error_ary[$errorName];

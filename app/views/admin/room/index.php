@@ -2,7 +2,7 @@
     <div class="white_box_tittle ">
         <div class="main-title2 flex items-center justify-between">
             <h4 class="mb-2 nowrap">Room</h4>
-            <a href='/room/new'><button type="button" class="btn btn-success">Create</button></a>
+            <a href='/admin/room/new'><button type="button" class="btn btn-success">Create</button></a>
         </div>
     </div>
     <div class="box_body">
@@ -21,7 +21,7 @@
                     </div>
                     <div class="table_room collapse" id="collapseseven" aria-labelledby="headingOne" data-parent="#accordion2">
                         <div class="d-flex justify-content-end mt-2 mr-6">
-                            <a href='/room/edit?id=<?= $room['id'] ?>' class="edit-btn"><button type="button" class="btn btn-info text-white mr-2">Edit</button></a>
+                            <a href='/admin/room/edit?id=<?= $room['id'] ?>' class="edit-btn btn btn-info text-white mr-2">Edit</a>
                             <button type="button" data-id="<?= $room['id'] ?>" class="btn btn-danger delete-btn text-white">Delete</button>
                         </div>
                         <div class="card-body row justify-content-center" style="padding-top: 25px;">
@@ -164,6 +164,7 @@
             if (ele.childNodes.length == 1) {
                 ele.parentNode.classList.add('hidden')
                 ele.parentNode.parentNode.innerHTML = '<div class="box_body"><p class="f-w-400 ">No memeber</p></div>'
+                console.log(ele.parentNode.parentNode.parentNode.childNodes)
             }
         })
     }

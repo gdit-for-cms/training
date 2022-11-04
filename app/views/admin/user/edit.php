@@ -16,6 +16,14 @@
                         <input id="name" name="name" type="text" value="<?= $user['name'] ?>" class="form-control">
                     </div>
                     <div class="mb-3">
+                        <label class="form-label" for="gender">Gender*</label>
+                        <select id="gender" name="gender" data-gender="<?php echo $user['gender'] ?>" class="form-control">
+                            <option value="other">Other</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label" for="inputAddress">Email*</label>
                         <input id="email" name="email" type="email" value="<?= $user['email'] ?>" class="form-control" placeholder="Email">
                     </div>
@@ -67,8 +75,8 @@
                             </select>
                         </div>
                     </div>
+                    <button id="submit" class="btn btn-primary">Save</button>
                 </form>
-                <button id="submit" class="btn btn-primary">Save</button>
             </div>
         </div>
     </div>
@@ -105,6 +113,7 @@
     const roomInput = document.querySelector('#room')
     const positionInput = document.querySelector('#position')
     const idUserEditInput = document.querySelector('#id')
+    const genderEle = document.querySelector('#gender')
 
     const dataUser = {
         'name': nameInput.value,
@@ -126,9 +135,19 @@
         // checkChangeInput('change', roleInput)
         // checkChangeInput('change', positionInput)
         checkConfirmPassword()
+        selectGender()
     }
     start()
-
+    function selectGender(params) {
+        let optionGender = genderEle.querySelectorAll('option')
+        optionGender.forEach( (ele) => {
+            if (ele.value == genderEle.getAttribute('data-gender')) {
+                ele.selected = true
+            } else {
+                ele.selected = false
+            }
+        })
+    }
     function validate() {
         const dataUserCurrent = {
             'name': nameInput.value,

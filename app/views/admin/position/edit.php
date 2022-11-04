@@ -9,15 +9,35 @@
         </div>
         <div class="white_card_body">
             <div class="card-body">
-                <form id="form_update_position" class="" action="update" method="PUT">
+                <form id="form_update_position" class="" action="update" method="POST">
                     <div class="mb-3">
                         <label class="form-label" for="name">Name*</label>
                         <input id="id" name="id" value="<?= $position['id'] ?>" type="hidden" class="form-control">
                         <input type="text" class="form-control" name="name" id="name" value="<?= $position['name'] ?>">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="responsibility">Responsibility*</label>
-                        <input type="text" class="form-control" name="responsibility" id="responsibility" value="<?= $position['name'] ?>">
+                        <label class="form-label" for="responsibility">Pages allowed to access*</label>
+                        <?php $access_page_ary = explode(',', $position['access_page']); ?>
+                        <?php foreach($pages as $page) { ?>
+                            <div class="form-check">
+                                <input class="form-check-input" name="access_page[]" type="checkbox"
+                                <?php foreach ($access_page_ary as $access_page) {
+                                    if ($access_page == $page) {
+                                        echo 'checked';
+                                    }
+                                } ?>
+                                 value="<?php echo $page ?>" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    <?php echo $page ?>
+                                </label>
+                            </div>
+                        <?php } ?>
+                        <div class="form-check">
+                            <input class="form-check-input" name="access_page[]" type="checkbox" value="admin" id="">
+                            <label class="form-check-label text-red-400" for="flexCheckDefault">
+                                admin
+                            </label>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="description">Description</label>
@@ -29,9 +49,11 @@
         </div>
     </div>
 </div>
-<script src="/ckeditor/ckeditor.js"></script>
+<!-- <script src="/ckeditor/ckeditor.js"></script>
+<script src="/ckfinder/ckfinder.js"></script> -->
 <script>
-    CKEDITOR.replace( 'description' );
+    // CKFinder.setupCKEditor();
+    // CKEDITOR.replace( 'description' );
 </script>
 <script>
     const submitBtn = document.querySelector('#submit')

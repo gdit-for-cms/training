@@ -5,7 +5,7 @@
         <div class="white_box_tittle">
           <div class="main-title2 flex items-center justify-between">
             <h4 class="mb-2 nowrap">User</h4>
-            <a href="/user/new"><button type="button" class="btn btn-success">Create</button></a>
+            <a href="/admin/user/new"><button type="button" class="btn btn-success">Create</button></a>
           </div>
         </div>
         <div class="white_card_body">
@@ -65,7 +65,7 @@
                     <td class="room_name"><?= $user['room_name'] ?></td>
                     <td class="position_name"><?= $user['position_name'] ?></td>
                     <td class="flex items-center justify-center">
-                      <a href='/user/edit?id=<?= $user['id'] ?>' class="edit_btn mr-2"><button type="button" class="btn btn-info text-white">Edit</button></a>
+                      <a href='/admin/user/edit?id=<?= $user['id'] ?>' class="edit_btn mr-2"><button type="button" class="btn btn-info text-white">Edit</button></a>
                       <button type="button" data-id="<?= $user['id'] ?>" class="btn btn-danger delete-btn text-white">Delete</button>
                     </td>
                   </tr>

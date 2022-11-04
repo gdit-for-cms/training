@@ -16,14 +16,20 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="responsibility">Pages allowed to access*</label>
-                        <?php foreach($pages as $page) { ?>
+                        <?php foreach ($pages as $page) { ?>
                             <div class="form-check">
-                                <input class="form-check-input" name="pages[]" type="checkbox" value="<?php echo $page ?>" id="">
+                                <input class="form-check-input" name="access_page[]" type="checkbox" value="<?php echo $page ?>" id="">
                                 <label class="form-check-label" for="flexCheckDefault">
                                     <?php echo $page ?>
                                 </label>
                             </div>
                         <?php } ?>
+                        <div class="form-check">
+                            <input class="form-check-input" name="access_page[]" type="checkbox" value="admin" id="">
+                            <label class="form-check-label text-red-400" for="flexCheckDefault">
+                                admin
+                            </label>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="description">Description</label>
@@ -57,9 +63,11 @@
         </div>
     </div>
 </div>
-<script src="/ckeditor/ckeditor.js"></script>
+<!-- <script src="/ckeditor/ckeditor.js"></script>
+<script src="/ckfinder/ckfinder.js"></script> -->
 <script>
-    CKEDITOR.replace('description');
+    // CKFinder.setupCKEditor();
+    // CKEDITOR.replace('description');
 </script>
 <script>
     const submitBtn = document.querySelector('#submit')

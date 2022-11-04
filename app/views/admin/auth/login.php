@@ -21,7 +21,7 @@
                             <? echo $error ?>
                         </div>
                     <?php } ?>
-                    <form action="/auth/loginProcess" method="POST">
+                    <form action="admin/auth/loginProcess" method="POST">
                     <div class="form-floating mb-3">
                         <input type="email" name="email" class="form-control" id="floatingInput" placeholder="name@example.com">
                         <label for="floatingInput">Email address</label>
@@ -31,8 +31,7 @@
                         <label for="floatingPassword">Password</label>
                     </div>
                     <div class="d-grid">
-                        <button class="btn btn-primary btn-login text-uppercase fw-bold" type="submit">Sign
-                        in</button>
+                        <button class="btn btn-primary btn-login text-uppercase fw-bold" type="submit">Sign in</button>
                     </div>
                     </form>
                 </div>

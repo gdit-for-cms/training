@@ -2,7 +2,7 @@
     <div class="white_box_tittle ">
         <div class="main-title2 flex items-center justify-between">
             <h4 class="mb-2 nowrap">Position</h4>
-            <a href='/position/new'><button type="button" class="btn btn-success">Create</button></a>
+            <a href='/admin/position/new'><button type="button" class="btn btn-success">Create</button></a>
         </div>
     </div>
     <div class="box_body">
@@ -21,7 +21,7 @@
                     </div>
                     <div class="table_position collapse" id="collapseseven" aria-labelledby="headingOne" data-parent="#accordion2">
                         <div class="d-flex justify-content-end mt-2 mr-6">
-                            <a href='/position/edit?id=<?= $position['id'] ?>' class="edit-btn btn btn-info text-white mr-2">Edit</a>
+                            <a href='/admin/position/edit?id=<?= $position['id'] ?>' class="edit-btn btn btn-info text-white mr-2">Edit</a>
                             <button type="button" data-id="<?= $position['id'] ?>" class="btn btn-danger delete-btn text-white">Delete</button>
                         </div>
                         <div class="card-body row justify-content-center" style="padding-top: 25px;">

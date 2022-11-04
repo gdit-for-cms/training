@@ -9,7 +9,7 @@
         </div>
         <div class="white_card_body">
             <div class="card-body">
-                <form id="form_new_room" class="" action="create?id=2" method="POST">
+                <form id="form_new_room" class="" action="create" method="POST">
                     <div class="mb-3">
                         <label class="form-label" for="name">Name*</label>
                         <input type="text" class="form-control" name="name" id="name"  placeholder="Name...">
@@ -18,8 +18,8 @@
                         <label class="form-label" for="description">Description</label>
                         <textarea class="form-control" rows="3" name="description" id="description" placeholder="Description..."></textarea>
                     </div>
+                    <button id="submit" class="btn btn-primary">Create</button>
                 </form>
-                <button id="submit" class="btn btn-primary">Create</button>
             </div>
         </div>
     </div>
@@ -46,11 +46,11 @@
         </div>
     </div>
 </div>
-<script src="/ckeditor/ckeditor.js"></script>
-<script src="/ckfinder/ckfinder.js"></script>
+<!-- <script src="/ckeditor/ckeditor.js"></script>
+<script src="/ckfinder/ckfinder.js"></script> -->
 <script>
-    CKFinder.setupCKEditor();
-    CKEDITOR.replace( 'description' );
+    // CKFinder.setupCKEditor();
+    // CKEDITOR.replace( 'description' );
 </script>
 <script>
     const submitBtn = document.querySelector('#submit')

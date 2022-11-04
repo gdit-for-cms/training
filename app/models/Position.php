@@ -59,6 +59,10 @@ class Position extends Model {
             'description' => [
                 'max:2000',
             ],
+            'access_page' => [
+                'required',
+                'pageExisted',
+            ]
         ];
 
         switch ($change) {

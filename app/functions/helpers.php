@@ -19,8 +19,7 @@ if (!function_exists('isLogged')) {
      function isLogged() {
           $obj_request = new Request;
           $admin_ary = $obj_request->getUser();
-          // var_dump($admin_ary);
-          // exit;
+
           if (isset($admin_ary)) {
                return TRUE;
           } else {

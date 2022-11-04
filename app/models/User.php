@@ -47,10 +47,6 @@ class User extends Model
         return $results_ary;
     }
 
-    public function getByIdRelation()
-    {
-    }
-
     public function getByRelation($req_method_ary = array(), $name, $results_per_page = 5)
     {
         $db = static::getDB();
@@ -185,6 +181,10 @@ class User extends Model
                 'required',
                 'email',
                 'filled',
+            ),
+            'gender' => array(
+                'required',
+                'gender'
             ),
             'password' => array(
                 'required',

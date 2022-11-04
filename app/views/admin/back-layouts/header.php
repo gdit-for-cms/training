@@ -29,8 +29,8 @@
                         <?php } ?>
                         <div class="profile_info_iner border" style="top: 60px; right: -5px;">
                             <div class="profile_info_details">
-                                <a href="/admin/show">My Profile</a>
-                                <a href="/auth/logout">Log Out</a>
+                                <a href="/admin/admin/show">My Profile</a>
+                                <a href="/admin/auth/logout">Log Out</a>
                             </div>
                         </div>
                     </div>

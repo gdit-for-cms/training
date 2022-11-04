@@ -21,22 +21,26 @@ function checkName(objName) {
     });
 };
 
-function submitForm(formId) {
-    var pathName = window.location.pathname.split('/')[1]
+function checkPathName() {
+    var pathName = window.location.pathname
+    const name = document.getElementById('name');
     var content = ''
-    $(formId).parents('.card-body').children('#submit').click(function (e) {
-        const name = document.getElementById('name');
-        if (pathName == 'user') {
-            const email = document.getElementById('email');
-            const role_select = document.getElementById('role');
-            const room_select = document.getElementById('room');
-            const position_select = document.getElementById('position');
-            content = `
+    if (pathName.includes('/admin/user')) {
+        const email = document.getElementById('email');
+        const role_select = document.getElementById('role');
+        const gender_select = document.getElementById('gender');
+        const room_select = document.getElementById('room');
+        const position_select = document.getElementById('position');
+        content = `
                     <div class="d-flex justify-content-center align-items-center w-full">
                         <div class="d-flex flex-col justify-content-center align-items-start">
                             <span class="mb-2">
                                 <span class="font-bold">Name: </span>
                                 ${name.value}
+                            </span>
+                            <span class="mb-2">
+                                <span class="font-bold">Gender: </span>
+                                ${gender_select.options[gender_select.selectedIndex].textContent}
                             </span>
                             <span class="mb-2">
                                 <span class="font-bold">Email: </span>
@@ -56,8 +60,8 @@ function submitForm(formId) {
                             </span>
                         </div>
                     </div>`
-        } else {
-            content = `
+    } else {
+        content = `
                     <div class="d-flex justify-content-center align-items-center w-full">
                         <div class="d-flex flex-col justify-content-center align-items-start">
                             <span class="mb-2">
@@ -66,7 +70,15 @@ function submitForm(formId) {
                             </span>
                         </div>
                     </div>`
-        }
+    }
+    return content
+}
+
+function submitForm(formId) {
+    $(formId).submit(function (e) {
+        console.log('123');
+        var content = checkPathName()
+        e.preventDefault()
         Swal.fire({
             title: 'Are you sure?',
             html: content,
@@ -77,9 +89,8 @@ function submitForm(formId) {
             confirmButtonText: 'Yes'
         }).then((result) => {
             if (result.isConfirmed) {
-                var form = $(formId);
+                var form = $(this);
                 var actionUrl = form.attr('action');
-                console.log(form.serialize());
                 $.ajax({
                     type: "POST",
                     url: actionUrl,
@@ -144,8 +155,8 @@ function submitForm(formId) {
 function alertDelete() {
     $('.delete-btn').click(function (e) {
         let deleteID = $(this).data('id');
-        let pathName = window.location.pathname.split('/')[1]
-        if (window.location.pathname.split('/')[1] != 'user') {
+        let pathName = window.location.pathname.split('/')[2]
+        if (!(window.location.pathname).includes('/admin/user')) {
             if ($(this).parents('.card')[0].querySelector('.table_member_body').childNodes.length == 1) {
                 Swal.fire({
                     title: 'Are you sure?',
@@ -158,7 +169,7 @@ function alertDelete() {
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: `/${pathName}/delete?id=${deleteID}`,
+                            url: `/admin/${pathName}/delete?id=${deleteID}`,
                             success: function () {
                                 document.location.reload(true);
                             }
@@ -178,13 +189,14 @@ function alertDelete() {
                     cancelButtonColor: '#3085d6',
                 }).then((result) => {
                     if (result.isDenied) {
-                        let pathName = window.location.pathname.split('/')[1]
+                        let pathName = window.location.pathname.split('/')[2]
                         let id = $(this).data('id')
+                        let page = 'all'
                         let name = $(this).parents('.card').data('name')
                         $.ajax({
                             type: "POST",
-                            url: '/api/users',
-                            data: { method: 'all', name_field: `${pathName}_id`, id: id },
+                            url: '/api/api/users',
+                            data: { method: 'all', name_field: `${pathName}_id`, id: id, page: page },
                             dataType: 'json',
                             success: function (response) {
                                 var arrayTable = response.data
@@ -236,7 +248,7 @@ function alertDelete() {
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: `/${pathName}/delete?id=${deleteID}`,
+                        url: `/admin/${pathName}/delete?id=${deleteID}`,
                         success: function () {
                             document.location.reload(true);
                         }
@@ -265,7 +277,7 @@ function convertTableToArray(arg) {
 
 function submitChange(params) {
     $('#change_member_btn').click((e) => {
-        const pathName = window.location.pathname.split('/')[1]
+        const pathName = window.location.pathname.split('/')[2]
         var dataChangeArray = {}
         const bodyTable = document.querySelector('.table_change_body')
         bodyTable.querySelectorAll('tr').forEach(e => {
@@ -273,7 +285,7 @@ function submitChange(params) {
         })
         $.ajax({
             type: "POST",
-            url: `/${pathName}/change${pathName[0].toUpperCase() + pathName.slice(1)}`,
+            url: `/admin/${pathName}/change${pathName[0].toUpperCase() + pathName.slice(1)}`,
             data: { data: dataChangeArray },
             dataType: 'json',
             success: function (response) {
@@ -330,7 +342,7 @@ function renderMember(response, tableMain, paginationMain = '') {
 }
 
 function sortPagination(cardHeader) {
-    let pathName = window.location.pathname.split('/')[1]
+    let pathName = window.location.pathname.split('/')[2]
     var name = cardHeader.parents('.card').data('name');
     const PAGE_STORAGE_KEY = `PAGE PAGINATION ${pathName.toUpperCase()}`
     var config = JSON.parse(localStorage.getItem(PAGE_STORAGE_KEY)) || {}
@@ -342,7 +354,7 @@ function sortPagination(cardHeader) {
     setLocalStorage(PAGE_STORAGE_KEY, config, name, 1)
     $.ajax({
         type: "POST",
-        url: '/api/users',
+        url: '/api/api/users',
         data: { name_field: `${pathName}_id`, id: id, page: config[name] },
         dataType: 'json',
         success: function (response) {
@@ -350,6 +362,7 @@ function sortPagination(cardHeader) {
             var numbersOfPage = response.data.numbers_of_page
             if (numbersOfPage == 0) {
                 tableMemberBodyEle.innerHTML = `<div class="box_body"><p class="f-w-400 ">No memeber</p></div>`
+                tableMemberBodyEle.parentNode.querySelector('.btn_sort_group').classList.add('d-none');
             } else {
                 var htmlsTable = data.map((item, index) => {
                     return `
@@ -425,7 +438,7 @@ function sortPagination(cardHeader) {
                 let tableMain = $(this).parents('.card')[0].querySelector('.body_table_main')
                 $.ajax({
                     type: "POST",
-                    url: '/api/users',
+                    url: '/api/api/users',
                     data: { name_field: `${pathName}_id`, id: id, page: page },
                     dataType: 'json',
                     success: function (response) {
@@ -463,12 +476,12 @@ function sortAll(data, tableMain, pathName, paginationMain) {
 }
 
 $(document).ready(function () {
+    submitForm('#form_new_position');
+    submitForm('#form_update_position');
     submitForm('#form_new_user');
     submitForm('#form_update_user');
     submitForm('#form_new_room');
     submitForm('#form_update_room');
-    submitForm('#form_new_position');
-    submitForm('#form_update_position');
     // submitForm('#form_upload_avatar');
 
     submitForm('.add-form');
@@ -480,7 +493,7 @@ $(document).ready(function () {
     });
 
     $('.btn_sort').click(function (e) {
-        let pathName = window.location.pathname.split('/')[1]
+        let pathName = window.location.pathname.split('/')[2]
         let id = $(this).parents('.card').children('.card-header').data('id')
         let tableMain = $(this).parents('.card')[0].querySelector('.body_table_main')
         let paginationMain = $(this).parents('.card')[0].querySelector('.pagination')
@@ -493,7 +506,7 @@ $(document).ready(function () {
             $(this).parents('.btn_sort_group').children('.btn_sort-pagi').removeClass('bg-gray-300 pe-none')
             $.ajax({
                 type: "POST",
-                url: '/api/users',
+                url: '/api/api/users',
                 data: { name_field: `${pathName}_id`, id: id, page: 'all' },
                 dataType: 'json',
                 success: function (response) {
@@ -538,11 +551,6 @@ $(document).ready(function () {
                     title: 'Oops...',
                     text: response.responseJSON.message,
                 });
-                if (response.responseJSON.message == 'dang nhap qua han') {
-                    setTimeout(() => {
-                        document.location.href = '/auth/logout'
-                    }, "1600");
-                }
             }
         });
     })

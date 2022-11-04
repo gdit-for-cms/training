@@ -101,7 +101,8 @@
   var avatarInput = document.querySelector('#image-input')
   var emptyAvatar = document.querySelector('#empty_avatar')
   var avatarImage = document.getElementById('avatar_image')
-  var currentAvatar = avatarImage.src
+  var currentAvatar = avatarImage.getAttribute('src')
+  console.log(currentAvatar);
   avatarInput.addEventListener('change', () => {
     if (avatarInput.files && avatarInput.files[0]) {
       var reader = new FileReader();
@@ -119,9 +120,8 @@
     avatarInput.value = ''
     inputAvatarBtn.style.backgroundColor = ''
     removeAvatar.classList.add('d-none')
-    console.log(currentAvatar);
-    if (currentAvatar != 'http://cms215.dev5.local/') {
-      avatarImage.src = currentAvatar
+    if (currentAvatar != '/') {
+      avatarImage.setAttribute('src', currentAvatar)
       avatarImage.classList.remove('d-none')
       emptyAvatar.classList.add('d-none')
     } else {

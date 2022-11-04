@@ -15,6 +15,14 @@
                         <input id="name" name="name" type="text" class="form-control" placeholder="Name">
                     </div>
                     <div class="mb-3">
+                        <label class="form-label" for="gender">Gender*</label>
+                        <select id="gender" name="gender" class="form-control">
+                            <option value="other">Other</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label" for="inputAddress">Email*</label>
                         <input id="email" name="email" type="email" class="form-control" placeholder="Email">
                     </div>
@@ -54,8 +62,8 @@
                             </select>
                         </div>
                     </div>
+                    <button id="submit" type="submit" class="btn btn-primary">Create</button>
                 </form>
-                <button id="submit" class="btn btn-primary">Create</button>
             </div>
         </div>
     </div>
@@ -72,7 +80,7 @@
             </div>
             <div class="white_card_body">
                 <div class="card-body">
- 
+
                     <div class="model-footer">
                         <button type="button" class="btn btn-secondary js-lightbox-close">Close</button>
                         <button class="btn btn-primary" id="submit_confirm_btn">Submit</button>

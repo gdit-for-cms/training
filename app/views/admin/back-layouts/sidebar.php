@@ -8,7 +8,7 @@
     </div>
     <ul id="sidebar_menu" class="metismenu">
         <li class="">
-            <a class="has-arrow" href="/user/index" aria-expanded="false">
+            <a class="has-arrow" href="/admin/user/index" aria-expanded="false">
                 <div class="nav_icon_small">
                     <img src="" alt="">
                 </div>
@@ -18,7 +18,7 @@
             </a>
         </li>
         <li class="">
-            <a class="has-arrow" href="/room/index" aria-expanded="false">
+            <a class="has-arrow" href="/admin/room/index" aria-expanded="false">
                 <div class="nav_icon_small">
                     <img src="" alt="">
                 </div>
@@ -28,7 +28,7 @@
             </a>
         </li>
         <li class="">
-            <a class="has-arrow" href="/position/index" aria-expanded="false">
+            <a class="has-arrow" href="/admin/position/index" aria-expanded="false">
                 <div class="nav_icon_small">
                     <img src="" alt="">
                 </div>
@@ -38,7 +38,7 @@
             </a>
         </li>
         <li class="">
-            <a class="has-arrow" href="/exam/list" aria-expanded="false">
+            <a class="has-arrow" href="/admin/exam/list" aria-expanded="false">
                 <div class="nav_icon_small">
                     <img src="" alt="">
                 </div>
@@ -48,7 +48,7 @@
             </a>
         </li>
         <li class="">
-            <a class="has-arrow" href="/question/list" aria-expanded="false">
+            <a class="has-arrow" href="/admin/question/list" aria-expanded="false">
                 <div class="nav_icon_small">
                     <img src="" alt="">
                 </div>
@@ -58,7 +58,7 @@
             </a>
         </li>
         <li class="">
-            <a class="has-arrow" href="/topic/list" aria-expanded="false">
+            <a class="has-arrow" href="/admin/topic/list" aria-expanded="false">
                 <div class="nav_icon_small">
                     <img src="" alt="">
                 </div>
@@ -68,7 +68,7 @@
             </a>
         </li>
         <li class="">
-            <a class="has-arrow" href="/admin/diff" aria-expanded="false">
+            <a class="has-arrow" href="/admin/admin/diff" aria-expanded="false">
                 <div class="nav_icon_small">
                     <img src="" alt="">
                 </div>

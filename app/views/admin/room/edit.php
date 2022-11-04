@@ -19,8 +19,8 @@
                         <label class="form-label" for="inputAddress2">Description</label>
                         <textarea class="form-control" rows="3" name="description" id="description"><?= $room['description'] ?></textarea>
                     </div>
+                    <button id="submit" type="submit" class="btn btn-primary">Save</button>
                 </form>
-                <button id="submit" type="submit" class="btn btn-primary">Save</button>
             </div>
         </div>
     </div>
@@ -47,9 +47,11 @@
         </div>
     </div>
 </div>
-<script src="/ckeditor/ckeditor.js"></script>
+<!-- <script src="/ckeditor/ckeditor.js"></script>
+<script src="/ckfinder/ckfinder.js"></script> -->
 <script>
-    CKEDITOR.replace( 'description' );
+    // CKFinder.setupCKEditor();
+    // CKEDITOR.replace( 'description' );
 </script>
 <script>
     const submitBtn = document.querySelector('#submit')
