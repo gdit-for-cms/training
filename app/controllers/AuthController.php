@@ -27,10 +27,8 @@ class AuthController extends Controller
     }
 
     public function loginProcessAction(Request $request) {
-        $post = $request->getPost();
-
-        $email = $post->get('email');
-        $password = $post->get('password');
+        $email = $request->getPost()->get('email');
+        $password = $request->getPost()->get('password');
 
         $user = new User();
         $inputUser = $user->table('user')
