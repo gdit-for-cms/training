@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Admin;
 
 use Core\View;
 use App\models\User;
@@ -11,7 +11,7 @@ class AuthController extends AppController {
 
     protected function before() {
         if (checkAdmin()) {
-            header('Location: /admin/index');
+            header('Location: /admin');
             exit;
         }
         
@@ -51,20 +51,20 @@ class AuthController extends AppController {
             'email' => $inputUser['email'],
             'role_id' => $inputUser['role_id'],
             'room_id' => $inputUser['room_id'],
+            'position_id' => $inputUser['position_id'],
             'avatar_image' => $inputUser['avatar_image'],
         ];
         
         $request->saveUser($data);
         
-        header('Location: /admin/index');
+        header('Location: /admin');
         exit;
-
     }
 
     public function logout(Request $request) {
         $request->deleteUser();
         
-        header('Location: /auth/login');
+        header('Location: /');
         exit;
     }
 }

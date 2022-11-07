@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Admin;
 
 use App\Requests\AppRequest;
 use App\Models\Position;
@@ -65,6 +65,7 @@ class UserController extends AppController {
         $role_id = $result_vali_ary['role_id'];
         $room_id = $result_vali_ary['room_id'];
         $position_id = $result_vali_ary['position_id'];
+        $gender = $result_vali_ary['gender'];
 
         $user_check_ary = $this->obj_model->getBy('email', '=', $email);
         $num_rows = count($user_check_ary);
@@ -77,6 +78,7 @@ class UserController extends AppController {
                     [
                         'name' => $name,
                         'email' => $email,
+                        'gender' => $gender,
                         'password' => $password,
                         'role_id' => $role_id,
                         'room_id' => $room_id,
@@ -106,9 +108,8 @@ class UserController extends AppController {
     public function update(Request $request) {   
         $post_ary = $request->getPost()->all();
         
-        $check_user = $this->obj_model->getBy('id', '=', $post_ary['id'])[0];
-        // var_dump($check_user);
-        // exit;
+        $check_user = $this->obj_model->getById($post_ary['id'])[0];
+
         $change_data_flg = false;
 
         foreach ($post_ary as $key => $value) {
@@ -148,11 +149,13 @@ class UserController extends AppController {
                 $role_id = $result_vali_ary['role_id'];
                 $room_id = $result_vali_ary['room_id'];
                 $position_id = $result_vali_ary['position_id'];
+                $gender = $result_vali_ary['gender'];
                 if (empty($password)) {
                     $this->obj_model->updateOne(
                         [
                             'name' => $name,
                             'email' => $email,
+                            'gender' => $gender,
                             'role_id' => $role_id,
                             'room_id' => $room_id,
                             'position_id' => $position_id
@@ -183,7 +186,7 @@ class UserController extends AppController {
 
         $this->obj_model->destroyOne("id = $id");
 
-        header('Location: /user/index');
+        header('Location: /admin/user/index');
         exit;
     }
 }

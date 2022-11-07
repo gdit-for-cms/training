@@ -49,7 +49,7 @@
                       <?php } ?>
                     </select>
                   </th>
-                  <th scope="col"></th>
+                  <th scope="col">Option</th>
                 </tr>
               </thead>
               <tbody>
@@ -64,7 +64,7 @@
                     <td class="role_name"><?= $user['role_name'] ?></td>
                     <td class="room_name"><?= $user['room_name'] ?></td>
                     <td class="position_name"><?= $user['position_name'] ?></td>
-                    <td class="flex items-center justify-center">
+                    <td class="flex items-center justify-start">
                       <a href='/admin/user/edit?id=<?= $user['id'] ?>' class="edit_btn mr-2"><button type="button" class="btn btn-info text-white">Edit</button></a>
                       <button type="button" data-id="<?= $user['id'] ?>" class="btn btn-danger delete-btn text-white">Delete</button>
                     </td>

@@ -160,7 +160,7 @@ function alertDelete() {
             if ($(this).parents('.card')[0].querySelector('.table_member_body').childNodes.length == 1) {
                 Swal.fire({
                     title: 'Are you sure?',
-                    text: "You won't be able to revert this!<br/>nasdhad",
+                    text: "You won't be able to revert this!",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',

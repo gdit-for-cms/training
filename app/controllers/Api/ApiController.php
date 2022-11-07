@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Api;
 
 use App\Models\User;
 use Core\Http\Request;
 use Core\Http\ResponseTrait;
+use Core\Controller;
 
-class ApiController extends AppController {
+class ApiController extends Controller {
     use ResponseTrait;
 
     public function users(Request $request) {  

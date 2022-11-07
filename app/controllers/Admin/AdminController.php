@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Admin;
 
 use Core\View;
 use App\models\User;
@@ -16,20 +16,15 @@ class AdminController extends AppController
 
     public $title = 'Chủ';
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->obj_model = new User;
     }
 
-    public function indexAction()
-    {
+    public function indexAction() {
         $this->data_ary['content'] = 'admin/dashboard';
     }
 
-    public function showAction(Request $request)
-    {   
-        // var_dump($_SESSION);
-        // exit;
+    public function showAction(Request $request) {   
         $user = $request->getUser();
         $user_ary = $this->obj_model->getById($user['id'])[0];
 
@@ -37,8 +32,7 @@ class AdminController extends AppController
         $this->data_ary['user'] = $user_ary;
     }
 
-    public function uploadAvatar(Request $request)
-    {
+    public function uploadAvatar(Request $request) {
         try {
             $image_file = $request->getFiles()->get('image');
 
@@ -48,8 +42,8 @@ class AdminController extends AppController
 
             $user = $request->getUser();
             $id = $user['id'];
-
-            $before_avatar = $user['avatar_image'];
+            
+            $before_avatar = $this->obj_model->getById($id)[0]['avatar_image'];
 
             $image_dir = 'ckfinder/userfiles/images/avatars/';
             $name = $id . '_' . date("Y-m-d_h-i-s") . '_' . $image_file['name'];
@@ -64,18 +58,17 @@ class AdminController extends AppController
             $user['avatar_image'] = $image_dir . $name;
             $request->saveUser($user);
 
-            if (!empty($before_avatar)) {
+            if (file_exists($before_avatar) && !empty($before_avatar)) {
                 unlink($before_avatar);
             }
 
             return $this->successResponse();
         } catch (\Throwable $th) {
-            return $this->errorResponse('dang nhap qua han');
+            return $this->errorResponse('An error occurred during upload');
         };
     }
 
-    public function deleteAvatar(Request $request)
-    {
+    public function deleteAvatar(Request $request) {
         $user = $request->getUser();
         if (empty($user['avatar_image'])) {
             return $this->errorResponse('Please update avatar');

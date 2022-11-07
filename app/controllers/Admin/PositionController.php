@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Admin;
 
 use App\Requests\AppRequest;
 use App\models\User;
@@ -8,13 +8,14 @@ use App\models\Position;
 use Core\Http\Request;
 use Core\Http\ResponseTrait;
 
-class PositionController extends AppController {
+class PositionController extends AppController
+{
     use ResponseTrait;
 
     public $title = 'Vị trí';
 
     public object $obj_model;
-    
+
     public array $data_ary;
 
     public function __construct() {
@@ -22,13 +23,18 @@ class PositionController extends AppController {
     }
 
     public function indexAction() {
-        $results_ary = User::getAllRelation();
-        
         $this->data_ary['positions'] = $this->obj_model->getAll();
         $this->data_ary['content'] = 'position/index';
     }
 
     public function newAction() {
+        $array = array_diff(scandir('../app/controllers/User'), array('..', '.'));
+        $result = array();
+        foreach ($array as $filename) {
+            array_push($result, strtolower((preg_split('/(?=[A-Z])/', $filename)[1])));
+        }
+        $this->data_ary['pages'] = $result;
+
         $this->data_ary['content'] = 'position/new';
     }
 
@@ -39,10 +45,11 @@ class PositionController extends AppController {
         if (in_array('error', $result_vali_ary)) {
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
             return $this->errorResponse($message_error);
-        } 
+        }
 
         $name = $result_vali_ary['name'];
         $description = $result_vali_ary['description'];
+        $access_page = implode(',', $result_vali_ary['access_page']);
 
         $position_check_ary = $this->obj_model->getBy('name', '=', $name);
         $num_rows = count($position_check_ary);
@@ -54,8 +61,10 @@ class PositionController extends AppController {
                 $this->obj_model->create(
                     [
                         'name' => $name,
-                        'description' => $description
-                    ]);
+                        'description' => $description,
+                        'access_page' => $access_page
+                    ]
+                );
 
                 return $this->successResponse();
             } catch (\Throwable $th) {
@@ -67,20 +76,37 @@ class PositionController extends AppController {
     public function editAction(Request $request) {
         $id = $request->getGet()->get('id');
 
-        $this->data_ary['position'] = $this->obj_model->getById($id, 'id, name, description');
+        $array = array_diff(scandir('../app/controllers/User'), array('..', '.'));
+        $result = array();
+        foreach ($array as $filename) {
+            array_push($result, strtolower((preg_split('/(?=[A-Z])/', $filename)[1])));
+        }
+
+        $this->data_ary['pages'] = $result;
+
+        $this->data_ary['position'] = $this->obj_model->getById($id, 'id, name, description, access_page');
+
         $this->data_ary['content'] = 'position/edit';
     }
 
-    public function update(Request $request) {   
+    public function update(Request $request) {
         $post_ary = $request->getPost()->all();
-        
+
         $check_position = $this->obj_model->getById($post_ary['id']);
         $change_data_flg = false;
-        
+
         foreach ($post_ary as $key => $value) {
-            if ($check_position[$key] != $value) {
-                $change_data_flg = true;
-                break;
+            if ($key != 'access_page') {
+                if ($check_position[$key] != $value) {
+                    $change_data_flg = true;
+                    break;
+                }
+            } else {
+                $value = implode(',', $value);
+                if ($check_position[$key] != $value) {
+                    $change_data_flg = true;
+                    break;
+                }
             }
         }
 
@@ -95,19 +121,22 @@ class PositionController extends AppController {
         if (in_array('error', $result_vali_ary)) {
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
             return $this->errorResponse($message_error);
-        } 
+        }
 
         try {
             $id = $result_vali_ary['id'];
             $name = $result_vali_ary['name'];
             $description = $result_vali_ary['description'];
+            $access_page = implode(',', $result_vali_ary['access_page']);
 
             $this->obj_model->updateOne(
                 [
                     'name' => $name,
-                    'description' => $description
+                    'description' => $description,
+                    'access_page' => $access_page
                 ],
-                "id = $id");
+                "id = $id"
+            );
 
             return $this->successResponse();
         } catch (\Throwable $th) {
@@ -120,7 +149,7 @@ class PositionController extends AppController {
 
         $this->obj_model->destroyOne("id = $id");
 
-        header('Location: /position/index');
+        header('Location: /admin/position/index');
         exit;
     }
 
@@ -128,15 +157,16 @@ class PositionController extends AppController {
         try {
             $post_ary = $request->getPost()->all();
             $post_ary = $post_ary['data'];
-
+            var_dump($post_ary);
+            exit;
             $obj_user = new User;
-            $array_id_ary = array();
+            $id_ary = array();
             foreach ($post_ary as $key => $value) {
                 $position = $this->obj_model->getBy('name', '=', $value);
-                $array_id_ary[$key] = (int)$position[0]['id'];
+                $id_ary[$key] = (int)$position[0]['id'];
             }
-                $obj_user->updateMultiByName($array_id_ary, 'position_id');
-                return $this->successResponse();
+            $obj_user->updateMultiByName($id_ary, 'position_id');
+            return $this->successResponse();
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

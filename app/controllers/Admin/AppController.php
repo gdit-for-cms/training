@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Admin;
 
 use Core\Controller;
 use Core\View;
@@ -8,7 +8,7 @@ use Core\View;
 class AppController extends Controller {   
     protected function before() {
         if (!checkAdmin()) {
-            header('Location: /auth/login');
+            header('Location: /admin/auth/login');
             exit;
         }
         $this->data_ary['title'] = $this->title;

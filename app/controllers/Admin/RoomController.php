@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Admin;
 
 use App\Requests\AppRequest;
 use App\models\User;
@@ -22,8 +22,6 @@ class RoomController extends AppController {
     }
 
     public function indexAction() {
-        $results_ary = User::getAllRelation();
-
         $this->data_ary['rooms'] = $this->obj_model->getAll();
         $this->data_ary['content'] = 'room/index';
     }
@@ -119,7 +117,7 @@ class RoomController extends AppController {
 
         $this->obj_model->destroyOne("id = $id");
 
-        header('Location: /room/index');
+        header('Location: /admin/room/index');
         exit;
     }
 
