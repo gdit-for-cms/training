@@ -10,9 +10,9 @@
             "App\\Services\\": "app/services/"
         },
         "files" : [
-            "app/helpers.php",
-            "app/errors.php",
-            "app/Validation.php"
+            "app/functions/helpers.php",
+            "app/functions/errors.php",
+            "app/functions/validation.php"
         ]
     }
 }

@@ -174,8 +174,7 @@ class User extends Model
                 'required',
                 'name',
                 'filled',
-                'maxLen:50',
-                'minLen:5',
+                'maxLen:30',
             ),
             'email' => array(
                 'required',
@@ -190,6 +189,7 @@ class User extends Model
                 'required',
                 'password',
                 'filled',
+                'minLen:8',
             ),
             'role_id' => array(
                 'required',

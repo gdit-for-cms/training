@@ -12,6 +12,7 @@
                 <form id='form_update_user' class="" action="update" method="PUT">
                     <div class="mb-3">
                         <label class="form-label" for="inputAddress">Name*</label>
+                        <span class="text-xs d-block text-gray-400">Name must have a minimum of 5 characters, a maximum of 50 characters, must not have a leading and trailing space and cannot have two consecutive spaces.</span>
                         <input id="id" name="id" value="<?= $user['id'] ?>" type="hidden" class="form-control">
                         <input id="name" name="name" type="text" value="<?= $user['name'] ?>" class="form-control">
                     </div>
@@ -25,15 +26,18 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="inputAddress">Email*</label>
+                        <span class="text-xs d-block text-gray-400">Email must be have format: (***@***.***).</span>
                         <input id="email" name="email" type="email" value="<?= $user['email'] ?>" class="form-control" placeholder="Email">
                     </div>
                     <div class="row mb-3">
                         <div class=" col-md-6">
                             <label class="form-label" for="password">Password*</label>
+                            <span class="text-xs d-block text-gray-400">Your password must be at least 8 characters long, contain at least one number and have a mixture of uppercase and lowercase letters.</span>
                             <input name="password" id="password" type="password" class="form-control">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label" for="confirmPassword">Confirm Password*</label>
+                            <span class="text-xs d-block text-gray-400">Confirm password must be like password.</span>
                             <input id="confirmPassword" type="password" class="form-control">
                         </div>
                     </div>
