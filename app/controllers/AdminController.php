@@ -118,7 +118,7 @@ class AdminController extends AppController
 
                 $this->data['uploadStatus'] = 'Success';
 
-                // Set content in file import to array.
+                // Set content in file upload to array.
                 $data_before = file_get_contents($_FILES['file1']['tmp_name']);
                 $data_before = explode("\n", $data_before);
 
@@ -190,13 +190,18 @@ class AdminController extends AppController
     }
 
     /**
-     * Get the variable in import file
+     * Get the variable in upload file
      *
      * @param  array  $data
-     * @return array $glo_in_file, $const_in_file, $in_file
+     * @return array $glo_in_file, $const_in_file, $in_file, $check_distinct
      */
-    public function setVariable($data, $glo_in_file = [], $const_in_file = [], $in_file = [], $check_distinct = []) {
+    public function setVariable($data) {
         // Check $data, $glo_in_file, $const_in_file, $in_file
+        $glo_in_file = array();
+        $const_in_file = array();
+        $in_file = array();
+        $check_distinct = array();
+
         for ($line = 0; $line < count($data); $line++) {
             if (preg_match('/^setDefineArray\(\'(.+?)\', \$(.+?)\)/i', $data[$line], $match)) {
                 if (isset($in_file[$match[1]])) {
@@ -251,7 +256,7 @@ class AdminController extends AppController
     }
 
     /**
-     * Same as above(getVariable) but set variable value by text instead
+     * Same as above(setVariable) but set variable value by text instead
      *
      * @param  array  $data (array content in file upload)
      * @param  array  $glo_in_file
