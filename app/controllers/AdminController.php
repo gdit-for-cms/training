@@ -193,7 +193,7 @@ class AdminController extends AppController
      * Get the variable in upload file
      *
      * @param  array  $data
-     * @return array $glo_in_file, $const_in_file, $in_file, $check_distinct
+     * @return array  $glo_in_file, $const_in_file, $in_file, $check_distinct
      */
     public function setVariable($data) {
         // Check $data, $glo_in_file, $const_in_file, $in_file
