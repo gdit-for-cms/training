@@ -86,9 +86,7 @@ class Request
      */
     public function getPost()
     {
-        $data = $this->getProtectedValue($this->post, 'container');
-
-        return $data;
+        return $this->post;
     }
 
     /**
@@ -112,10 +110,7 @@ class Request
      */
     public function getGet()
     {
-        $data = $this->getProtectedValue($this->get, 'container');
-        
-        return $data;
-
+        return $this->get;
     }
 
     /**
@@ -259,20 +254,4 @@ class Request
     public function getUser(){
         return $this->session->user;
     }
-
-    /**
-     * Get the data form proteced request 
-     *
-     * @param  mixed  $obj
-     * @param  string  default:'container'
-     *
-     * @return array
-     */
-    public function getProtectedValue($obj, $name) {
-        $array = (array)$obj;
-        $prefix = chr(0).'*'.chr(0);
-        return $array[$prefix.$name];
-    }
-
 }
-
