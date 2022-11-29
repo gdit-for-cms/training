@@ -12,13 +12,13 @@ use App\Config;
  */
 abstract class Model
 {
-
     /**
      * Get the PDO database connection
      *
      * @return mixed
      */
-    protected static function getDB() {
+    protected static function getDB() 
+    {
         static $db = null;
 
         if ($db === null) {

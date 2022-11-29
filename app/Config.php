@@ -20,7 +20,7 @@ class Config
      * Database name
      * @var string
      */
-    const DB_NAME = 'training';
+    const DB_NAME = 'phonghaw2';
 
     /**
      * Database user

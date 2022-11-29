@@ -15,7 +15,7 @@ class Bag
         return isset($container[$key]);
     }
 
-    public function get(String $key){
+    public function get(String $key) {
         return $this->container[$key];
     }
 

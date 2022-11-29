@@ -6,8 +6,6 @@ use Core\Http\Bag\Files;
 use Core\Http\Bag\Post;
 use Core\Http\Bag\Get;
 
-
-
 /**
  * 
  * The HTTP request
@@ -86,9 +84,7 @@ class Request
      */
     public function getPost()
     {
-        $data = $this->getProtectedValue($this->post, 'container');
-
-        return $data;
+        return $this->post;
     }
 
     /**
@@ -112,10 +108,7 @@ class Request
      */
     public function getGet()
     {
-        $data = $this->getProtectedValue($this->get, 'container');
-        
-        return $data;
-
+        return $this->get;
     }
 
     /**
@@ -234,8 +227,10 @@ class Request
      *
      * 
      */
-    public function saveUser($user){
+    public function saveUser($user)
+    {
         $this->session->user = $user;
+
         return $this;
     }
 
@@ -245,8 +240,10 @@ class Request
      *
      * 
      */
-    public function deleteUser(){
+    public function deleteUser()
+    {
         $this->session->user = null;
+
         return $this;
     }
 
@@ -256,23 +253,8 @@ class Request
      *
      * @return mixed
      */
-    public function getUser(){
+    public function getUser()
+    {
         return $this->session->user;
     }
-
-    /**
-     * Get the data form proteced request 
-     *
-     * @param  mixed  $obj
-     * @param  string  default:'container'
-     *
-     * @return array
-     */
-    public function getProtectedValue($obj, $name) {
-        $array = (array)$obj;
-        $prefix = chr(0).'*'.chr(0);
-        return $array[$prefix.$name];
-    }
-
 }
-
