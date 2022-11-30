@@ -38,6 +38,7 @@ class Router
         // Convert variables e.g. {controller}
         $route = preg_replace('/\{([a-z]+)\}/', '(?P<\1>[a-z-]+)', $route);
 
+
         // Convert variables with custom regular expressions e.g. {id:\d+}
         $route = preg_replace('/\{([a-z]+):([^\}]+)\}/', '(?P<\1>\2)', $route);
 
@@ -102,17 +103,23 @@ class Router
      *
      * @return void
      */
-    public function dispatch($request) {
+    public function dispatch($request)
+    {
         $url = $this->removeQueryStringVariables($_SERVER['QUERY_STRING']);
 
         if ($this->match($url)) {
             $controller = $this->params['controller'] . 'Controller';
             $controller = $this->convertToStudlyCaps($controller);
+            
+            if (isset($this->params['directory'])) {
+                $dir = $this->params['directory'] . '\\';
+                $dir = $this->convertToStudlyCaps($dir);
+                $controller = $dir . $controller;
+            }
             $controller = $this->getNamespace() . $controller;
 
             if (class_exists($controller)) {
                 $controller_object = new $controller($this->params);
-
                 $action = $this->params['action'];
                 $action = $this->convertToCamelCase($action);
 
@@ -137,7 +144,8 @@ class Router
      *
      * @return string
      */
-    protected function convertToStudlyCaps($string) {
+    protected function convertToStudlyCaps($string)
+    {
         return str_replace(' ', '', ucwords(str_replace('-', ' ', $string)));
     }
 
@@ -149,7 +157,8 @@ class Router
      *
      * @return string
      */
-    protected function convertToCamelCase($string) {
+    protected function convertToCamelCase($string)
+    {
         return lcfirst($this->convertToStudlyCaps($string));
     }
 
@@ -176,7 +185,8 @@ class Router
      *
      * @return string The URL with the query string variables removed
      */
-    protected function removeQueryStringVariables($url) {
+    protected function removeQueryStringVariables($url)
+    {
         if ($url != '') {
             $parts = explode('&', $url, 2);
 
@@ -196,7 +206,8 @@ class Router
      *
      * @return string The request URL
      */
-    protected function getNamespace() {
+    protected function getNamespace()
+    {
         $namespace = 'App\Controllers\\';
 
         if (array_key_exists('namespace', $this->params)) {
