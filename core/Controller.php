@@ -58,7 +58,7 @@ abstract class Controller
      */
     protected function before() {
     }
-
+    
     /**
      * After filter - called after an action method.
      *

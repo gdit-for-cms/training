@@ -17,7 +17,11 @@ $router = new Core\Router();
 $request = new Core\Http\Request();
 
 // Add the routes
-$router->add('', ['controller' => 'Default', 'action' => 'index']);
+$router->add('', ['directory' => 'Admin', 'controller' => 'Auth', 'action' => 'login']);
+$router->add('homepage', ['controller' => 'Home', 'action' => 'homepage']);
+$router->add('admin', ['directory' => 'Admin', 'controller' => 'Admin', 'action' => 'index']);
+
 $router->add('{controller}/{action}');
+$router->add('{directory}/{controller}/{action}');
     
 $router->dispatch($request);
