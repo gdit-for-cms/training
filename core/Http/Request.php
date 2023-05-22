@@ -254,15 +254,4 @@ class Request
     public function getUser(){
         return $this->session->user;
     }
-
-    /**
-     * Get the data form proteced request 
-     *
-     * @param  mixed  $obj
-     * @param  string  default:'container'
-     *
-     * @return array
-     */
-
 }
-

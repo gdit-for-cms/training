@@ -21,6 +21,7 @@ $router->add('', ['directory' => 'Admin', 'controller' => 'Auth', 'action' => 'l
 $router->add('homepage', ['controller' => 'Home', 'action' => 'homepage']);
 $router->add('admin', ['directory' => 'Admin', 'controller' => 'Admin', 'action' => 'index']);
 
+$router->add('', ['controller' => 'Auth', 'action' => 'login']);
 $router->add('{controller}/{action}');
 $router->add('{directory}/{controller}/{action}');
     

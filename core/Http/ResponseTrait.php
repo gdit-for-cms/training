@@ -12,6 +12,7 @@ trait ResponseTrait
             'message' => $message,
         ]);
         $res->setContent($result);
+        
         return $res->send();
     }
 

@@ -1,0 +1,5 @@
+app/Config.php
+.vscode/settings.json
+.vscode/launch.json
+.vscode/ftp-kr.json
+.vscode/ftp-kr.sync.cache.json

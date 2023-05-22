@@ -21,6 +21,7 @@ Trait QueryBuilder
     public function table($tableName)
     {
         $this->tableName = $tableName;
+        
         return $this;
     }
 
@@ -34,18 +35,19 @@ Trait QueryBuilder
      */
     public function where($column, $compare, $value)
     {
-        if(empty($this->where)){
+        if (empty($this->where)) {
             $this->operator = ' WHERE ';
-        }else {
+        } else {
             $this->operator = ' AND ';
         }
         $value = addslashes($value);
-        $this->where .= "$this->operator $column $compare '$value'";
+        $this->where .= $this->operator . ' ' . $column . ' ' . $compare . ' \'' . $value . '\'';
+
         return $this;
     }
 
     /**
-     * Add an "or where" clause to the query.
+     * Add an 'or where' clause to the query.
      *
      * @param  string|array  $column
      * @param  mixed  $value
@@ -54,17 +56,18 @@ Trait QueryBuilder
      */
     public function orWhere($column, $compare, $value)
     {
-        if(empty($this->where)){
+        if (empty($this->where)) {
             $this->operator = ' WHERE ';
-        }else {
+        } else {
             $this->operator = ' OR ';
         }
-        $this->where .= "$this->operator $column $compare '$value'";
+        $this->where .= $this->operator . ' ' . $column . ' ' . $compare . ' \'' . $value . '\'';
+
         return $this;
     }
 
     /**
-     * Add an "where like" clause to the query.
+     * Add an 'where like' clause to the query.
      *
      * @param  string|array  $column
      * @param  mixed  $value
@@ -72,13 +75,14 @@ Trait QueryBuilder
      */
     public function whereLike($column, $value)
     {
-        if(empty($this->where)){
+        if (empty($this->where)) {
             $this->operator = ' WHERE ';
-        }else {
+        } else {
             $this->operator = ' AND ';
         }
         $value = addslashes($value);
-        $this->where .= "$this->operator $column LIKE '%$value%'";
+        $this->where .= $this->operator . ' ' . $column . ' LIKE ' . '\'%' . $value . '%\'';
+
         return $this;
     }
     /**
@@ -90,6 +94,7 @@ Trait QueryBuilder
     public function select($column = '*')
     {
         $this->selectColumn = $column;
+
         return $this;
     }
 
@@ -102,7 +107,8 @@ Trait QueryBuilder
      */
     public function limit($number, $offset = 0)
     {
-        $this->limit = "LIMIT " . $offset . ", " . $number;
+        $this->limit = 'LIMIT ' . $offset . ', ' . $number;
+
         return $this;
     }
 
@@ -116,15 +122,16 @@ Trait QueryBuilder
     public function orderBy($column, $direction = 'asc')
     {
         $arrColumns = array_filter(explode(',', $column));
-        if(!empty($arrColumns) && count($arrColumns) >= 2 ){
-            $this->orderBy = "ORDER BY". implode(', ', $arrColumns);
-        }else {
-            $this->orderBy = "ORDER BY" . " " . $column . " " . $direction;
+        if (!empty($arrColumns) && count($arrColumns) >= 2 ) {
+            $this->orderBy = 'ORDER BY'. implode(', ', $arrColumns);
+        } else {
+            $this->orderBy = 'ORDER BY' . ' ' . $column . ' ' . $direction;
         }
+
         return $this;
     }
     /**
-     * Add an "order by" clause for a timestamp to the query.
+     * Add an 'order by' clause for a timestamp to the query.
      * 
      * @param  string  $column
      * @return $this
@@ -135,7 +142,7 @@ Trait QueryBuilder
     }
 
     /**
-     * Add an "order by" clause for a timestamp to the query.
+     * Add an 'order by' clause for a timestamp to the query.
      *
      * @param  string  $column
      * @return $this
@@ -146,7 +153,7 @@ Trait QueryBuilder
     }
 
     /**
-     * Execute the query as a "select" statement.
+     * Execute the query as a 'select' statement.
      *
      * @return array
      */
@@ -155,20 +162,22 @@ Trait QueryBuilder
         $db = static::getDB();
         $this->selectColumn = $column;
         $sqlQuery = 
-        "SELECT " . $this->selectColumn . 
-        " FROM " . $this->_table . " " .
-        $this->innerJoin . " " . 
-        $this->where . " " . 
-        $this->orderBy . " " . 
+        'SELECT ' . $this->selectColumn . 
+        ' FROM ' . $this->_table . ' ' .
+        $this->innerJoin . ' ' . 
+        $this->where . ' ' . 
+        $this->orderBy . ' ' . 
         $this->limit;
         $sqlQuery = trim($sqlQuery);
         $result = $db->query($sqlQuery);
+ 
         // Reset field
         $this->resetQuery();
 
-        if($result){
+        if (!empty($result)) {
             return $result->fetchAll(PDO::FETCH_ASSOC);
         }
+
         return false;
     }
 
@@ -180,15 +189,16 @@ Trait QueryBuilder
     public function all()
     {
         $db = static::getDB();
-        $sqlQuery = "SELECT * FROM $this->_table";
-        $result = $db->query($sqlQuery);
+        $sqlQuery = 'SELECT * FROM $this->_table';
+        $query = $db->query($sqlQuery);
 
         // Reset field
         $this->resetQuery();
 
-        if($result){
-            return $result->fetchAll(PDO::FETCH_ASSOC);
+        if ($query) {
+            return $query->fetchAll(PDO::FETCH_ASSOC);
         }
+
         return false;
     }
 
@@ -214,15 +224,16 @@ Trait QueryBuilder
     {
         $db = static::getDB();
         $this->selectColumn = $column;
-        $sqlQuery = "SELECT " . $this->selectColumn . " FROM " . $this->_table . " " . $this->where;
+        $sqlQuery = 'SELECT ' . $this->selectColumn . ' FROM ' . $this->_table . ' ' . $this->where;
         $result = $db->query($sqlQuery);
 
         // Reset field
         $this->resetQuery();
 
-        if($result){
+        if (!empty($result)) {
             return $result->fetch(PDO::FETCH_ASSOC);
         }
+
         return false;
     }
 
@@ -246,7 +257,8 @@ Trait QueryBuilder
      */
     public function join($tableName, $relationship)
     {
-        $this->innerJoin = "INNER JOIN" .$tableName. " ON " .$relationship." ";
+        $this->innerJoin = 'INNER JOIN' .$tableName. ' ON ' .$relationship.' ';
+
         return $this;
     }
     
@@ -260,22 +272,22 @@ Trait QueryBuilder
     {
         $db = static::getDB();
         $tableName = $this->_table;
-        if(!empty($data)){
+        if (!empty($data)) {
             $columnStr = '';
             $valueStr = '';
             foreach($data as $key => $value){
-                $key = addslashes($key);
-                $value = addslashes($value);
-                $columnStr.= $key.',';
-                $valueStr.= "'".$value."',";
+                $key = addslashes(htmlspecialchars($key));
+                $value = addslashes(htmlspecialchars($value));
+                $columnStr.= $key . ',';
+                $valueStr.= '\'' . $value . '\',';
             }
             $columnStr = rtrim($columnStr, ',');
             $valueStr = rtrim($valueStr, ',');
 
-            $sqlQuery = "INSERT INTO " . $tableName . " (" . $columnStr . ")" . " VALUES " . "(" . $valueStr . ") " ;
+            $sqlQuery = 'INSERT INTO ' . $tableName . ' (' . $columnStr . ')' . ' VALUES ' . '(' . $valueStr . ') ' ;
             $result = $db->query($sqlQuery);
 
-            if($result){
+            if ($result) {
                 return true;
             }
         }
@@ -295,29 +307,27 @@ Trait QueryBuilder
         $db = static::getDB();
         $tableName = $this->_table; 
 
-        if(!empty($data)){
+        if (!empty($data)) {
             $updateStr = '';
-            foreach($data as $key => $value){
-                $key = addslashes($key);
-                $value = addslashes($value);
-                $updateStr.= "$key = '$value',";
+            foreach ($data as $key => $value) {
+                $key = addslashes(htmlspecialchars($key));
+                $value = addslashes(htmlspecialchars($value));
+                $updateStr.= $key . '=' . '\'' . $value . '\',';
             }
             $updateStr = rtrim($updateStr, ',');
             
-            if(!empty($conditions)){
-                $sqlQuery = "UPDATE " . $tableName . " SET " . $updateStr . " WHERE " . $conditions;
-            }else {
-                $sqlQuery = "UPDATE " . $tableName . " SET " . $updateStr ;
+            if (!empty($conditions)) {
+                $sqlQuery = 'UPDATE ' . $tableName . ' SET ' . $updateStr . ' WHERE ' . $conditions;
+            } else {
+                $sqlQuery = 'UPDATE ' . $tableName . ' SET ' . $updateStr ;
             }
-            // echo $sqlQuery;
-            // exit;
             $result = $db->query($sqlQuery);
 
-            if($result){
+            if ($result) {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -331,7 +341,7 @@ Trait QueryBuilder
         $db = static::getDB();
         $tableName = $this->_table;
 
-        $sqlQuery = "DELETE FROM " . $tableName . " WHERE " . $conditions;
+        $sqlQuery = 'DELETE FROM ' . $tableName . ' WHERE ' . $conditions;
 
         $result = $db->query($sqlQuery);
 
@@ -339,7 +349,7 @@ Trait QueryBuilder
     }
 
      /**
-     * Execute the delete query (delete table).
+     * Execute the delete query (delete table). 
      *
      * @return boolean
      */
@@ -348,11 +358,10 @@ Trait QueryBuilder
         $db = static::getDB();
         $tableName = $this->_table;
 
-        $sqlQuery = "DELETE FROM " . $tableName;
+        $sqlQuery = 'DELETE FROM ' . $tableName;
 
         $result = $db->query($sqlQuery);
 
         return !!$result;
     }
 }
-
