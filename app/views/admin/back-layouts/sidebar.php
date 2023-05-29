@@ -77,5 +77,16 @@
                 </div>
             </a>
         </li>
+        <li class="">
+            <a class="has-arrow" href="/admin/capture/index" aria-expanded="false">
+                <div class="nav_icon_small">
+                    <img src="" alt="">
+                </div>
+                <div class="nav_title">
+                    <span>Capture Page</span>
+                </div>
+            </a>
+        </li>
+
     </ul>
 </nav>
