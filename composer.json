@@ -14,5 +14,16 @@
             "app/functions/errors.php",
             "app/functions/validation.php"
         ]
+    },
+    "config": {
+        "bin-dir": "/htdocs/intern_training/vendor/jonnyw/php-phantomjs/src/JonnyW/PhantomJs"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "PhantomInstaller\\Installer::installPhantomJS"
+        ],
+        "post-update-cmd": [
+            "PhantomInstaller\\Installer::installPhantomJS"
+        ]
     }
 }
