@@ -77,5 +77,15 @@
                 </div>
             </a>
         </li>
+        <li class="">
+            <a class="has-arrow" href="/admin/webdriver/index" aria-expanded="false">
+                <div class="nav_icon_small">
+                    <img src="" alt="">
+                </div>
+                <div class="nav_title">
+                    <span>WebDriver</span>
+                </div>
+            </a>
+        </li>
     </ul>
 </nav>
