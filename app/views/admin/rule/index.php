@@ -22,9 +22,15 @@
                                 <div class="card-header">
                                     <form action="/admin/rule/import" class="form-group w-50 d-flex justify-content-around m-2" method="post" enctype="multipart/form-data">
                                         <input class="form-control w-75 mr-2" type="file" name="file_upload" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required>
-                                        <input class="form-control w-75 mr-2 " type="text" name="type_rule_name" placeholder="Enter rule name..." required>
+                                        <input class="form-control w-75 mr-2 " type="text" name="type_rule_name" placeholder="Enter rule list name..." required>
                                         <button class="btn btn-primary w-25" type="submit">Import</button>
                                     </form>
+                                    <?php if (isset($msg)) {
+                                        echo " <div class='alert alert-danger' role='alert'>
+                                                $msg
+                                           </div>";
+                                    }
+                                    ?>
                                 </div>
                             </div>
                         </div>
@@ -38,19 +44,16 @@
                             <ul class="list-group list-rules">
                                 <?php $i = 1;
                                 foreach ($types_rule as $type_rule) { ?>
-                                    <li class="list-group-item justify-content-around d-flex align-content-center">
+                                    <li class="list-group-item justify-content-around d-flex w-50">
                                         <span class="rule-name mt-3 f_s_18 w-50">
                                             <?php echo $type_rule['name']; ?>
                                         </span>
                                         <div class="d-flex ">
-                                            <a href="/admin/rule/rulesDetail?id=<?php echo $type_rule['id'] ?>&name=<?php echo $type_rule['name'] ?>" class="btn btn-info m-2">View detail</a>
-                                            <a href="#" class="btn btn-warning m-2">Edit</a>
-                                            <a href="#" class="btn btn-danger m-2">Delete</a>
+                                            <a href="/admin/rule/rulesDetail?id=<?php echo $type_rule['id'] ?>" class="btn btn-info m-2">View detail</a>
+                                            <button data-id="<?php echo $type_rule['id'] ?>" class="btn btn-danger btn-delete-list-rule m-2">Delete</button>
                                         </div>
                                     </li>
                                 <?php } ?>
-
-
                             </ul>
                         </div>
                     </div>

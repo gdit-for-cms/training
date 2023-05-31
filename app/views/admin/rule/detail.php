@@ -3,12 +3,20 @@
         <div class="col-12">
             <div class="white_card card_box card_height_100 mb_30">
                 <div class="white_box_tittle">
-                    <div class="main-title2 flex items-center ">
-                        <h4 class="mb-2 nowrap">List Rules</h4>
-                        <h4 class="mb-2 nowrap fw-bold"> <?php if (isset($type_rule_name)) {
-                                                                echo ': ' . $type_rule_name;
-                                                            } ?></h4>
+                    <div class="main-title2 d-flex justify-content-between items-center ">
+
+                        <div class="top-left d-flex">
+                            <h4 class="mb-2 nowrap">List Rules</h4>
+                            <h4 class="mb-2 nowrap fw-bold"> <?php if (isset($type_rule_name)) {
+                                                                    echo ': ' . $type_rule_name;
+                                                                } ?></h4>
+
+                        </div>
+                        <div class="top-right">
+                            <a href="/admin/rule/create?type_rule_id=<?php echo $type_rule_id ?>"><button type=" button" class="btn btn-success float-end">Add New</button></a>
+                        </div>
                     </div>
+
                 </div>
                 <div class="white_card_body">
                     <div class="table-responsive m-b-30">
@@ -18,11 +26,10 @@
                                 <button id="search_btn" type="button" disabled class="btn btn-primary">search</button>
                                 <button id="delete_search" type="button" class="btn btn-danger text-white ml-2">X</button>
                             </div>
-                            <div class="flex col-2 my-3">
-                                <form action="/admin/rule/export" method="post">
+                            <div class="flex col-2 my-3 justify-content-end">
+                                <form action="/admin/rule/export" class="" method="post">
                                     <input type="hidden" name="type_rule_id" value="<?php echo $type_rule_id ?>">
                                     <input type="hidden" name="type_rule_name" value="<?php echo $type_rule_name ?>">
-
                                     <button type="submit" class="btn btn-danger m-2">Export file (.xlsx)</button>
                                 </form>
                             </div>
@@ -54,8 +61,8 @@
                                         <td><?php echo htmlspecialchars($rule['note']) ?></td>
 
                                         <td class="flex py-5">
-                                            <a href='#' class="edit_btn mr-2"><button type="button" class="btn btn-info text-white">Edit</button></a>
-                                            <button type="button" data-id="" class="btn btn-danger delete-btn text-white">Delete</button>
+                                            <a href="/admin/rule/edit?id=<?php echo $rule['id'] ?>" class="btn btn-info text-white mr-1">Edit</a>
+                                            <button type="button" class="btn btn-danger delete-btn text-white">Delete</button>
                                         </td>
                                     </tr>
                                 <?php } ?>

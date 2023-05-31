@@ -9,11 +9,10 @@ use App\Models\TypeRule;
 use  PhpOffice\PhpSpreadsheet\Spreadsheet;
 use  PhpOffice\PhpSpreadsheet\Reader\Xls;
 use  PhpOffice\PhpSpreadsheet\Reader\Csv;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-
-
-
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 class RuleController extends AppController
 {
@@ -39,19 +38,75 @@ class RuleController extends AppController
         $this->data_ary['content'] = "rule/index";
     }
 
+    public function createAction(Request $request)
+    {
+        $type_rule_id = $request->getGet()->get('type_rule_id');
+        $type_rule = $this->obj_type_rule_model->getById($type_rule_id);
+        $this->data_ary['type_rule'] = $type_rule;
+        $this->data_ary['content'] = "rule/create";
+    }
+    public function editAction(Request $request)
+    {
+        $rule_id = $request->getGet()->get('id');
+        $rule_edit = $this->obj_rule_model->getById($rule_id);
+        $type_rule = $this->obj_type_rule_model->getById($rule_edit['type_rule_id']);
+
+        $this->data_ary['type_rule'] = $type_rule;
+        $this->data_ary['rule_edit'] = $rule_edit;
+        $this->data_ary['content'] = "rule/edit";
+    }
+
+    public function storeAction(Request $request)
+    {
+        $type_rule_id = $request->getGet()->get('type_rule_id');
+        $type_rule = $this->obj_type_rule_model->getById($type_rule_id);
+
+        $data_ary = $request->getPost()->all();
+        $data_ary['type_rule_id'] = $type_rule_id;
+
+        if ($this->obj_rule_model->create($data_ary)) {
+            header("Location: /admin/rule/rulesDetail?id=" . $type_rule_id . '&name=' . $type_rule['name']);
+        } else {
+            header("Location: /admin/rule/create?type_rule_id=" . $type_rule['id']);
+        }
+    }
+    public function updateAction(Request $request)
+    {
+        $rule_id = $request->getGet()->get('id');
+        $rule_edit = $this->obj_rule_model->getById($rule_id);
+
+        $type_rule_id = $request->getGet()->get('type_rule_id');
+        $type_rule = $this->obj_type_rule_model->getById($type_rule_id);
+
+        $data_ary = $request->getPost()->all();
+
+        if ($this->obj_rule_model->updateOne($data_ary, "id ='$rule_id'")) {
+            header("Location: /admin/rule/rulesDetail?id=" . $type_rule_id . '&name=' . $type_rule['name']);
+        } else {
+            header("Location: /admin/rule/edit?id=" . $rule_edit['id']);
+        }
+    }
+
     public function rulesDetailAction(Request $request)
     {
         $type_rule_id = $request->getGet()->get('id');
-        $type_rule_name = $request->getGet()->get('name');
+        $type_rule =  $this->obj_type_rule_model->getById($type_rule_id);
 
         $rules_by_type_ary = $this->obj_rule_model->getBy('type_rule_id', '=', $type_rule_id, '*');
 
-
         $this->data_ary['rules_by_type_ary'] = $rules_by_type_ary;
-        $this->data_ary['type_rule_name'] = $type_rule_name;
+        $this->data_ary['type_rule_name'] = $type_rule['name'];
         $this->data_ary['type_rule_id'] = $type_rule_id;
         $this->data_ary['content'] = "rule/detail";
     }
+
+    public function deleteListlAction(Request $request)
+    {
+        $type_rule_id = $request->getGet()->get('id');
+        $type_rule =  $this->obj_type_rule_model->getById($type_rule_id);
+        $this->data_ary['content'] = "rule/detail";
+    }
+
     public function importAction(Request $request)
     {
         $type_rule_name = $request->getPost()->get('type_rule_name');
@@ -98,6 +153,7 @@ class RuleController extends AppController
                             }
                         }
                     } else {
+                        $this->data_ary['msg'] = "Rule list name already exits. Please enter another name!";
                     }
 
                     $this->data_ary['content'] = "rule/index";
@@ -113,32 +169,81 @@ class RuleController extends AppController
         $type_rule_id = $request->getPost()->get('type_rule_id');
         $type_rule_name = $request->getPost()->get('type_rule_name');
         $rules_by_type_ary = $this->obj_rule_model->getBy('type_rule_id', '=', $type_rule_id, '*');
-        $spreadsheet = IOFactory::load('template.xlsx');
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-        // $sheet->setCellValue('A1', 'No');
-        // $sheet->setCellValue('B1', 'Large category');
-        // $sheet->setCellValue('C1', 'Middle category');
-        // $sheet->setCellValue('D1', 'Small category');
-        // $sheet->setCellValue('E1', 'Content');
-        // $sheet->setCellValue('F1', 'Detail');
-        // $sheet->setCellValue('G1', 'Note');
-        // // $row_count = 2;
-        // // foreach ($rules_by_type_ary as $row) {
-        // //     $sheet->setCellValue('A' . $row_count, $row_count - 1);
-        // //     $sheet->setCellValue('B' . $row_count, $row['large_category']);
-        // //     $sheet->setCellValue('C' . $row_count, $row['middle_category']);
-        // //     $sheet->setCellValue('D' . $row_count, $row['small_category']);
-        // //     $sheet->setCellValue('E' . $row_count, $row['content']);
-        // //     $sheet->setCellValue('F' . $row_count, $row['detail']);
-        // //     $sheet->setCellValue('G' . $row_count, $row['note']);
-        // //     $row_count++;
-        // // }
-        $writer = new Xlsx($spreadsheet);
-        $file_name = str_replace(' ', '_', $type_rule_name);
-        $file_name .= date('Ymd') . ".xlsx";
+        $spread_sheet = new Spreadsheet();
+        $sheet = $spread_sheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Large category');
+        $sheet->setCellValue('C1', 'Middle category');
+        $sheet->setCellValue('D1', 'Small category');
+        $sheet->setCellValue('E1', 'Content');
+        $sheet->setCellValue('F1', 'Detail');
+        $sheet->setCellValue('G1', 'Note');
+        $row_count = 1;
+        foreach ($rules_by_type_ary as $row) {
+            $row_count++;
+            $sheet->setCellValue('A' . $row_count, $row_count - 1);
+            $sheet->setCellValue('B' . $row_count, $row['large_category']);
+            $sheet->setCellValue('C' . $row_count, $row['middle_category']);
+            $sheet->setCellValue('D' . $row_count, $row['small_category']);
+            $sheet->setCellValue('E' . $row_count, $row['content']);
+            $sheet->setCellValue('F' . $row_count, $row['detail']);
+            $sheet->setCellValue('G' . $row_count, $row['note']);
+        }
+
+        $styles_body_ary = [
+            'borders'   => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                ],
+            ],
+            'alignment' => [
+                'wrapText' => true,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+            ],
+        ];
+        $styles_header_ary = [
+            'borders'   => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                ],
+            ],
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => ['argb' => 'C0C0C0']
+            ],
+            'font' => [
+                'bold' => true,
+            ],
+        ];
+        $spread_sheet->getActiveSheet()->getStyle("A1:G1")->applyFromArray($styles_header_ary);
+        $spread_sheet->getActiveSheet()->getStyle("A2:G$row_count")->applyFromArray($styles_body_ary);
+        $spread_sheet->getActiveSheet()->getRowDimension('1')->setRowHeight(20);
+        foreach (range('A', 'G') as $column) {
+            switch ($column) {
+                case 'B':
+                case 'C':
+                case 'D':
+                    $spread_sheet->getActiveSheet()->getColumnDimension($column)->setWidth(20);
+                    break;
+                case 'E':
+                case 'F':
+                case 'G':
+                    $spread_sheet->getActiveSheet()->getColumnDimension($column)->setWidth(50);
+                    break;
+                default:
+                    $spread_sheet->getActiveSheet()->getColumnDimension($column)->setWidth(5);
+                    break;
+            }
+        }
+        $spread_sheet->getDefaultStyle()->getFont()->setName('Times New Roman');
+        $spread_sheet->getDefaultStyle()->getFont()->setSize(10);
+
+        $writer =  new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spread_sheet);
+        $file_name = str_replace(' ', '_', $type_rule_name) . date('Ymd') . ".xlsx";
+        $writer->save($file_name);
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attactment; filename="' . $file_name . '"');
-        $writer->save('php://output');
+        header('Content-Disposition: attactment; filename="' . urlencode($file_name) . '"');
+        readfile("$file_name");
+        exit();
     }
 }

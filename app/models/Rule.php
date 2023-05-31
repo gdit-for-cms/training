@@ -34,6 +34,7 @@ class Rule extends Model
 
     public function getById($id)
     {
+        return $this->where('id', "=", $id)->get('*')[0];
     }
 
 

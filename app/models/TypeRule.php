@@ -34,7 +34,7 @@ class TypeRule extends Model
 
     public function getById($id)
     {
-        return $this->where('id', '=', $id)->get('*');
+        return $this->where('id', '=', $id)->get('*')[0];
     }
 
     public function create($data)
