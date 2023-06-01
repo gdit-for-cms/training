@@ -13,7 +13,7 @@
                     <div class="card-body-left w-50 mr-3">
                         <div class="mb-3">
                             <label for="type_rule" class="form-label">Type rule</label>
-                            <input type="text" name="type_rule" class="form-control" id="type_rule" value="<?php echo $type_rule['name'] ?>" disabled>
+                            <input type="text" name="type_rule" class="form-control" id="type_rule" value="<?php echo htmlspecialchars($type_rule['name']) ?>" disabled>
                         </div>
                         <div class="mb-3">
                             <label for="large_category" class="form-label">Large Category</label>

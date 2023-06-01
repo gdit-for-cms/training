@@ -8,7 +8,7 @@
                         <div class="top-left d-flex">
                             <h4 class="mb-2 nowrap">List Rules</h4>
                             <h4 class="mb-2 nowrap fw-bold"> <?php if (isset($type_rule_name)) {
-                                                                    echo ': ' . $type_rule_name;
+                                                                    echo ': ' . htmlspecialchars($type_rule_name);
                                                                 } ?></h4>
 
                         </div>
@@ -29,12 +29,12 @@
                             <div class="flex col-2 my-3 justify-content-end">
                                 <form action="/admin/rule/export" class="" method="post">
                                     <input type="hidden" name="type_rule_id" value="<?php echo $type_rule_id ?>">
-                                    <input type="hidden" name="type_rule_name" value="<?php echo $type_rule_name ?>">
+                                    <input type="hidden" name="type_rule_name" value="<?php echo htmlspecialchars($type_rule_name) ?>">
                                     <button type="submit" class="btn btn-danger m-2">Export file (.xlsx)</button>
                                 </form>
                             </div>
                         </div>
-                        <table class="table table-striped table-bordered">
+                        <table class="table table-striped table-bordered table-responsive">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
@@ -49,7 +49,7 @@
                             </thead>
                             <tbody>
                                 <?php $i = 1;
-                                foreach ($rules_by_type_ary as $rule) { ?>
+                                foreach ($rules_in_one_page_ary as $rule) { ?>
                                     <tr class="user_items">
                                         <th scope="row"><?php echo $i;
                                                         $i++ ?> </th>
@@ -58,11 +58,13 @@
                                         <td><?php echo htmlspecialchars($rule['small_category']) ?></td>
                                         <td><?php echo htmlspecialchars($rule['content']) ?></td>
                                         <td><?php echo htmlspecialchars($rule['detail']) ?></td>
-                                        <td><?php echo htmlspecialchars($rule['note']) ?></td>
+                                        <td class=""><?php echo htmlspecialchars($rule['note']) ?></td>
 
-                                        <td class="flex py-5">
-                                            <a href="/admin/rule/edit?id=<?php echo $rule['id'] ?>" class="btn btn-info text-white mr-1">Edit</a>
-                                            <button type="button" class="btn btn-danger delete-btn text-white">Delete</button>
+                                        <td class="">
+                                            <div class="d-flex ">
+                                                <a href="/admin/rule/edit?id=<?php echo $rule['id'] ?>" class="btn btn-info text-white mr-1">Edit</a>
+                                                <button data-id="<?php echo $rule['id'] ?>" type="button" class="btn btn-danger btn-delete-rule text-white">Delete</button>
+                                            </div>
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -70,8 +72,140 @@
                         </table>
                     </div>
                 </div>
-
+                <div class="flex justify-center items-center">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item cursor-pointer"><a class="page-link">Previous</a></li>
+                            <?php for ($i = 1; $i <= $numbers_of_pages; $i++) { ?>
+                                <li class="page-item cursor-pointer"><a class="page-link"><?= $i ?></a></li>
+                            <?php } ?>
+                            <li class="page-item cursor-pointer"><a class="page-link">Next</a></li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    const paginationEles = document.querySelectorAll('.page-item')
+    const searchInput = document.querySelector('#search_input')
+    const searchBtn = document.querySelector('#search_btn')
+    const deleteSearchBtn = document.querySelector('#delete_search')
+    const urlParams = new URLSearchParams(window.location.search)
+    const typeRuleId = urlParams.get('type_rule_id');
+    const PAGE_STORAGE_KEY = 'PAGE RULE FILTER'
+    var config = JSON.parse(localStorage.getItem(PAGE_STORAGE_KEY)) || {}
+
+    function start() {
+        filterRule()
+        checkValueSearch()
+        deleteSearch()
+    }
+    start()
+
+    function setFilter(key, value) {
+        config[key] = value
+        localStorage.setItem(PAGE_STORAGE_KEY, JSON.stringify(config))
+    }
+
+    function filterRule() {
+        if (config.type_rule_id != typeRuleId) {
+            setFilter('type_rule_id', typeRuleId)
+            setFilter('page', 1)
+            setFilter('search', "")
+        }
+        if (localStorage.getItem("PAGE RULE FILTER") === null) {
+            setFilter('search', searchInput.value)
+            setFilter('page', 1)
+        } else {
+            if (!urlParams.has('page')) {
+                let data = `${config.type_rule_id == '' ? '' : `&type_rule_id=${config.type_rule_id}`}${config.search == '' ? '' : `&search=${config.search}`}${config.page == '' ? '' : `&page=${config.page}`}`
+                if (data.charAt(0) == '&') {
+                    data = data.substring(1)
+                }
+                document.location.search = `?${data}`
+            }
+        }
+        searchInput.value = config.search
+        paginationEles.forEach(ele => {
+            if (config.page == 1 && ele.getElementsByTagName('a')[0].textContent == 'Previous') {
+                ele.classList.add('d-none')
+            } else {
+                ele.classList.remove('hidden')
+            }
+
+            if (config.page == paginationEles.length - 2 && ele.getElementsByTagName('a')[0].textContent == 'Next') {
+                ele.classList.add('hidden')
+            } else {
+                ele.classList.remove('hidden')
+            }
+
+            if (config.page == ele.getElementsByTagName('a')[0].textContent) {
+                ele.getElementsByTagName('a')[0].style.backgroundColor = '#C5C5C5'
+            }
+
+            ele.addEventListener('click', () => {
+                switch (ele.getElementsByTagName('a')[0].textContent) {
+                    case 'Previous':
+                        if (config.page == 1) {
+                            setFilter('page', 1)
+                        } else {
+                            setFilter('page', parseInt(config.page) - 1)
+                        }
+                        break;
+                    case 'Next':
+                        if (config.page == paginationEles.length - 2) {
+                            setFilter('page', paginationEles.length - 2)
+                        } else {
+                            setFilter('page', parseInt(config.page) + 1)
+                        }
+                        break;
+                    default:
+                        setFilter('page', ele.getElementsByTagName('a')[0].textContent)
+                        break;
+                }
+                let data = `${config.type_rule_id == '' ? '' : `&type_rule_id=${config.type_rule_id}`}${config.search == '' ? '' : `&search=${config.search}`}${config.page == '' ? '' : `&page=${config.page}`}`
+                if (data.charAt(0) == '&') {
+                    data = data.substring(1)
+                }
+                document.location.search = `?${data}`
+            })
+        })
+    }
+    searchBtn.addEventListener('click', () => {
+        setFilter('page', 1)
+        setFilter('search', searchInput.value)
+        let data = `${config.type_rule_id == '' ? '' : `&type_rule_id=${config.type_rule_id}`}${config.search == '' ? '' : `&search=${config.search}`}${config.page == '' ? '' : `&page=${config.page}`}`
+        if (data.charAt(0) == '&') {
+            data = data.substring(1)
+        }
+        document.location.search = `?${data}`
+    })
+
+    function checkValueSearch() {
+        searchInput.addEventListener('keyup', () => {
+            if (searchInput.value.length == 0) {
+                searchBtn.disabled = true
+            } else {
+                searchBtn.disabled = false
+            }
+        })
+    }
+
+    function deleteSearch() {
+        if (searchInput.value == '') {
+            deleteSearchBtn.disabled = true
+        } else {
+            deleteSearchBtn.disabled = false
+        }
+        deleteSearchBtn.addEventListener('click', () => {
+            setFilter('search', '')
+            let data = `${config.type_rule_id == '' ? '' : `&type_rule_id=${config.type_rule_id}`}${config.search == '' ? '' : `&search=${config.search}`}${config.page == '' ? '' : `&page=${config.page}`}`
+            if (data.charAt(0) == '&') {
+                data = data.substring(1)
+            }
+            document.location.search = `?${data}`
+        })
+    }
+</script>

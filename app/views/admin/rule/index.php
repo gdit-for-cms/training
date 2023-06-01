@@ -16,21 +16,27 @@
                                     + Import data
                                 </button>
                             </p>
+                            <?php if (isset($_SESSION['msg'])) {
+                                $msg =  $_SESSION['msg']['message'];
+                                $type =  $_SESSION['msg']['type'];
+
+                                echo " <div class='alert alert-$type' role='alert'>
+                                             $msg   
+                                           </div>";
+                                unset($_SESSION['msg']);
+                            }
+                            ?>
+
                         </div>
                         <div class="collapse" id="collapseExample">
                             <div class="card card-body  ">
                                 <div class="card-header">
-                                    <form action="/admin/rule/import" class="form-group w-50 d-flex justify-content-around m-2" method="post" enctype="multipart/form-data">
+                                    <form action="" id="form_import_file" class="form-group w-50 d-flex justify-content-around m-2" method="post" enctype="multipart/form-data">
                                         <input class="form-control w-75 mr-2" type="file" name="file_upload" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required>
                                         <input class="form-control w-75 mr-2 " type="text" name="type_rule_name" placeholder="Enter rule list name..." required>
-                                        <button class="btn btn-primary w-25" type="submit">Import</button>
+                                        <button class="btn btn-primary w-25" name="btn-import" type="submit">Import</button>
                                     </form>
-                                    <?php if (isset($msg)) {
-                                        echo " <div class='alert alert-danger' role='alert'>
-                                                $msg
-                                           </div>";
-                                    }
-                                    ?>
+
                                 </div>
                             </div>
                         </div>
@@ -46,10 +52,10 @@
                                 foreach ($types_rule as $type_rule) { ?>
                                     <li class="list-group-item justify-content-around d-flex w-50">
                                         <span class="rule-name mt-3 f_s_18 w-50">
-                                            <?php echo $type_rule['name']; ?>
+                                            <?php echo htmlspecialchars($type_rule['name']) ?>
                                         </span>
                                         <div class="d-flex ">
-                                            <a href="/admin/rule/rulesDetail?id=<?php echo $type_rule['id'] ?>" class="btn btn-info m-2">View detail</a>
+                                            <a href="/admin/rule/rulesDetail?type_rule_id=<?php echo $type_rule['id'] ?>" class="btn btn-info m-2">View detail</a>
                                             <button data-id="<?php echo $type_rule['id'] ?>" class="btn btn-danger btn-delete-list-rule m-2">Delete</button>
                                         </div>
                                     </li>
@@ -63,6 +69,3 @@
         </div>
     </div>
 </div>
-<script>
-
-</script>

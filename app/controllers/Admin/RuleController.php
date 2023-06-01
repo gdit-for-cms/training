@@ -33,6 +33,11 @@ class RuleController extends AppController
 
     public function indexAction(Request $request)
     {
+        if (isset($_POST['btn-import'])) {
+            $this->import($request);
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+            die();
+        }
         $types_rule = $this->obj_type_rule_model->getAll();
         $this->data_ary['types_rule'] = $types_rule;
         $this->data_ary['content'] = "rule/index";
@@ -65,7 +70,7 @@ class RuleController extends AppController
         $data_ary['type_rule_id'] = $type_rule_id;
 
         if ($this->obj_rule_model->create($data_ary)) {
-            header("Location: /admin/rule/rulesDetail?id=" . $type_rule_id . '&name=' . $type_rule['name']);
+            header("Location: /admin/rule/rulesDetail?type_rule_id=" . $type_rule_id);
         } else {
             header("Location: /admin/rule/create?type_rule_id=" . $type_rule['id']);
         }
@@ -81,7 +86,7 @@ class RuleController extends AppController
         $data_ary = $request->getPost()->all();
 
         if ($this->obj_rule_model->updateOne($data_ary, "id ='$rule_id'")) {
-            header("Location: /admin/rule/rulesDetail?id=" . $type_rule_id . '&name=' . $type_rule['name']);
+            header("Location: /admin/rule/rulesDetail?type_rule_id=" . $type_rule_id);
         } else {
             header("Location: /admin/rule/edit?id=" . $rule_edit['id']);
         }
@@ -89,10 +94,18 @@ class RuleController extends AppController
 
     public function rulesDetailAction(Request $request)
     {
-        $type_rule_id = $request->getGet()->get('id');
+        $type_rule_id = $request->getGet()->get('type_rule_id');
         $type_rule =  $this->obj_type_rule_model->getById($type_rule_id);
-
         $rules_by_type_ary = $this->obj_rule_model->getBy('type_rule_id', '=', $type_rule_id, '*');
+
+        $get_ary = $request->getGet()->all();
+        $results_per_page = 5;
+        array_shift($get_ary);
+        $results_ary = $this->obj_rule_model->getAllRelation($get_ary, $results_per_page);
+        $numbers_of_result = $results_ary['numbers_of_result'];
+        $numbers_of_pages = ceil($numbers_of_result / $results_per_page);
+        $this->data_ary['numbers_of_pages'] = $numbers_of_pages;
+        $this->data_ary['rules_in_one_page_ary'] = $results_ary['results'];
 
         $this->data_ary['rules_by_type_ary'] = $rules_by_type_ary;
         $this->data_ary['type_rule_name'] = $type_rule['name'];
@@ -100,14 +113,24 @@ class RuleController extends AppController
         $this->data_ary['content'] = "rule/detail";
     }
 
-    public function deleteListlAction(Request $request)
+    public function deleteListAction(Request $request)
     {
         $type_rule_id = $request->getGet()->get('id');
-        $type_rule =  $this->obj_type_rule_model->getById($type_rule_id);
-        $this->data_ary['content'] = "rule/detail";
+        $this->obj_type_rule_model->destroyOne("id = $type_rule_id");
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        die();
     }
 
-    public function importAction(Request $request)
+    public function deleteAction(Request $request)
+    {
+        $rule_id = $request->getGet()->get('id');
+        $this->obj_rule_model->destroyOne("id = $rule_id");
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        die();
+    }
+
+
+    public function import(Request $request)
     {
         $type_rule_name = $request->getPost()->get('type_rule_name');
         $file_mimes = array('text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel', 'text/plain', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -139,7 +162,7 @@ class RuleController extends AppController
                                 $content = $row[4];
                                 $detail = $row[5];
                                 $note = $row[6];
-                                $this->obj_rule_model->create(
+                                $result = $this->obj_rule_model->create(
                                     [
                                         'type_rule_id' => $type_rule[0]['id'],
                                         'large_category' => $large_category,
@@ -150,19 +173,30 @@ class RuleController extends AppController
                                         'note' => $note,
                                     ]
                                 );
+                                if ($result) {
+                                    $_SESSION['msg']  = [
+                                        'type' => "success",
+                                        'message' => "Import success!"
+                                    ];
+                                } else {
+                                    $_SESSION['msg']  = [
+                                        'type' => "danger",
+                                        'message' => "Import failed!"
+                                    ];
+                                }
                             }
                         }
                     } else {
-                        $this->data_ary['msg'] = "Rule list name already exits. Please enter another name!";
+                        $_SESSION['msg']  = [
+                            'type' => "danger",
+                            'message' => "Rule list name already exits. Please enter another name!"
+                        ];
                     }
-
-                    $this->data_ary['content'] = "rule/index";
                 } catch (\Throwable $th) {
                     return $this->errorResponse($th->getMessage());
                 };
             }
         }
-        header('Location: /admin/rule/index');
     }
     public function exportAction(Request $request)
     {
