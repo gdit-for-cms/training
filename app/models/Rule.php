@@ -55,18 +55,30 @@ class Rule extends Model
 
         foreach ($req_method_ary as $key => $value) {
             if ($condition_query != '') {
-                if ($key != 'search') {
+                if ($key == 'date_search') {
+                    $condition_query .= ' AND ';
+                    $condition_query .= '(Date(r.created_at) =\'' . $value . '\')';
+                } else if ($key == 'category') {
+                    $condition_query .= ' AND ';
+                    $condition_query .= '(r.large_category =\'' . $value . '\' OR r.middle_category =\'' . $value . '\'OR r.small_category=\'' . $value . '\')';
+                } else if ($key != 'search') {
                     $condition_query .= ' AND ';
                     $condition_query .= $key . '=' . $value;
                 } else {
                     $condition_query .= ' AND ';
-                    $condition_query .= '(r.large_category LIKE \'%' . $value . '%\' OR r.large_category LIKE \'%' . $value . '%\'OR r.small_category LIKE \'%' . $value . '%\')';
+                    $condition_query .= '(r.large_category LIKE \'%' . $value . '%\' OR r.middle_category LIKE \'%' . $value . '%\'OR r.small_category LIKE \'%'
+                        . $value . '%\'OR r.content LIKE \'%' . $value . '%\'OR r.detail LIKE \'%' . $value . '%\'OR r.note LIKE \'%' . $value . '%\')';
                 }
             } else {
-                if ($key != 'search') {
+                if ($key == 'date_search') {
+                    $condition_query .= "WHERE Date(r.created_at) =\'' . $value . '\'";
+                } else if ($key == 'category') {
+                    $condition_query .= "WHERE r.large_category =\'' . $value . '\' OR r.middle_category =\'' . $value . '\'OR r.small_category=\'' . $value . '\'";
+                } else if ($key != 'search') {
                     $condition_query .= "WHERE $key = $value";
                 } else {
-                    $condition_query .= 'WHERE (r.large_category LIKE \'%' . $value . '%\' OR r.large_category LIKE \'%' . $value . '%\'OR r.small_category LIKE \'%' . $value . '%\')';
+                    $condition_query .= 'WHERE (r.large_category LIKE \'%' . $value . '%\' OR r.middle_category LIKE \'%' . $value . '%\'OR r.small_category LIKE \'%'
+                        . $value . '%\'OR r.content LIKE \'%' . $value . '%\'OR r.detail LIKE \'%' . $value . '%\'OR r.note LIKE \'%' . $value . '%\')';
                 }
             }
         }
@@ -76,6 +88,8 @@ class Rule extends Model
                 '
             . $condition_query;
 
+
+
         $stmt_count = $db->query($query);
         $numbers_of_result = count($stmt_count->fetchAll(PDO::FETCH_ASSOC));
         $stmt = $db->query($query . ' ' . $limit_query);
@@ -83,6 +97,30 @@ class Rule extends Model
         $results_ary = array('numbers_of_result' => $numbers_of_result, 'results' => $results_query);
 
         return $results_ary;
+    }
+
+    public static function getAllCategories($type_rule_id)
+    {
+        $db = static::getDB();
+        $query_large_category = "SELECT large_category FROM rules WHERE type_rule_id = '$type_rule_id' GROUP BY large_category";
+        $query_middle_category = "SELECT middle_category FROM rules WHERE type_rule_id = '$type_rule_id' GROUP BY middle_category";
+        $query_small_category = "SELECT small_category FROM rules WHERE type_rule_id = '$type_rule_id' GROUP BY small_category";
+        $large_categories = $db->query($query_large_category)->fetchAll(PDO::FETCH_ASSOC);
+        $middle_categories = $db->query($query_middle_category)->fetchAll(PDO::FETCH_ASSOC);
+        $small_categories = $db->query($query_small_category)->fetchAll(PDO::FETCH_ASSOC);
+
+        $all_categories = array();
+        foreach ($large_categories as $key => $value) {
+            $all_categories[] = $value['large_category'];
+        }
+        foreach ($middle_categories as $key => $value) {
+            $all_categories[] = $value['middle_category'];
+        }
+        foreach ($small_categories as $key => $value) {
+            $all_categories[] = $value['small_category'];
+        }
+
+        return $all_categories;
     }
 
     public function create($data)

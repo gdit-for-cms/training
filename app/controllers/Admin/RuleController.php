@@ -64,31 +64,26 @@ class RuleController extends AppController
     public function storeAction(Request $request)
     {
         $type_rule_id = $request->getGet()->get('type_rule_id');
-        $type_rule = $this->obj_type_rule_model->getById($type_rule_id);
-
         $data_ary = $request->getPost()->all();
         $data_ary['type_rule_id'] = $type_rule_id;
-
         if ($this->obj_rule_model->create($data_ary)) {
-            header("Location: /admin/rule/rulesDetail?type_rule_id=" . $type_rule_id);
+            header("Location: /admin/rule/rulesDetail?type_rule_id=" . $type_rule_id . '&page=1');
         } else {
-            header("Location: /admin/rule/create?type_rule_id=" . $type_rule['id']);
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
         }
     }
     public function updateAction(Request $request)
     {
         $rule_id = $request->getGet()->get('id');
-        $rule_edit = $this->obj_rule_model->getById($rule_id);
 
         $type_rule_id = $request->getGet()->get('type_rule_id');
-        $type_rule = $this->obj_type_rule_model->getById($type_rule_id);
 
         $data_ary = $request->getPost()->all();
 
         if ($this->obj_rule_model->updateOne($data_ary, "id ='$rule_id'")) {
-            header("Location: /admin/rule/rulesDetail?type_rule_id=" . $type_rule_id);
+            header("Location: /admin/rule/rulesDetail?type_rule_id=" . $type_rule_id . '&page=1');
         } else {
-            header("Location: /admin/rule/edit?id=" . $rule_edit['id']);
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
         }
     }
 
@@ -97,15 +92,24 @@ class RuleController extends AppController
         $type_rule_id = $request->getGet()->get('type_rule_id');
         $type_rule =  $this->obj_type_rule_model->getById($type_rule_id);
         $rules_by_type_ary = $this->obj_rule_model->getBy('type_rule_id', '=', $type_rule_id, '*');
+        $all_categories = $this->obj_rule_model->getAllCategories($type_rule_id);
 
         $get_ary = $request->getGet()->all();
         $results_per_page = 5;
         array_shift($get_ary);
         $results_ary = $this->obj_rule_model->getAllRelation($get_ary, $results_per_page);
+
         $numbers_of_result = $results_ary['numbers_of_result'];
         $numbers_of_pages = ceil($numbers_of_result / $results_per_page);
+
+        $current_page = (int) $request->getGet()->get('page');
+        $previous_order = ($current_page - 1) * $results_per_page;
+
+        $this->data_ary['previous_order'] = $previous_order;
         $this->data_ary['numbers_of_pages'] = $numbers_of_pages;
         $this->data_ary['rules_in_one_page_ary'] = $results_ary['results'];
+
+        $this->data_ary['all_categories'] = $all_categories;
 
         $this->data_ary['rules_by_type_ary'] = $rules_by_type_ary;
         $this->data_ary['type_rule_name'] = $type_rule['name'];
@@ -138,30 +142,56 @@ class RuleController extends AppController
             $inputFileType = IOFactory::identify($_FILES['file_upload']['tmp_name']);
 
             if ('xlsx' == lcfirst($inputFileType)) {
-                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+                $reader = new Xlsx();
             } else if ('xls' == lcfirst($inputFileType)) {
-                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+                $reader = new Xls();
             } else if ('csv' == lcfirst($inputFileType)) {
-                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+                $reader = new Csv();
             }
 
             $spreadsheet = $reader->load($_FILES['file_upload']['tmp_name']);
-            $sheetData_ary = $spreadsheet->getActiveSheet()->toArray();
+            $spreadsheet =  $spreadsheet->getActiveSheet();
+            $mergedCells = $spreadsheet->getMergeCells();
+
+            foreach ($mergedCells as $mergedCell) {
+                $cells = explode(':', $mergedCell);
+                $startCell = $cells[0];
+                $endCell = $cells[1];
+
+                $mergedCellValue = $spreadsheet->getCell($startCell)->getValue();
+
+                $startCell_number = ltrim($startCell, $startCell[0]);
+                $endCell_number = ltrim($endCell, $endCell[0]);
+
+                for ($row = $startCell_number; $row <= $endCell_number; $row++) {
+                    for ($col = $startCell[0]; $col <= $endCell[0]; $col++) {
+                        $currentCell = $col . $row;
+                        $spreadsheet->getCell($currentCell)->setValue($mergedCellValue);
+                    }
+                }
+                $spreadsheet->unmergeCells($mergedCell);
+            }
+
+            $sheetData_ary = $spreadsheet->toArray(null, true, true, true);
+            $sheetData_ary = array_filter($sheetData_ary, function ($row) {
+                return !empty(array_filter($row));
+            });
+
             if (!empty($sheetData_ary)) {
                 try {
-                    unset($sheetData_ary[0]);
+                    unset($sheetData_ary[1]);
                     if (count($this->obj_type_rule_model->getBy('name', '=', $type_rule_name, '*')) == 0) {
                         $this->obj_type_rule_model->create(['name' => $type_rule_name]);
                         $type_rule = $this->obj_type_rule_model->getBy('name', '=', $type_rule_name, '*');
 
                         foreach ($sheetData_ary as $row) {
-                            if (!empty($row['1'])) {
-                                $large_category = $row[1];
-                                $middle_category = $row[2];
-                                $small_category = $row[3];
-                                $content = $row[4];
-                                $detail = $row[5];
-                                $note = $row[6];
+                            if (!(empty($row['B']) && empty($row['C']) && empty($row['D']) && empty($row['E']))) {
+                                $large_category = $row['B'] ? $row['B'] : "";
+                                $middle_category = $row['C'] ? $row['C'] : "";
+                                $small_category = $row['D'] ? $row['D'] : "";
+                                $content = $row['E'] ? $row['E'] : "";
+                                $detail = $row['F'] ? $row['F'] : "";
+                                $note = $row['G'] ? $row['G'] : "";
                                 $result = $this->obj_rule_model->create(
                                     [
                                         'type_rule_id' => $type_rule[0]['id'],
@@ -273,11 +303,10 @@ class RuleController extends AppController
         $spread_sheet->getDefaultStyle()->getFont()->setSize(10);
 
         $writer =  new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spread_sheet);
-        $file_name = str_replace(' ', '_', $type_rule_name) . date('Ymd') . ".xlsx";
-        $writer->save($file_name);
+        $file_name = str_replace(' ', '_', $type_rule_name) . date('_Y_m_d_') . time() . ".xlsx";
+        $writer->save('files/' . $file_name);
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attactment; filename="' . urlencode($file_name) . '"');
-        readfile("$file_name");
-        exit();
+        readfile('files/' . $file_name);
     }
 }

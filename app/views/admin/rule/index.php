@@ -55,7 +55,7 @@
                                             <?php echo htmlspecialchars($type_rule['name']) ?>
                                         </span>
                                         <div class="d-flex ">
-                                            <a href="/admin/rule/rulesDetail?type_rule_id=<?php echo $type_rule['id'] ?>" class="btn btn-info m-2">View detail</a>
+                                            <a href="/admin/rule/rulesDetail?type_rule_id=<?php echo $type_rule['id'] ?>&page=1" class="btn btn-info m-2">View detail</a>
                                             <button data-id="<?php echo $type_rule['id'] ?>" class="btn btn-danger btn-delete-list-rule m-2">Delete</button>
                                         </div>
                                     </li>

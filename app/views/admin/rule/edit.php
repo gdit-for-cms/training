@@ -27,12 +27,12 @@
                             <label for="small_category" class="form-label">Small Category</label>
                             <input type="text" name="small_category" class="form-control" id="small_category" value="<?php echo htmlspecialchars($rule_edit['small_category']) ?>">
                         </div>
-                        <button type="submit" class="btn btn-primary mt-5">Save</button>
+                        <button type="submit" id="submit" class="btn btn-primary mt-5">Save</button>
                     </div>
                     <div class="card-body-right w-50">
                         <div class="mb-3">
-                            <label for="content" class="form-label">Content</label>
-                            <textarea class="form-control h-120px" name="content" id="content" rows="3"><?php echo htmlspecialchars(trim($rule_edit['content'])) ?></textarea>
+                            <label for="content" class="form-label ">Content</label>
+                            <textarea class="form-control h-120px rule_content" name="content" id="content" rows="3"><?php echo htmlspecialchars(trim($rule_edit['content'])) ?></textarea>
                         </div>
                         <div class="mb-3">
                             <label for="detail" class="form-label">Detail</label>
@@ -49,3 +49,31 @@
         </div>
     </div>
 </div>
+<script>
+    const submitBtn = document.querySelector('#submit')
+    const contentInput = document.querySelector('.rule_content')
+
+    function start() {
+        validate()
+        checkValueContentField()
+    }
+    start()
+
+    function validate() {
+        if (contentInput.value.length <= 0) {
+            submitBtn.disabled = true;
+        } else {
+            submitBtn.disabled = false;
+        }
+    }
+
+    function checkValueContentField() {
+        contentInput.addEventListener('keyup', () => {
+            if (contentInput.value.length <= 0) {
+                submitBtn.disabled = true;
+            } else {
+                submitBtn.disabled = false;
+            }
+        })
+    }
+</script>
