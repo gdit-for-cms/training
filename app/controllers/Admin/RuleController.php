@@ -139,6 +139,7 @@ class RuleController extends AppController
         $type_rule_name = $request->getPost()->get('type_rule_name');
         $file_mimes = array('text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel', 'text/plain', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         if (isset($_FILES['file_upload']['name']) && in_array($_FILES['file_upload']['type'], $file_mimes)) {
+
             $inputFileType = IOFactory::identify($_FILES['file_upload']['tmp_name']);
 
             if ('xlsx' == lcfirst($inputFileType)) {
@@ -177,13 +178,13 @@ class RuleController extends AppController
                 return !empty(array_filter($row));
             });
 
+
             if (!empty($sheetData_ary)) {
                 try {
                     unset($sheetData_ary[1]);
                     if (count($this->obj_type_rule_model->getBy('name', '=', $type_rule_name, '*')) == 0) {
                         $this->obj_type_rule_model->create(['name' => $type_rule_name]);
                         $type_rule = $this->obj_type_rule_model->getBy('name', '=', $type_rule_name, '*');
-
                         foreach ($sheetData_ary as $row) {
                             if (!(empty($row['B']) && empty($row['C']) && empty($row['D']) && empty($row['E']))) {
                                 $large_category = $row['B'] ? $row['B'] : "";
@@ -191,7 +192,8 @@ class RuleController extends AppController
                                 $small_category = $row['D'] ? $row['D'] : "";
                                 $content = $row['E'] ? $row['E'] : "";
                                 $detail = $row['F'] ? $row['F'] : "";
-                                $note = $row['G'] ? $row['G'] : "";
+                                $note = $row['G'] ? $row['G'] : "note";
+
                                 $result = $this->obj_rule_model->create(
                                     [
                                         'type_rule_id' => $type_rule[0]['id'],
@@ -203,17 +205,24 @@ class RuleController extends AppController
                                         'note' => $note,
                                     ]
                                 );
+
                                 if ($result) {
                                     $_SESSION['msg']  = [
                                         'type' => "success",
                                         'message' => "Import success!"
                                     ];
                                 } else {
+                                    $this->obj_type_rule_model->destroyOne("id=\''$type_rule[0]['id']'\'");
                                     $_SESSION['msg']  = [
                                         'type' => "danger",
                                         'message' => "Import failed!"
                                     ];
                                 }
+                            } else {
+                                $_SESSION['msg']  = [
+                                    'type' => "danger",
+                                    'message' => "Import failed!"
+                                ];
                             }
                         }
                     } else {
@@ -225,7 +234,17 @@ class RuleController extends AppController
                 } catch (\Throwable $th) {
                     return $this->errorResponse($th->getMessage());
                 };
+            } else {
+                $_SESSION['msg']  = [
+                    'type' => "danger",
+                    'message' => "File empty. Please choose another file!"
+                ];
             }
+        } else {
+            $_SESSION['msg']  = [
+                'type' => "danger",
+                'message' => "Please choose the correct file format (xlsx,csv,xls)!"
+            ];
         }
     }
     public function exportAction(Request $request)
