@@ -66,24 +66,36 @@ class RuleController extends AppController
         $type_rule_id = $request->getGet()->get('type_rule_id');
         $data_ary = $request->getPost()->all();
         $data_ary['type_rule_id'] = $type_rule_id;
-        if ($this->obj_rule_model->create($data_ary)) {
-            header("Location: /admin/rule/rulesDetail?type_rule_id=" . $type_rule_id . '&page=1');
-        } else {
-            header('Location: ' . $_SERVER['HTTP_REFERER']);
+        try {
+            if ($this->obj_rule_model->create($data_ary)) {
+                header("Location: /admin/rule/rulesDetail?type_rule_id=" . $type_rule_id . '&page=1');
+            } else {
+                header('Location: ' . $_SERVER['HTTP_REFERER']);
+            }
+        } catch (\Throwable $th) {
+            $_SESSION['msg']  = [
+                'type' => "danger",
+                'message' => "Creation failed! Please try again!"
+            ];
         }
     }
     public function updateAction(Request $request)
     {
         $rule_id = $request->getGet()->get('id');
-
         $type_rule_id = $request->getGet()->get('type_rule_id');
-
         $data_ary = $request->getPost()->all();
 
-        if ($this->obj_rule_model->updateOne($data_ary, "id ='$rule_id'")) {
-            header("Location: /admin/rule/rulesDetail?type_rule_id=" . $type_rule_id . '&page=1');
-        } else {
-            header('Location: ' . $_SERVER['HTTP_REFERER']);
+        try {
+            if ($this->obj_rule_model->updateOne($data_ary, "id ='$rule_id'")) {
+                header("Location: /admin/rule/rulesDetail?type_rule_id=" . $type_rule_id . '&page=1');
+            } else {
+                header('Location: ' . $_SERVER['HTTP_REFERER']);
+            }
+        } catch (\Throwable $th) {
+            $_SESSION['msg']  = [
+                'type' => "danger",
+                'message' => "Update failed! Please try again!"
+            ];
         }
     }
 
@@ -108,9 +120,7 @@ class RuleController extends AppController
         $this->data_ary['previous_order'] = $previous_order;
         $this->data_ary['numbers_of_pages'] = $numbers_of_pages;
         $this->data_ary['rules_in_one_page_ary'] = $results_ary['results'];
-
         $this->data_ary['all_categories'] = $all_categories;
-
         $this->data_ary['rules_by_type_ary'] = $rules_by_type_ary;
         $this->data_ary['type_rule_name'] = $type_rule['name'];
         $this->data_ary['type_rule_id'] = $type_rule_id;
@@ -139,111 +149,105 @@ class RuleController extends AppController
         $type_rule_name = $request->getPost()->get('type_rule_name');
         $file_mimes = array('text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel', 'text/plain', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         if (isset($_FILES['file_upload']['name']) && in_array($_FILES['file_upload']['type'], $file_mimes)) {
-
-            $inputFileType = IOFactory::identify($_FILES['file_upload']['tmp_name']);
-
-            if ('xlsx' == lcfirst($inputFileType)) {
-                $reader = new Xlsx();
-            } else if ('xls' == lcfirst($inputFileType)) {
-                $reader = new Xls();
-            } else if ('csv' == lcfirst($inputFileType)) {
-                $reader = new Csv();
-            }
-
-            $spreadsheet = $reader->load($_FILES['file_upload']['tmp_name']);
-            $spreadsheet =  $spreadsheet->getActiveSheet();
-            $mergedCells = $spreadsheet->getMergeCells();
-
-            foreach ($mergedCells as $mergedCell) {
-                $cells = explode(':', $mergedCell);
-                $startCell = $cells[0];
-                $endCell = $cells[1];
-
-                $mergedCellValue = $spreadsheet->getCell($startCell)->getValue();
-
-                $startCell_number = ltrim($startCell, $startCell[0]);
-                $endCell_number = ltrim($endCell, $endCell[0]);
-
-                for ($row = $startCell_number; $row <= $endCell_number; $row++) {
-                    for ($col = $startCell[0]; $col <= $endCell[0]; $col++) {
-                        $currentCell = $col . $row;
-                        $spreadsheet->getCell($currentCell)->setValue($mergedCellValue);
-                    }
+            try {
+                $inputFileType = IOFactory::identify($_FILES['file_upload']['tmp_name']);
+                if ('xlsx' == lcfirst($inputFileType)) {
+                    $reader = new Xlsx();
+                } else if ('xls' == lcfirst($inputFileType)) {
+                    $reader = new Xls();
+                } else if ('csv' == lcfirst($inputFileType)) {
+                    $reader = new Csv();
                 }
-                $spreadsheet->unmergeCells($mergedCell);
-            }
 
-            $sheetData_ary = $spreadsheet->toArray(null, true, true, true);
-            $sheetData_ary = array_filter($sheetData_ary, function ($row) {
-                return !empty(array_filter($row));
-            });
+                $spreadsheet = $reader->load($_FILES['file_upload']['tmp_name']);
+                $spreadsheet =  $spreadsheet->getActiveSheet();
+                $mergedCells = $spreadsheet->getMergeCells();
+                foreach ($mergedCells as $mergedCell) {
+                    $cells = explode(':', $mergedCell);
+                    $startCell = $cells[0];
+                    $endCell = $cells[1];
 
+                    $mergedCellValue = $spreadsheet->getCell($startCell)->getValue();
 
-            if (!empty($sheetData_ary)) {
-                try {
-                    unset($sheetData_ary[1]);
-                    if (count($this->obj_type_rule_model->getBy('name', '=', $type_rule_name, '*')) == 0) {
-                        $this->obj_type_rule_model->create(['name' => $type_rule_name]);
-                        $type_rule = $this->obj_type_rule_model->getBy('name', '=', $type_rule_name, '*');
-                        foreach ($sheetData_ary as $row) {
-                            if (!(empty($row['B']) && empty($row['C']) && empty($row['D']) && empty($row['E']))) {
-                                $large_category = $row['B'] ? $row['B'] : "";
-                                $middle_category = $row['C'] ? $row['C'] : "";
-                                $small_category = $row['D'] ? $row['D'] : "";
-                                $content = $row['E'] ? $row['E'] : "";
-                                $detail = $row['F'] ? $row['F'] : "";
-                                $note = $row['G'] ? $row['G'] : "note";
+                    $startCell_number = ltrim($startCell, $startCell[0]);
+                    $endCell_number = ltrim($endCell, $endCell[0]);
 
-                                $result = $this->obj_rule_model->create(
-                                    [
-                                        'type_rule_id' => $type_rule[0]['id'],
-                                        'large_category' => $large_category,
-                                        'middle_category' => $middle_category,
-                                        'small_category' => $small_category,
-                                        'content' => $content,
-                                        'detail' => $detail,
-                                        'note' => $note,
-                                    ]
-                                );
-
-                                if ($result) {
-                                    $_SESSION['msg']  = [
-                                        'type' => "success",
-                                        'message' => "Import success!"
-                                    ];
-                                } else {
-                                    $this->obj_type_rule_model->destroyOne("id=\''$type_rule[0]['id']'\'");
-                                    $_SESSION['msg']  = [
-                                        'type' => "danger",
-                                        'message' => "Import failed!"
-                                    ];
-                                }
-                            } else {
-                                $_SESSION['msg']  = [
-                                    'type' => "danger",
-                                    'message' => "Import failed!"
-                                ];
-                            }
+                    for ($row = $startCell_number; $row <= $endCell_number; $row++) {
+                        for ($col = $startCell[0]; $col <= $endCell[0]; $col++) {
+                            $currentCell = $col . $row;
+                            $spreadsheet->getCell($currentCell)->setValue($mergedCellValue);
                         }
-                    } else {
+                    }
+                    $spreadsheet->unmergeCells($mergedCell);
+                }
+
+                $sheetData_ary = $spreadsheet->toArray(null, true, true, true);
+                $sheetData_ary = array_filter($sheetData_ary, function ($row) {
+                    return !empty(array_filter($row));
+                });
+
+                if (!empty($sheetData_ary)) {
+                    try {
+                        unset($sheetData_ary[1]);
+                        if (count($this->obj_type_rule_model->getBy('name', '=', $type_rule_name, '*')) == 0) {
+                            $this->obj_type_rule_model->create(['name' => $type_rule_name]);
+                            $type_rule = $this->obj_type_rule_model->getBy('name', '=', $type_rule_name, '*');
+
+                            foreach ($sheetData_ary as $row) {
+                                if (!(empty($row['B']) && empty($row['C']) && empty($row['D']) && empty($row['E']))) {
+                                    $large_category = $row['B'] ? $row['B'] : "";
+                                    $middle_category = $row['C'] ? $row['C'] : "";
+                                    $small_category = $row['D'] ? $row['D'] : "";
+                                    $content = $row['E'] ? $row['E'] : "";
+                                    $detail = $row['F'] ? $row['F'] : "";
+                                    $note = $row['G'] ? $row['G'] : "";
+                                    $result = $this->obj_rule_model->create(
+                                        [
+                                            'type_rule_id' => $type_rule[0]['id'],
+                                            'large_category' => $large_category,
+                                            'middle_category' => $middle_category,
+                                            'small_category' => $small_category,
+                                            'content' => $content,
+                                            'detail' => $detail,
+                                            'note' => $note,
+                                        ]
+                                    );
+                                    if ($result) {
+                                        $_SESSION['msg']  = [
+                                            'type' => "success",
+                                            'message' => "Import success!"
+                                        ];
+                                    } else {
+                                        $_SESSION['msg']  = [
+                                            'type' => "danger",
+                                            'message' => "Import failed!"
+                                        ];
+                                    }
+                                }
+                            }
+                        } else {
+                            $_SESSION['msg']  = [
+                                'type' => "danger",
+                                'message' => "Rule list name already exits. Please enter another name!"
+                            ];
+                        }
+                    } catch (\Throwable $th) {
                         $_SESSION['msg']  = [
                             'type' => "danger",
-                            'message' => "Rule list name already exits. Please enter another name!"
+                            'message' => "Import failed!"
                         ];
-                    }
-                } catch (\Throwable $th) {
-                    return $this->errorResponse($th->getMessage());
-                };
-            } else {
+                    };
+                }
+            } catch (\Throwable $th) {
                 $_SESSION['msg']  = [
                     'type' => "danger",
-                    'message' => "File empty. Please choose another file!"
+                    'message' => "Please check file again! Choose the correct file format (xlsx, xls, csv)!"
                 ];
             }
         } else {
             $_SESSION['msg']  = [
                 'type' => "danger",
-                'message' => "Please choose the correct file format (xlsx,csv,xls)!"
+                'message' => "Please choose the correct file format (xlsx, xls, csv)!"
             ];
         }
     }
@@ -323,9 +327,9 @@ class RuleController extends AppController
 
         $writer =  new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spread_sheet);
         $file_name = str_replace(' ', '_', $type_rule_name) . date('_Y_m_d_') . time() . ".xlsx";
-        $writer->save('files/' . $file_name);
+        $writer->save($file_name);
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attactment; filename="' . urlencode($file_name) . '"');
-        readfile('files/' . $file_name);
+        readfile($file_name);
     }
 }

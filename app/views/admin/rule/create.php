@@ -27,6 +27,16 @@
                             <label for="small_category" class="form-label">Small Category</label>
                             <input type="text" name="small_category" class="form-control" id="small_category" value="">
                         </div>
+                        <?php if (isset($_SESSION['msg'])) {
+                            $msg =  $_SESSION['msg']['message'];
+                            $type =  $_SESSION['msg']['type'];
+
+                            echo " <div class='alert alert-$type' role='alert'>
+                                             $msg   
+                                           </div>";
+                            unset($_SESSION['msg']);
+                        }
+                        ?>
                         <button type="submit" id="submit" class="btn btn-primary mt-5 w-25">Add</button>
                     </div>
                     <div class="card-body-right w-50">
@@ -44,8 +54,6 @@
                             <textarea class="form-control h-120px" name="note" id="note" rows="3"></textarea>
                         </div>
                     </div>
-
-
                 </div>
             </form>
         </div>

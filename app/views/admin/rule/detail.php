@@ -9,7 +9,8 @@
                             <h4 class="mb-2 nowrap">List Rules</h4>
                             <h4 class="mb-2 nowrap fw-bold"> <?php if (isset($type_rule_name)) {
                                                                     echo ': ' . htmlspecialchars($type_rule_name);
-                                                                } ?></h4>
+                                                                } ?>
+                            </h4>
                         </div>
                         <div class="top-right">
                             <a href="/admin/rule/create?type_rule_id=<?php echo $type_rule_id ?>"><button type=" button" class="btn btn-success float-end">Add New</button></a>
@@ -34,16 +35,14 @@
                                                 }
                                             }
                                         }
-
                                         ?>
-
                                     </select>
                                 </div>
                                 <input class="p-2 mr-2 w-75 " type="date" id="date_search" name="date_search" value="">
                                 <input id="search_input" type="search" class="form-control rounded mr-4" placeholder="Enter keyword..." aria-label="Search" aria-describedby="search-addon" />
 
                                 <button id="search_btn" type="button" disabled class="btn btn-primary px-4">Filter</button>
-                                <button id="delete_search" type="button" class="btn btn-danger text-white mx-3 px-4">Clear </button>
+                                <button id="delete_search" type="button" class="btn btn-danger text-white mx-3 px-4">Reset </button>
                             </div>
                             <div class="flex col-2 my-3 justify-content-end">
                                 <form action="/admin/rule/export" class="" method="post">
@@ -81,8 +80,6 @@
                                         <td><?php echo htmlspecialchars($rule['detail']) ?></td>
                                         <td class=""><?php echo htmlspecialchars($rule['note']) ?></td>
                                         <td class=""><?php echo $rule['created_at'] ?></td>
-
-
                                         <td class="">
                                             <div class="d-flex ">
                                                 <a href=" /admin/rule/edit?id=<?php echo $rule['id'] ?>" class="btn btn-info text-white mr-1 ">Edit</a>
@@ -100,7 +97,7 @@
                         <ul class="pagination">
                             <li class="page-item cursor-pointer"><a class="page-link">Previous</a></li>
                             <?php for ($i = 1; $i <= $numbers_of_pages; $i++) { ?>
-                                <li class="page-item cursor-pointer"><a class="page-link"><?= $i ?></a></li>
+                                <li class="page-item cursor-pointer"><a class="page-link"><?php echo $i; ?></a></li>
                             <?php } ?>
                             <li class="page-item cursor-pointer"><a class="page-link">Next</a></li>
                         </ul>
@@ -223,7 +220,7 @@
 
     function checkValueSearch() {
         categorySelect.addEventListener('change', () => {
-            if (categorySelect.value == '') {
+            if (categorySelect.value == '' && dateSearchInput.value == '' && searchInput.value.length == 0) {
                 searchBtn.disabled = true
             } else {
                 searchBtn.disabled = false

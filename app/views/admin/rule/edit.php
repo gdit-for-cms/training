@@ -27,6 +27,16 @@
                             <label for="small_category" class="form-label">Small Category</label>
                             <input type="text" name="small_category" class="form-control" id="small_category" value="<?php echo htmlspecialchars($rule_edit['small_category']) ?>">
                         </div>
+                        <?php if (isset($_SESSION['msg'])) {
+                            $msg =  $_SESSION['msg']['message'];
+                            $type =  $_SESSION['msg']['type'];
+
+                            echo " <div class='alert alert-$type' role='alert'>
+                                             $msg   
+                                           </div>";
+                            unset($_SESSION['msg']);
+                        }
+                        ?>
                         <button type="submit" id="submit" class="btn btn-primary mt-5">Save</button>
                     </div>
                     <div class="card-body-right w-50">
