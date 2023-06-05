@@ -83,7 +83,7 @@
                     <img src="" alt="">
                 </div>
                 <div class="nav_title">
-                    <span>Rules</span>
+                    <span>Coding rule</span>
                 </div>
             </a>
         </li>

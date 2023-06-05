@@ -394,3 +394,6 @@ a {
     border-radius: 4px;
     border: #c8c5c5cf 1px solid;
 }
+.permission-content .card-body .form-check{
+    color: #0D6EFD;
+}

@@ -8,36 +8,41 @@ use App\models\Room;
 use Core\Http\Request;
 use Core\Http\ResponseTrait;
 
-class RoomController extends AppController {
+class RoomController extends AppController
+{
     use ResponseTrait;
 
     public $title = 'Phòng';
 
     public object $obj_model;
-    
+
     public array $data_ary;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->obj_model = new Room;
     }
 
-    public function indexAction() {
+    public function indexAction()
+    {
         $this->data_ary['rooms'] = $this->obj_model->getAll();
         $this->data_ary['content'] = 'room/index';
     }
 
-    public function newAction() {   
+    public function newAction()
+    {
         $this->data_ary['content'] = 'room/new';
     }
 
-    public function create(Request $request) {   
+    public function create(Request $request)
+    {
         $app_request = new AppRequest;
         $result_vali_ary = $app_request->validate(Room::rules(), $request, 'post');
 
         if (in_array('error', $result_vali_ary)) {
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
             return $this->errorResponse($message_error);
-        } 
+        }
 
         $name = $result_vali_ary['name'];
         $description = $result_vali_ary['description'];
@@ -62,14 +67,16 @@ class RoomController extends AppController {
         }
     }
 
-    public function editAction(Request $request) {
+    public function editAction(Request $request)
+    {
         $id = $request->getGet()->get('id');
 
         $this->data_ary['room'] = $this->obj_model->getById($id, 'id, name, description');
         $this->data_ary['content'] = 'room/edit';
     }
 
-    public function update(Request $request) {   
+    public function update(Request $request)
+    {
         $post_ary = $request->getPost()->all();
         $check_room = $this->obj_model->getById($post_ary['id']);
         $change_data_flg = false;
@@ -87,11 +94,11 @@ class RoomController extends AppController {
         $app_request = new AppRequest;
         $rules_ary = Room::rules('add', ['id' => ['required', 'filled']]);
         $result_vali_ary = $app_request->validate($rules_ary, $request, 'post');
-        
+
         if (in_array('error', $result_vali_ary)) {
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
             return $this->errorResponse($message_error);
-        } 
+        }
 
         try {
             $id = $result_vali_ary['id'];
@@ -112,7 +119,8 @@ class RoomController extends AppController {
         };
     }
 
-    public function delete(Request $request) {
+    public function delete(Request $request)
+    {
         $id = $request->getGet()->get('id');
 
         $this->obj_model->destroyOne("id = $id");
@@ -121,7 +129,8 @@ class RoomController extends AppController {
         exit;
     }
 
-    public function changeRoom(Request $request) {
+    public function changeRoom(Request $request)
+    {
         try {
             $post_ary = $request->getPost()->all();
             $post_ary = $post_ary['data'];

@@ -7,8 +7,8 @@
                 </div>
             </div>
         </div>
-        <div class="white_card_body">
-            <div class="card-body">
+        <div class="white_card_body d-flex">
+            <div class="card-body w-50 m-4">
                 <form id="form_update_room" class="" action="update" method="PUT">
                     <div class="mb-3">
                         <label class="form-label" for="inputAddress">Name*</label>
@@ -21,6 +21,61 @@
                     </div>
                     <button id="submit" type="submit" class="btn btn-primary">Save</button>
                 </form>
+            </div>
+            <div class="permission-content w-50">
+                <h5 class="ml-6">Select modules permissions</h5>
+                <div class="card m-4">
+                    <div class="card-header ">
+                        <div class="form-check">
+                            <input id="module-rule-checkbox" class="form-check-input" type="checkbox" name="" value="true">
+                            <label for="module-rule-checkbox" class="form-check-label">Module rule</label>
+                        </div>
+                    </div>
+                    <div class="card-body d-flex justify-content-around">
+                        <div class="form-check">
+                            <input id="create-rule-checkbox" class="form-check-input" type="checkbox" name="" value="true">
+                            <label for="create-rule-checkbox" class="form-check-label">Create rule</label>
+                        </div>
+                        <div class="form-check">
+                            <input id="read-rule-checkbox" class="form-check-input" type="checkbox" name="" value="true">
+                            <label for="read-rule-checkbox" class="form-check-label">View rule</label>
+                        </div>
+                        <div class="form-check">
+                            <input id="edit-rule-checkbox" class="form-check-input" type="checkbox" name="" value="true">
+                            <label for="edit-rule-checkbox" class="form-check-label">Edit rule</label>
+                        </div>
+                        <div class="form-check">
+                            <input id="delete-rule-checkbox" class="form-check-input" type="checkbox" name="" value="true">
+                            <label for="delete-rule-checkbox" class="form-check-label">Delete rule</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="card m-4">
+                    <div class="card-header ">
+                        <div class="form-check">
+                            <input id="module-user-checkbox" class="form-check-input" type="checkbox" name="" value="true">
+                            <label for="module-user-checkbox" class="form-check-label">Module user</label>
+                        </div>
+                    </div>
+                    <div class="card-body d-flex justify-content-around">
+                        <div class="form-check">
+                            <input id="create-user-checkbox" class="form-check-input" type="checkbox" name="" value="true">
+                            <label for="create-user-checkbox" class="form-check-label">Create user</label>
+                        </div>
+                        <div class="form-check">
+                            <input id="read-user-checkbox" class="form-check-input" type="checkbox" name="" value="true">
+                            <label for="read-user-checkbox" class="form-check-label">View user</label>
+                        </div>
+                        <div class="form-check">
+                            <input id="edit-user-checkbox" class="form-check-input" type="checkbox" name="" value="true">
+                            <label for="edit-user-checkbox" class="form-check-label">Edit user</label>
+                        </div>
+                        <div class="form-check">
+                            <input id="delete-user-checkbox" class="form-check-input" type="checkbox" name="" value="true">
+                            <label for="delete-user-checkbox" class="form-check-label">Delete user</label>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
