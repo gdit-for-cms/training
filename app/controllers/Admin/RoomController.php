@@ -2,6 +2,8 @@
 
 namespace App\Controllers\Admin;
 
+use App\Models\Permission;
+use App\Models\PermissionRoom;
 use App\Requests\AppRequest;
 use App\models\User;
 use App\models\Room;
@@ -15,12 +17,17 @@ class RoomController extends AppController
     public $title = 'Phòng';
 
     public object $obj_model;
+    private object $permission;
+    private object $permission_room;
+
 
     public array $data_ary;
 
     public function __construct()
     {
         $this->obj_model = new Room;
+        $this->permission = new Permission;
+        $this->permission_room = new PermissionRoom;
     }
 
     public function indexAction()
@@ -31,6 +38,8 @@ class RoomController extends AppController
 
     public function newAction()
     {
+        $permissionParents = $this->permission->getBy('parent_id', '=', 0);
+        $this->data_ary['permissionParents'] = $permissionParents;
         $this->data_ary['content'] = 'room/new';
     }
 
@@ -46,6 +55,7 @@ class RoomController extends AppController
 
         $name = $result_vali_ary['name'];
         $description = $result_vali_ary['description'];
+        $permission_ids = $request->getPost()->get('permission_id');
 
         $room_check_ary = $this->obj_model->getBy('name', '=', $name);
         $num_rows = count($room_check_ary);
@@ -60,6 +70,15 @@ class RoomController extends AppController
                         'description' => $description
                     ]
                 );
+                $current_room = $this->obj_model->getBy('name', '=', $name)[0];
+                if (!empty($permission_ids)) {
+                    foreach ($permission_ids as $id) {
+                        $this->permission_room->create([
+                            'room_id' => $current_room['id'],
+                            'permission_id' => $id
+                        ]);
+                    }
+                }
                 return $this->successResponse();
             } catch (\Throwable $th) {
                 return $this->errorResponse($th->getMessage());
@@ -70,7 +89,6 @@ class RoomController extends AppController
     public function editAction(Request $request)
     {
         $id = $request->getGet()->get('id');
-
         $this->data_ary['room'] = $this->obj_model->getById($id, 'id, name, description');
         $this->data_ary['content'] = 'room/edit';
     }
@@ -123,8 +141,9 @@ class RoomController extends AppController
     {
         $id = $request->getGet()->get('id');
 
-        $this->obj_model->destroyOne("id = $id");
+        $this->permission_room->destroyByRoomId($id);
 
+        $this->obj_model->destroyOne("id = $id");
         header('Location: /admin/room/index');
         exit;
     }

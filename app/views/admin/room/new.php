@@ -22,50 +22,37 @@
                 </div>
                 <div class="permission-content w-50">
                     <h5 class="ml-6">Permissions for Administrators</h5>
-                    <div class="card m-4">
-                        <div class="card-header">
-                            <div class="form-check">
-                                <input id="module-rule-checkbox" class="form-check-input" type="checkbox" name="" value="true">
-                                <label for="module-rule-checkbox" class="form-check-label">Module rule</label>
+                    <?php
+
+                    use App\Models\Permission;
+
+                    if (!empty($permissionParents)) {
+                        foreach ($permissionParents as $permissionParentItem) {
+                    ?>
+                            <div class="card m-4">
+                                <div class="card-header">
+                                    <div class="form-check">
+                                        <input data-id="<?php echo $permissionParentItem['id'] ?>" class="form-check-input checkbox-parrent-permission" type="checkbox" name="" value="">
+                                        <label class="form-check-label"><?php echo $permissionParentItem['name'] ?></label>
+                                    </div>
+                                </div>
+                                <div class="card-body d-flex justify-content-around">
+                                    <?php
+                                    foreach (Permission::getChildsByParentId($permissionParentItem['id']) as $permissionItem) {
+                                    ?>
+                                        <div class="form-check">
+                                            <input data-id="<?php echo $permissionParentItem['id'] ?>" id="<?php echo lcfirst(str_replace(' ', '-', $permissionItem['name'])) ?>" class="form-check-input checkbox-child-permission" type="checkbox" name="permission_id[]" value="<?php echo $permissionItem['id'] ?>">
+                                            <label for="<?php echo lcfirst(str_replace(' ', '-', $permissionItem['name'])) ?>" class="form-check-label"><?php echo $permissionItem['name'] ?></label>
+                                        </div>
+                                    <?php
+                                    }
+                                    ?>
+                                </div>
                             </div>
-                        </div>
-                        <div class="card-body d-flex justify-content-around">
-                            <div class="form-check">
-                                <input id="create-rule-checkbox" class="form-check-input" type="checkbox" name="create-rule" value="true">
-                                <label for="create-rule-checkbox" class="form-check-label">Create rule</label>
-                            </div>
-                            <div class="form-check">
-                                <input id="edit-rule-checkbox" class="form-check-input" type="checkbox" name="edit-rule" value="true">
-                                <label for="edit-rule-checkbox" class="form-check-label">Edit rule</label>
-                            </div>
-                            <div class="form-check">
-                                <input id="delete-rule-checkbox" class="form-check-input" type="checkbox" name="delete-rule" value="true">
-                                <label for="delete-rule-checkbox" class="form-check-label">Delete rule</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card m-4">
-                        <div class="card-header">
-                            <div class="form-check">
-                                <input id="module-user-checkbox" class="form-check-input" type="checkbox" name="" value="true">
-                                <label for="module-user-checkbox" class="form-check-label">Module user</label>
-                            </div>
-                        </div>
-                        <div class="card-body d-flex justify-content-around">
-                            <div class="form-check">
-                                <input id="create-user-checkbox" class="form-check-input" type="checkbox" name="create-user" value="true">
-                                <label for="create-user-checkbox" class="form-check-label">Create user</label>
-                            </div>
-                            <div class="form-check">
-                                <input id="edit-user-checkbox" class="form-check-input" type="checkbox" name="edit-user" value="true">
-                                <label for="edit-user-checkbox" class="form-check-label">Edit user</label>
-                            </div>
-                            <div class="form-check">
-                                <input id="delete-user-checkbox" class="form-check-input" type="checkbox" name="delete-user" value="true">
-                                <label for="delete-user-checkbox" class="form-check-label">Delete user</label>
-                            </div>
-                        </div>
-                    </div>
+                    <?php
+                        }
+                    }
+                    ?>
             </form>
         </div>
     </div>
@@ -103,10 +90,12 @@
     const submitBtn = document.querySelector('#submit')
     const nameInput = document.querySelector('#name')
     const descriptionInput = document.querySelector('#description')
+    const checkParentPermissions = document.querySelectorAll('.checkbox-parrent-permission');
 
     function start() {
         // checkChangeInput(nameInput)
         // checkChangeInput(descriptionInput)
+        checkSelectParentPermission()
     }
     start()
 
@@ -122,5 +111,16 @@
         input.addEventListener('keyup', () => {
             validate()
         })
+    }
+
+    function checkSelectParentPermission() {
+        checkParentPermissions.forEach((checkParentPermission) => {
+            checkParentPermission.addEventListener('click', () => {
+                allCheckBoxChilds = document.querySelectorAll('.checkbox-child-permission')
+
+                console.log(allCheckBoxChilds)
+            })
+        })
+
     }
 </script>
