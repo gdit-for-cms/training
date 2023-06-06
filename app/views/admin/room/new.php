@@ -9,7 +9,7 @@
         </div>
         <div class="white_card_body">
             <form id="form_new_room" class="d-flex" action="create" method="POST">
-                <div class="card-body mt-3">
+                <div class="card-body ">
                     <div class="mb-3">
                         <label class="form-label" for="name">Name*</label>
                         <input type="text" class="form-control" name="name" id="name" placeholder="Name...">
@@ -29,11 +29,11 @@
                     if (!empty($permissionParents)) {
                         foreach ($permissionParents as $permissionParentItem) {
                     ?>
-                            <div class="card m-4">
+                            <div class="card ml-4 mb-4">
                                 <div class="card-header">
                                     <div class="form-check">
-                                        <input data-id="<?php echo $permissionParentItem['id'] ?>" class="form-check-input checkbox-parrent-permission" type="checkbox" name="" value="">
-                                        <label class="form-check-label"><?php echo $permissionParentItem['name'] ?></label>
+                                        <input id="checkbox-parent-<?php echo $permissionParentItem['id'] ?>" data-id="<?php echo $permissionParentItem['id'] ?>" class="form-check-input checkbox-parrent-permission" type="checkbox" name="" value="">
+                                        <label for="checkbox-parent-<?php echo $permissionParentItem['id'] ?>" class="form-check-label"><?php echo $permissionParentItem['name'] ?></label>
                                     </div>
                                 </div>
                                 <div class="card-body d-flex justify-content-around">
@@ -90,7 +90,10 @@
     const submitBtn = document.querySelector('#submit')
     const nameInput = document.querySelector('#name')
     const descriptionInput = document.querySelector('#description')
-    const checkParentPermissions = document.querySelectorAll('.checkbox-parrent-permission');
+    const checkboxParents = document.querySelectorAll('.checkbox-parrent-permission')
+    const allCheckboxChilds = document.querySelectorAll('.checkbox-child-permission')
+    let arrCheckboxChilds = Array.from(allCheckboxChilds)
+
 
     function start() {
         // checkChangeInput(nameInput)
@@ -114,11 +117,14 @@
     }
 
     function checkSelectParentPermission() {
-        checkParentPermissions.forEach((checkParentPermission) => {
-            checkParentPermission.addEventListener('click', () => {
-                allCheckBoxChilds = document.querySelectorAll('.checkbox-child-permission')
-
-                console.log(allCheckBoxChilds)
+        checkboxParents.forEach((checkboxParent) => {
+            checkboxParent.addEventListener('click', () => {
+                const checkboxChildsBelongParent = arrCheckboxChilds.filter(checkboxChild => {
+                    return checkboxChild.getAttribute("data-id") == checkboxParent.getAttribute("data-id")
+                })
+                checkboxChildsBelongParent.forEach(checkbox => {
+                    checkbox.checked = checkboxParent.checked
+                })
             })
         })
 

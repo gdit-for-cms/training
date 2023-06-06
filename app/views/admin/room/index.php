@@ -28,8 +28,7 @@
                             <a href='/admin/room/edit?id=<?= $room['id'] ?>' class="edit-btn btn btn-info text-white mr-2">Edit</a>
                             <button type="button" data-id="<?= $room['id'] ?>" class="btn btn-danger delete-btn text-white">Delete</button>
                         </div>
-                        <div class="card-body row justify-content-center" style="padding-top: 25px;">
-
+                        <div class="card-body row justify-content-center d-flex col-12 " style="padding-top: 25px;">
                             <div class="col-lg-6">
                                 <div class="col-lg-12">
                                     <div class="card_box box_shadow position-relative mb_30     ">
@@ -88,12 +87,10 @@
                                 <div class="card_box box_shadow position-relative mb_30     ">
                                     <div class="white_box_tittle">
                                         <div class="main-title2 ">
-                                            <h4 class="mb-2 nowrap ">Permissions for Administrators</h4>
+                                            <h4 class="mb-2  ">Permissions for Administrators</h4>
                                         </div>
                                     </div>
-                                    <div class="">
-                                        <?php echo Permission::getParentPermissionHtml($room['id']) ?>
-                                    </div>
+                                    <?php echo Permission::getParentPermissionHtml($room['id']) ?>
                                 </div>
                             </div>
                         </div>

@@ -58,7 +58,7 @@ class Permission extends Model
                         <label for='module-rule-checkbox' class='form-check-label fw-bold'> " . $permissionParentItem['name'] . " </label>
                     </div>
                 </div>
-                <div class='card-body d-flex justify-content-around'>
+                <div class='card-body d-flex justify-content-between'>
                 " . $permission_childs_html . "
                 </div>
             </div>";
@@ -75,11 +75,10 @@ class Permission extends Model
             $type = 'text-decoration-line-through';
             foreach ($permission_ids_by_room_id as $permission_id) {
                 if ($permission_id == $permissionItem['id']) {
-                    $type = "bg-success p-1 rounded ";
+                    $type = "bg-success ";
                 }
             }
-            $permissionParentHtml .= "<label class='form-check-label $type'
-            >" . $permissionItem['name'] . "</label>";
+            $permissionParentHtml .= "<label class='form-check-label p-1 rounded mr-1 w-100 text-center $type'>" . $permissionItem['name'] . "</label>";
         }
         return $permissionParentHtml;
     }
