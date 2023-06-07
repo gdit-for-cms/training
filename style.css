@@ -1,12 +1,16 @@
 .bg-question {
     background-color: #51b336;
-}
-
-.bg-step {
+  }
+  
+  .bg-step {
     background-color: #ffce89;
-}
-
-.modal {
+  }
+  
+  .disabled {
+    pointer-events: none;
+  }
+  
+  .modal {
     display: none;
     position: fixed;
     z-index: 1;
@@ -17,26 +21,26 @@
     overflow: auto;
     background-color: rgb(0, 0, 0);
     background-color: rgba(0, 0, 0, 0.4);
-}
-
-.modal-content {
+  }
+  
+  .modal-content {
     background-color: #fefefe;
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
-}
-
-.close {
+  }
+  
+  .close {
     color: #aaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
-}
-
-.closeModalAddQuestion1:hover,
-.closeModalAddQuestion1:focus {
+  }
+  
+  .closeModalAddQuestion1:hover,
+  .closeModalAddQuestion1:focus {
     color: black;
     text-decoration: none;
     cursor: pointer;
-}
+  }
