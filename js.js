@@ -1,48 +1,48 @@
 $(document).ready(function () {
 
-    $('.button_add_question_1').click(function () {
+    $('.button_add_question_1').on("click", function () {
         $('#modal_add_question_1').css("display", "block")
     })
 
-    $(".close_modal_add_question_1").click(function () {
+    $(".close_modal_add_question_1").on("click", function () {
         $('#modal_add_question_1').css("display", "none")
     })
 
-    $(".close_modal_edit_question_1").click(function () {
+    $(".close_modal_edit_question_1").on("click", function () {
         $('#modal_edit_question_1').css("display", "none")
     })
 
-    $(".close_modal_add_selection_1").click(function () {
+    $(".close_modal_add_selection_1").on("click", function () {
         $('#modal_add_selection_1').css("display", "none")
     })
 
-    $(".close_modal_edit_selection_1").click(function () {
+    $(".close_modal_edit_selection_1").on("click", function () {
         $('#modal_edit_selection_1').css("display", "none")
     })
 
-    $(".close_modal_add_question_2").click(function () {
+    $(".close_modal_add_question_2").on("click", function () {
         $('#modal_add_question_2').css("display", "none")
     })
 
-    $(".close_modal_edit_question_2").click(function () {
+    $(".close_modal_edit_question_2").on("click", function () {
         $('#modal_edit_question_2').css("display", "none")
     })
 
-    $(".close_modal_add_selection_2").click(function () {
+    $(".close_modal_add_selection_2").on("click", function () {
         $('#modal_add_selection_2').css("display", "none")
     })
 
-    $(".close_modal_edit_selection_2").click(function () {
+    $(".close_modal_edit_selection_2").on("click", function () {
         $('#modal_edit_selection_2').css("display", "none")
     })
 
-    $(".close_modal_step").click(function () {
+    $(".close_modal_step").on("click", function () {
         $('#modal_step').css("display", "none")
     })
 
 
     // Add question 1
-    $("#submit_add_question_1").click(function () {
+    $("#submit_add_question_1").on("click", function () {
         $('#modal_add_question_1').css("display", "none")
 
         if ($("#input_add_question_1").val() !== "") {
@@ -69,14 +69,14 @@ $(document).ready(function () {
 
 
         // Edit question 1
-        $('.button_edit_question_1').click(function () {
+        $('.button_edit_question_1').on("click", function () {
             $('#modal_edit_question_1').css("display", "block")
 
             content_question_edit = $(this).parent().parent().find('h5')
             val_question_edit = content_question_edit.html()
             $('#input_edit_question_1').val(val_question_edit)
 
-            $("#submit_edit_question_1").click(function () {
+            $("#submit_edit_question_1").on("click", function () {
                 $('#modal_edit_question_1').css("display", "none")
                 content_question_edit.html($("#input_edit_question_1").val())
             })
@@ -85,20 +85,20 @@ $(document).ready(function () {
 
 
         // Del question 1
-        $(".button_delete_question_1").click(function () {
+        $(".button_delete_question_1").on("click", function () {
             if ($(this).parent().parent().parent().find('.content_selection_1').html() == "") {
-                $(this).parent().parent().parent().remove()
+                $(this).parent().parent().parent().empty()
             }
         })
         // End del question 1
 
 
         // Add selection 1
-        $('.button_add_selection_1').click(function () {
+        $('.button_add_selection_1').on("click", function () {
             content_selection_1 = $(this).parent().parent().parent().find('.content_selection_1')
             $('#modal_add_selection_1').css("display", "block")
 
-            $("#submit_add_selection_1").click(function () {
+            $("#submit_add_selection_1").on("click", function () {
                 $('#modal_add_selection_1').css("display", "none")
 
                 if ($("#input_add_selection_1").val() !== "") {
@@ -125,14 +125,14 @@ $(document).ready(function () {
 
 
                 // Edit selection 1
-                $('.button_edit_selection_1').click(function () {
+                $('.button_edit_selection_1').on("click", function () {
                     $('#modal_edit_selection_1').css("display", "block")
 
                     content_selection_edit = $(this).parent().parent().find('h6')
                     val_selection_edit = content_selection_edit.html()
                     $('#input_edit_selection_1').val(val_selection_edit)
 
-                    $("#submit_edit_selection_1").click(function () {
+                    $("#submit_edit_selection_1").on("click", function () {
                         $('#modal_edit_selection_1').css("display", "none")
                         content_selection_edit.html($("#input_edit_selection_1").val())
                     })
@@ -141,22 +141,20 @@ $(document).ready(function () {
 
 
                 // Del selection 1
-                $(".button_delete_selection_1").click(function () {
-                    console.log($(this).parent().parent().parent().find('.content_question_2').html())
+                $(".button_delete_selection_1").on("click", function () {
                     if ($(this).parent().parent().parent().find('.content_question_2').html() == "") {
-                        $(this).parent().parent().parent().remove()
+                        $(this).parent().parent().parent().parent().empty()
                     }
                 })
                 // End del selection 1
 
 
                 // Add question 2
-                $('.button_add_question_2').click(function () {
+                $('.button_add_question_2').on("click", function () {
                     content_question_2 = $(this).parent().parent().parent().find('.content_question_2')
                     $('#modal_add_question_2').css("display", "block")
-                    $("#submit_add_question_2").click(function () {
+                    $("#submit_add_question_2").on("click", function () {
                         $('#modal_add_question_2').css("display", "none")
-                        console.log($("#input_add_question_2").val())
                         if ($("#input_add_question_2").val() !== "") {
                             h5_question_2 = $('<h5></h5>').append($("#input_add_question_2").val())
                             div_option_question_2 = $(`<div>
@@ -180,14 +178,14 @@ $(document).ready(function () {
 
 
                         // Edit question 2
-                        $('.button_edit_question_2').click(function () {
+                        $('.button_edit_question_2').on("click", function () {
                             $('#modal_edit_question_2').css("display", "block")
 
                             content_question_edit = $(this).parent().parent().find('h5')
                             val_question_edit = content_question_edit.html()
                             $('#input_edit_question_2').val(val_question_edit)
 
-                            $("#submit_edit_question_2").click(function () {
+                            $("#submit_edit_question_2").on("click", function () {
                                 $('#modal_edit_question_2').css("display", "none")
                                 content_question_edit.html($("#input_edit_question_2").val())
                             })
@@ -196,21 +194,20 @@ $(document).ready(function () {
 
 
                         // Del question 2
-                        $(".button_delete_question_2").click(function () {
-                            console.log($(this).parent().parent().parent().find('.content_question_2'))
+                        $(".button_delete_question_2").on("click", function () {
                             if ($(this).parent().parent().parent().find('.content_question_2').html() == "") {
-                                $(this).parent().parent().parent().remove()
+                                $(this).parent().parent().parent().empty()
                             }
                         })
                         // End del question 2
 
 
                         // Add selection 2
-                        $('.button_add_selection_2').click(function () {
+                        $('.button_add_selection_2').on("click", function () {
                             content_selection_2 = $(this).parent().parent().parent().find('.content_selection_2')
                             $('#modal_add_selection_2').css("display", "block")
 
-                            $("#submit_add_selection_2").click(function () {
+                            $("#submit_add_selection_2").on("click", function () {
                                 $('#modal_add_selection_2').css("display", "none")
 
                                 if ($("#input_add_selection_2").val() !== "") {
@@ -236,14 +233,14 @@ $(document).ready(function () {
 
 
                                 // Edit selection 2
-                                $('.button_edit_selection_2').click(function () {
+                                $('.button_edit_selection_2').on("click", function () {
                                     $('#modal_edit_selection_2').css("display", "block")
 
                                     content_selection_edit = $(this).parent().parent().find('h6')
                                     val_selection_edit = content_selection_edit.html()
                                     $('#input_edit_selection_2').val(val_selection_edit)
 
-                                    $("#submit_edit_selection_2").click(function () {
+                                    $("#submit_edit_selection_2").on("click", function () {
                                         $('#modal_edit_selection_2').css("display", "none")
                                         content_selection_edit.html($("#input_edit_selection_2").val())
                                     })
@@ -252,24 +249,33 @@ $(document).ready(function () {
 
 
                                 // Del selection 2
-                                $(".button_delete_selection_2").click(function () {
-                                    console.log($(this).parent().parent().parent().find('.content_step').html())
+                                $(".button_delete_selection_2").on("click", function () {
                                     if ($(this).parent().parent().parent().find('.content_step').html() == "") {
-                                        $(this).parent().parent().parent().remove()
+                                        $(this).parent().parent().parent().empty()
                                     }
                                 })
                                 // End del selection 2
 
 
                                 // Add step
-                                $(".button_add_step").click(function () {
+                                $(".button_add_step").on("click", function () {
                                     content_step = $(this).parent().parent().parent().find('.content_step')
                                     $('#modal_step').css("display", "block")
 
-                                    $("#submit_step").click(function () {
-                                        $(this)
-                                        console.log($(this))
-                                       
+                                    $("#submit_step").on("click", function () {
+                                        $('#modal_step').css("display", "none")
+
+                                        checkboxes = $(this).parent().parent().find('input[type="checkbox"]:checked')
+
+                                        for (i = 0; i < checkboxes.length; i++) {
+                                            step = $('<div class="bg-step ms-5 my-1 d-flex justify-content-between align-items-center border"></div>')
+                                            div_data_id = $('<div class="p-3 border-end"></div>')
+                                            div_data_id.append($(checkboxes[i]).data('id'))
+                                            div_data_step = $('<div class="p-3"></div>')
+                                            div_data_step.append($(checkboxes[i]).data('step'))
+                                            step.append(div_data_id).append(div_data_step)
+                                            content_step.append(step)
+                                        }
                                     })
                                 })
                                 // End add step
@@ -280,15 +286,28 @@ $(document).ready(function () {
                 })
                 // End add question 2
 
-                 // Add step
-                 $(".button_add_step").click(function () {
-                    content_step = $(this).parent().parent().parent().find('.content_step')
+                // Add step
+                $(".button_add_step").on("click", function () {
+                    content_question_2 = $(this).parent().parent().parent().find('.content_question_2')
                     $('#modal_step').css("display", "block")
 
-                    $("#submit_step").click(function () {
-                        console.log($(this))
+                    $("#submit_step").on("click", function () {
+                        $('#modal_step').css("display", "none")
 
-                       
+                        checkboxes = $(this).parent().parent().find('input[type="checkbox"]:checked')
+                        console.log(checkboxes)
+                        if (checkboxes.length > 0) {
+                            for (i = 0; i < checkboxes.length; i++) {
+                                step = $('<div class="bg-step ms-5 my-1 d-flex justify-content-between align-items-center border"></div>')
+                                div_data_id = $('<div class="p-3 border-end"></div>')
+                                div_data_id.append($(checkboxes[i]).data('id'))
+                                div_data_step = $('<div class="p-3"></div>')
+                                div_data_step.append($(checkboxes[i]).data('step'))
+                                step.append(div_data_id).append(div_data_step)
+                                content_question_2.append(step)
+                            }
+                        }
+
                     })
                 })
                 // End add step
@@ -297,4 +316,62 @@ $(document).ready(function () {
         // End add selection 1
     })
     // End add question 1
+
+    // // Edit question 1
+    // $("#submit_add_question_1").on("click", ".button_edit_question_1", function () {
+    //     $('#modal_edit_question_1').css("display", "block")
+
+    //     content_question_edit = $(this).parent().parent().find('h5')
+    //     val_question_edit = content_question_edit.html()
+    //     $('#input_edit_question_1').val(val_question_edit)
+
+    //     $("#submit_edit_question_1").on("click", function () {
+    //         $('#modal_edit_question_1').css("display", "none")
+    //         content_question_edit.html($("#input_edit_question_1").val())
+    //     })
+    // })
+
+    // Log Json
+    $('.console_log_json').on("click", function () {
+
+        var json = {};
+
+        $('.content_question_1').find('.wrapper_question_1').each(function (index_1, question_1) {
+            var questionObj = {}
+
+            var questionTitle = $(question_1).find('.question_1 h5').text()
+            console.log(questionTitle)
+            questionObj['question'] = questionTitle
+
+            var selections = []
+            $(question_1).find('.wrapper_selection_1').each(function (index2, selection1) {
+                var selectionObj = {}
+
+                var selectionTitle = $(selection1).find('.selection_1 h6').text()
+                selectionObj['selection'] = selectionTitle
+
+                var steps = []
+                $(selection1).find('.content_question_2 .bg-step').each(function (index3, step) {
+                    var stepNumber = $(step).find('.border-end').text().trim()
+                    var stepContent = $(step).find('.p-3').text().trim()
+                    steps.push({
+                        'stepNumber': stepNumber,
+                        'stepContent': stepContent
+                    })
+                })
+
+                selectionObj['steps'] = steps
+                selections.push(selectionObj)
+            })
+
+            questionObj['selections' + (index_1 + 1)] = selections
+            json['question' + (index_1 + 1)] = questionObj
+        });
+
+        var jsonString = JSON.stringify(json)
+
+        console.log(jsonString)
+
+    })
+    // End log Json
 })
