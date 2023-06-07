@@ -2,8 +2,6 @@
 
 namespace App\Controllers\Admin;
 
-use App\Models\Permission;
-use App\Models\PermissionRoom;
 use App\Requests\AppRequest;
 use App\models\User;
 use App\models\Room;
@@ -17,17 +15,12 @@ class RoomController extends AppController
     public $title = 'Phòng';
 
     private object $obj_model;
-    private object $permission;
-    private object $permission_room;
-
 
     public array $data_ary;
 
     public function __construct()
     {
         $this->obj_model = new Room;
-        $this->permission = new Permission;
-        $this->permission_room = new PermissionRoom;
     }
 
     public function indexAction()
@@ -38,8 +31,6 @@ class RoomController extends AppController
 
     public function newAction()
     {
-        $permissionParents = $this->permission->getBy('parent_id', '=', 0);
-        $this->data_ary['permissionParents'] = $permissionParents;
         $this->data_ary['content'] = 'room/new';
     }
 
@@ -70,15 +61,6 @@ class RoomController extends AppController
                         'description' => $description
                     ]
                 );
-                $current_room = $this->obj_model->getBy('name', '=', $name)[0];
-                if (!empty($permission_ids)) {
-                    foreach ($permission_ids as $id) {
-                        $this->permission_room->create([
-                            'room_id' => $current_room['id'],
-                            'permission_id' => $id
-                        ]);
-                    }
-                }
                 return $this->successResponse();
             } catch (\Throwable $th) {
                 return $this->errorResponse($th->getMessage());
@@ -89,12 +71,6 @@ class RoomController extends AppController
     public function editAction(Request $request)
     {
         $id = $request->getGet()->get('id');
-
-        $permission_parents = $this->permission->getBy('parent_id', '=', 0);
-        $permission_ids_by_room_id = $this->permission_room->getPermissionIdsByRoomId($id);
-
-        $this->data_ary['permission_ids_by_room_id'] = $permission_ids_by_room_id;
-        $this->data_ary['permission_parents'] = $permission_parents;
         $this->data_ary['room'] = $this->obj_model->getById($id, 'id, name, description');
         $this->data_ary['content'] = 'room/edit';
     }
@@ -104,21 +80,11 @@ class RoomController extends AppController
         $post_ary = $request->getPost()->all();
 
         $check_room = $this->obj_model->getById($post_ary['id']);
-        var_dump($check_room);
-        die;
-        $check_permission_room = $this->permission_room->getPermissionIdsByRoomId($post_ary['id']);
         $change_data_flg = false;
         foreach ($post_ary as $key => $value) {
-            if ($key != 'permission_id') {
-                if ($check_room[$key] != $value) {
-                    $change_data_flg = true;
-                    break;
-                }
-            } else {
-                if (array_diff($value, $check_permission_room) != array_diff($check_permission_room, $value)) {
-                    $change_data_flg = true;
-                    break;
-                }
+            if ($check_room[$key] != $value) {
+                $change_data_flg = true;
+                break;
             }
         }
 
@@ -129,7 +95,6 @@ class RoomController extends AppController
         $app_request = new AppRequest;
         $rules_ary = Room::rules('add', ['id' => ['required', 'filled']]);
         $result_vali_ary = $app_request->validate($rules_ary, $request, 'post');
-        $permission_ids = $post_ary['permission_id'];
 
         if (in_array('error', $result_vali_ary)) {
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
@@ -149,19 +114,6 @@ class RoomController extends AppController
                 "id = $id"
             );
 
-            if (!empty($permission_ids)) {
-                if ($this->permission_room->destroyByRoom($id)) {
-                    foreach ($permission_ids as $permission_id) {
-                        $this->permission_room->create([
-                            'room_id' => $id,
-                            'permission_id' => $permission_id
-                        ]);
-                    }
-                } else {
-                    return $this->errorResponse('Can not update permission for this room!');
-                }
-            }
-
             return $this->successResponse();
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
@@ -171,9 +123,6 @@ class RoomController extends AppController
     public function delete(Request $request)
     {
         $id = $request->getGet()->get('id');
-
-        $this->permission_room->destroyByRoomId($id);
-
         $this->obj_model->destroyOne("id = $id");
         header('Location: /admin/room/index');
         exit;

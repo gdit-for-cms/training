@@ -6,26 +6,31 @@ use Core\View;
 use App\models\User;
 use Core\Http\Request;
 
-class AuthController extends AppController {
+class AuthController extends AppController
+{
     public array $data;
 
-    protected function before() {
-        if (checkAdmin()) {
+    protected function before()
+    {
+        if (checkAuth()) {
             header('Location: /admin');
             exit;
         }
-        
+
         $this->data['title'] = 'Login';
     }
 
-    protected function after() {
+    protected function after()
+    {
     }
 
-    public function loginAction() {
+    public function loginAction()
+    {
         View::render('admin/auth/login.php');
     }
 
-    public function loginProcessAction(Request $request) {
+    public function loginProcessAction(Request $request)
+    {
         $post = $request->getPost();
 
         $email = $post->get('email');
@@ -33,10 +38,9 @@ class AuthController extends AppController {
 
         $user = new User();
         $inputUser = $user->table('user')
-                     ->where('email', '=', $email)
-                     ->where('password', '=', $password)
-                     ->where('role_id', '=', 1)
-                     ->first();
+            ->where('email', '=', $email)
+            ->where('password', '=', $password)
+            ->first();
 
         if (!$inputUser) {
             $this->data['error'] = showError('login');
@@ -54,16 +58,17 @@ class AuthController extends AppController {
             'position_id' => $inputUser['position_id'],
             'avatar_image' => $inputUser['avatar_image'],
         ];
-        
+
         $request->saveUser($data);
-        
+
         header('Location: /admin');
         exit;
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         $request->deleteUser();
-        
+
         header('Location: /');
         exit;
     }

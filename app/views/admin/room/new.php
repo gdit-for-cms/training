@@ -16,43 +16,11 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="description">Description</label>
-                        <textarea class="form-control" rows="3" name="description" id="description" placeholder="Description..."></textarea>
+                        <textarea class="form-control" rows="3" name="description" id="description"
+                            placeholder="Description..."></textarea>
                     </div>
                     <button id="submit" class="btn btn-primary">Create</button>
                 </div>
-                <div class="permission-content w-50">
-                    <h5 class="ml-6">Permissions for Administrators</h5>
-                    <?php
-
-                    use App\Models\Permission;
-
-                    if (!empty($permissionParents)) {
-                        foreach ($permissionParents as $permissionParentItem) {
-                    ?>
-                            <div class="card ml-4 mb-4">
-                                <div class="card-header">
-                                    <div class="form-check">
-                                        <input id="checkbox-parent-<?php echo $permissionParentItem['id'] ?>" data-id="<?php echo $permissionParentItem['id'] ?>" class="form-check-input checkbox-parrent-permission" type="checkbox" name="" value="">
-                                        <label for="checkbox-parent-<?php echo $permissionParentItem['id'] ?>" class="form-check-label"><?php echo $permissionParentItem['name'] ?></label>
-                                    </div>
-                                </div>
-                                <div class="card-body d-flex justify-content-around  flex-wrap">
-                                    <?php
-                                    foreach (Permission::getChildsByParentId($permissionParentItem['id']) as $permissionItem) {
-                                    ?>
-                                        <div class="form-check w-25 mt-4">
-                                            <input data-id="<?php echo $permissionParentItem['id'] ?>" id="<?php echo lcfirst(str_replace(' ', '-', $permissionItem['name'])) ?>" class="form-check-input checkbox-child-permission" type="checkbox" name="permission_id[]" value="<?php echo $permissionItem['id'] ?>">
-                                            <label for="<?php echo lcfirst(str_replace(' ', '-', $permissionItem['name'])) ?>" class="form-check-label"><?php echo $permissionItem['name'] ?></label>
-                                        </div>
-                                    <?php
-                                    }
-                                    ?>
-                                </div>
-                            </div>
-                    <?php
-                        }
-                    }
-                    ?>
             </form>
         </div>
     </div>
@@ -83,51 +51,32 @@
 <!-- <script src="/ckeditor/ckeditor.js"></script>
 <script src="/ckfinder/ckfinder.js"></script> -->
 <script>
-    // CKFinder.setupCKEditor();
-    // CKEDITOR.replace( 'description' );
+// CKFinder.setupCKEditor();
+// CKEDITOR.replace( 'description' );
 </script>
 <script>
-    const submitBtn = document.querySelector('#submit')
-    const nameInput = document.querySelector('#name')
-    const descriptionInput = document.querySelector('#description')
-    const checkboxParents = document.querySelectorAll('.checkbox-parrent-permission')
-    const allCheckboxChilds = document.querySelectorAll('.checkbox-child-permission')
-    let arrCheckboxChilds = Array.from(allCheckboxChilds)
+const submitBtn = document.querySelector('#submit')
+const nameInput = document.querySelector('#name')
+const descriptionInput = document.querySelector('#description')
 
 
-    function start() {
-        // checkChangeInput(nameInput)
-        // checkChangeInput(descriptionInput)
-        checkSelectParentPermission()
+function start() {
+    // checkChangeInput(nameInput)
+    // checkChangeInput(descriptionInput)
+}
+start()
+
+function validate() {
+    if (nameInput.value == '') {
+        submitBtn.disabled = true;
+    } else {
+        submitBtn.disabled = false;
     }
-    start()
+}
 
-    function validate() {
-        if (nameInput.value == '') {
-            submitBtn.disabled = true;
-        } else {
-            submitBtn.disabled = false;
-        }
-    }
-
-    function checkChangeInput(input) {
-        input.addEventListener('keyup', () => {
-            validate()
-        })
-    }
-
-    function checkSelectParentPermission() {
-        checkboxParents.forEach((checkboxParent) => {
-            checkboxParent.addEventListener('click', () => {
-                const checkboxChildsBelongParent = arrCheckboxChilds.filter(checkboxChild => {
-                    return checkboxChild.getAttribute("data-id") == checkboxParent.getAttribute(
-                        "data-id")
-                })
-                checkboxChildsBelongParent.forEach(checkbox => {
-                    checkbox.checked = checkboxParent.checked
-                })
-            })
-        })
-
-    }
+function checkChangeInput(input) {
+    input.addEventListener('keyup', () => {
+        validate()
+    })
+}
 </script>

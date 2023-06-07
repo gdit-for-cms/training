@@ -10,7 +10,8 @@ if (!function_exists('checkAuth')) {
      {
           $obj_request = new Request;
           $admin_ary = $obj_request->getUser();
-          if ($admin_ary !== null && ($admin_ary['role_id'] == 1 || $admin_ary['role_id'] == 2 || $admin_ary['role_id'] == 3)) {
+          if ($admin_ary !== null && (in_array($admin_ary['role_id'], [1, 2, 3]))) {
+
                return TRUE;
           } else {
                return FALSE;
@@ -39,7 +40,6 @@ if (!function_exists('checkAccess')) {
 
           $access_page =  Position::getColAccessById($user_position)['access_page'];
           $access_page = explode(',', $access_page);
-
           if (in_array($controller, $access_page)) {
                return TRUE;
           } else {
@@ -51,20 +51,25 @@ if (!function_exists('checkAccess')) {
 if (!function_exists('checkPermission')) {
      function checkPermission()
      {
-          if (!checkAdmin()) {
-               if (!checkRoomManager()) {
-                    $obj_request = new Request;
-                    $req_url = $obj_request->getUrl();
-                    $url_ary = explode('/', $req_url);
-                    unset($url_ary[0]);
-                    // /admin
+          if (getLevel() == 1) {
+               return TRUE;
+          } else {
+               $obj_request = new Request;
+               $req_url = $obj_request->getUrl();
+               $url_ary = explode('/', $req_url);
+               unset($url_ary[0]);
+               if (getLevel() == 2) {
+                    if (count($url_ary) == 3) {
+                         if (in_array($url_ary[2], ['user', 'room', 'position'])) {
+                              return FALSE;
+                         }
+                    }
+                    return TRUE;
+               } else {
                     if (count($url_ary) == 1) {
                          return TRUE;
-                    }
-                    // /admin/rule/create
-                    if (count($url_ary) == 3) {
+                    } else {
                          $url_ary[3] = explode('?', $url_ary[3])[0];
-                         $controller_action = implode('/', $url_ary);
                          if (in_array($url_ary[2], ['user', 'room', 'position'])) {
                               return FALSE;
                          } else {
@@ -74,40 +79,17 @@ if (!function_exists('checkPermission')) {
                               return FALSE;
                          }
                     }
-               } else {
-                    $obj_request = new Request;
-                    $user_room = $obj_request->getUser()['room_id'];
-                    $permissions_access_ary =  Room::getPermissionsAccess($user_room);
-                    $req_url = $obj_request->getUrl();
-                    $url_ary = explode('/', $req_url);
-                    unset($url_ary[0]);
-                    if (count($url_ary) == 3) {
-                         $url_ary[3] = explode('?', $url_ary[3])[0];
-                         $controller_action = implode('/', $url_ary);
-
-                         foreach ($permissions_access_ary as $permission) {
-                              if ($controller_action == $permission['controller_action']) {
-                                   return TRUE;
-                              }
-                         }
-                         return FALSE;
-                    }
-                    return TRUE;
                }
-          } else {
-               return TRUE;
           }
      }
 }
-if (!function_exists('checkAdmin')) {
-     function checkAdmin()
+if (!function_exists('getLevel')) {
+     function getLevel()
      {
           $obj_request = new Request;
           $admin_ary = $obj_request->getUser();
-          if ($admin_ary !== null && ($admin_ary['role_id'] == 1)) {
-               return TRUE;
-          } else {
-               return FALSE;
+          if ($admin_ary !== null) {
+               return $admin_ary['role_id'];
           }
      }
 }

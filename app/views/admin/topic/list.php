@@ -4,7 +4,15 @@
             <div class="white_card card_height_100 mb_30">
                 <div class="white_card_header">
                     <div class="panel ">
+                        <?php
+                        if ($cur_user_role != 3) {
+                        ?>
                         <a href="new" class="btn btn-primary">Create</a>
+
+                        <?php
+                        }
+                        ?>
+
                     </div>
                     <div class="box_header m-0">
                         <div class="main-title">
@@ -20,21 +28,38 @@
                                     <th scope="col">#</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Action</th>
+                                    <?php
+                                    if ($cur_user_role != 3) {
+                                    ?>
                                     <th scope="col">Delete</th>
+
+                                    <?php
+                                    }
+                                    ?>
+
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php $i = 1; foreach ($topics as $topic) { ?>
-                                    <tr>
-                                        <th scope="row"><?= $i++ ?></th>
-                                        <td><?= $topic['name'] ?></td>
-                                        <td><a href="new" class="btn btn-outline-primary mb-3">Edit</a></td>
-                                        <td>
-                                            <a class="btn btn-outline-danger mb-3 delete-btn" data-id="<?= $topic['id'] ?>">
-                                                Delete
-                                            </a>
-                                        </td>
-                                    </tr>
+                                <?php $i = 1;
+                                foreach ($topics as $topic) { ?>
+                                <tr>
+                                    <th scope="row"><?= $i++ ?></th>
+                                    <td><?= $topic['name'] ?></td>
+                                    <td><a href="new" class="btn btn-outline-primary mb-3">Edit</a></td>
+
+                                    <?php
+                                        if ($cur_user_role != 3) {
+                                        ?>
+                                    <td>
+                                        <a class="btn btn-outline-danger mb-3 delete-btn" data-id="<?= $topic['id'] ?>">
+                                            Delete
+                                        </a>
+                                    </td>
+
+                                    <?php
+                                        }
+                                        ?>
+                                </tr>
                                 <?php } ?>
                             </tbody>
                         </table>
@@ -43,4 +68,4 @@
             </div>
         </div>
     </div>
-</div>          
+</div>

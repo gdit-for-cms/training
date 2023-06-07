@@ -23,6 +23,8 @@ class AppController extends Controller
             exit();
         }
 
+        $request = new Request;
+        $this->data_ary['cur_user_role'] = $request->getUser()['role_id'];
         $this->data_ary['title'] = $this->title;
     }
 

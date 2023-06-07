@@ -8,9 +8,6 @@
     <div class="box_body">
         <div class="default-according" id="accordion2">
             <?php
-
-            use App\Models\Permission;
-
             foreach ($rooms as $room) { ?>
             <div class="card" data-name="<?= $room['name'] ?>">
                 <div class="card-header parpel_bg cursor-pointer" id="headingseven" data-id="<?= $room['id'] ?>">
@@ -34,74 +31,63 @@
                     </div>
                     <div class="card-body row justify-content-center d-flex col-12 " style="padding-top: 25px;">
                         <div class="col-lg-6">
-                            <div class="col-lg-12">
-                                <div class="card_box box_shadow position-relative mb_30     ">
-                                    <div class="white_box_tittle">
-                                        <div class="main-title2 ">
-                                            <h4 class="mb-2 nowrap ">Description</h4>
-                                        </div>
-                                    </div>
-                                    <div class="box_body">
-                                        <p class="f-w-400 ">
-                                            <?= empty($room['description']) ? 'Add description for room...' : $room['description'] ?>
-                                        </p>
+                            <div class="card_box box_shadow position-relative mb_30     ">
+                                <div class="white_box_tittle">
+                                    <div class="main-title2 ">
+                                        <h4 class="mb-2 nowrap ">Description</h4>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <div class="white_card box_shadow card_height_100 mb_30" data-user="">
-                                    <div class="white_box_tittle">
-                                        <div class="main-title2 ">
-                                            <h4 class="mb-2 nowrap ">Member</h4>
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="btn_sort_group d-flex justify-content-end align-items-center text-white mt-2 mr-2">
-                                        <button type="button" disabled
-                                            class="btn_sort btn_sort-pagi bg-gray-300 pe-none rounded border d-flex justify-content-end align-items-cente ml-2 hover:bg-gray-300">
-                                            <box-icon name='list-plus'></box-icon>
-                                        </button>
-                                        <button type="button"
-                                            class="btn_sort btn_sort-all rounded border d-flex justify-content-end align-items-cente ml-2 hover:bg-gray-300">
-                                            <box-icon name='list-ul'></box-icon>
-                                        </button>
-                                    </div>
-                                    <div
-                                        class="table_member_body table-responsive m-b-30 flex flex-col items-center justify-center">
-                                        <table id="table_<?= $room['id'] ?>" class="table table-striped"
-                                            style="width: 90% !important">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">#</th>
-                                                    <th scope="col">Name</th>
-                                                    <th scope="col">Position</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="body_table_main">
-
-                                            </tbody>
-                                        </table>
-                                        <div class="flex justify-center items-center">
-                                            <nav aria-label="Page navigation example">
-                                                <ul class="pagination">
-
-                                                </ul>
-                                            </nav>
-                                        </div>
-                                    </div>
+                                <div class="box_body">
+                                    <p class="f-w-400 ">
+                                        <?= empty($room['description']) ? 'Add description for room...' : $room['description'] ?>
+                                    </p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-6">
-                            <div class="card_box box_shadow position-relative mb_30     ">
+                            <div class="white_card box_shadow card_height_100 mb_30" data-user="">
                                 <div class="white_box_tittle">
                                     <div class="main-title2 ">
-                                        <h4 class="mb-2  ">Permissions for Administrators</h4>
+                                        <h4 class="mb-2 nowrap ">Member</h4>
                                     </div>
                                 </div>
-                                <?php echo Permission::getParentPermissionHtml($room['id']) ?>
+                                <div
+                                    class="btn_sort_group d-flex justify-content-end align-items-center text-white mt-2 mr-2">
+                                    <button type="button" disabled
+                                        class="btn_sort btn_sort-pagi bg-gray-300 pe-none rounded border d-flex justify-content-end align-items-cente ml-2 hover:bg-gray-300">
+                                        <box-icon name='list-plus'></box-icon>
+                                    </button>
+                                    <button type="button"
+                                        class="btn_sort btn_sort-all rounded border d-flex justify-content-end align-items-cente ml-2 hover:bg-gray-300">
+                                        <box-icon name='list-ul'></box-icon>
+                                    </button>
+                                </div>
+                                <div
+                                    class="table_member_body table-responsive m-b-30 flex flex-col items-center justify-center">
+                                    <table id="table_<?= $room['id'] ?>" class="table table-striped"
+                                        style="width: 90% !important">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">Position</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="body_table_main">
+
+                                        </tbody>
+                                    </table>
+                                    <div class="flex justify-center items-center">
+                                        <nav aria-label="Page navigation example">
+                                            <ul class="pagination">
+
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>

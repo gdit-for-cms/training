@@ -7,6 +7,9 @@
         </div>
     </div>
     <ul id="sidebar_menu" class="metismenu">
+        <?php
+        if ($cur_user_role == 1) {
+        ?>
         <li class="">
             <a class="has-arrow" href="/admin/user/index" aria-expanded="false">
                 <div class="nav_icon_small">
@@ -37,6 +40,10 @@
                 </div>
             </a>
         </li>
+
+        <?php
+        }
+        ?>
         <li class="">
             <a class="has-arrow" href="/admin/exam/list" aria-expanded="false">
                 <div class="nav_icon_small">
