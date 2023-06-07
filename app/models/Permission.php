@@ -58,7 +58,7 @@ class Permission extends Model
                         <label for='module-rule-checkbox' class='form-check-label fw-bold'> " . $permissionParentItem['name'] . " </label>
                     </div>
                 </div>
-                <div class='card-body d-flex justify-content-between'>
+                <div class='card-body d-flex justify-content-start flex-wrap'>
                 " . $permission_childs_html . "
                 </div>
             </div>";
@@ -78,7 +78,7 @@ class Permission extends Model
                     $type = "bg-success ";
                 }
             }
-            $permissionParentHtml .= "<label class='form-check-label p-1 rounded mr-1 w-100 text-center $type'>" . $permissionItem['name'] . "</label>";
+            $permissionParentHtml .= "<label class='form-check-label p-1 rounded mr-1 mt-2  text-center $type'>" . $permissionItem['name'] . "</label>";
         }
         return $permissionParentHtml;
     }

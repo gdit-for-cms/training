@@ -51,15 +51,33 @@ class PermissionRoom extends Model
             }
             return $result_ary;
         }
-        return false;
+        return FALSE;
     }
 
-    public function destroyByRoomId($room_id)
+    public static function getPermissionByRoom($room_id)
+    {
+        $db = static::getDB();
+        $query = "SELECT permission_id,permissions.name as 'permisson_name',controller_action FROM `permission_room`,`permissions` WHERE room_id='$room_id' AND permissions.id=permission_room.permission_id";
+        $result = $db->query($query);
+        if ($result) {
+            $result_ary = [];
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $result_ary[] = $row;
+            }
+            return $result_ary;
+        }
+        return FALSE;
+    }
+
+    public function destroyByRoom($room_id)
     {
         $db = static::getDB();
         $query = "DELETE FROM permission_room WHERE room_id='$room_id'";
         $result = $db->query($query);
-        return $result;
+        if ($result) {
+            return TRUE;
+        }
+        return FALSE;
     }
 
     public function getBy($column, $operator, $value)

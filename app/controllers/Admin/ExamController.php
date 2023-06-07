@@ -1,26 +1,28 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Admin;
 
+
+use App\Controllers\Admin\AppController;
 use Core\Controller;
 use Core\View;
 
-class ExamController extends Controller
+class ExamController extends AppController
 {
-    public array $data;
+    public array $data_ary;
 
-    protected function after() 
+    protected function after()
     {
-        View::render('admin/back-layouts/master.php', $this->data);
+        View::render('admin/back-layouts/master.php', $this->data_ary);
     }
-    
+
     public function listAction()
     {
-        $this->data['content'] = 'exam/list';
+        $this->data_ary['content'] = 'exam/list';
     }
 
     public function newAction()
     {
-        $this->data['content'] = 'exam/new';
+        $this->data_ary['content'] = 'exam/new';
     }
 }

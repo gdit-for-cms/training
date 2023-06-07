@@ -16,7 +16,7 @@ class RoomController extends AppController
 
     public $title = 'Phòng';
 
-    public object $obj_model;
+    private object $obj_model;
     private object $permission;
     private object $permission_room;
 
@@ -104,6 +104,8 @@ class RoomController extends AppController
         $post_ary = $request->getPost()->all();
 
         $check_room = $this->obj_model->getById($post_ary['id']);
+        var_dump($check_room);
+        die;
         $check_permission_room = $this->permission_room->getPermissionIdsByRoomId($post_ary['id']);
         $change_data_flg = false;
         foreach ($post_ary as $key => $value) {
@@ -147,14 +149,16 @@ class RoomController extends AppController
                 "id = $id"
             );
 
-
-
             if (!empty($permission_ids)) {
-                foreach ($permission_ids as $id) {
-                    $this->permission_room->create([
-                        'room_id' => $id,
-                        'permission_id' => $id
-                    ]);
+                if ($this->permission_room->destroyByRoom($id)) {
+                    foreach ($permission_ids as $permission_id) {
+                        $this->permission_room->create([
+                            'room_id' => $id,
+                            'permission_id' => $permission_id
+                        ]);
+                    }
+                } else {
+                    return $this->errorResponse('Can not update permission for this room!');
                 }
             }
 

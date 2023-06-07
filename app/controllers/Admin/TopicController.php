@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Admin;
 
+use App\Controllers\Admin\AppController;
 use App\models\Topic;
 use Core\Controller;
 use Core\View;
@@ -9,20 +10,20 @@ use Core\Http\Request;
 use Core\Http\Response;
 use Core\Http\ResponseTrait;
 
-class TopicController extends Controller
+class TopicController  extends AppController
 {
     use ResponseTrait;
-    public array $data;
+    public array $data_ary;
 
     public function listAction()
     {
-        $this->data['topics'] = Topic::all();
-        $this->data['content'] = 'topic/list';
+        $this->data_ary['topics'] = Topic::all();
+        $this->data_ary['content'] = 'topic/list';
     }
 
     public function newAction()
     {
-        $this->data['content'] = 'topic/new';
+        $this->data_ary['content'] = 'topic/new';
     }
 
     public function create(Request $request)

@@ -36,11 +36,11 @@
                                         <label for="checkbox-parent-<?php echo $permissionParentItem['id'] ?>" class="form-check-label"><?php echo $permissionParentItem['name'] ?></label>
                                     </div>
                                 </div>
-                                <div class="card-body d-flex justify-content-around">
+                                <div class="card-body d-flex justify-content-around  flex-wrap">
                                     <?php
                                     foreach (Permission::getChildsByParentId($permissionParentItem['id']) as $permissionItem) {
                                     ?>
-                                        <div class="form-check">
+                                        <div class="form-check w-25 mt-4">
                                             <input data-id="<?php echo $permissionParentItem['id'] ?>" id="<?php echo lcfirst(str_replace(' ', '-', $permissionItem['name'])) ?>" class="form-check-input checkbox-child-permission" type="checkbox" name="permission_id[]" value="<?php echo $permissionItem['id'] ?>">
                                             <label for="<?php echo lcfirst(str_replace(' ', '-', $permissionItem['name'])) ?>" class="form-check-label"><?php echo $permissionItem['name'] ?></label>
                                         </div>
@@ -120,7 +120,8 @@
         checkboxParents.forEach((checkboxParent) => {
             checkboxParent.addEventListener('click', () => {
                 const checkboxChildsBelongParent = arrCheckboxChilds.filter(checkboxChild => {
-                    return checkboxChild.getAttribute("data-id") == checkboxParent.getAttribute("data-id")
+                    return checkboxChild.getAttribute("data-id") == checkboxParent.getAttribute(
+                        "data-id")
                 })
                 checkboxChildsBelongParent.forEach(checkbox => {
                     checkbox.checked = checkboxParent.checked
