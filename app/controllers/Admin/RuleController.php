@@ -117,9 +117,12 @@ class RuleController extends AppController
 
         $current_page = (int) $request->getGet()->get('page');
         $previous_order = ($current_page - 1) * $results_per_page;
+        $max_pagination_item = 3;
 
         $this->data_ary['previous_order'] = $previous_order;
+        $this->data_ary['current_page'] = $current_page;
         $this->data_ary['numbers_of_pages'] = $numbers_of_pages;
+        $this->data_ary['max_pagination_item'] = $max_pagination_item;
         $this->data_ary['rules_in_one_page_ary'] = $results_ary['results'];
         $this->data_ary['all_categories'] = $all_categories;
         $this->data_ary['rules_by_type_ary'] = $rules_by_type_ary;

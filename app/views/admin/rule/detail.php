@@ -50,6 +50,20 @@
 
                                 <button id="search_btn" type="button" disabled class="btn btn-primary px-4">Filter</button>
                                 <button id="delete_search" type="button" class="btn btn-danger text-white mx-3 px-4">Reset </button>
+
+
+                            </div>
+                            <div class="col-2 d-flex align-items-center">
+                                <div class="form-group d-flex align-items-center">
+                                    <label class="mr-1" for="my-select">Show</label>
+                                    <select id="my-select" class="form-control" name="">
+                                        <option value="5">5</option>
+                                        <option value="10">10</option>
+                                        <option value="15">15</option>
+                                    </select>
+                                    <label class="m-2" for="my-select">Entries</label>
+
+                                </div>
                             </div>
                             <div class="flex col-2 my-3 justify-content-end">
                                 <form action="/admin/rule/export" class="" method="post">
@@ -125,9 +139,21 @@
                     <nav aria-label="Page navigation example">
                         <ul class="pagination">
                             <li class="page-item cursor-pointer"><a class="page-link">Previous</a></li>
-                            <?php for ($i = 1; $i <= $numbers_of_pages; $i++) { ?>
-                                <li class="page-item cursor-pointer"><a class="page-link"><?php echo $i; ?></a></li>
-                            <?php } ?>
+                            <?php for ($i = 1; $i <= $numbers_of_pages; $i++) {
+                                if ($numbers_of_pages < $max_pagination_item) {
+                            ?>
+                                    <li class="page-item cursor-pointer"><a class="page-link"><?php echo $i; ?></a></li>
+                                    <?php } else {
+                                    if (($i < $current_page - 2) || ($i > $current_page + 2)) {
+                                        echo "<span class='fw-bold p-1'> . </span>";
+                                    } else {
+                                    ?>
+                                        <li class="page-item cursor-pointer"><a class="page-link"><?php echo $i; ?></a></li>
+                            <?php
+                                    }
+                                }
+                            }
+                            ?>
                             <li class="page-item cursor-pointer"><a class="page-link">Next</a></li>
                         </ul>
                     </nav>
