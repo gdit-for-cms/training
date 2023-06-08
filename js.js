@@ -1,42 +1,42 @@
 $(document).ready(function () {
 
-    $('.button_add_question_1').on("click", function () {
+    $(document).on("click", ".button_add_question_1", function () {
         $('#modal_add_question_1').css("display", "block")
     })
 
-    $(".close_modal_add_question_1").on("click", function () {
+    $(document).on("click", ".close_modal_add_question_1", function () {
         $('#modal_add_question_1').css("display", "none")
     })
 
-    $(".close_modal_edit_question_1").on("click", function () {
+    $(document).on("click", ".close_modal_edit_question_1", function () {
         $('#modal_edit_question_1').css("display", "none")
     })
 
-    $(".close_modal_add_selection_1").on("click", function () {
+    $(document).on("click", ".close_modal_add_selection_1", function () {
         $('#modal_add_selection_1').css("display", "none")
     })
 
-    $(".close_modal_edit_selection_1").on("click", function () {
+    $(document).on("click", ".close_modal_edit_selection_1", function () {
         $('#modal_edit_selection_1').css("display", "none")
     })
 
-    $(".close_modal_add_question_2").on("click", function () {
+    $(document).on("click", ".close_modal_add_question_2", function () {
         $('#modal_add_question_2').css("display", "none")
     })
 
-    $(".close_modal_edit_question_2").on("click", function () {
+    $(document).on("click", ".close_modal_edit_question_2", function () {
         $('#modal_edit_question_2').css("display", "none")
     })
 
-    $(".close_modal_add_selection_2").on("click", function () {
+    $(document).on("click", ".close_modal_add_selection_2", function () {
         $('#modal_add_selection_2').css("display", "none")
     })
 
-    $(".close_modal_edit_selection_2").on("click", function () {
+    $(document).on("click", ".close_modal_edit_selection_2", function () {
         $('#modal_edit_selection_2').css("display", "none")
     })
 
-    $(".close_modal_step").on("click", function () {
+    $(document).on("click", ".close_modal_step", function () {
         $('#modal_step').css("display", "none")
     })
 
