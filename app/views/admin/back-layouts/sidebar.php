@@ -7,92 +7,69 @@
         </div>
     </div>
     <ul id="sidebar_menu" class="metismenu">
-        <?php
-        if ($cur_user_role == 1) {
-        ?>
-        <li class="">
-            <a class="has-arrow" href="/admin/user/index" aria-expanded="false">
-                <div class="nav_icon_small">
-                    <img src="" alt="">
-                </div>
-                <div class="nav_title">
-                    <span>User</span>
-                </div>
-            </a>
-        </li>
-        <li class="">
-            <a class="has-arrow" href="/admin/room/index" aria-expanded="false">
-                <div class="nav_icon_small">
-                    <img src="" alt="">
-                </div>
-                <div class="nav_title">
-                    <span>Room</span>
-                </div>
-            </a>
-        </li>
-        <li class="">
-            <a class="has-arrow" href="/admin/position/index" aria-expanded="false">
-                <div class="nav_icon_small">
-                    <img src="" alt="">
-                </div>
-                <div class="nav_title">
-                    <span>Position</span>
-                </div>
-            </a>
-        </li>
 
         <?php
+        if ($cur_user) {
+            if ($cur_user['role_id'] == 1) {
+        ?>
+                <li class=" user">
+                    <a class="has-arrow" href="/admin/user/index" aria-expanded="false">
+                        <div class="nav_icon_small">
+                            <img src="" alt="">
+                        </div>
+                        <div class="nav_title">
+                            <span>User</span>
+                        </div>
+                    </a>
+                </li>
+                <li class=" room">
+                    <a class="has-arrow" href="/admin/room/index" aria-expanded="false">
+                        <div class="nav_icon_small">
+                            <img src="" alt="">
+                        </div>
+                        <div class="nav_title">
+                            <span>Room</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="position">
+                    <a class="has-arrow " href="/admin/position/index" aria-expanded="false">
+                        <div class="nav_icon_small">
+                            <img src="" alt="">
+                        </div>
+                        <div class="nav_title">
+                            <span>Position</span>
+                        </div>
+                    </a>
+                </li>
+                <?php
+            }
+
+            if ($cur_user['permissions']) {
+                foreach ($cur_user['permissions'] as $item) {
+                    if ($item['controller'] != 'admin') {
+                ?>
+                        <li class="<?php echo $item['controller'] ?>">
+                            <a class="has-arrow" href="/admin/<?php echo $item['controller'] ?>/index" aria-expanded="false">
+                                <div class="nav_icon_small">
+                                    <img src="" alt="">
+                                </div>
+                                <div class="nav_title">
+                                    <span><?php
+                                            if (isset($item['permisson_name'])) {
+                                                echo $item['permisson_name'];
+                                            } else {
+                                                echo $item['name'];
+                                            }
+                                            ?></span>
+                                </div>
+                            </a>
+                        </li>
+        <?php
+                    }
+                }
+            }
         }
         ?>
-        <li class="">
-            <a class="has-arrow" href="/admin/exam/list" aria-expanded="false">
-                <div class="nav_icon_small">
-                    <img src="" alt="">
-                </div>
-                <div class="nav_title">
-                    <span>Exam</span>
-                </div>
-            </a>
-        </li>
-        <li class="">
-            <a class="has-arrow" href="/admin/question/list" aria-expanded="false">
-                <div class="nav_icon_small">
-                    <img src="" alt="">
-                </div>
-                <div class="nav_title">
-                    <span>Question</span>
-                </div>
-            </a>
-        </li>
-        <li class="">
-            <a class="has-arrow" href="/admin/topic/list" aria-expanded="false">
-                <div class="nav_icon_small">
-                    <img src="" alt="">
-                </div>
-                <div class="nav_title">
-                    <span>Topic</span>
-                </div>
-            </a>
-        </li>
-        <li class="">
-            <a class="has-arrow" href="/admin/admin/diff" aria-expanded="false">
-                <div class="nav_icon_small">
-                    <img src="" alt="">
-                </div>
-                <div class="nav_title">
-                    <span>Diff-file</span>
-                </div>
-            </a>
-        </li>
-        <li class="">
-            <a class="has-arrow" href="/admin/rule/index" aria-expanded="false">
-                <div class="nav_icon_small">
-                    <img src="" alt="">
-                </div>
-                <div class="nav_title">
-                    <span>Coding rule</span>
-                </div>
-            </a>
-        </li>
     </ul>
 </nav>

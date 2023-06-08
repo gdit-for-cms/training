@@ -33,6 +33,7 @@ class RuleController extends AppController
 
     public function indexAction(Request $request)
     {
+
         if (isset($_POST['btn-import'])) {
             $this->import($request);
             header('Location: ' . $_SERVER['HTTP_REFERER']);

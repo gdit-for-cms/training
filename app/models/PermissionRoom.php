@@ -57,7 +57,7 @@ class PermissionRoom extends Model
     public static function getPermissionByRoom($room_id)
     {
         $db = static::getDB();
-        $query = "SELECT permission_id,permissions.name as 'permisson_name',controller_action FROM `permission_room`,`permissions` WHERE room_id='$room_id' AND permissions.id=permission_room.permission_id";
+        $query = "SELECT permission_id,permissions.name as 'permisson_name',controller FROM `permission_room`,`permissions` WHERE room_id='$room_id' AND permissions.id=permission_room.permission_id";
         $result = $db->query($query);
         if ($result) {
             $result_ary = [];
@@ -65,17 +65,6 @@ class PermissionRoom extends Model
                 $result_ary[] = $row;
             }
             return $result_ary;
-        }
-        return FALSE;
-    }
-
-    public function destroyByRoom($room_id)
-    {
-        $db = static::getDB();
-        $query = "DELETE FROM permission_room WHERE room_id='$room_id'";
-        $result = $db->query($query);
-        if ($result) {
-            return TRUE;
         }
         return FALSE;
     }

@@ -15,7 +15,7 @@ class TopicController  extends AppController
     use ResponseTrait;
     public array $data_ary;
 
-    public function listAction()
+    public function indexAction()
     {
         $this->data_ary['topics'] = Topic::all();
         $this->data_ary['content'] = 'topic/list';

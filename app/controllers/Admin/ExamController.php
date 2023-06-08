@@ -16,7 +16,7 @@ class ExamController extends AppController
         View::render('admin/back-layouts/master.php', $this->data_ary);
     }
 
-    public function listAction()
+    public function indexAction()
     {
         $this->data_ary['content'] = 'exam/list';
     }

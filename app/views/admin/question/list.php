@@ -2,9 +2,9 @@
     <div class="panel ">
 
         <?php
-        if ($cur_user_role != 3) {
+        if ($cur_user['role_id'] != 3) {
         ?>
-        <button class="btn btn-primary">Create</button>
+            <button class="btn btn-primary">Create</button>
 
         <?php
         }

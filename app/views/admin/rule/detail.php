@@ -15,10 +15,9 @@
                         <div class="top-right">
 
                             <?php
-                            if ($cur_user_role != 3) {
+                            if ($cur_user['role_id'] != 3) {
                             ?>
-                            <a href="/admin/rule/create?type_rule_id=<?php echo $type_rule_id ?>"><button type=" button"
-                                    class="btn btn-success float-end">Add New</button></a>
+                                <a href="/admin/rule/create?type_rule_id=<?php echo $type_rule_id ?>"><button type=" button" class="btn btn-success float-end">Add New</button></a>
                             <?php
                             }
                             ?>
@@ -47,24 +46,19 @@
                                     </select>
                                 </div>
                                 <input class="p-2 mr-2 w-75 " type="date" id="date_search" name="date_search" value="">
-                                <input id="search_input" type="search" class="form-control rounded mr-4"
-                                    placeholder="Enter keyword..." aria-label="Search"
-                                    aria-describedby="search-addon" />
+                                <input id="search_input" type="search" class="form-control rounded mr-4" placeholder="Enter keyword..." aria-label="Search" aria-describedby="search-addon" />
 
-                                <button id="search_btn" type="button" disabled
-                                    class="btn btn-primary px-4">Filter</button>
-                                <button id="delete_search" type="button"
-                                    class="btn btn-danger text-white mx-3 px-4">Reset </button>
+                                <button id="search_btn" type="button" disabled class="btn btn-primary px-4">Filter</button>
+                                <button id="delete_search" type="button" class="btn btn-danger text-white mx-3 px-4">Reset </button>
                             </div>
                             <div class="flex col-2 my-3 justify-content-end">
                                 <form action="/admin/rule/export" class="" method="post">
                                     <input type="hidden" name="type_rule_id" value="<?php echo $type_rule_id ?>">
-                                    <input type="hidden" name="type_rule_name"
-                                        value="<?php echo htmlspecialchars($type_rule_name) ?>">
+                                    <input type="hidden" name="type_rule_name" value="<?php echo htmlspecialchars($type_rule_name) ?>">
                                     <?php
-                                    if ($cur_user_role != 3) {
+                                    if ($cur_user['role_id'] != 3) {
                                     ?>
-                                    <button type="submit" class="btn btn-danger m-2">Export file (.xlsx)</button>
+                                        <button type="submit" class="btn btn-danger m-2">Export file (.xlsx)</button>
 
                                     <?php
                                     }
@@ -84,9 +78,9 @@
                                     <th scope="col">Note</th>
                                     <th scope="col">Created_at</th>
                                     <?php
-                                    if ($cur_user_role != 3) {
+                                    if ($cur_user['role_id'] != 3) {
                                     ?>
-                                    <th scope="col">Option</th>
+                                        <th scope="col">Option</th>
 
                                     <?php
                                     }
@@ -96,34 +90,32 @@
                             <tbody>
                                 <?php
                                 foreach ($rules_in_one_page_ary as $rule) { ?>
-                                <tr class="user_items">
-                                    <th scope="row"><?php $previous_order++;
+                                    <tr class="user_items">
+                                        <th scope="row"><?php $previous_order++;
                                                         echo $previous_order;
                                                         ?> </th>
-                                    <td><?php echo htmlspecialchars($rule['large_category']) ?></td>
-                                    <td><?php echo htmlspecialchars($rule['middle_category']) ?></td>
-                                    <td><?php echo htmlspecialchars($rule['small_category']) ?></td>
-                                    <td><?php echo htmlspecialchars($rule['content']) ?></td>
-                                    <td><?php echo htmlspecialchars($rule['detail']) ?></td>
-                                    <td><?php echo htmlspecialchars($rule['note']) ?></td>
-                                    <td><?php echo $rule['created_at'] ?></td>
-                                    <?php
-                                        if ($cur_user_role != 3) {
+                                        <td><?php echo htmlspecialchars($rule['large_category']) ?></td>
+                                        <td><?php echo htmlspecialchars($rule['middle_category']) ?></td>
+                                        <td><?php echo htmlspecialchars($rule['small_category']) ?></td>
+                                        <td><?php echo htmlspecialchars($rule['content']) ?></td>
+                                        <td><?php echo htmlspecialchars($rule['detail']) ?></td>
+                                        <td><?php echo htmlspecialchars($rule['note']) ?></td>
+                                        <td><?php echo $rule['created_at'] ?></td>
+                                        <?php
+                                        if ($cur_user['role_id'] != 3) {
                                         ?>
-                                    <td>
-                                        <div class="d-flex ">
-                                            <a href=" /admin/rule/edit?id=<?php echo $rule['id'] ?>"
-                                                class="btn btn-info text-white mr-1 ">Edit</a>
-                                            <button data-id="<?php echo $rule['id'] ?>" type="button"
-                                                class="btn btn-danger btn-delete-rule text-white ">Delete</button>
-                                        </div>
-                                    </td>
+                                            <td>
+                                                <div class="d-flex ">
+                                                    <a href=" /admin/rule/edit?id=<?php echo $rule['id'] ?>" class="btn btn-info text-white mr-1 ">Edit</a>
+                                                    <button data-id="<?php echo $rule['id'] ?>" type="button" class="btn btn-danger btn-delete-rule text-white ">Delete</button>
+                                                </div>
+                                            </td>
 
-                                    <?php
+                                        <?php
                                         }
                                         ?>
 
-                                </tr>
+                                    </tr>
                                 <?php } ?>
                             </tbody>
                         </table>
@@ -134,7 +126,7 @@
                         <ul class="pagination">
                             <li class="page-item cursor-pointer"><a class="page-link">Previous</a></li>
                             <?php for ($i = 1; $i <= $numbers_of_pages; $i++) { ?>
-                            <li class="page-item cursor-pointer"><a class="page-link"><?php echo $i; ?></a></li>
+                                <li class="page-item cursor-pointer"><a class="page-link"><?php echo $i; ?></a></li>
                             <?php } ?>
                             <li class="page-item cursor-pointer"><a class="page-link">Next</a></li>
                         </ul>
@@ -145,162 +137,161 @@
     </div>
 </div>
 <script>
-const paginationEles = document.querySelectorAll('.page-item')
-const categorySelect = document.querySelector('#select-category')
-const dateSearchInput = document.querySelector('#date_search')
-const searchInput = document.querySelector('#search_input')
-const searchBtn = document.querySelector('#search_btn')
-const deleteSearchBtn = document.querySelector('#delete_search')
-const urlParams = new URLSearchParams(window.location.search)
-const typeRuleId = urlParams.get('type_rule_id');
-const PAGE_STORAGE_KEY = 'PAGE RULE FILTER'
-var config = JSON.parse(localStorage.getItem(PAGE_STORAGE_KEY)) || {}
+    const paginationEles = document.querySelectorAll('.page-item')
+    const categorySelect = document.querySelector('#select-category')
+    const dateSearchInput = document.querySelector('#date_search')
+    const searchInput = document.querySelector('#search_input')
+    const searchBtn = document.querySelector('#search_btn')
+    const deleteSearchBtn = document.querySelector('#delete_search')
+    const urlParams = new URLSearchParams(window.location.search)
+    const typeRuleId = urlParams.get('type_rule_id');
+    const PAGE_STORAGE_KEY = 'PAGE RULE FILTER'
+    var config = JSON.parse(localStorage.getItem(PAGE_STORAGE_KEY)) || {}
 
-function start() {
-    filterRule()
-    checkValueSearch()
-    deleteSearch()
-}
-start()
-
-function setFilter(key, value) {
-    config[key] = value
-    localStorage.setItem(PAGE_STORAGE_KEY, JSON.stringify(config))
-}
-
-function filterRule() {
-    if (config.type_rule_id != typeRuleId) {
-        setFilter('type_rule_id', typeRuleId)
-        setFilter('page', 1)
-        setFilter('search', "")
-        setFilter('date_search', "")
-        setFilter('category', "")
-
+    function start() {
+        filterRule()
+        checkValueSearch()
+        deleteSearch()
     }
-    if (localStorage.getItem("PAGE RULE FILTER") === null) {
+    start()
+
+    function setFilter(key, value) {
+        config[key] = value
+        localStorage.setItem(PAGE_STORAGE_KEY, JSON.stringify(config))
+    }
+
+    function filterRule() {
+        if (config.type_rule_id != typeRuleId) {
+            setFilter('type_rule_id', typeRuleId)
+            setFilter('page', 1)
+            setFilter('search', "")
+            setFilter('date_search', "")
+            setFilter('category', "")
+
+        }
+        if (localStorage.getItem("PAGE RULE FILTER") === null) {
+            setFilter('category', categorySelect.value)
+            setFilter('date_search', dateSearchInput.value)
+            setFilter('search', searchInput.value)
+            setFilter('page', 1)
+        }
+        const urlNewParams = new URLSearchParams(window.location.search)
+        if (urlNewParams.has('page') && parseInt(urlNewParams.get('page')) === 1 && config.page != 1) {
+            let data =
+                `${config.type_rule_id == '' ? '' : `&type_rule_id=${config.type_rule_id}`}${config.search == '' ? '' : `&search=${config.search}`}${config.date_search == '' ? '' 
+                         : `&date_search=${config.date_search}`}${config.category == '' ? '' : `&category=${config.category}`}${config.page == '' ? '' : `&page=${config.page}`}`
+            if (data.charAt(0) == '&') {
+                data = data.substring(1)
+            }
+            document.location.search = `?${data}`
+        }
+        categorySelect.value = config.category
+        dateSearchInput.value = config.date_search
+        searchInput.value = config.search
+
+        paginationEles.forEach(ele => {
+            if (config.page == 1 && ele.getElementsByTagName('a')[0].textContent == 'Previous') {
+                ele.classList.add('d-none')
+            } else {
+                ele.classList.remove('hidden')
+            }
+
+            if (config.page == paginationEles.length - 2 && ele.getElementsByTagName('a')[0].textContent ==
+                'Next') {
+                ele.classList.add('hidden')
+            } else {
+                ele.classList.remove('hidden')
+            }
+            if (config.page == ele.getElementsByTagName('a')[0].textContent) {
+                ele.getElementsByTagName('a')[0].style.backgroundColor = '#C5C5C5'
+            }
+
+            ele.addEventListener('click', () => {
+                switch (ele.getElementsByTagName('a')[0].textContent) {
+                    case 'Previous':
+                        if (config.page == 1) {
+                            setFilter('page', 1)
+                        } else {
+                            setFilter('page', parseInt(config.page) - 1)
+                        }
+                        break;
+                    case 'Next':
+                        if (config.page == paginationEles.length - 2) {
+                            setFilter('page', paginationEles.length - 2)
+                        } else {
+                            setFilter('page', parseInt(config.page) + 1)
+                        }
+                        break;
+                    default:
+                        setFilter('page', ele.getElementsByTagName('a')[0].textContent)
+                        break;
+                }
+                let data =
+                    `${config.type_rule_id == '' ? '' : `&type_rule_id=${config.type_rule_id}`}${config.search == '' ? '' : `&search=${config.search}`}${config.date_search == '' ? '' 
+                            : `&date_search=${config.date_search}`}${config.category == '' ? '' : `&category=${config.category}`}${config.page == '' ? '' : `&page=${config.page}`}`
+                if (data.charAt(0) == '&') {
+                    data = data.substring(1)
+                }
+                document.location.search = `?${data}`
+            })
+        })
+    }
+    searchBtn.addEventListener('click', () => {
+        setFilter('page', 1)
         setFilter('category', categorySelect.value)
         setFilter('date_search', dateSearchInput.value)
         setFilter('search', searchInput.value)
-        setFilter('page', 1)
-    }
-    const urlNewParams = new URLSearchParams(window.location.search)
-    if (urlNewParams.has('page') && parseInt(urlNewParams.get('page')) === 1 && config.page != 1) {
         let data =
             `${config.type_rule_id == '' ? '' : `&type_rule_id=${config.type_rule_id}`}${config.search == '' ? '' : `&search=${config.search}`}${config.date_search == '' ? '' 
-                         : `&date_search=${config.date_search}`}${config.category == '' ? '' : `&category=${config.category}`}${config.page == '' ? '' : `&page=${config.page}`}`
+                 : `&date_search=${config.date_search}`}${config.category == '' ? '' : `&category=${config.category}`}${config.page == '' ? '' : `&page=${config.page}`}`
         if (data.charAt(0) == '&') {
             data = data.substring(1)
         }
         document.location.search = `?${data}`
-    }
-    categorySelect.value = config.category
-    dateSearchInput.value = config.date_search
-    searchInput.value = config.search
+    })
 
-    paginationEles.forEach(ele => {
-        if (config.page == 1 && ele.getElementsByTagName('a')[0].textContent == 'Previous') {
-            ele.classList.add('d-none')
-        } else {
-            ele.classList.remove('hidden')
-        }
-
-        if (config.page == paginationEles.length - 2 && ele.getElementsByTagName('a')[0].textContent ==
-            'Next') {
-            ele.classList.add('hidden')
-        } else {
-            ele.classList.remove('hidden')
-        }
-
-        if (config.page == ele.getElementsByTagName('a')[0].textContent) {
-            ele.getElementsByTagName('a')[0].style.backgroundColor = '#C5C5C5'
-        }
-
-        ele.addEventListener('click', () => {
-            switch (ele.getElementsByTagName('a')[0].textContent) {
-                case 'Previous':
-                    if (config.page == 1) {
-                        setFilter('page', 1)
-                    } else {
-                        setFilter('page', parseInt(config.page) - 1)
-                    }
-                    break;
-                case 'Next':
-                    if (config.page == paginationEles.length - 2) {
-                        setFilter('page', paginationEles.length - 2)
-                    } else {
-                        setFilter('page', parseInt(config.page) + 1)
-                    }
-                    break;
-                default:
-                    setFilter('page', ele.getElementsByTagName('a')[0].textContent)
-                    break;
+    function checkValueSearch() {
+        categorySelect.addEventListener('change', () => {
+            if (categorySelect.value == '' && dateSearchInput.value == '' && searchInput.value.length == 0) {
+                searchBtn.disabled = true
+            } else {
+                searchBtn.disabled = false
             }
+        })
+        dateSearchInput.addEventListener('change', () => {
+            if (dateSearchInput.value == '') {
+                searchBtn.disabled = true
+            } else {
+                searchBtn.disabled = false
+            }
+        })
+        searchInput.addEventListener('keyup', () => {
+            if (searchInput.value.length == 0) {
+                searchBtn.disabled = true
+            } else {
+                searchBtn.disabled = false
+            }
+        })
+    }
+
+
+    function deleteSearch() {
+        if (searchInput.value == '' && dateSearchInput.value == '' && categorySelect.value == '') {
+            deleteSearchBtn.disabled = true
+        } else {
+            deleteSearchBtn.disabled = false
+        }
+        deleteSearchBtn.addEventListener('click', () => {
+            setFilter('category', '')
+            setFilter('date_search', '')
+            setFilter('search', '')
             let data =
                 `${config.type_rule_id == '' ? '' : `&type_rule_id=${config.type_rule_id}`}${config.search == '' ? '' : `&search=${config.search}`}${config.date_search == '' ? '' 
-                            : `&date_search=${config.date_search}`}${config.category == '' ? '' : `&category=${config.category}`}${config.page == '' ? '' : `&page=${config.page}`}`
+                        : `&date_search=${config.date_search}`}${config.category == '' ? '' : `&category=${config.category}`}${config.page == '' ? '' : `&page=${config.page}`}`
             if (data.charAt(0) == '&') {
                 data = data.substring(1)
             }
             document.location.search = `?${data}`
         })
-    })
-}
-searchBtn.addEventListener('click', () => {
-    setFilter('page', 1)
-    setFilter('category', categorySelect.value)
-    setFilter('date_search', dateSearchInput.value)
-    setFilter('search', searchInput.value)
-    let data =
-        `${config.type_rule_id == '' ? '' : `&type_rule_id=${config.type_rule_id}`}${config.search == '' ? '' : `&search=${config.search}`}${config.date_search == '' ? '' 
-                 : `&date_search=${config.date_search}`}${config.category == '' ? '' : `&category=${config.category}`}${config.page == '' ? '' : `&page=${config.page}`}`
-    if (data.charAt(0) == '&') {
-        data = data.substring(1)
     }
-    document.location.search = `?${data}`
-})
-
-function checkValueSearch() {
-    categorySelect.addEventListener('change', () => {
-        if (categorySelect.value == '' && dateSearchInput.value == '' && searchInput.value.length == 0) {
-            searchBtn.disabled = true
-        } else {
-            searchBtn.disabled = false
-        }
-    })
-    dateSearchInput.addEventListener('change', () => {
-        if (dateSearchInput.value == '') {
-            searchBtn.disabled = true
-        } else {
-            searchBtn.disabled = false
-        }
-    })
-    searchInput.addEventListener('keyup', () => {
-        if (searchInput.value.length == 0) {
-            searchBtn.disabled = true
-        } else {
-            searchBtn.disabled = false
-        }
-    })
-}
-
-
-function deleteSearch() {
-    if (searchInput.value == '' && dateSearchInput.value == '' && categorySelect.value == '') {
-        deleteSearchBtn.disabled = true
-    } else {
-        deleteSearchBtn.disabled = false
-    }
-    deleteSearchBtn.addEventListener('click', () => {
-        setFilter('category', '')
-        setFilter('date_search', '')
-        setFilter('search', '')
-        let data =
-            `${config.type_rule_id == '' ? '' : `&type_rule_id=${config.type_rule_id}`}${config.search == '' ? '' : `&search=${config.search}`}${config.date_search == '' ? '' 
-                        : `&date_search=${config.date_search}`}${config.category == '' ? '' : `&category=${config.category}`}${config.page == '' ? '' : `&page=${config.page}`}`
-        if (data.charAt(0) == '&') {
-            data = data.substring(1)
-        }
-        document.location.search = `?${data}`
-    })
-}
 </script>

@@ -58,28 +58,35 @@ if (!function_exists('checkPermission')) {
                $req_url = $obj_request->getUrl();
                $url_ary = explode('/', $req_url);
                unset($url_ary[0]);
-               if (getLevel() == 2) {
-                    if (count($url_ary) == 3) {
-                         if (in_array($url_ary[2], ['user', 'room', 'position'])) {
-                              return FALSE;
-                         }
-                    }
-                    return TRUE;
-               } else {
-                    if (count($url_ary) == 1) {
-                         return TRUE;
+               $user_room = $obj_request->getUser()['room_id'];
+               $permissions_access_ary =  Room::getPermissionsAccess($user_room);
+               if (count($url_ary) == 3) {
+                    $controller = $url_ary[2];
+                    if (in_array($controller, ['user', 'room', 'position'])) {
+                         return FALSE;
                     } else {
-                         $url_ary[3] = explode('?', $url_ary[3])[0];
-                         if (in_array($url_ary[2], ['user', 'room', 'position'])) {
-                              return FALSE;
-                         } else {
-                              if (in_array($url_ary[3], ['index', 'list', 'rulesDetail'])) {
-                                   return TRUE;
+                         $check_access = false;
+                         foreach ($permissions_access_ary as $permission) {
+                              if ($controller == $permission['controller']) {
+                                   $check_access = true;
+                                   break;
                               }
-                              return FALSE;
                          }
+                         if ($check_access) {
+                              if (getLevel() == 2) {
+                                   return TRUE;
+                              } else {
+                                   $url_ary[3] = explode('?', $url_ary[3])[0];
+                                   if (in_array($url_ary[3], ['index', 'list', 'rulesDetail', 'show'])) {
+                                        return TRUE;
+                                   }
+                                   return FALSE;
+                              }
+                         }
+                         return FALSE;
                     }
                }
+               return TRUE;
           }
      }
 }
