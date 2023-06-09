@@ -48,6 +48,8 @@ class RuleController extends AppController
     {
         $type_rule_id = $request->getGet()->get('type_rule_id');
         $type_rule = $this->obj_type_rule_model->getById($type_rule_id);
+        $all_categories = $this->obj_rule_model->getAllCategories($type_rule_id);
+        $this->data_ary['all_categories'] = $all_categories;
         $this->data_ary['type_rule'] = $type_rule;
         $this->data_ary['content'] = "rule/create";
     }
@@ -56,7 +58,8 @@ class RuleController extends AppController
         $rule_id = $request->getGet()->get('id');
         $rule_edit = $this->obj_rule_model->getById($rule_id);
         $type_rule = $this->obj_type_rule_model->getById($rule_edit['type_rule_id']);
-
+        $all_categories = $this->obj_rule_model->getAllCategories($rule_edit['type_rule_id']);
+        $this->data_ary['all_categories'] = $all_categories;
         $this->data_ary['type_rule'] = $type_rule;
         $this->data_ary['rule_edit'] = $rule_edit;
         $this->data_ary['content'] = "rule/edit";
@@ -69,7 +72,7 @@ class RuleController extends AppController
         $data_ary['type_rule_id'] = $type_rule_id;
         try {
             if ($this->obj_rule_model->create($data_ary)) {
-                header("Location: /admin/rule/rulesDetail?type_rule_id=" . $type_rule_id . '&page=1');
+                header("Location: /admin/rule/rulesDetail?type_rule_id=" . $type_rule_id . '&page=1&results_per_pages=5');
             } else {
                 header('Location: ' . $_SERVER['HTTP_REFERER']);
             }
@@ -88,7 +91,7 @@ class RuleController extends AppController
 
         try {
             if ($this->obj_rule_model->updateOne($data_ary, "id ='$rule_id'")) {
-                header("Location: /admin/rule/rulesDetail?type_rule_id=" . $type_rule_id . '&page=1');
+                header("Location: /admin/rule/rulesDetail?type_rule_id=" . $type_rule_id . '&page=1&results_per_pages=5');
             } else {
                 header('Location: ' . $_SERVER['HTTP_REFERER']);
             }
@@ -108,11 +111,12 @@ class RuleController extends AppController
         $all_categories = $this->obj_rule_model->getAllCategories($type_rule_id);
 
         $get_results_per_page =  $request->getGet()->get('results_per_pages');
-        $results_per_page = (int) $get_results_per_page ? $get_results_per_page : 5;
+        $results_per_page =  $get_results_per_page ? $get_results_per_page : '5';
         $options_select_ary = [5, 10, 15];
         $get_ary = $request->getGet()->all();
         array_shift($get_ary);
         $results_ary = $this->obj_rule_model->getAllRelation($get_ary, $results_per_page);
+
 
         $numbers_of_result = $results_ary['numbers_of_result'];
         $numbers_of_pages = ceil($numbers_of_result / $results_per_page);
@@ -197,7 +201,7 @@ class RuleController extends AppController
                 if (!empty($sheetData_ary)) {
                     try {
                         unset($sheetData_ary[1]);
-                        if (count($this->obj_type_rule_model->getBy('name', '=', $type_rule_name, '*')) == 0) {
+                        if (count($this->obj_type_rule_model->getBy('name', '=', $type_rule_name, '*')) == 0) {}
                             $this->obj_type_rule_model->create(['name' => $type_rule_name]);
                             $type_rule = $this->obj_type_rule_model->getBy('name', '=', $type_rule_name, '*');
 
@@ -284,7 +288,6 @@ class RuleController extends AppController
             $sheet->setCellValue('F' . $row_count, $row['detail']);
             $sheet->setCellValue('G' . $row_count, $row['note']);
         }
-
         $styles_body_ary = [
             'borders'   => [
                 'allBorders' => [
@@ -339,5 +342,6 @@ class RuleController extends AppController
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attactment; filename="' . urlencode($file_name) . '"');
         readfile($file_name);
+        exit;
     }
 }

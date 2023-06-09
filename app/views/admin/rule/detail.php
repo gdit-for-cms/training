@@ -13,7 +13,6 @@
                             </h4>
                         </div>
                         <div class="top-right">
-
                             <?php
                             if ($cur_user['role_id'] != 3) {
                             ?>
@@ -23,7 +22,6 @@
                             ?>
                         </div>
                     </div>
-
                 </div>
                 <div class="white_card_body">
                     <div class="table-responsive m-b-30">
@@ -31,14 +29,28 @@
                             <div class="flex col-8  my-4">
                                 <div class="form-group d-flex w-75 mr-2">
                                     <select id="select-category" class="form-control" name="select-category">
-                                        <option value=''>--Select category--</option>
+                                        <option value=''>Select category</option>
                                         <?php
-                                        if (isset($all_categories)) {
-                                            $i = 0;
-                                            foreach ($all_categories as $category) {
-                                                $i++;
+                                        if (!empty($all_categories['large_categories'])) {
+                                            foreach ($all_categories['large_categories'] as $category) {
                                                 if ($category != '') {
-                                                    echo  "<option value='$category'>$i. $category</option>";
+                                                    echo  "<option class=''  value='$category'> $category</option>";
+                                                }
+                                            }
+                                        }
+                                        if (!empty($all_categories['middle_categories'])) {
+                                            foreach ($all_categories['middle_categories'] as $category) {
+
+                                                if ($category != '') {
+                                                    echo  "<option value='$category'>__ $category</option>";
+                                                }
+                                            }
+                                        }
+                                        if (!empty($all_categories['small_categories'])) {
+                                            foreach ($all_categories['small_categories'] as $category) {
+
+                                                if ($category != '') {
+                                                    echo  "<option value='$category'>____  $category</option>";
                                                 }
                                             }
                                         }
@@ -137,6 +149,7 @@
                         </table>
                     </div>
                 </div>
+
                 <div class="flex justify-center items-center">
                     <nav aria-label="Page navigation example">
                         <ul class="pagination">
@@ -146,8 +159,8 @@
                             ?>
                                     <li class="page-item cursor-pointer"><a class="page-link"><?php echo $i; ?></a></li>
                                     <?php } else {
-                                    if (($i < $current_page - 2) || ($i > $current_page + 2)) {
-                                        echo "<span class='fw-bold p-1'> . </span>";
+                                    if (($i < $current_page - 3) || ($i > $current_page + 3)) {
+                                        echo "<li class='page-item hide-element'><a> </a></li>";
                                     } else {
                                     ?>
                                         <li class="page-item cursor-pointer"><a class="page-link"><?php echo $i; ?></a></li>
@@ -160,12 +173,15 @@
                         </ul>
                     </nav>
                 </div>
+
             </div>
         </div>
     </div>
 </div>
 <script>
     const paginationEles = document.querySelectorAll('.page-item')
+    const paginationChilds = document.querySelector('.pagination').children
+    const hideElements = document.querySelector('.pagination').querySelectorAll('.hide-element')
     const categorySelect = document.querySelector('#select-category')
     const dateSearchInput = document.querySelector('#date_search')
     const numberEntriesSelect = document.querySelector('#select-number-entries')
@@ -217,7 +233,7 @@
                 ele.classList.remove('hidden')
             }
 
-            if (config.page == paginationEles.length - 2 && ele.getElementsByTagName('a')[0].textContent ==
+            if (config.page == paginationChilds.length - 2 && ele.getElementsByTagName('a')[0].textContent ==
                 'Next') {
                 ele.classList.add('hidden')
             } else {
@@ -235,21 +251,37 @@
                         } else {
                             setFilter('page', parseInt(config.page) - 1)
                         }
+                        loadUrlLocalStorage()
                         break;
                     case 'Next':
-                        if (config.page == paginationEles.length - 2) {
-                            setFilter('page', paginationEles.length - 2)
+                        if (config.page == paginationChilds.length - 2) {
+                            setFilter('page', paginationChilds.length - 2)
                         } else {
                             setFilter('page', parseInt(config.page) + 1)
                         }
+                        loadUrlLocalStorage()
                         break;
+                    case '...':
+                        break;
+
                     default:
                         setFilter('page', ele.getElementsByTagName('a')[0].textContent)
+                        loadUrlLocalStorage()
                         break;
                 }
-                loadUrlLocalStorage()
             })
+
         })
+        hideElements.forEach((item) => {
+            if (item == hideElements[0] || item == hideElements[hideElements.length - 1]) {
+                aNode = item.querySelector('a')
+                aNode.classList.add('page-link', 'disabled')
+                aNode.textContent = "..."
+            } else {
+                item.remove()
+            }
+        })
+
     }
     searchBtn.addEventListener('click', () => {
         setFilter('page', 1)

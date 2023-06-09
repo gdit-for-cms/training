@@ -58,7 +58,6 @@ class RoomController extends AppController
         $name = $result_vali_ary['name'];
         $description = $result_vali_ary['description'];
         $permission_ids = $request->getPost()->get('permission_id');
-
         $room_check_ary = $this->obj_model->getBy('name', '=', $name);
         $num_rows = count($room_check_ary);
 

@@ -17,15 +17,50 @@
                         </div>
                         <div class="mb-3">
                             <label for="large_category" class="form-label">Large Category</label>
-                            <input type="text" name="large_category" class="form-control" id="large_category" value="<?php echo htmlspecialchars($rule_edit['large_category']) ?>">
+                            <input type="text" name="large_category" class="form-control" id="large_category" list="large_category_list" value="<?php echo htmlspecialchars($rule_edit['large_category']) ?>">
+                            <datalist id="large_category_list">
+                                <?php
+                                if (!empty($all_categories['large_categories'])) {
+                                    foreach ($all_categories['large_categories'] as $category) {
+                                        if ($category != '') {
+                                            echo  "<option class=''  value='$category'></option>";
+                                        }
+                                    }
+                                }
+                                ?>
+                            </datalist>
                         </div>
                         <div class="mb-3">
                             <label for="middle_category" class="form-label">Middle Category</label>
-                            <input type="text" name="middle_category" class="form-control" id="middle_category" value="<?php echo htmlspecialchars($rule_edit['middle_category']) ?>">
+                            <input type="text" name="middle_category" class="form-control" id="middle_category" list="middle_category_list" value="<?php echo htmlspecialchars($rule_edit['middle_category']) ?>">
+                            <datalist id="middle_category_list">
+                                <?php
+                                if (!empty($all_categories['middle_categories'])) {
+                                    foreach ($all_categories['middle_categories'] as $category) {
+
+                                        if ($category != '') {
+                                            echo  "<option value='$category'></option>";
+                                        }
+                                    }
+                                }
+                                ?>
+                            </datalist>
                         </div>
                         <div class="mb-3">
                             <label for="small_category" class="form-label">Small Category</label>
-                            <input type="text" name="small_category" class="form-control" id="small_category" value="<?php echo htmlspecialchars($rule_edit['small_category']) ?>">
+                            <input type="text" name="small_category" class="form-control" id="small_category" list="small_category_list" value="<?php echo htmlspecialchars($rule_edit['small_category']) ?>">
+                            <datalist id="small_category_list">
+                                <?php
+                                if (!empty($all_categories['small_categories'])) {
+                                    foreach ($all_categories['small_categories'] as $category) {
+
+                                        if ($category != '') {
+                                            echo  "<option value='$category'></option>";
+                                        }
+                                    }
+                                }
+                                ?>
+                            </datalist>
                         </div>
                         <?php if (isset($_SESSION['msg'])) {
                             $msg =  $_SESSION['msg']['message'];
