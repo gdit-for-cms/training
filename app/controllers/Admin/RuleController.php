@@ -107,8 +107,10 @@ class RuleController extends AppController
         $rules_by_type_ary = $this->obj_rule_model->getBy('type_rule_id', '=', $type_rule_id, '*');
         $all_categories = $this->obj_rule_model->getAllCategories($type_rule_id);
 
+        $get_results_per_page =  $request->getGet()->get('results_per_pages');
+        $results_per_page = (int) $get_results_per_page ? $get_results_per_page : 5;
+        $options_select_ary = [5, 10, 15];
         $get_ary = $request->getGet()->all();
-        $results_per_page = 5;
         array_shift($get_ary);
         $results_ary = $this->obj_rule_model->getAllRelation($get_ary, $results_per_page);
 
@@ -121,7 +123,9 @@ class RuleController extends AppController
 
         $this->data_ary['previous_order'] = $previous_order;
         $this->data_ary['current_page'] = $current_page;
+        $this->data_ary['results_per_page'] = $results_per_page;
         $this->data_ary['numbers_of_pages'] = $numbers_of_pages;
+        $this->data_ary['options_select_ary'] = $options_select_ary;
         $this->data_ary['max_pagination_item'] = $max_pagination_item;
         $this->data_ary['rules_in_one_page_ary'] = $results_ary['results'];
         $this->data_ary['all_categories'] = $all_categories;

@@ -46,39 +46,39 @@ class Rule extends Model
         if (!isset($req_method_ary['page'])) {
             $req_method_ary['page'] = '1';
         }
-
-
         $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
         $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
 
         unset($req_method_ary['page']);
 
         foreach ($req_method_ary as $key => $value) {
-            if ($condition_query != '') {
-                if ($key == 'date_search') {
-                    $condition_query .= ' AND ';
-                    $condition_query .= '(Date(r.created_at) =\'' . $value . '\')';
-                } else if ($key == 'category') {
-                    $condition_query .= ' AND ';
-                    $condition_query .= '(r.large_category =\'' . $value . '\' OR r.middle_category =\'' . $value . '\'OR r.small_category=\'' . $value . '\')';
-                } else if ($key != 'search') {
-                    $condition_query .= ' AND ';
-                    $condition_query .= $key . '=' . $value;
+            if ($key != 'results_per_pages') {
+                if ($condition_query != '') {
+                    if ($key == 'date_search') {
+                        $condition_query .= ' AND ';
+                        $condition_query .= '(Date(r.created_at) =\'' . $value . '\')';
+                    } else if ($key == 'category') {
+                        $condition_query .= ' AND ';
+                        $condition_query .= '(r.large_category =\'' . $value . '\' OR r.middle_category =\'' . $value . '\'OR r.small_category=\'' . $value . '\')';
+                    } else if ($key != 'search') {
+                        $condition_query .= ' AND ';
+                        $condition_query .= $key . '=' . $value;
+                    } else {
+                        $condition_query .= ' AND ';
+                        $condition_query .= '(r.large_category LIKE \'%' . $value . '%\' OR r.middle_category LIKE \'%' . $value . '%\'OR r.small_category LIKE \'%'
+                            . $value . '%\'OR r.content LIKE \'%' . $value . '%\'OR r.detail LIKE \'%' . $value . '%\'OR r.note LIKE \'%' . $value . '%\')';
+                    }
                 } else {
-                    $condition_query .= ' AND ';
-                    $condition_query .= '(r.large_category LIKE \'%' . $value . '%\' OR r.middle_category LIKE \'%' . $value . '%\'OR r.small_category LIKE \'%'
-                        . $value . '%\'OR r.content LIKE \'%' . $value . '%\'OR r.detail LIKE \'%' . $value . '%\'OR r.note LIKE \'%' . $value . '%\')';
-                }
-            } else {
-                if ($key == 'date_search') {
-                    $condition_query .= "WHERE Date(r.created_at) =\'' . $value . '\'";
-                } else if ($key == 'category') {
-                    $condition_query .= "WHERE r.large_category =\'' . $value . '\' OR r.middle_category =\'' . $value . '\'OR r.small_category=\'' . $value . '\'";
-                } else if ($key != 'search') {
-                    $condition_query .= "WHERE $key = $value";
-                } else {
-                    $condition_query .= 'WHERE (r.large_category LIKE \'%' . $value . '%\' OR r.middle_category LIKE \'%' . $value . '%\'OR r.small_category LIKE \'%'
-                        . $value . '%\'OR r.content LIKE \'%' . $value . '%\'OR r.detail LIKE \'%' . $value . '%\'OR r.note LIKE \'%' . $value . '%\')';
+                    if ($key == 'date_search') {
+                        $condition_query .= "WHERE Date(r.created_at) =\'' . $value . '\'";
+                    } else if ($key == 'category') {
+                        $condition_query .= "WHERE r.large_category =\'' . $value . '\' OR r.middle_category =\'' . $value . '\'OR r.small_category=\'' . $value . '\'";
+                    } else if ($key != 'search') {
+                        $condition_query .= "WHERE $key = $value";
+                    } else {
+                        $condition_query .= 'WHERE (r.large_category LIKE \'%' . $value . '%\' OR r.middle_category LIKE \'%' . $value . '%\'OR r.small_category LIKE \'%'
+                            . $value . '%\'OR r.content LIKE \'%' . $value . '%\'OR r.detail LIKE \'%' . $value . '%\'OR r.note LIKE \'%' . $value . '%\')';
+                    }
                 }
             }
         }

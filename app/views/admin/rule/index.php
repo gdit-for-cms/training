@@ -61,7 +61,7 @@
                                             <?php echo htmlspecialchars($type_rule['name']) ?>
                                         </span>
                                         <div class="d-flex ">
-                                            <a href="/admin/rule/rulesDetail?type_rule_id=<?php echo $type_rule['id'] ?>&page=1" class="btn btn-info m-2">View detail</a>
+                                            <a href="/admin/rule/rulesDetail?type_rule_id=<?php echo $type_rule['id'] ?>&page=1&results_per_pages=5" class="btn btn-info m-2">View detail</a>
 
                                             <?php
                                             if ($cur_user['role_id'] != 3) {

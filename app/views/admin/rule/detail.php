@@ -50,22 +50,24 @@
 
                                 <button id="search_btn" type="button" disabled class="btn btn-primary px-4">Filter</button>
                                 <button id="delete_search" type="button" class="btn btn-danger text-white mx-3 px-4">Reset </button>
-
-
                             </div>
                             <div class="col-2 d-flex align-items-center">
                                 <div class="form-group d-flex align-items-center">
-                                    <label class="mr-1" for="my-select">Show</label>
-                                    <select id="my-select" class="form-control" name="">
-                                        <option value="5">5</option>
-                                        <option value="10">10</option>
-                                        <option value="15">15</option>
+                                    <label class="mr-2" for="select-number-entries">Show</label>
+                                    <select id="select-number-entries" class="form-control" name="">
+                                        <?php
+                                        foreach ($options_select_ary as $item) {
+                                        ?>
+                                            <option <?php if ($item == $results_per_page)  echo "selected" ?> value="<?php echo $item ?>"><?php echo $item ?></option>
+                                        <?php
+
+                                        } ?>
                                     </select>
-                                    <label class="m-2" for="my-select">Entries</label>
+                                    <label class="m-2" for="select-number-entries">Entries</label>
 
                                 </div>
                             </div>
-                            <div class="flex col-2 my-3 justify-content-end">
+                            <div class="flex col-lg-2 my-3 justify-content-end">
                                 <form action="/admin/rule/export" class="" method="post">
                                     <input type="hidden" name="type_rule_id" value="<?php echo $type_rule_id ?>">
                                     <input type="hidden" name="type_rule_name" value="<?php echo htmlspecialchars($type_rule_name) ?>">
@@ -101,7 +103,7 @@
                                     ?>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="table-rule-body">
                                 <?php
                                 foreach ($rules_in_one_page_ary as $rule) { ?>
                                     <tr class="user_items">
@@ -166,6 +168,7 @@
     const paginationEles = document.querySelectorAll('.page-item')
     const categorySelect = document.querySelector('#select-category')
     const dateSearchInput = document.querySelector('#date_search')
+    const numberEntriesSelect = document.querySelector('#select-number-entries')
     const searchInput = document.querySelector('#search_input')
     const searchBtn = document.querySelector('#search_btn')
     const deleteSearchBtn = document.querySelector('#delete_search')
@@ -174,9 +177,10 @@
     const PAGE_STORAGE_KEY = 'PAGE RULE FILTER'
     var config = JSON.parse(localStorage.getItem(PAGE_STORAGE_KEY)) || {}
 
+
     function start() {
         filterRule()
-        checkValueSearch()
+        checkInputsFilter()
         deleteSearch()
     }
     start()
@@ -190,30 +194,21 @@
         if (config.type_rule_id != typeRuleId) {
             setFilter('type_rule_id', typeRuleId)
             setFilter('page', 1)
-            setFilter('search', "")
-            setFilter('date_search', "")
-            setFilter('category', "")
-
+            resetSearchConfig()
+            setFilter('results_per_pages', 5)
         }
         if (localStorage.getItem("PAGE RULE FILTER") === null) {
             setFilter('category', categorySelect.value)
             setFilter('date_search', dateSearchInput.value)
             setFilter('search', searchInput.value)
             setFilter('page', 1)
+            setFilter('results_per_pages', 5)
         }
         const urlNewParams = new URLSearchParams(window.location.search)
         if (urlNewParams.has('page') && parseInt(urlNewParams.get('page')) === 1 && config.page != 1) {
-            let data =
-                `${config.type_rule_id == '' ? '' : `&type_rule_id=${config.type_rule_id}`}${config.search == '' ? '' : `&search=${config.search}`}${config.date_search == '' ? '' 
-                         : `&date_search=${config.date_search}`}${config.category == '' ? '' : `&category=${config.category}`}${config.page == '' ? '' : `&page=${config.page}`}`
-            if (data.charAt(0) == '&') {
-                data = data.substring(1)
-            }
-            document.location.search = `?${data}`
+            loadUrlLocalStorage()
         }
-        categorySelect.value = config.category
-        dateSearchInput.value = config.date_search
-        searchInput.value = config.search
+        loadSearchConfig()
 
         paginationEles.forEach(ele => {
             if (config.page == 1 && ele.getElementsByTagName('a')[0].textContent == 'Previous') {
@@ -252,13 +247,7 @@
                         setFilter('page', ele.getElementsByTagName('a')[0].textContent)
                         break;
                 }
-                let data =
-                    `${config.type_rule_id == '' ? '' : `&type_rule_id=${config.type_rule_id}`}${config.search == '' ? '' : `&search=${config.search}`}${config.date_search == '' ? '' 
-                            : `&date_search=${config.date_search}`}${config.category == '' ? '' : `&category=${config.category}`}${config.page == '' ? '' : `&page=${config.page}`}`
-                if (data.charAt(0) == '&') {
-                    data = data.substring(1)
-                }
-                document.location.search = `?${data}`
+                loadUrlLocalStorage()
             })
         })
     }
@@ -267,16 +256,16 @@
         setFilter('category', categorySelect.value)
         setFilter('date_search', dateSearchInput.value)
         setFilter('search', searchInput.value)
-        let data =
-            `${config.type_rule_id == '' ? '' : `&type_rule_id=${config.type_rule_id}`}${config.search == '' ? '' : `&search=${config.search}`}${config.date_search == '' ? '' 
-                 : `&date_search=${config.date_search}`}${config.category == '' ? '' : `&category=${config.category}`}${config.page == '' ? '' : `&page=${config.page}`}`
-        if (data.charAt(0) == '&') {
-            data = data.substring(1)
-        }
-        document.location.search = `?${data}`
+        loadUrlLocalStorage()
+    })
+    numberEntriesSelect.addEventListener('change', () => {
+        var value = numberEntriesSelect.options[numberEntriesSelect.selectedIndex].value;
+        numberEntriesSelect.options[numberEntriesSelect.selectedIndex].selected
+        setFilter('results_per_pages', value)
+        loadUrlLocalStorage()
     })
 
-    function checkValueSearch() {
+    function checkInputsFilter() {
         categorySelect.addEventListener('change', () => {
             if (categorySelect.value == '' && dateSearchInput.value == '' && searchInput.value.length == 0) {
                 searchBtn.disabled = true
@@ -300,7 +289,6 @@
         })
     }
 
-
     function deleteSearch() {
         if (searchInput.value == '' && dateSearchInput.value == '' && categorySelect.value == '') {
             deleteSearchBtn.disabled = true
@@ -308,16 +296,38 @@
             deleteSearchBtn.disabled = false
         }
         deleteSearchBtn.addEventListener('click', () => {
-            setFilter('category', '')
-            setFilter('date_search', '')
-            setFilter('search', '')
-            let data =
-                `${config.type_rule_id == '' ? '' : `&type_rule_id=${config.type_rule_id}`}${config.search == '' ? '' : `&search=${config.search}`}${config.date_search == '' ? '' 
-                        : `&date_search=${config.date_search}`}${config.category == '' ? '' : `&category=${config.category}`}${config.page == '' ? '' : `&page=${config.page}`}`
-            if (data.charAt(0) == '&') {
-                data = data.substring(1)
-            }
-            document.location.search = `?${data}`
+            resetSearchConfig()
+            loadUrlLocalStorage()
         })
+    }
+
+    function resetSearchConfig() {
+        setFilter('category', '')
+        setFilter('date_search', '')
+        setFilter('search', '')
+    }
+
+    function loadSearchConfig() {
+        categorySelect.value = config.category
+        dateSearchInput.value = config.date_search
+        searchInput.value = config.search
+    }
+
+    function loadUrlLocalStorage() {
+        let data = getDataLocalStorage()
+        if (data.charAt(0) == '&') {
+            data = data.substring(1)
+        }
+        document.location.search = `?${data}`
+    }
+
+    function getDataLocalStorage() {
+        return `${config.type_rule_id == '' ? '' 
+            : `&type_rule_id=${config.type_rule_id}`}${config.search == '' ? '' 
+                    : `&search=${config.search}`}${config.date_search == '' ? '' 
+                        : `&date_search=${config.date_search}`}${config.category == '' ? '' 
+                            : `&category=${config.category}`}${config.page == '' ? '' 
+                                : `&page=${config.page}`}${config.results_per_pages == '' ? '' 
+                                    : `&results_per_pages=${config.results_per_pages}`}`
     }
 </script>
