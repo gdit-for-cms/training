@@ -9,7 +9,6 @@
     <link href="/css/back-css/dashboard.css" rel="stylesheet">
     <link href="/css/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link href="/css/back-css/style.css" rel="stylesheet">
-    <link href="/css/back-css/create-table.css" rel="stylesheet">
 
 </head>
 <body class="crm_body_bg">
@@ -25,6 +24,5 @@
     <script src="/js/front-js/sweetalert2.all.min.js"></script>
     <script src="/js/back-js/main.js"></script>
     <script src="/js/boostrap/bootstrap.min.js"></script>
-    <script src="/js/back-js/create-table.js"></script>
 </body>
 </html>
