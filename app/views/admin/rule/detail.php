@@ -63,23 +63,27 @@
                                 <button id="search_btn" type="button" disabled class="btn btn-primary px-4">Filter</button>
                                 <button id="delete_search" type="button" class="btn btn-danger text-white mx-3 px-4">Reset </button>
                             </div>
-                            <div class="col-2 d-flex align-items-center">
-                                <div class="form-group d-flex align-items-center">
+                            <div class="col-3  d-flex align-items-center">
+                                <div class="form-group d-flex align-items-center   w-100">
                                     <label class="mr-2" for="select-number-entries">Show</label>
-                                    <select id="select-number-entries" class="form-control" name="">
+                                    <select id="select-number-entries" class="form-control w-25" name="">
                                         <?php
                                         foreach ($options_select_ary as $item) {
                                         ?>
                                             <option <?php if ($item == $results_per_page)  echo "selected" ?> value="<?php echo $item ?>"><?php echo $item ?></option>
                                         <?php
-
                                         } ?>
                                     </select>
-                                    <label class="m-2" for="select-number-entries">Entries</label>
+                                    <label class="ml-2" for="select-number-entries">Entries</label>
+                                    <?php if (!empty($numbers_of_result)) {
+                                    ?>
+                                        <label class="fw-bold">/(Sum: <?php echo ' ' . $numbers_of_result ?>)</label>
 
+                                    <?php
+                                    } ?>
                                 </div>
                             </div>
-                            <div class="flex col-lg-2 my-3 justify-content-end">
+                            <div class="flex col-lg-1 my-3 justify-content-end">
                                 <form action="/admin/rule/export" class="" method="post">
                                     <input type="hidden" name="type_rule_id" value="<?php echo $type_rule_id ?>">
                                     <input type="hidden" name="type_rule_name" value="<?php echo htmlspecialchars($type_rule_name) ?>">
@@ -117,34 +121,42 @@
                             </thead>
                             <tbody class="table-rule-body">
                                 <?php
-                                foreach ($rules_in_one_page_ary as $rule) { ?>
-                                    <tr class="user_items">
-                                        <th scope="row"><?php $previous_order++;
-                                                        echo $previous_order;
-                                                        ?> </th>
-                                        <td><?php echo htmlspecialchars($rule['large_category']) ?></td>
-                                        <td><?php echo htmlspecialchars($rule['middle_category']) ?></td>
-                                        <td><?php echo htmlspecialchars($rule['small_category']) ?></td>
-                                        <td><?php echo htmlspecialchars($rule['content']) ?></td>
-                                        <td><?php echo htmlspecialchars($rule['detail']) ?></td>
-                                        <td><?php echo htmlspecialchars($rule['note']) ?></td>
-                                        <td><?php echo $rule['created_at'] ?></td>
-                                        <?php
-                                        if ($cur_user['role_id'] != 3) {
-                                        ?>
-                                            <td>
-                                                <div class="d-flex ">
-                                                    <a href=" /admin/rule/edit?id=<?php echo $rule['id'] ?>" class="btn btn-info text-white mr-1 ">Edit</a>
-                                                    <button data-id="<?php echo $rule['id'] ?>" type="button" class="btn btn-danger btn-delete-rule text-white ">Delete</button>
-                                                </div>
-                                            </td>
+                                if (!empty($rules_in_one_page_ary)) {
 
-                                        <?php
-                                        }
-                                        ?>
-
+                                    foreach ($rules_in_one_page_ary as $rule) { ?>
+                                        <tr class="user_items">
+                                            <th scope="row"><?php $previous_order++;
+                                                            echo $previous_order;
+                                                            ?> </th>
+                                            <td><?php echo htmlspecialchars($rule['large_category']) ?></td>
+                                            <td><?php echo htmlspecialchars($rule['middle_category']) ?></td>
+                                            <td><?php echo htmlspecialchars($rule['small_category']) ?></td>
+                                            <td><?php echo htmlspecialchars($rule['content']) ?></td>
+                                            <td><?php echo htmlspecialchars($rule['detail']) ?></td>
+                                            <td><?php echo htmlspecialchars($rule['note']) ?></td>
+                                            <td><?php echo $rule['created_at'] ?></td>
+                                            <?php
+                                            if ($cur_user['role_id'] != 3) {
+                                            ?>
+                                                <td>
+                                                    <div class="d-flex ">
+                                                        <a href=" /admin/rule/edit?id=<?php echo $rule['id'] ?>" class="btn btn-info text-white mr-1 ">Edit</a>
+                                                        <button data-id="<?php echo $rule['id'] ?>" type="button" class="btn btn-danger btn-delete-rule text-white ">Delete</button>
+                                                    </div>
+                                                </td>
+                                            <?php
+                                            }
+                                            ?>
+                                        </tr>
+                                    <?php }
+                                } else {
+                                    ?>
+                                    <tr>
+                                        <td colspan="9" class='text-center h-100'>Empty</td>
                                     </tr>
-                                <?php } ?>
+                                <?php
+                                }
+                                ?>
                             </tbody>
                         </table>
                     </div>
@@ -153,23 +165,35 @@
                 <div class="flex justify-center items-center">
                     <nav aria-label="Page navigation example">
                         <ul class="pagination">
-                            <li class="page-item cursor-pointer"><a class="page-link">Previous</a></li>
-                            <?php for ($i = 1; $i <= $numbers_of_pages; $i++) {
-                                if ($numbers_of_pages < $max_pagination_item) {
+                            <?php
+                            if (!empty($rules_in_one_page_ary)) {
                             ?>
+                                <li class="page-item cursor-pointer"><a class="page-link">Previous</a></li>
+                                <?php
+                            }
+                            $max_page_item = 8;
+                            for ($i = 1; $i <= $numbers_of_pages; $i++) {
+
+                                if ($numbers_of_pages < $max_pagination_item) {
+                                ?>
                                     <li class="page-item cursor-pointer"><a class="page-link"><?php echo $i; ?></a></li>
                                     <?php } else {
-                                    if (($i < $current_page - 3) || ($i > $current_page + 3)) {
+                                    if (($i < $current_page - $max_page_item / 2) || ($i > $current_page + $max_page_item / 2)) {
                                         echo "<li class='page-item hide-element'><a> </a></li>";
                                     } else {
                                     ?>
                                         <li class="page-item cursor-pointer"><a class="page-link"><?php echo $i; ?></a></li>
-                            <?php
+                                <?php
                                     }
                                 }
                             }
+                            if (!empty($rules_in_one_page_ary)) {
+                                ?>
+                                <li class="page-item cursor-pointer"><a class="page-link">Next</a></li>
+                            <?php
+                            }
                             ?>
-                            <li class="page-item cursor-pointer"><a class="page-link">Next</a></li>
+
                         </ul>
                     </nav>
                 </div>
@@ -193,7 +217,6 @@
     const PAGE_STORAGE_KEY = 'PAGE RULE FILTER'
     var config = JSON.parse(localStorage.getItem(PAGE_STORAGE_KEY)) || {}
 
-
     function start() {
         filterRule()
         checkInputsFilter()
@@ -216,7 +239,7 @@
         if (localStorage.getItem("PAGE RULE FILTER") === null) {
             setFilter('category', categorySelect.value)
             setFilter('date_search', dateSearchInput.value)
-            setFilter('search', searchInput.value.replace(/[^a-zA-Z0-9 ]/g, ''))
+            setFilter('search', removeSqlInJection(searchInput.value))
             setFilter('page', 1)
             setFilter('results_per_pages', 5)
         }
@@ -242,6 +265,7 @@
             if (config.page == ele.getElementsByTagName('a')[0].textContent) {
                 ele.getElementsByTagName('a')[0].style.backgroundColor = '#C5C5C5'
             }
+
 
             ele.addEventListener('click', () => {
                 switch (ele.getElementsByTagName('a')[0].textContent) {
@@ -281,13 +305,19 @@
                 item.remove()
             }
         })
+        const newHideElements = document.querySelector('.pagination').querySelectorAll('.hide-element')
+        if (newHideElements.length == 2) {
+            if (newHideElements[1].previousElementSibling == newHideElements[0]) {
+                newHideElements[1].parentElement.removeChild(newHideElements[0])
+            }
+        }
 
     }
     searchBtn.addEventListener('click', () => {
         setFilter('page', 1)
         setFilter('category', categorySelect.value)
         setFilter('date_search', dateSearchInput.value)
-        setFilter('search', searchInput.value.replace(/[^a-zA-Z0-9 ]/g, ''))
+        setFilter('search', removeSqlInJection(searchInput.value))
         loadUrlLocalStorage()
     })
     numberEntriesSelect.addEventListener('change', () => {
@@ -327,6 +357,7 @@
         } else {
             deleteSearchBtn.disabled = false
         }
+
         deleteSearchBtn.addEventListener('click', () => {
             resetSearchConfig()
             loadUrlLocalStorage()
@@ -340,9 +371,9 @@
     }
 
     function loadSearchConfig() {
-        categorySelect.value = config.category.replace(/[^a-zA-Z0-9 ]/g, '')
-        dateSearchInput.value = config.date_search.replace(/[^a-zA-Z0-9 ]/g, '')
-        searchInput.value = config.search.replace(/[^a-zA-Z0-9 ]/g, '')
+        categorySelect.value = config.category
+        dateSearchInput.value = config.date_search
+        searchInput.value = config.search
     }
 
     function loadUrlLocalStorage() {
@@ -363,7 +394,12 @@
                                     : `&results_per_pages=${config.results_per_pages}`}`
     }
 
-    // function removeSqlKeyword(params) {
-
-    // }
+    function removeSqlInJection(string) {
+        sqlKeyword = ['SELECT', 'UNION', 'DROP', 'DELETE', 'WHERE', 'FROM', 'SET', 'ALTER', 'INSERT', 'UPDATE', 'ADD', 'OR', 'AND', 'CREATE', 'JOIN']
+        string = string.replace(/[^A-Za-z\s\u00C0-\u1EF9]/g, '');
+        sqlKeyword.forEach((item) => {
+            string = string.replace(item, '')
+        })
+        return string
+    }
 </script>

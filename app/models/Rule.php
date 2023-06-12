@@ -46,17 +46,17 @@ class Rule extends Model
         }
         $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
         $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
-
         unset($req_method_ary['page']);
-        foreach ($req_method_ary as $key => $value) {
-            $req_method_ary[$key] = self::removeSpecialChar($value);
-        }
-        // var_dump($req_method_ary);
-        // die;
 
+        foreach ($req_method_ary as $key => $value) {
+            $req_method_ary[$key] = self::removeSqlInJection($value);
+        }
         $condition_ary = array();
         if (!empty($req_method_ary['date_search'])) {
             array_push($condition_ary, '(Date(r.created_at) =\'' . $req_method_ary['date_search'] . '\')');
+        }
+        if (!empty($req_method_ary['type_rule_id'])) {
+            array_push($condition_ary, '(type_rule_id =\'' . $req_method_ary['type_rule_id'] . '\')');
         }
         if (!empty($req_method_ary['category'])) {
             array_push($condition_ary, '(r.large_category =\'' . $req_method_ary['category'] . '\' OR r.middle_category =\'' . $req_method_ary['category'] . '\'OR r.small_category=\'' . $req_method_ary['category'] . '\')');
@@ -89,21 +89,29 @@ class Rule extends Model
         $query_large_category = "SELECT large_category FROM rules WHERE type_rule_id = '$type_rule_id' GROUP BY large_category";
         $query_middle_category = "SELECT middle_category FROM rules WHERE type_rule_id = '$type_rule_id' GROUP BY middle_category";
         $query_small_category = "SELECT small_category FROM rules WHERE type_rule_id = '$type_rule_id' GROUP BY small_category";
-        $large_categories = $db->query($query_large_category)->fetchAll(PDO::FETCH_ASSOC);
-        $middle_categories = $db->query($query_middle_category)->fetchAll(PDO::FETCH_ASSOC);
-        $small_categories = $db->query($query_small_category)->fetchAll(PDO::FETCH_ASSOC);
+        $large_categories_result = $db->query($query_large_category)->fetchAll(PDO::FETCH_ASSOC);
+        $middle_categories_result = $db->query($query_middle_category)->fetchAll(PDO::FETCH_ASSOC);
+        $small_categories_result = $db->query($query_small_category)->fetchAll(PDO::FETCH_ASSOC);
 
-        $all_categories = array();
-        foreach ($large_categories as $key => $value) {
-            $all_categories[] = $value['large_category'];
-        }
-        foreach ($middle_categories as $key => $value) {
-            $all_categories[] = $value['middle_category'];
-        }
-        foreach ($small_categories as $key => $value) {
-            $all_categories[] = $value['small_category'];
-        }
+        $small_categories = array();
+        $middle_categories = array();
+        $small_categories = array();
 
+
+        foreach ($large_categories_result as $key => $value) {
+            $large_categories[] = $value['large_category'];
+        }
+        foreach ($middle_categories_result as $key => $value) {
+            $middle_categories[] = $value['middle_category'];
+        }
+        foreach ($small_categories_result as $key => $value) {
+            $small_categories[] = $value['small_category'];
+        }
+        $all_categories = [
+            'large_categories' => $large_categories,
+            'middle_categories' => $middle_categories,
+            'small_categories' => $small_categories
+        ];
         return $all_categories;
     }
 
@@ -122,9 +130,9 @@ class Rule extends Model
     {
         return $this->destroy($condition);
     }
-    public static function removeSpecialChar($string)
+    public static function removeSqlInJection($string)
     {
         $replace = array('UNION', 'SELECT', 'AND', 'OR', '=', '_', '-', '&', '+', '*', '`', '~', '#', '?', '<', '>', '(', ')', '%', '!', "'", "'", ";");
-        return str_replace($replace, '', preg_replace('/[^a-zA-Z0-9]/', "", $string));
+        return str_replace($replace, '', $string);
     }
 }

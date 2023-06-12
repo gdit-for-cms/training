@@ -6,9 +6,9 @@ use Core\Http\Request;
 use Core\Http\ResponseTrait;
 use App\models\Rule;
 use App\Models\TypeRule;
-use  PhpOffice\PhpSpreadsheet\Spreadsheet;
-use  PhpOffice\PhpSpreadsheet\Reader\Xls;
-use  PhpOffice\PhpSpreadsheet\Reader\Csv;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Reader\Xls;
+use PhpOffice\PhpSpreadsheet\Reader\Csv;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Border;
@@ -101,7 +101,6 @@ class RuleController extends AppController
     {
         $type_rule_id = $request->getGet()->get('type_rule_id');
         $type_rule =  $this->obj_type_rule_model->getById($type_rule_id);
-        $rules_by_type_ary = $this->obj_rule_model->getBy('type_rule_id', '=', $type_rule_id, '*');
         $all_categories = $this->obj_rule_model->getAllCategories($type_rule_id);
 
         $get_results_per_page =  $request->getGet()->get('results_per_pages');
@@ -117,17 +116,18 @@ class RuleController extends AppController
 
         $current_page = (int) $request->getGet()->get('page');
         $previous_order = ($current_page - 1) * $results_per_page;
-        $max_pagination_item = 3;
+        $max_pagination_item = 4;
+
 
         $this->data_ary['previous_order'] = $previous_order;
         $this->data_ary['current_page'] = $current_page;
         $this->data_ary['results_per_page'] = $results_per_page;
         $this->data_ary['numbers_of_pages'] = $numbers_of_pages;
+        $this->data_ary['numbers_of_result'] = $numbers_of_result;
         $this->data_ary['options_select_ary'] = $options_select_ary;
         $this->data_ary['max_pagination_item'] = $max_pagination_item;
         $this->data_ary['rules_in_one_page_ary'] = $results_ary['results'];
         $this->data_ary['all_categories'] = $all_categories;
-        $this->data_ary['rules_by_type_ary'] = $rules_by_type_ary;
         $this->data_ary['type_rule_name'] = $type_rule['name'];
         $this->data_ary['type_rule_id'] = $type_rule_id;
         $this->data_ary['content'] = "rule/detail";
@@ -183,15 +183,15 @@ class RuleController extends AppController
                     $spreadsheet->unmergeCells($mergedCell);
                 }
 
-                $sheetData_ary = $spreadsheet->toArray(null, true, true, true);
-                $sheetData_ary = array_filter($sheetData_ary, function ($row) {
+                $sheet_data_ary = $spreadsheet->toArray(null, true, true, true);
+                $sheet_data_ary = array_filter($sheet_data_ary, function ($row) {
                     return !empty(array_filter($row));
                 });
 
 
-                if (!empty($sheetData_ary)) {
+                if (!empty($sheet_data_ary)) {
                     try {
-                        unset($sheetData_ary[1]);
+                        unset($sheet_data_ary[1]);
                         if (count($this->obj_type_rule_model->getBy('name', '=', $type_rule_name, '*')) != 0) {
                             $this->createMessage('msg', 'danger', 'Rule list name already exits. Please enter another name!');
                             header('Location:/admin/rule/index');
@@ -200,7 +200,7 @@ class RuleController extends AppController
                         $this->obj_type_rule_model->create(['name' => $type_rule_name]);
                         $type_rule = $this->obj_type_rule_model->getBy('name', '=', $type_rule_name, '*');
 
-                        foreach ($sheetData_ary as $row) {
+                        foreach ($sheet_data_ary as $row) {
                             if (!(empty($row['B']) && empty($row['C']) && empty($row['D']) && empty($row['E']))) {
                                 $large_category = $row['B'] ? $row['B'] : "";
                                 $middle_category = $row['C'] ? $row['C'] : "";

@@ -4,7 +4,6 @@ namespace App\Controllers\Admin;
 
 
 use App\Controllers\Admin\AppController;
-use Core\Controller;
 use Core\View;
 
 class ExamController extends AppController
