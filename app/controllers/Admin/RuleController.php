@@ -251,28 +251,63 @@ class RuleController extends AppController
         $sheet->setCellValue('E1', 'Content');
         $sheet->setCellValue('F1', 'Detail');
         $sheet->setCellValue('G1', 'Note');
-        $row_count = 1;
-        foreach ($rules_by_type_ary as $row) {
-            $row_count++;
-            $sheet->setCellValue('A' . $row_count, $row_count - 1);
-            $sheet->setCellValue('B' . $row_count, $row['large_category']);
-            $sheet->setCellValue('C' . $row_count, $row['middle_category']);
-            $sheet->setCellValue('D' . $row_count, $row['small_category']);
-            $sheet->setCellValue('E' . $row_count, $row['content']);
-            $sheet->setCellValue('F' . $row_count, $row['detail']);
-            $sheet->setCellValue('G' . $row_count, $row['note']);
+        $row_number_large = 2;
+        $row_number_middle = 2;
+        $row_number_small = 2;
+
+        $start_row_large = -1;
+        $start_row_middle = -1;
+        $start_row_small = -1;
+
+        $previous_large = '';
+        $previous_middle = '';
+        $previous_small = '';
+
+        foreach ($rules_by_type_ary as $index => $row) {
+            if ($start_row_large == -1) {
+                $start_row_large = $row_number_large;
+                $previous_large = $row['large_category'];
+            }
+            if ($start_row_middle == -1) {
+                $start_row_middle = $row_number_middle;
+                $previous_middle = $row['middle_category'];
+            }
+            if ($start_row_small == -1) {
+                $start_row_small = $row_number_small;
+                $previous_small = $row['small_category'];
+            }
+
+            $sheet->setCellValue('A' . $index + 2, $index + 1);
+            $sheet->setCellValue('B' . $index + 2, $row['large_category']);
+            $sheet->setCellValue('C' . $index + 2, $row['middle_category']);
+            $sheet->setCellValue('D' . $index + 2, $row['small_category']);
+            $sheet->setCellValue('E' . $index + 2, $row['content']);
+            $sheet->setCellValue('F' . $index + 2, $row['detail']);
+            $sheet->setCellValue('G' . $index + 2, $row['note']);
+            $next_large = isset($rules_by_type_ary[$index + 1]) ? $rules_by_type_ary[$index + 1]['large_category'] : null;
+            $next_middle = isset($rules_by_type_ary[$index + 1]) ? $rules_by_type_ary[$index + 1]['middle_category'] : null;
+            $next_small = isset($rules_by_type_ary[$index + 1]) ? $rules_by_type_ary[$index + 1]['small_category'] : null;
+
+            if ($row_number_large >= $start_row_large && (($previous_large <> $next_large) || ($next_large == null))) {
+                $cellToMerge = 'B' . $start_row_large . ':B' . $row_number_large;
+                $sheet->mergeCells($cellToMerge);
+                $start_row_large = -1;
+            }
+            if ($row_number_middle >= $start_row_middle && (($previous_middle <> $next_middle) || ($next_middle == null))) {
+                $cellToMerge = 'C' . $start_row_middle . ':C' . $row_number_middle;
+                $sheet->mergeCells($cellToMerge);
+                $start_row_middle = -1;
+            }
+            if ($row_number_small >= $start_row_small && (($previous_small <> $next_small) || ($next_small == null))) {
+                $cellToMerge = 'D' . $start_row_small . ':D' . $row_number_small;
+                $sheet->mergeCells($cellToMerge);
+                $start_row_small = -1;
+            }
+
+            $row_number_large++;
+            $row_number_middle++;
+            $row_number_small++;
         }
-        $styles_body_ary = [
-            'borders'   => [
-                'allBorders' => [
-                    'borderStyle' => Border::BORDER_THIN,
-                ],
-            ],
-            'alignment' => [
-                'wrapText' => true,
-                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-            ],
-        ];
         $styles_header_ary = [
             'borders'   => [
                 'allBorders' => [
@@ -285,17 +320,35 @@ class RuleController extends AppController
             ],
             'font' => [
                 'bold' => true,
+            ], 'alignment' => [
+                'wrapText' => true,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER
+            ],
+
+        ];
+        $styles_body_ary = [
+            'borders'   => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                ],
+            ],
+            'alignment' => [
+                'wrapText' => true,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
             ],
         ];
+
+        $row_count = count($rules_by_type_ary) + 1;
         $spread_sheet->getActiveSheet()->getStyle("A1:G1")->applyFromArray($styles_header_ary);
         $spread_sheet->getActiveSheet()->getStyle("A2:G$row_count")->applyFromArray($styles_body_ary);
-        $spread_sheet->getActiveSheet()->getRowDimension('1')->setRowHeight(20);
+        $spread_sheet->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
         foreach (range('A', 'G') as $column) {
             switch ($column) {
                 case 'B':
                 case 'C':
                 case 'D':
-                    $spread_sheet->getActiveSheet()->getColumnDimension($column)->setWidth(20);
+                    $spread_sheet->getActiveSheet()->getColumnDimension($column)->setWidth(14);
                     break;
                 case 'E':
                 case 'F':
