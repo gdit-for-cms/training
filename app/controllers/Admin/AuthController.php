@@ -8,7 +8,7 @@ use Core\Http\Request;
 
 class AuthController extends AppController
 {
-    public array $data;
+    public array $data_ary;
 
     protected function before()
     {
@@ -17,7 +17,7 @@ class AuthController extends AppController
             exit;
         }
 
-        $this->data['title'] = 'Login';
+        $this->data_ary['title'] = 'Login';
     }
 
     protected function after()
@@ -43,13 +43,13 @@ class AuthController extends AppController
             ->first();
 
         if (!$inputUser) {
-            $this->data['error'] = showError('login');
+            $this->data_ary['error'] = showError('login');
 
-            View::render('admin/auth/login.php', $this->data);
+            View::render('admin/auth/login.php', $this->data_ary);
             exit;
         }
 
-        $data = [
+        $data_ary = [
             'id' => $inputUser['id'],
             'name' => $inputUser['name'],
             'email' => $inputUser['email'],
@@ -59,7 +59,7 @@ class AuthController extends AppController
             'avatar_image' => $inputUser['avatar_image'],
         ];
 
-        $request->saveUser($data);
+        $request->saveUser($data_ary);
 
         header('Location: /admin');
         exit;

@@ -36,8 +36,8 @@ class RuleController extends AppController
 
         if (isset($_POST['btn-import'])) {
             $this->import($request);
-            header('Location: ' . $_SERVER['HTTP_REFERER']);
-            die();
+            header('Location:/admin/rule/index');
+            exit;
         }
         $types_rule = $this->obj_type_rule_model->getAll();
         $this->data_ary['types_rule'] = $types_rule;
@@ -74,13 +74,10 @@ class RuleController extends AppController
             if ($this->obj_rule_model->create($data_ary)) {
                 header("Location: /admin/rule/rulesDetail?type_rule_id=" . $type_rule_id . '&page=1&results_per_pages=5');
             } else {
-                header('Location: ' . $_SERVER['HTTP_REFERER']);
+                header('Location: /admin/rule/create?type_rule_id=' . $type_rule_id);
             }
         } catch (\Throwable $th) {
-            $_SESSION['msg']  = [
-                'type' => "danger",
-                'message' => "Creation failed! Please try again!"
-            ];
+            $this->createMessage('msg', 'danger', 'Creation failed! Please try again!');
         }
     }
     public function updateAction(Request $request)
@@ -93,13 +90,10 @@ class RuleController extends AppController
             if ($this->obj_rule_model->updateOne($data_ary, "id ='$rule_id'")) {
                 header("Location: /admin/rule/rulesDetail?type_rule_id=" . $type_rule_id . '&page=1&results_per_pages=5');
             } else {
-                header('Location: ' . $_SERVER['HTTP_REFERER']);
+                header('Location: /admin/rule/edit?id=' . $rule_id);
             }
         } catch (\Throwable $th) {
-            $_SESSION['msg']  = [
-                'type' => "danger",
-                'message' => "Update failed! Please try again!"
-            ];
+            $this->createMessage('msg', 'danger', 'Update failed! Please try again!');
         }
     }
 
@@ -143,16 +137,12 @@ class RuleController extends AppController
     {
         $type_rule_id = $request->getGet()->get('id');
         $this->obj_type_rule_model->destroyOne("id = $type_rule_id");
-        header('Location: ' . $_SERVER['HTTP_REFERER']);
-        die();
     }
 
     public function deleteAction(Request $request)
     {
         $rule_id = $request->getGet()->get('id');
         $this->obj_rule_model->destroyOne("id = $rule_id");
-        header('Location: ' . $_SERVER['HTTP_REFERER']);
-        die();
     }
 
 
@@ -198,69 +188,53 @@ class RuleController extends AppController
                     return !empty(array_filter($row));
                 });
 
+
                 if (!empty($sheetData_ary)) {
                     try {
                         unset($sheetData_ary[1]);
-                        if (count($this->obj_type_rule_model->getBy('name', '=', $type_rule_name, '*')) == 0) {}
-                            $this->obj_type_rule_model->create(['name' => $type_rule_name]);
-                            $type_rule = $this->obj_type_rule_model->getBy('name', '=', $type_rule_name, '*');
+                        if (count($this->obj_type_rule_model->getBy('name', '=', $type_rule_name, '*')) != 0) {
+                            $this->createMessage('msg', 'danger', 'Rule list name already exits. Please enter another name!');
+                            header('Location:/admin/rule/index');
+                            exit;
+                        }
+                        $this->obj_type_rule_model->create(['name' => $type_rule_name]);
+                        $type_rule = $this->obj_type_rule_model->getBy('name', '=', $type_rule_name, '*');
 
-                            foreach ($sheetData_ary as $row) {
-                                if (!(empty($row['B']) && empty($row['C']) && empty($row['D']) && empty($row['E']))) {
-                                    $large_category = $row['B'] ? $row['B'] : "";
-                                    $middle_category = $row['C'] ? $row['C'] : "";
-                                    $small_category = $row['D'] ? $row['D'] : "";
-                                    $content = $row['E'] ? $row['E'] : "";
-                                    $detail = $row['F'] ? $row['F'] : "";
-                                    $note = $row['G'] ? $row['G'] : "";
-                                    $result = $this->obj_rule_model->create(
-                                        [
-                                            'type_rule_id' => $type_rule[0]['id'],
-                                            'large_category' => $large_category,
-                                            'middle_category' => $middle_category,
-                                            'small_category' => $small_category,
-                                            'content' => $content,
-                                            'detail' => $detail,
-                                            'note' => $note,
-                                        ]
-                                    );
-                                    if ($result) {
-                                        $_SESSION['msg']  = [
-                                            'type' => "success",
-                                            'message' => "Import success!"
-                                        ];
-                                    } else {
-                                        $_SESSION['msg']  = [
-                                            'type' => "danger",
-                                            'message' => "Import failed!"
-                                        ];
-                                    }
+                        foreach ($sheetData_ary as $row) {
+                            if (!(empty($row['B']) && empty($row['C']) && empty($row['D']) && empty($row['E']))) {
+                                $large_category = $row['B'] ? $row['B'] : "";
+                                $middle_category = $row['C'] ? $row['C'] : "";
+                                $small_category = $row['D'] ? $row['D'] : "";
+                                $content = $row['E'] ? $row['E'] : "";
+                                $detail = $row['F'] ? $row['F'] : "";
+                                $note = $row['G'] ? $row['G'] : "";
+                                $result = $this->obj_rule_model->create(
+                                    [
+                                        'type_rule_id' => $type_rule[0]['id'],
+                                        'large_category' => $large_category,
+                                        'middle_category' => $middle_category,
+                                        'small_category' => $small_category,
+                                        'content' => $content,
+                                        'detail' => $detail,
+                                        'note' => $note,
+                                    ]
+                                );
+                                if ($result) {
+                                    $this->createMessage('msg', 'success', 'Import success!');
+                                } else {
+                                    $this->createMessage('msg', 'danger', 'Import failed!');
                                 }
                             }
-                        } else {
-                            $_SESSION['msg']  = [
-                                'type' => "danger",
-                                'message' => "Rule list name already exits. Please enter another name!"
-                            ];
                         }
                     } catch (\Throwable $th) {
-                        $_SESSION['msg']  = [
-                            'type' => "danger",
-                            'message' => "Import failed!"
-                        ];
+                        $this->createMessage('msg', 'danger', 'Import failed!');
                     };
                 }
             } catch (\Throwable $th) {
-                $_SESSION['msg']  = [
-                    'type' => "danger",
-                    'message' => "Please check file again! Choose the correct file format (xlsx, xls, csv)!"
-                ];
+                $this->createMessage('msg', 'danger', 'Please check file again! Choose the correct file format (xlsx, xls, csv)!');
             }
         } else {
-            $_SESSION['msg']  = [
-                'type' => "danger",
-                'message' => "Please choose the correct file format (xlsx, xls, csv)!"
-            ];
+            $this->createMessage('msg', 'danger', 'Please choose the correct file format (xlsx, xls, csv)!');
         }
     }
     public function exportAction(Request $request)
@@ -343,5 +317,12 @@ class RuleController extends AppController
         header('Content-Disposition: attactment; filename="' . urlencode($file_name) . '"');
         readfile($file_name);
         exit;
+    }
+    public function createMessage($name, $type, $message)
+    {
+        $_SESSION[$name]  = [
+            'type' => "$type",
+            'message' => "$message"
+        ];
     }
 }

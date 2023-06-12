@@ -216,7 +216,7 @@
         if (localStorage.getItem("PAGE RULE FILTER") === null) {
             setFilter('category', categorySelect.value)
             setFilter('date_search', dateSearchInput.value)
-            setFilter('search', searchInput.value)
+            setFilter('search', searchInput.value.replace(/[^a-zA-Z0-9 ]/g, ''))
             setFilter('page', 1)
             setFilter('results_per_pages', 5)
         }
@@ -287,7 +287,7 @@
         setFilter('page', 1)
         setFilter('category', categorySelect.value)
         setFilter('date_search', dateSearchInput.value)
-        setFilter('search', searchInput.value)
+        setFilter('search', searchInput.value.replace(/[^a-zA-Z0-9 ]/g, ''))
         loadUrlLocalStorage()
     })
     numberEntriesSelect.addEventListener('change', () => {
@@ -340,9 +340,9 @@
     }
 
     function loadSearchConfig() {
-        categorySelect.value = config.category
-        dateSearchInput.value = config.date_search
-        searchInput.value = config.search
+        categorySelect.value = config.category.replace(/[^a-zA-Z0-9 ]/g, '')
+        dateSearchInput.value = config.date_search.replace(/[^a-zA-Z0-9 ]/g, '')
+        searchInput.value = config.search.replace(/[^a-zA-Z0-9 ]/g, '')
     }
 
     function loadUrlLocalStorage() {
@@ -362,4 +362,8 @@
                                 : `&page=${config.page}`}${config.results_per_pages == '' ? '' 
                                     : `&results_per_pages=${config.results_per_pages}`}`
     }
+
+    // function removeSqlKeyword(params) {
+
+    // }
 </script>

@@ -16,13 +16,9 @@ class AppController extends Controller
 
     protected function before()
     {
-        if (!checkAuth()) {
+        if (!checkAuth() || !checkPermission()) {
             header('Location: /admin/auth/login');
             exit;
-        }
-        if (!checkPermission()) {
-            header('Location: ' . $_SERVER['HTTP_REFERER']);
-            exit();
         }
 
         $request = new Request;

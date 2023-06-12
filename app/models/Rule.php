@@ -41,8 +41,6 @@ class Rule extends Model
     {
 
         $db = static::getDB();
-        $condition_query = "";
-
         if (!isset($req_method_ary['page'])) {
             $req_method_ary['page'] = '1';
         }
@@ -50,45 +48,31 @@ class Rule extends Model
         $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
 
         unset($req_method_ary['page']);
-
         foreach ($req_method_ary as $key => $value) {
-            if ($key != 'results_per_pages') {
-                if ($condition_query != '') {
-                    if ($key == 'date_search') {
-                        $condition_query .= ' AND ';
-                        $condition_query .= '(Date(r.created_at) =\'' . $value . '\')';
-                    } else if ($key == 'category') {
-                        $condition_query .= ' AND ';
-                        $condition_query .= '(r.large_category =\'' . $value . '\' OR r.middle_category =\'' . $value . '\'OR r.small_category=\'' . $value . '\')';
-                    } else if ($key != 'search') {
-                        $condition_query .= ' AND ';
-                        $condition_query .= $key . '=' . $value;
-                    } else {
-                        $condition_query .= ' AND ';
-                        $condition_query .= '(r.large_category LIKE \'%' . $value . '%\' OR r.middle_category LIKE \'%' . $value . '%\'OR r.small_category LIKE \'%'
-                            . $value . '%\'OR r.content LIKE \'%' . $value . '%\'OR r.detail LIKE \'%' . $value . '%\'OR r.note LIKE \'%' . $value . '%\')';
-                    }
-                } else {
-                    if ($key == 'date_search') {
-                        $condition_query .= "WHERE Date(r.created_at) =\'' . $value . '\'";
-                    } else if ($key == 'category') {
-                        $condition_query .= "WHERE r.large_category =\'' . $value . '\' OR r.middle_category =\'' . $value . '\'OR r.small_category=\'' . $value . '\'";
-                    } else if ($key != 'search') {
-                        $condition_query .= "WHERE $key = $value";
-                    } else {
-                        $condition_query .= 'WHERE (r.large_category LIKE \'%' . $value . '%\' OR r.middle_category LIKE \'%' . $value . '%\'OR r.small_category LIKE \'%'
-                            . $value . '%\'OR r.content LIKE \'%' . $value . '%\'OR r.detail LIKE \'%' . $value . '%\'OR r.note LIKE \'%' . $value . '%\')';
-                    }
-                }
-            }
+            $req_method_ary[$key] = self::removeSpecialChar($value);
         }
+        // var_dump($req_method_ary);
+        // die;
 
+        $condition_ary = array();
+        if (!empty($req_method_ary['date_search'])) {
+            array_push($condition_ary, '(Date(r.created_at) =\'' . $req_method_ary['date_search'] . '\')');
+        }
+        if (!empty($req_method_ary['category'])) {
+            array_push($condition_ary, '(r.large_category =\'' . $req_method_ary['category'] . '\' OR r.middle_category =\'' . $req_method_ary['category'] . '\'OR r.small_category=\'' . $req_method_ary['category'] . '\')');
+        }
+        if (!empty($req_method_ary['search'])) {
+            array_push($condition_ary, ' (r.large_category LIKE \'%' . $req_method_ary['search'] . '%\' OR r.middle_category LIKE \'%' . $req_method_ary['search'] . '%\'OR r.small_category LIKE \'%'
+                . $req_method_ary['search'] . '%\'OR r.content LIKE \'%' . $req_method_ary['search'] . '%\'OR r.detail LIKE \'%' . $req_method_ary['search'] . '%\'OR r.note LIKE \'%' . $req_method_ary['search'] . '%\')');
+        }
+        $where_condiditon = implode('AND', $condition_ary);
+        if ($where_condiditon != '') {
+            $where_condiditon = 'WHERE' . $where_condiditon;
+        }
         $query = 'SELECT *
                 FROM rules AS r
                 '
-            . $condition_query;
-
-
+            . $where_condiditon;
 
         $stmt_count = $db->query($query);
         $numbers_of_result = count($stmt_count->fetchAll(PDO::FETCH_ASSOC));
@@ -137,5 +121,10 @@ class Rule extends Model
     public function destroyOne($condition)
     {
         return $this->destroy($condition);
+    }
+    public static function removeSpecialChar($string)
+    {
+        $replace = array('UNION', 'SELECT', 'AND', 'OR', '=', '_', '-', '&', '+', '*', '`', '~', '#', '?', '<', '>', '(', ')', '%', '!', "'", "'", ";");
+        return str_replace($replace, '', preg_replace('/[^a-zA-Z0-9]/', "", $string));
     }
 }
