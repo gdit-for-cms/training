@@ -49,7 +49,7 @@ class Rule extends Model
         unset($req_method_ary['page']);
 
         foreach ($req_method_ary as $key => $value) {
-            $req_method_ary[$key] = self::removeSqlInJection($value);
+            $req_method_ary[$key] = self::filterSqlInJection($value);
         }
         $condition_ary = array();
         if (!empty($req_method_ary['date_search'])) {
@@ -97,7 +97,6 @@ class Rule extends Model
         $middle_categories = array();
         $small_categories = array();
 
-
         foreach ($large_categories_result as $key => $value) {
             $large_categories[] = $value['large_category'];
         }
@@ -126,11 +125,11 @@ class Rule extends Model
     }
 
 
-    public function destroyOne($condition)
+    public function destroyBy($condition)
     {
         return $this->destroy($condition);
     }
-    public static function removeSqlInJection($string)
+    public static function filterSqlInJection($string)
     {
         $replace = array('UNION', 'SELECT', 'AND', 'OR', '=', '_', '-', '&', '+', '*', '`', '~', '#', '?', '<', '>', '(', ')', '%', '!', "'", "'", ";");
         return str_replace($replace, '', $string);

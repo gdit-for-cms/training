@@ -7,7 +7,6 @@
                         <h4 class="mb-2 nowrap">Rule lists</h4>
                     </div>
                 </div>
-
                 <div class="white_card_body">
                     <?php
                     if ($cur_user['role_id'] != 3) {
@@ -47,7 +46,6 @@
                     <?php
                     }
                     ?>
-
                     <div class="panel panel-default">
                         <div class="panel-heading p-1 fw-bold">
                             RULE LISTS ADDED
@@ -62,17 +60,26 @@
                                         </span>
                                         <div class="d-flex ">
                                             <a href="/admin/rule/rulesDetail?type_rule_id=<?php echo $type_rule['id'] ?>&page=1&results_per_pages=5" class="btn btn-info m-2">View detail</a>
-
                                             <?php
                                             if ($cur_user['role_id'] != 3) {
                                             ?>
                                                 <button data-id="<?php echo $type_rule['id'] ?>" class="btn btn-danger btn-delete-list-rule m-2">Delete</button>
+                                                <button data-id="<?php echo $type_rule['id'] ?>" class="btn btn-primary m-2" data-bs-toggle="collapse" data-bs-target="#collapseChangeFile<?php echo $type_rule['id'] ?>" aria-expanded="false" aria-controls="collapseChangeFile<?php echo $type_rule['id'] ?>">Change file</button>
                                             <?php
                                             }
                                             ?>
-
                                         </div>
                                     </li>
+                                    <div class="collapse w-50 mb-3" id="collapseChangeFile<?php echo $type_rule['id'] ?>">
+                                        <div class="card card-body  ">
+                                            <div class="card-header">
+                                                <form action="/admin/rule/updateList?id=<?php echo $type_rule['id'] ?>" data-id="<?php echo $type_rule['id'] ?>" class="form-group  d-flex justify-content-end m-2 form_import_change_file" method="post" enctype="multipart/form-data">
+                                                    <input class="form-control w-75 mr-2" type="file" name="file_upload" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required>
+                                                    <button class="btn btn-success w-25" name="btn-import-change" type="submit">Update</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                 <?php } ?>
                             </ul>
                         </div>
