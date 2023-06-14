@@ -2,6 +2,7 @@
 
 namespace App\Controllers\Admin;
 
+use App\Models\Image;
 use Core\Http\Request;
 use Core\Http\ResponseTrait;
 use App\models\Rule;
@@ -21,12 +22,14 @@ class RuleController extends AppController
     public $title = 'Rules';
     public object $obj_rule;
     public object $obj_type_rule;
+    public object $obj_image;
     public array $data_ary;
 
     public function __construct()
     {
         $this->obj_rule = new Rule;
         $this->obj_type_rule = new TypeRule;
+        $this->obj_image = new Image;
     }
 
     public function indexAction(Request $request)
@@ -56,6 +59,8 @@ class RuleController extends AppController
         $rule_edit = $this->obj_rule->getById($rule_id);
         $type_rule = $this->obj_type_rule->getById($rule_edit['type_rule_id']);
         $all_categories = $this->obj_rule->getAllCategories($rule_edit['type_rule_id']);
+        $library_images = $this->obj_image->getAll();
+        $this->data_ary['library_images'] = $library_images;
         $this->data_ary['all_categories'] = $all_categories;
         $this->data_ary['type_rule'] = $type_rule;
         $this->data_ary['rule_edit'] = $rule_edit;

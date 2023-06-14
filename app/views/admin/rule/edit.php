@@ -129,9 +129,54 @@
     $(document).ready(() => {
         const btnPickImage = $('.ck-file-dialog-button')[0]
         btnPickImage.setAttribute('data-bs-toggle', 'modal')
-        btnPickImage.setAttribute('data-bs-target', '#staticBackdrop')
+        btnPickImage.setAttribute('data-bs-target', '#image-settings')
         btnPickImage.addEventListener('click', (e) => {
             e.preventDefault()
         })
+
+        //image preview modal
+        const modal = document.getElementById("myModal")
+        const btnShowChildModal = document.getElementById("myBtn")
+        const closeChildModal = document.getElementsByClassName("close")[0]
+        const btnOpenPreviews = document.querySelectorAll('.btn-open-preview')
+        const imagePreview = document.getElementById('image-preview')
+        const imagePreviewTitle = document.getElementById('image-preview-title')
+        const uploadImagesForm = document.forms['upload-images-form'];
+
+
+        closeChildModal.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        btnOpenPreviews.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                imagePreview.src = btn.getAttribute('data-path')
+                imagePreviewTitle.textContent = btn.getAttribute('data-img-name')
+                modal.style.display = "block";
+            })
+        })
+
+        //upload images
+        $("form").submit(function(event) {
+            var formData = {
+                name: $("#name").val(),
+                email: $("#email").val(),
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/admin/image/store",
+                data: formData,
+                dataType: "json",
+                encode: true,
+            }).done(function(data) {
+                console.log(data);
+            });
+
+            event.preventDefault();
+        });
+
+
+
     })
 </script>

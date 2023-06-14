@@ -1,10 +1,10 @@
 <div class="container-fluid g-0">
-    <!-- Modal -->
-    <div class="modal modal-lg  " id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <!-- Modal main -->
+    <div class="modal modal-lg  " id="image-settings" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="image-settingsLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content modal-images-setting">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Image settings</h5>
+                    <h5 class="modal-title" id="image-settingsLabel">Image settings</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -18,92 +18,163 @@
                     </ul>
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                            <div class="container">
-                                <div class="row justify-content-center align-items-center mx-3 mt-4 g-2">
-                                    <div class="col-2">
-                                        <div class="d-flex flex-column justify-content-center">
-                                            <label class="mb-1" for="">Image name 1</label>
-                                            <label class="mt-1" for="">File 1</label>
+                            <form method="POST" name="upload-images-form">
+                                <div class=" row group-select-one-file">
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <label for="">Image name 1</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input class="form-control" type="text" name="name-file1">
                                         </div>
                                     </div>
-                                    <div class="col-10"><input class="form-control" type="text" name="">
-                                        <button class="btn-select-file" type="button">Select</button>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <label for="">File 1</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input type="file" name="file-upload1" class="upload-photo" id="upload-photo1" />
+                                            <label class="label-select-file" l for="upload-photo1">Select</label>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="row justify-content-center align-items-center mx-3 mt-1 g-2">
-                                    <div class="col-2">
-                                        <div class="d-flex flex-column justify-content-center">
-                                            <label class="mb-1" for="">Image name 1</label>
-                                            <label class="mt-1" for="">File 1</label>
+                                <div class="row group-select-one-file">
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <label for="">Image name 2</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input class="form-control" type="text" name="">
                                         </div>
                                     </div>
-                                    <div class="col-10"><input class="form-control" type="text" name=""><button class="btn-select-file" type="button">Select</button></div>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <label for="">File 2</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input type="file" name="photo" class="upload-photo" id="upload-photo2" />
+                                            <label class="label-select-file" l for="upload-photo2">Select</label>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="row justify-content-center align-items-center mx-3 mt-1 g-2">
-                                    <div class="col-2">
-                                        <div class="d-flex flex-column justify-content-center">
-                                            <label class="mb-1" for="">Image name 1</label>
-                                            <label class="mt-1" for="">File 1</label>
+                                <div class="row group-select-one-file">
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <label for="">Image name 3</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input class="form-control" type="text" name="">
                                         </div>
                                     </div>
-                                    <div class="col-10"><input class="form-control" type="text" name=""><button class="btn-select-file" type="button">Select</button></div>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <label for="">File 3</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input type="file" name="photo" class="upload-photo" id="upload-photo3" />
+                                            <label class="label-select-file" l for="upload-photo3">Select</label>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="row justify-content-center align-items-center mx-3 mt-1 g-2">
-                                    <div class="col-2">
-                                        <div class="d-flex flex-column justify-content-center">
-                                            <label class="mb-1" for="">Image name 1</label>
-                                            <label class="mt-1" for="">File 1</label>
+                                <div class="row group-select-one-file">
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <label for="">Image name 4</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input class="form-control" type="text" name="">
                                         </div>
                                     </div>
-                                    <div class="col-10"><input class="form-control" type="text" name=""><button class="btn-select-file" type="button">Select</button></div>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <label for="">File 4</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input type="file" name="photo" class="upload-photo" id="upload-photo4" />
+                                            <label class="label-select-file" l for="upload-photo4">Select</label>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="row justify-content-center align-items-center mx-3 mt-1 g-2">
-                                    <div class="col-2">
-                                        <div class="d-flex flex-column justify-content-center">
-                                            <label class="mb-1" for="">Image name 1</label>
-                                            <label class="mt-1" for="">File 1</label>
+                                <div class="row group-select-one-file">
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <label for="">Image name 5</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input class="form-control" type="text" name="">
                                         </div>
                                     </div>
-                                    <div class="col-10"><input class="form-control" type="text" name=""><button class="btn-select-file" type="button">Select</button></div>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <label for="">File 5</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input type="file" name="photo" class="upload-photo" id="upload-photo5" />
+                                            <label class="label-select-file" l for="upload-photo5">Select</label>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="row justify-content-center align-items-center mx-3 mt-1 g-2">
                                     <div class="w-50 row justify-content-center">
-                                        <button type="button" class="btn-select-file mb-5 w-25">Register</button>
+                                        <button type="button" id="btn-register-upload" class="btn-basic mt-5 w-25">Register</button>
                                     </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                             <div class="search-option ">
-                                <div class="row justify-content-around align-items-center  mt-4">
-                                    <div class="col-3 d-flex justify-content-center ">
-                                        <div class="d-flex flex-column justify-content-center">
-                                            <label class="mb-1" for="">File classification</label>
-                                            <label class="mt-1" for="">Keyword</label>
-                                            <label class="mt-1" for="">Order</label>
-                                            <label class="mt-1" for="">Thumbnail</label>
-                                        </div>
+                                <div class="row justify-content-around align-items-center  mt-2">
+                                    <div class="col-3 d-flex justify-content-start ">
+                                        <label class="search-option-label">File classification</label>
                                     </div>
                                     <div class="col-7">
                                         <select id="my-select" class="form-select" name="">
                                             <option>Current location</option>
                                         </select>
+                                    </div>
+                                    <div class="col-2">
+                                    </div>
+                                </div>
+                                <div class="row justify-content-around align-items-center  mt-2">
+                                    <div class="col-3 d-flex justify-content-start ">
+                                        <label class="search-option-label">Keyword</label>
+                                    </div>
+                                    <div class="col-7">
                                         <input class="form-control" type="text" name="">
+                                    </div>
+                                    <div class="col-2">
+                                        <button class="btn-basic" type="button">Search</button>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-around align-items-center  mt-2">
+                                    <div class="col-3 d-flex justify-content-start ">
+                                        <label class="search-option-label">Order</label>
+                                    </div>
+                                    <div class="col-7">
                                         <div class="radio-btn-group-date d-flex">
                                             <label for="">Update date</label>
                                             <div class="form-check ml-4">
                                                 <input class="form-check-input" type="radio" name="update-date" id="desc">
                                                 <label class="form-check-label" for="desc">
-                                                    Descending order
+                                                    Descending
                                                 </label>
                                             </div>
                                             <div class="form-check ml-4">
                                                 <input class="form-check-input" type="radio" name="update-date" id="asc">
                                                 <label class="form-check-label" for="asc">
-                                                    Ascending order
+                                                    Ascending
                                                 </label>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="col-2">
+                                    </div>
+                                </div>
+                                <div class="row justify-content-around align-items-center  mt-2">
+                                    <div class="col-3 d-flex justify-content-start ">
+                                        <label class="search-option-label">Thumbnail</label>
+                                    </div>
+                                    <div class=" col-7">
                                         <div class="radio-btn-group-thumnail d-flex">
                                             <div class="form-check ml-4">
                                                 <input class="form-check-input" type="radio" name="thumbnail" id="Non">
@@ -120,81 +191,66 @@
                                         </div>
                                     </div>
                                     <div class="col-2">
-                                        <button class="btn-select-file" type="button">Search</button>
+
                                     </div>
                                 </div>
                             </div>
                             <div class="select-quantity ">
-                                <div class="row justify-content-around align-items-center  mt-4">
-                                    <select id="select-quantity" class="form-select" name="">
+                                <div class="row justify-content-end align-items-end mt-3">
+                                    <select id="select-quantity" class="form-select w-25 mr-4" name="">
                                         <option value="5">5 pieces</option>
                                         <option value="10">10 pieces</option>
                                         <option value="15">15 pieces</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="images-file-list ">
-                                <div class="row justify-content-around align-items-center  mt-4">
-                                    <ul class="list-group  ">
-                                        <li class="list-group-item ">
-                                            <div class="col-8">
-                                                <h2>2222</h2>
-                                                <span>/library_images/gd_test_logi.jpg</span>
-                                                <span>Update date: June 13, 2023 15:42:51</span>
-                                                <div class="d-flex">
-                                                    <button>Edit</button>
-                                                    <button>Delete</button>
-                                                    <button>Properties</button>
-                                                    <button>Preview</button>
-                                                </div>
-                                            </div>
-                                            <div class="col-4">
-                                                <button>Insert Image</button>
-                                            </div>
-                                        </li>
+
+                            <div class="images-file-list">
+                                <div class="row justify-content-around align-items-center">
+                                    <ul class="list-group d-flex flex-column  align-items-center ">
+                                        <?php
+                                        if (!empty($library_images)) {
+                                            foreach ($library_images as $image) {
+                                        ?>
+                                                <li class="list-group-item d-flex col-12 ">
+                                                    <div class="col-9">
+                                                        <div class="d-flex flex-column ml-2">
+                                                            <h5><?php echo $image['name'] ?></h5>
+                                                            <span><?php echo $image['path'] ?></span>
+                                                            <span>Update date: <?php echo $image['updated_at'] ?></span>
+                                                        </div>
+                                                        <div class="d-flex justify-content-around w-75">
+                                                            <button class="btn-basic">Edit</button>
+                                                            <button class="btn-basic">Delete</button>
+                                                            <button class="btn-basic">Properties</button>
+                                                            <button data-path="<?php echo $image['path'] ?>" data-img-name="<?php echo $image['name'] ?>" class="btn-basic btn-open-preview">Preview</button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <div class="d-flex justify-content-end mt-4 ">
+                                                            <button class="btn-basic mt-5">Insert Image</button>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                        <?php
+                                            }
+                                        }
+                                        ?>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                </div>
-
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12 p-0 ">
-            <div class="header_iner d-flex justify-content-between align-items-center">
-                <div class="sidebar_icon d-lg-none">
-                    <i class="ti-menu"></i>
-                </div>
-                <div class="line_icon open_miniSide d-none d-lg-block">
-                    <img src="" alt="">
-                </div>
-                <div class="serach_field-area d-flex align-items-center">
-                    <div class="search_inner">
-                        <form action="#">
-                            <div class="search_field">
-                                <input type="text" placeholder="Search">
+                    <!-- The Modal -->
+                    <div id="myModal" class="modal">
+                        <!-- Modal content -->
+                        <div class="modal-content">
+                            <div class="modal-child-header">
+                                <h5 id="image-preview-title" class="modal-title">Image preview</h5>
+                                <button type="button" class="close " data-bs-dismiss="modal" aria-label="Close">X</button>
                             </div>
-                            <button type="submit"></button>
-                        </form>
-                    </div>
-                </div>
-                <div class="header_right d-flex justify-content-between align-items-center">
-                    <div class="header_notification_warp d-flex align-items-center">
-                    </div>
-                    <div class="profile_info">
-                        <?php if ($_SESSION['user']['avatar_image']) { ?>
-                            <div class="rounded-circle border cursor-pointer flex items-center justify-center w-10 h-10 bg-gray-600 text-sm text-white font-bold align-middle"><?php echo strtoupper(substr($_SESSION['user']['name'], 0, 1)) ?></div>
-                        <?php } else { ?>
-                            <img src="/<?php echo $_SESSION['user']['avatar_image'] ?>" class="rounded-circle cursor-pointer border" alt="example placeholder" />
-                        <?php } ?>
-                        <div class="profile_info_iner border" style="top: 60px; right: -5px;">
-                            <div class="profile_info_details">
-                                <a href="/admin/admin/show">My Profile</a>
-                                <a href="/admin/auth/logout">Log Out</a>
+                            <div class="row justify-content-center">
+                                <img class="img-fluid" id="image-preview" src="/library_images/pexels-photo-2490949.jpeg" alt="">
                             </div>
                         </div>
                     </div>
@@ -202,4 +258,44 @@
             </div>
         </div>
     </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 p-0 ">
+        <div class="header_iner d-flex justify-content-between align-items-center">
+            <div class="sidebar_icon d-lg-none">
+                <i class="ti-menu"></i>
+            </div>
+            <div class="line_icon open_miniSide d-none d-lg-block">
+                <img src="" alt="">
+            </div>
+            <div class="serach_field-area d-flex align-items-center">
+                <div class="search_inner">
+                    <form action="#">
+                        <div class="search_field">
+                            <input type="text" placeholder="Search">
+                        </div>
+                        <button type="submit"></button>
+                    </form>
+                </div>
+            </div>
+            <div class="header_right d-flex justify-content-between align-items-center">
+                <div class="header_notification_warp d-flex align-items-center">
+                </div>
+                <div class="profile_info">
+                    <?php if ($_SESSION['user']['avatar_image']) { ?>
+                        <div class="rounded-circle border cursor-pointer flex items-center justify-center w-10 h-10 bg-gray-600 text-sm text-white font-bold align-middle"><?php echo strtoupper(substr($_SESSION['user']['name'], 0, 1)) ?></div>
+                    <?php } else { ?>
+                        <img src="/<?php echo $_SESSION['user']['avatar_image'] ?>" class="rounded-circle cursor-pointer border" alt="example placeholder" />
+                    <?php } ?>
+                    <div class="profile_info_iner border" style="top: 60px; right: -5px;">
+                        <div class="profile_info_details">
+                            <a href="/admin/admin/show">My Profile</a>
+                            <a href="/admin/auth/logout">Log Out</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </div>
