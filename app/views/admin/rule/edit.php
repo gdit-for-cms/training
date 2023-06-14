@@ -86,7 +86,7 @@
 
                         <div class="mb-3">
                             <label for="note" class="form-label">Note</label>
-                            <textarea class="form-control h-120px" name="note" id="note" rows="3"><?php echo htmlspecialchars(trim($rule_edit['note'])) ?></textarea>
+                            <textarea id="editor-edit-note" class="form-control h-120px" name="note" id="note" rows="3"><?php echo htmlspecialchars(trim($rule_edit['note'])) ?></textarea>
                         </div>
                     </div>
                 </div>
@@ -121,4 +121,17 @@
             }
         })
     }
+    ClassicEditor
+        .create(document.querySelector('#editor-edit-note'))
+        .catch(error => {
+            console.error(error);
+        });
+    $(document).ready(() => {
+        const btnPickImage = $('.ck-file-dialog-button')[0]
+        btnPickImage.setAttribute('data-bs-toggle', 'modal')
+        btnPickImage.setAttribute('data-bs-target', '#staticBackdrop')
+        btnPickImage.addEventListener('click', (e) => {
+            e.preventDefault()
+        })
+    })
 </script>

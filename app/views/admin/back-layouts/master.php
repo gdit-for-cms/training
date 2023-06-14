@@ -10,6 +10,8 @@
     <link href="/css/back-css/dashboard.css" rel="stylesheet">
     <link href="/css/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link href="/css/back-css/style.css" rel="stylesheet">
+    <script src="/js/front-js/jquery.min.js"></script>
+    <script src="/ckeditor5-build-classic/ckeditor.js"></script>
 
 </head>
 
@@ -21,7 +23,6 @@
             <?php require_once '../app/views/admin/' . $content . '.php' ?>
         </div>
         </div>
-        <script src="/js/front-js/jquery.min.js"></script>
         <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
         <script src="/js/front-js/sweetalert2.all.min.js"></script>
         <script src="/js/back-js/main.js"></script>
