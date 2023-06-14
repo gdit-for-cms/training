@@ -12,10 +12,10 @@
 
 <body>
   <div class="d-flex justify-content-between m-5">
-    <a href="/admin" type="button" class="btn btn-danger button_add_json_to">
+    <a href="/admin" type="button" class="btn btn-danger">
       Back Admin
     </a>
-    <button type="button" class="btn btn-primary button_add_question_1">
+    <button type="button" class="btn btn-primary button_question_add">
       Create Question
     </button>
     <button type="button" class="btn btn-primary console_log_json">
@@ -24,20 +24,27 @@
     <button type="button" class="btn btn-primary button_import_json">
       Import Json
     </button>
+    <a href="/admin/step/index" type="button" class="btn btn-success">
+      Steps
+    </a>
   </div>
   <div class="d-flex justify-content-between">
     <div class="w-50 mx-5">
-      <h5 class="text-center border">Create Table</h5>
-      <div class="content_question_1 mb-5"></div>
+      <h5 class="text-center border">Select Database</h5>
+      <div class="content_question">
+        <?php echo $questions ?>
+      </div>
     </div>
     <div class="w-50 mx-5">
       <h5 class="text-center border">Import Json</h5>
-      <div class="content_import_json mb-5"></div>
+      <div class="content_import_json mb-5">
+
+      </div>
     </div>
   </div>
 
   <!-- Modal import json-->
-  <div class="modal_import_json modal">
+  <!-- <div class="modal_import_json modal">
     <div class="modal-content">
       <div class="modal-header">
         <h6 class="modal-title">Import Json</h6>
@@ -48,14 +55,33 @@
       </div>
       <div class="modal-footer">
         <span class="close_modal_import_json btn btn-secondary">Back</span>
-        <button type="button" class="submit_import_json btn btn-primary">Import</button>
+        <button type="button" class="submit it_import_json btn btn-primary">Import</button>
       </div>
     </div>
-  </div>
+  </div> -->
   <!-- End modal import json-->
 
+  <!-- Modal edit json-->
+  <!-- <div class="modal_edit_json modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title">Edit Json</h6>
+        <span class="close_modal_edit_json close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <textarea class="input_edit_json input-group form-control" rows="8" type="text"></textarea>
+      </div>
+      <div class="modal-footer">
+        <span class="close_modal_edit_json btn btn-secondary">Back</span>
+        <button type="button" class="submit it_edit_json btn btn-primary">Edit</button>
+      </div>
+    </div>
+  </div> -->
+  <!-- End modal edit json-->
+
+
   <!-- Modal add question 1-->
-  <div class="modal_add_question_1 modal">
+  <!-- <div class="modal_add_question_1 modal">
     <div class="modal-content">
       <div class="modal-header">
         <h6 class="modal-title">Create question</h6>
@@ -66,32 +92,69 @@
       </div>
       <div class="modal-footer">
         <span class="close_modal_add_question_1 btn btn-secondary">Back</span>
-        <button type="button" class="submit_add_question_1 btn btn-primary">Add</button>
+        <button type="button" class="submit it_add_question_1 btn btn-primary">Add</button>
       </div>
     </div>
-  </div>
-  <!-- End modal add question 1-->
+  </div> -->
+  <!-- End modal add question 1 -->
 
-  <!-- Modal edit question 1-->
-  <div class="modal_edit_question_1 modal">
+
+  <!-- Modal question edit-->
+  <div class="modal_question_edit modal">
     <div class="modal-content">
       <div class="modal-header">
         <h6 class="modal-title">Edit question</h6>
-        <span class="close_modal_edit_question_1 close">&times;</span>
+        <span class="close_modal_question_edit close">&times;</span>
       </div>
       <div class="modal-body">
-        <input class="input_edit_question_1 input-group form-control" type="text">
+        <input class="input_question_edit input-group form-control" type="text">
       </div>
       <div class="modal-footer">
-        <span class="close_modal_edit_question_1 btn btn-secondary">Back</span>
-        <button type="button" class="submit_edit_question_1 btn btn-primary">Add</button>
+        <span class="close_modal_question_edit btn btn-secondary">Back</span>
+        <button type="button" class="submit_question_edit btn btn-primary">Save</button>
       </div>
     </div>
   </div>
-  <!-- End modal edit question 1-->
+  <!-- End modal question edit-->
+
+
+  <!-- Modal answer edit-->
+  <div class="modal_answer_edit modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title">Edit answer</h6>
+        <span class="close_modal_answer_edit close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <input class="input_answer_edit input-group form-control" type="text">
+      </div>
+      <div class="modal-footer">
+        <span class="close_modal_answer_edit btn btn-secondary">Back</span>
+        <button type="button" class="submit_answer_edit btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+  <!-- End modal answer edit-->
+
+
+  <!-- Modal alert delete-->
+  <div class="modal_alert_delete modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title">Are you sure?</h6>
+        <span class="close_modal_alert_delete close">&times;</span>
+      </div>
+      <div class="modal-footer">
+        <span class="close_modal_alert_delete btn btn-secondary">Back</span>
+        <button type="button" class="submit_modal_alert_delete btn btn-danger">Yes, delete it</button>
+      </div>
+    </div>
+  </div>
+  <!-- End modal alert delete-->
+
 
   <!-- Modal add selection 1-->
-  <div class="modal_add_selection_1 modal">
+  <!-- <div class="modal_add_selection_1 modal">
     <div class="modal-content">
       <div class="modal-header">
         <h6 class="modal-title">Create selection</h6>
@@ -102,14 +165,15 @@
       </div>
       <div class="modal-footer">
         <span class="close_modal_add_selection_1 btn btn-secondary">Back</span>
-        <button type="button" class="submit_add_selection_1 btn btn-primary">Add</button>
+        <button type="button" class="submit it_add_selection_1 btn btn-primary">Add</button>
       </div>
     </div>
-  </div>
+  </div> -->
   <!-- End modal add selection 1-->
 
+
   <!-- Modal edit selection 1-->
-  <div class="modal_edit_selection_1 modal">
+  <!-- <div class="modal_edit_selection_1 modal">
     <div class="modal-content">
       <div class="modal-header">
         <h6 class="modal-title">Edit selection</h6>
@@ -120,14 +184,15 @@
       </div>
       <div class="modal-footer">
         <span class="close_modal_edit_selection_1 btn btn-secondary">Back</span>
-        <button type="button" class="submit_edit_selection_1 btn btn-primary">Add</button>
+        <button type="button" class="submit it_edit_selection_1 btn btn-primary">Add</button>
       </div>
     </div>
-  </div>
+  </div> -->
   <!-- End modal edit selection 1-->
 
+
   <!-- Modal add question 2-->
-  <div class="modal_add_question_2 modal">
+  <!-- <div class="modal_add_question_2 modal">
     <div class="modal-content">
       <div class="modal-header">
         <h6 class="modal-title">Create question</h6>
@@ -138,14 +203,15 @@
       </div>
       <div class="modal-footer">
         <span class="close_modal_add_question_2 btn btn-secondary">Back</span>
-        <button type="button" class="submit_add_question_2 btn btn-primary">Add</button>
+        <button type="button" class="submit it_add_question_2 btn btn-primary">Add</button>
       </div>
     </div>
-  </div>
+  </div> -->
   <!-- End modal add question 2-->
 
+
   <!-- Modal edit question 2-->
-  <div class="modal_edit_question_2 modal">
+  <!-- <div class="modal_edit_question_2 modal">
     <div class="modal-content">
       <div class="modal-header">
         <h6 class="modal-title">Edit question</h6>
@@ -156,14 +222,15 @@
       </div>
       <div class="modal-footer">
         <span class="close_modal_edit_question_2 btn btn-secondary">Back</span>
-        <button type="button" class="submit_edit_question_2 btn btn-primary">Add</button>
+        <button type="button" class="submit it_edit_question_2 btn btn-primary">Add</button>
       </div>
     </div>
-  </div>
+  </div> -->
   <!-- End modal edit question 2-->
 
+
   <!-- Modal add selection 2-->
-  <div class="modal_add_selection_2 modal">
+  <!-- <div class="modal_add_selection_2 modal">
     <div class="modal-content">
       <div class="modal-header">
         <h6 class="modal-title">Create selection</h6>
@@ -174,14 +241,15 @@
       </div>
       <div class="modal-footer">
         <span class="close_modal_add_selection_2 btn btn-secondary">Back</span>
-        <button type="button" class="submit_add_selection_2 btn btn-primary">Add</button>
+        <button type="button" class="submit it_add_selection_2 btn btn-primary">Add</button>
       </div>
     </div>
-  </div>
+  </div> -->
   <!-- End modal add selection 2-->
 
+
   <!-- Modal edit selection 2-->
-  <div class="modal_edit_selection_2 modal">
+  <!-- <div class="modal_edit_selection_2 modal">
     <div class="modal-content">
       <div class="modal-header">
         <h6 class="modal-title">Edit selection</h6>
@@ -192,14 +260,15 @@
       </div>
       <div class="modal-footer">
         <span class="close_modal_edit_selection_2 btn btn-secondary">Back</span>
-        <button type="button" class="submit_edit_selection_2 btn btn-primary">Add</button>
+        <button type="button" class="submit it_edit_selection_2 btn btn-primary">Add</button>
       </div>
     </div>
-  </div>
+  </div> -->
   <!-- End modal edit selection 2-->
 
+
   <!-- Modal step-->
-  <div class="modal_step modal">
+  <!-- <div class="modal_step modal">
     <div class="modal-content">
       <div class="modal-header">
         <h6 class="modal-title">Create 1 or more steps</h6>
@@ -270,11 +339,44 @@
       </div>
       <div class="modal-footer">
         <span class="close_modal_step btn btn-secondary">Back</span>
-        <button type="button" class="submit_step btn btn-primary">Thêm</button>
+        <button type="button" class="submit it_step btn btn-primary">Thêm</button>
       </div>
     </div>
-  </div>
+  </div> -->
   <!-- End modal step-->
+
+
+  <!-- Modal dialog selection 1-->
+  <!-- <div class="modal_dialog_selection_1 modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title">Dialog selection</h6>
+        <span class="close_modal_dialog_selection_2 close">&times;</span>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <span class="close_modal_dialog_selection_2 btn btn-secondary">Back</span>
+        <button type="button" class="submit it_dialog_selection_2 btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div> -->
+  <!-- End modal dialog selection 1-->
+
+  <!-- Modal dialog selection 2-->
+  <!-- <div class="modal_dialog_selection_2 modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title">Dialog selection</h6>
+        <span class="close_modal_dialog_selection_2 close">&times;</span>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <span class="close_modal_dialog_selection_2 btn btn-secondary">Back</span>
+        <button type="button" class="submit it_dialog_selection_2 btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div> -->
+  <!-- End modal dialog selection 2-->
 
   <script src="/js/front-js/jquery.min.js"></script>
   <script src="/js/bootstrap/bootstrap.min.js"></script>
