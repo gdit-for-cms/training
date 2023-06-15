@@ -47,7 +47,7 @@ class TableController extends Controller
             $html .= '<div data-question-id="' . $questionId . '" class="question_content">' . $questionContent . '</div>';
             $html .= '<div>';
             $html .= '<button data-question-id="' . $questionId . '" type="button" class="mx-1 btn btn-primary button_question_edit">Edit</button>';
-            $html .= '<button data-question-id="' . $questionId . '" type="button" class="mx-1 btn btn-success button_question_create_answer">Create selection</button>';
+            $html .= '<button data-question-id="' . $questionId . '" type="button" class="mx-1 btn btn-success button_question_create_answer">Create answer</button>';
             $html .= '<button data-question-id="' . $questionId . '" type="button" class="mx-1 btn btn-danger button_question_delete">Delete</button>';
             $html .= '</div>';
             $html .= '</div>';
@@ -79,11 +79,11 @@ class TableController extends Controller
                             $stepName = $step['step_name'];
 
                             $html .= '<div data-step-id="' . $stepId . '" class="step bg-step p-3 d-flex justify-content-between align-items-center">';
-                            $html .= $stepId;
-                            $html .= '<hr>';
-                            $html .= $stepName;
+                            $html .= '<div class="step_id">' . $stepId . '</div>';
+                            $html .= '<div class="step_name">' . $stepName . '</div>';
                             $html .= '</div>';
                         }
+                        
                         $html .= '</div>';
                     } elseif (!empty($answer['questions'])) {
                         $html .= '<div class="content_question">';
