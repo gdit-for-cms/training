@@ -93,6 +93,8 @@
             </form>
         </div>
     </div>
+
+    </body>
 </div>
 <script>
     const submitBtn = document.querySelector('#submit')
@@ -133,7 +135,6 @@
         btnPickImage.addEventListener('click', (e) => {
             e.preventDefault()
         })
-
         //image preview modal
         const modal = document.getElementById("myModal")
         const btnShowChildModal = document.getElementById("myBtn")
@@ -141,42 +142,60 @@
         const btnOpenPreviews = document.querySelectorAll('.btn-open-preview')
         const imagePreview = document.getElementById('image-preview')
         const imagePreviewTitle = document.getElementById('image-preview-title')
-        const uploadImagesForm = document.forms['upload-images-form'];
+        const uploadImagesForm = document.forms['upload-images-form']
 
+        previewModal()
+        uploadScreen()
 
-        closeChildModal.onclick = function() {
-            modal.style.display = "none";
-        }
-
-        btnOpenPreviews.forEach((btn) => {
-            btn.addEventListener("click", () => {
-                imagePreview.src = btn.getAttribute('data-path')
-                imagePreviewTitle.textContent = btn.getAttribute('data-img-name')
-                modal.style.display = "block";
+        function uploadScreen() {
+            $.each($('.upload-photo'), (key, item) => {
+                $(item).on('change', (e) => {
+                    if ($(item).val() != null) {
+                        const inputFilePath = $(item).val();
+                        const inputFileName = inputFilePath.split('\\')[inputFilePath.split('\\').length - 1]
+                        const labelFileName = $(item).next().next()
+                        labelFileName.html(`${inputFileName}<i class="ml-2 text-danger $ fa-sharp fa-regular fa-circle-xmark"></i>`);
+                        labelFileName.on('click', () => {
+                            labelFileName.text("")
+                            $(item).val(null)
+                        })
+                    }
+                })
             })
-        })
 
-        //upload images
-        $("form").submit(function(event) {
-            var formData = {
-                name: $("#name").val(),
-                email: $("#email").val(),
-            };
-
-            $.ajax({
-                type: "POST",
-                url: "/admin/image/store",
-                data: formData,
-                dataType: "json",
-                encode: true,
-            }).done(function(data) {
-                console.log(data);
+            $('#upload-images-form').submit((e) => {
+                e.preventDefault()
+                var actionUrl = $('#upload-images-form').attr('action')
+                var form_data = new FormData($('#upload-images-form')[0]);
+                $.ajax({
+                    type: "POST",
+                    url: actionUrl,
+                    data: form_data,
+                    success: function(data) {
+                        console.log(data)
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                })
             });
 
-            event.preventDefault();
-        });
+            $('#btn-register-upload').on('click', () => {
+                $('#upload-images-form').submit()
+            })
+        }
 
-
-
+        function previewModal() {
+            closeChildModal.onclick = function() {
+                modal.style.display = "none";
+            }
+            btnOpenPreviews.forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    imagePreview.src = btn.getAttribute('data-path')
+                    imagePreviewTitle.textContent = btn.getAttribute('data-img-name')
+                    modal.style.display = "block";
+                })
+            })
+        }
     })
 </script>

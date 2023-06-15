@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
     <link href="/css/back-css/dashboard.css" rel="stylesheet">
     <link href="/css/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.css">
+    </link>
     <link href="/css/back-css/style.css" rel="stylesheet">
     <script src="/js/front-js/jquery.min.js"></script>
     <script src="/ckeditor5-build-classic/ckeditor.js"></script>
