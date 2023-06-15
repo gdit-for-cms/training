@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 namespace Core\Http;
 
 trait ResponseTrait
@@ -15,12 +16,12 @@ trait ResponseTrait
         return $res->send();
     }
 
-    public function errorResponse($message = '')
+    public function errorResponse($message = '', $data = [])
     {
         $res = new Response;
         $result = json_encode([
             'success' => false,
-            'data' => [],
+            'data' => $data,
             'message' => $message,
         ]);
         $res->setContent($result);

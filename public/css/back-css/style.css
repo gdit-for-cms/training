@@ -509,7 +509,7 @@ a {
 
 
   /* The Preview Modal (background) */
-#myModal.modal {
+#myModal,#modal-notice.modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
@@ -531,14 +531,24 @@ a {
     height: 40%;
     box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
   }
+
+#modal-notice .modal-content {
+    background-color: #fefefe;
+    margin: 10% 41% auto auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width:20% !important; /* Could be more or less, depending on screen size */
+    height: 20%;
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+  }
   
   /* The Close Button */
- #myModal  .close {
+ #myModal,#modal-notice  .close {
     font-size: 20px;
   }
   
- #myModal  .close:hover,
- #myModal  .close:focus {
+ #myModal,#modal-notice  .close:hover,
+ #myModal,#modal-notice  .close:focus {
     color: black;
     text-decoration: none;
     cursor: pointer;

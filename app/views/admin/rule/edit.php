@@ -167,12 +167,16 @@
                 e.preventDefault()
                 var actionUrl = $('#upload-images-form').attr('action')
                 var form_data = new FormData($('#upload-images-form')[0]);
+                var modalNotice = $('#modal-notice')
                 $.ajax({
                     type: "POST",
                     url: actionUrl,
                     data: form_data,
                     success: function(data) {
                         console.log(data)
+                        const status = data['success'] ? 'success' : 'danger'
+                        modalNotice.find('#modal-notice-content').html(`<h5 class='text-center text-${status}'>${data['message']}</h5>`)
+                        modalNotice.css('display', "block");
                     },
                     cache: false,
                     contentType: false,
@@ -183,6 +187,11 @@
             $('#btn-register-upload').on('click', () => {
                 $('#upload-images-form').submit()
             })
+
+
+            $('.close-modal-notice').on('click', () => {
+                $('#modal-notice').css('display', 'none')
+            })
         }
 
         function previewModal() {
@@ -191,7 +200,7 @@
             }
             btnOpenPreviews.forEach((btn) => {
                 btn.addEventListener("click", () => {
-                    imagePreview.src = btn.getAttribute('data-path')
+                    imagePreview.src = '/' + btn.getAttribute('data-path')
                     imagePreviewTitle.textContent = btn.getAttribute('data-img-name')
                     modal.style.display = "block";
                 })

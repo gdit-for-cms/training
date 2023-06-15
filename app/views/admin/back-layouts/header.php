@@ -221,7 +221,10 @@
                                             foreach ($library_images as $image) {
                                         ?>
                                                 <li class="list-group-item d-flex col-12 ">
-                                                    <div class="col-9">
+                                                    <div class="col-2 d-flex justify-content-center align-items-center">
+                                                        <img class="img-thumbnail" src="<?php echo '/' . $image['path'] ?>" alt="">
+                                                    </div>
+                                                    <div class="col-8">
                                                         <div class="d-flex flex-column ml-2">
                                                             <h5><?php echo $image['name'] ?></h5>
                                                             <span><?php echo $image['path'] ?></span>
@@ -234,7 +237,7 @@
                                                             <button data-path="<?php echo $image['path'] ?>" data-img-name="<?php echo $image['name'] ?>" class="btn-basic btn-open-preview">Preview</button>
                                                         </div>
                                                     </div>
-                                                    <div class="col-3">
+                                                    <div class="col-2">
                                                         <div class="d-flex justify-content-end mt-4 ">
                                                             <button class="btn-basic mt-5">Insert Image</button>
                                                         </div>
@@ -377,7 +380,22 @@
                                     <button type="button" class="close " data-bs-dismiss="modal" aria-label="Close">X</button>
                                 </div>
                                 <div class="row justify-content-center image-preview-cover ">
-                                    <img class="" id="image-preview" src="/images/library_images/pexels-photo-2490949.jpeg" alt="">
+                                    <img class="" id="image-preview" src="/images/pexels-photo-2490949.jpeg" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Modal notification -->
+                        <div id="modal-notice" class="modal">
+                            <!-- Modal content -->
+                            <div class="modal-content  ">
+                                <div class="modal-child-header">
+                                    <h5 id="image-preview-title" class="modal-title">Message</h5>
+                                    <button type="button" class="close-modal-notice" data-bs-dismiss="modal" aria-label="Close">X</button>
+                                </div>
+                                <div class="row justify-content-center image-preview-cover ">
+                                    <div class="alert" id="modal-notice-content" role="alert">
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
