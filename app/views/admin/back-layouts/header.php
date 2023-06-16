@@ -9,18 +9,18 @@
                 </div>
                 <div class="modal-body">
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
-                        <li class="nav-item " role="presentation">
-                            <button class=" nav-link active image-setting" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Select from PC and register</button>
+                        <li class="nav-item" role="presentation">
+                            <button class=" nav-link active image-setting" id="btn-upload-tab" data-bs-toggle="tab" data-bs-target="#upload" type="button" role="tab" aria-controls="upload" aria-selected="true">Select from PC and register</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link image-setting" id="btn-list-image-tab" data-bs-toggle="tab" data-bs-target="#list" type="button" role="tab" aria-controls="list" aria-selected="false">Select from registered images</button>
                         </li>
                         <li class="nav-item " role="presentation">
-                            <button class=" nav-link image-setting" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Select from registered images</button>
-                        </li>
-                        <li class="nav-item " role="presentation">
-                            <button class=" nav-link image-setting" id="image-format-tab" data-bs-toggle="tab" data-bs-target="#image-format" type="button" role="tab" aria-controls="image-format" aria-selected="false">Format</button>
+                            <button class=" nav-link image-setting d-none opacity-0" id="btn-format-tab" data-bs-toggle="tab" data-bs-target="#image-format" type="button" role="tab" aria-controls="image-format" aria-selected="false">Format</button>
                         </li>
                     </ul>
                     <div class="tab-content" id="myTabContent">
-                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="tab-pane  show active" id="upload" role="tabpanel" aria-labelledby="btn-upload-tab">
                             <form action="/admin/image/store" name="upload-images-form" id="upload-images-form" enctype="multipart/form-data" method="post">
                                 <div class=" row group-select-one-file">
                                     <div class="row">
@@ -28,7 +28,7 @@
                                             <label for="">Image name 1</label>
                                         </div>
                                         <div class="col-9">
-                                            <input class="form-control" type="text" name="name-file1" id="name-file1">
+                                            <input class="form-control name-file" type="text" name="name-file1" id="name-file1">
                                         </div>
                                     </div>
                                     <div class="row">
@@ -37,8 +37,13 @@
                                         </div>
                                         <div class="col-9">
                                             <input type="file" name="upload-photo1" class="upload-photo" id="upload-photo1" />
-                                            <label class="label-select-file" for="upload-photo1">Select</label>
-                                            <span class="file-name-select"></span>
+                                            <div class="d-flex file-name-message">
+                                                <label class="label-select-file" for="upload-photo1">Select</label>
+                                                <div class="d-flex flex-column ml-2">
+                                                    <span class="file-name-select"></span>
+                                                    <span class="message-input-file w-100"></span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -48,7 +53,7 @@
                                             <label for="">Image name 2</label>
                                         </div>
                                         <div class="col-9">
-                                            <input class="form-control" type="text" name="name-file2" id="name-file2">
+                                            <input class="form-control name-file" type="text" name="name-file2" id="name-file2">
                                         </div>
                                     </div>
                                     <div class="row">
@@ -57,8 +62,13 @@
                                         </div>
                                         <div class="col-9">
                                             <input type="file" name="upload-photo2" class="upload-photo" id="upload-photo2" />
-                                            <label class="label-select-file" for="upload-photo2">Select</label>
-                                            <span class="file-name-select"></span>
+                                            <div class="d-flex file-name-message">
+                                                <label class="label-select-file" for="upload-photo2">Select</label>
+                                                <div class="d-flex flex-column ml-2">
+                                                    <span class="file-name-select"></span>
+                                                    <span class="message-input-file w-100"></span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -68,7 +78,7 @@
                                             <label for="">Image name 3</label>
                                         </div>
                                         <div class="col-9">
-                                            <input class="form-control" type="text" name="name-file3" id="name-file3">
+                                            <input class="form-control name-file" type="text" name="name-file3" id="name-file3">
                                         </div>
                                     </div>
                                     <div class="row">
@@ -77,8 +87,13 @@
                                         </div>
                                         <div class="col-9">
                                             <input type="file" name="upload-photo3" class="upload-photo" id="upload-photo3" />
-                                            <label class="label-select-file" for="upload-photo3">Select</label>
-                                            <span class="file-name-select"></span>
+                                            <div class="d-flex file-name-message">
+                                                <label class="label-select-file" for="upload-photo3">Select</label>
+                                                <div class="d-flex flex-column ml-2">
+                                                    <span class="file-name-select"></span>
+                                                    <span class="message-input-file w-100"></span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -88,7 +103,7 @@
                                             <label for="">Image name 4</label>
                                         </div>
                                         <div class="col-9">
-                                            <input class="form-control" type="text" name="name-file4" id="name-file4">
+                                            <input class="form-control name-file" type="text" name="name-file4" id="name-file4">
                                         </div>
                                     </div>
                                     <div class="row">
@@ -97,8 +112,13 @@
                                         </div>
                                         <div class="col-9">
                                             <input type="file" name="upload-photo4" class="upload-photo" id="upload-photo4" />
-                                            <label class="label-select-file" for="upload-photo4">Select</label>
-                                            <span class="file-name-select"></span>
+                                            <div class="d-flex file-name-message">
+                                                <label class="label-select-file" for="upload-photo4">Select</label>
+                                                <div class="d-flex flex-column ml-2">
+                                                    <span class="file-name-select"></span>
+                                                    <span class="message-input-file w-100"></span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -108,7 +128,7 @@
                                             <label for="">Image name 5</label>
                                         </div>
                                         <div class="col-9">
-                                            <input class="form-control" type="text" name="name-file5" id="name-file5">
+                                            <input class="form-control name-file" type="text" name="name-file5" id="name-file5">
                                         </div>
                                     </div>
                                     <div class="row">
@@ -117,19 +137,24 @@
                                         </div>
                                         <div class="col-9">
                                             <input type="file" name="upload-photo5" class="upload-photo" id="upload-photo5" />
-                                            <label class="label-select-file" for="upload-photo5">Select</label>
-                                            <span class="file-name-select"></span>
+                                            <div class="d-flex file-name-message">
+                                                <label class="label-select-file" for="upload-photo5">Select</label>
+                                                <div class="d-flex flex-column ml-2">
+                                                    <span class="file-name-select"></span>
+                                                    <span class="message-input-file w-100"></span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row justify-content-center align-items-center mx-3 mt-1 g-2">
                                     <div class="w-50 row justify-content-center">
-                                        <button type="submit" id="btn-register-upload" class="btn-basic mt-5 w-25">Register</button>
+                                        <button id="btn-register-upload" class="btn-basic mt-5 w-25">Register</button>
                                     </div>
                                 </div>
                             </form>
                         </div>
-                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <div class="tab-pane " id="list" role="tabpanel" aria-labelledby="btn-list-image-tab">
                             <div class="search-option ">
                                 <div class="row justify-content-around align-items-center  mt-2">
                                     <div class="col-3 d-flex justify-content-start ">
@@ -215,7 +240,7 @@
 
                             <div class="images-file-list">
                                 <div class="row justify-content-around align-items-center">
-                                    <ul class="list-group d-flex flex-column  align-items-center ">
+                                    <ul id="images-file-list-ul" class="list-group d-flex flex-column  align-items-center ">
                                         <?php
                                         if (!empty($library_images)) {
                                             foreach ($library_images as $image) {
@@ -239,7 +264,7 @@
                                                     </div>
                                                     <div class="col-2">
                                                         <div class="d-flex justify-content-end mt-4 ">
-                                                            <button class="btn-basic mt-5">Insert Image</button>
+                                                            <button class="btn-basic mt-5 btn-insert-image" data-path="<?php echo $image['path'] ?>" data-img-name="<?php echo $image['name'] ?>">Insert Image</button>
                                                         </div>
                                                     </div>
                                                 </li>
@@ -251,12 +276,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="image-format" role="tabpanel" aria-labelledby="image-format-tab">
+                        <div class="tab-pane " id="image-format" role="tabpanel" aria-labelledby="image-format-tab">
                             <div class="format-image-content">
                                 <div class="row col-12 format-image-setting">
                                     <div class="col-4 format-image-left">
                                         <div class="row justify-content-center">
-                                            <img class="img-fluid" id="" src="/images/library_images/pexels-photo-2490949.jpeg" alt="">
+                                            <img class="img-fluid" id="format-image-img" src="/images/library_images/pexels-photo-2490949.jpeg" alt="">
                                         </div>
                                     </div>
                                     <div class="col-8 format-image-right">
@@ -275,7 +300,7 @@
                                                         <label for="img-width">Width</label>
                                                     </div>
                                                     <div class="col-8">
-                                                        <input id="img-width" class="form-control" type="number" name="image-width">
+                                                        <input id="img-width" class="form-control" type="number" name="image-width" min=1>
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -283,7 +308,7 @@
                                                         <label for="img-height">Height</label>
                                                     </div>
                                                     <div class="col-8">
-                                                        <input id="img-height" class="form-control" type="number" name="image-alt">
+                                                        <input id="img-height" class="form-control" type="number" name="image-alt" min=1>
                                                     </div>
                                                 </div>
                                             </div>
@@ -302,7 +327,7 @@
                                                 <div class="col-4 d-flex flex-column align-items-start justify-content-start">
                                                     <img class="img-fluid mx-auto my-2 w-75" for="aligngment-unspecified" src="/images/img-alignment/unspecified.png" alt="">
                                                     <div class="form-check ml-4">
-                                                        <input class="form-check-input" type="radio" name="update-date" id="aligngment-unspecified">
+                                                        <input class="form-check-input" type="radio" name="update-date" checked="true" id="aligngment-unspecified">
                                                         <label class="form-check-label" for="aligngment-unspecified">
                                                             Unspecified
                                                         </label>
@@ -361,10 +386,10 @@
                                 </div>
                                 <div class="row col-12 justify-content-center mt-4">
                                     <div class="col-5 d-flex justify-content-around">
-                                        <button class="btn-basic  m-2">
+                                        <button class="btn-basic m-2">
                                             Setting
                                         </button>
-                                        <button class="btn-basic  m-2">
+                                        <button class="btn-basic m-2" id="btn-to-list-screen">
                                             To the list screen
                                         </button>
                                     </div>
@@ -389,8 +414,8 @@
                             <!-- Modal content -->
                             <div class="modal-content  ">
                                 <div class="modal-child-header">
-                                    <h5 id="image-preview-title" class="modal-title">Message</h5>
-                                    <button type="button" class="close-modal-notice" data-bs-dismiss="modal" aria-label="Close">X</button>
+                                    <h5 id="image-preview-title" class="modal-title">Message!</h5>
+                                    <button type="button" id="close-modal-notice" class="close-modal-notice" data-bs-dismiss="modal" aria-label="Close">X</button>
                                 </div>
                                 <div class="row justify-content-center image-preview-cover ">
                                     <div class="alert" id="modal-notice-content" role="alert">

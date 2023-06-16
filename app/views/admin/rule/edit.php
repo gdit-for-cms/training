@@ -135,76 +135,211 @@
         btnPickImage.addEventListener('click', (e) => {
             e.preventDefault()
         })
-        //image preview modal
-        const modal = document.getElementById("myModal")
-        const btnShowChildModal = document.getElementById("myBtn")
-        const closeChildModal = document.getElementsByClassName("close")[0]
-        const btnOpenPreviews = document.querySelectorAll('.btn-open-preview')
-        const imagePreview = document.getElementById('image-preview')
-        const imagePreviewTitle = document.getElementById('image-preview-title')
-        const uploadImagesForm = document.forms['upload-images-form']
+        //tab list
+        var modalPreviewImg = $("#myModal")[0]
+        var closeChildModal = document.getElementsByClassName("close")[0]
+        var btnOpenPreviews = document.querySelectorAll('.btn-open-preview')
+        var imagePreview = $('#image-preview')[0]
+        var imagePreviewTitle = $('#image-preview-title')[0]
+        var btnInsertImages = document.querySelectorAll('.btn-insert-image')
+        var btnListImageTab = document.getElementById('btn-list-image-tab')
+        var imgFileListUL = $('#images-file-list-ul')
+        //tab upload
+        var uploadImagesForm = $("#upload-images-form")
+        var modalNotice = $('#modal-notice')
+        var closeModalNotice = $('#close-modal-notice')
+        var btnUploadTab = document.getElementById('btn-upload-tab')
+        //tab format
+        var formatImageImg = document.getElementById('format-image-img')
+        var imgAlt = document.getElementById('img-alt')
+        var btnFormatTab = document.getElementById('btn-format-tab')
+        var btnToListScreen = document.getElementById('btn-to-list-screen')
 
         previewModal()
         uploadScreen()
+        uploadScreenTab()
+        clickInsertImage()
+        formatImageScreen()
 
         function uploadScreen() {
             $.each($('.upload-photo'), (key, item) => {
                 $(item).on('change', (e) => {
+                    const labelFileName = $(item).parent().find('.file-name-select')
                     if ($(item).val() != null) {
                         const inputFilePath = $(item).val();
                         const inputFileName = inputFilePath.split('\\')[inputFilePath.split('\\').length - 1]
-                        const labelFileName = $(item).next().next()
                         labelFileName.html(`${inputFileName}<i class="ml-2 text-danger $ fa-sharp fa-regular fa-circle-xmark"></i>`);
                         labelFileName.on('click', () => {
-                            labelFileName.text("")
+                            labelFileName.empty()
                             $(item).val(null)
+                            $(item).parent().find('.message-input-file').html('')
                         })
+                    } else {
+                        labelFileName.empty()
                     }
                 })
             })
 
-            $('#upload-images-form').submit((e) => {
+            $.each($('.name-file'), (key, item) => {
+                $(item).on('keyup', (e) => {
+                    if ($(item).val() != null) {
+                        const spanMessage = $(item).closest('.group-select-one-file').find('.message-input-file')
+                        spanMessage.html('')
+                    }
+                })
+            })
+
+            $('#close-modal-notice').on('click', () => {
+                if (modalNotice != null) {
+                    modalNotice?.css('display', 'none')
+                }
+            })
+
+            uploadImagesForm.submit((e) => {
                 e.preventDefault()
-                var actionUrl = $('#upload-images-form').attr('action')
-                var form_data = new FormData($('#upload-images-form')[0]);
-                var modalNotice = $('#modal-notice')
+                var actionUrl = uploadImagesForm.attr('action')
+                var form_data = new FormData(uploadImagesForm[0]);
                 $.ajax({
                     type: "POST",
                     url: actionUrl,
                     data: form_data,
                     success: function(data) {
-                        console.log(data)
-                        const status = data['success'] ? 'success' : 'danger'
-                        modalNotice.find('#modal-notice-content').html(`<h5 class='text-center text-${status}'>${data['message']}</h5>`)
-                        modalNotice.css('display', "block");
+                        if (data['success']) {
+                            const newImages = Object.entries(data['result']['new_images'])
+                            addNewImageToList(newImages)
+                            modalNotice.find('#modal-notice-content').html(`<h5 class='text-center text-success'>${data['message']}</h5>`)
+                            modalNotice.css('display', "block");
+                            showAllInputNotice(data['result'])
+                            switchToList()
+                        } else {
+                            modalNotice.find('#modal-notice-content').html(`<h5 class='text-center text-danger'>${data['message']}</h5>`)
+                            modalNotice.css('display', "block");
+                            showAllInputNotice(data['result'])
+                        }
                     },
                     cache: false,
                     contentType: false,
                     processData: false
-                })
+                }).fail(function() {
+                    modalNotice.find('#modal-notice-content').html(`<h5 class='text-center text-danger'>Can not upload image. Please check again!</h5>`)
+                    modalNotice.css('display', "block");
+                });
             });
+        }
 
-            $('#btn-register-upload').on('click', () => {
-                $('#upload-images-form').submit()
-            })
+        function addNewImageToList(newImages) {
+            console.log(newImages);
+            htmls = ""
+            newImages.forEach(item => {
+                image = item[1][0]
+                htmls += `<li class="list-group-item d-flex col-12 ">
+                    <div class="col-2 d-flex justify-content-center align-items-center">
+                        <img class="img-thumbnail" src="/${image['path']}" alt="">
+                    </div>
+                    <div class="col-8">
+                        <div class="d-flex flex-column ml-2">
+                            <h5>${image['name']}</h5>
+                            <span>${image['path']}</span>
+                            <span>Update date: ${image['updated_at']} </span>
+                        </div>
+                        <div class="d-flex justify-content-around w-75">
+                            <button class="btn-basic">Edit</button>
+                            <button class="btn-basic">Delete</button>
+                            <button class="btn-basic">Properties</button>
+                            <button data-path="${image['path']}" data-img-name="${image['name']}" class="btn-basic btn-open-preview">Preview</button>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="d-flex justify-content-end mt-4 ">
+                            <button class="btn-basic mt-5 btn-insert-image" data-path="${image['path']}" data-img-name="${image['name']}">Insert Image</button>
+                        </div>
+                    </div>
+                </li>`
+            });
+            imgFileListUL.prepend(htmls)
+            updateDomElements()
+        }
 
+        function showAllInputNotice(result) {
+            inputIds = ['upload-photo1', 'upload-photo2', 'upload-photo3', 'upload-photo4', 'upload-photo5']
+            if (result['success']) {
+                inputIds.forEach((id) => {
+                    setMessageInput(result, 'success', id)
+                })
+            }
+            if (result['failed']) {
+                inputIds.forEach((id) => {
+                    setMessageInput(result, 'failed', id)
+                })
+            }
+        }
 
-            $('.close-modal-notice').on('click', () => {
-                $('#modal-notice').css('display', 'none')
-            })
+        function setMessageInput(result, status, inputId) {
+            if (result[status][inputId]) {
+                const message = {
+                    'type': status,
+                    'msg': result[status][inputId]
+                }
+                showEachINputNotice(inputId, message)
+            }
+        }
+
+        function showEachINputNotice(inputId, message) {
+            if (message['type'] == 'failed') {
+                message['type'] = 'danger'
+            }
+            const msgHtml = $('#' + inputId).parent().find('.message-input-file');
+            msgHtml.html(`<span class='text-center w-100 text-${message['type']}'>${message['msg']}</span>`)
         }
 
         function previewModal() {
             closeChildModal.onclick = function() {
-                modal.style.display = "none";
+                modalPreviewImg.style.display = "none";
             }
             btnOpenPreviews.forEach((btn) => {
                 btn.addEventListener("click", () => {
                     imagePreview.src = '/' + btn.getAttribute('data-path')
                     imagePreviewTitle.textContent = btn.getAttribute('data-img-name')
-                    modal.style.display = "block";
+                    modalPreviewImg.style.display = "block";
                 })
             })
+        }
+
+
+        function clickInsertImage() {
+            btnInsertImages.forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    formatImageImg.src = '/' + btn.getAttribute('data-path')
+                    imgAlt.value = btn.getAttribute('data-img-name')
+                    btnFormatTab.click()
+                    btnListImageTab.classList.add('active-interface')
+                })
+            })
+        }
+
+        function formatImageScreen() {
+            btnToListScreen.addEventListener('click', () => {
+                switchToList()
+            })
+        }
+
+        function switchToList() {
+            btnListImageTab.click()
+            btnListImageTab.classList.remove('active-interface')
+            btnListImageTab.classList.add('active')
+        }
+
+        function uploadScreenTab() {
+            btnUploadTab.addEventListener('click', () => {
+                btnListImageTab.classList.remove('active-interface')
+            })
+        }
+
+        function updateDomElements() {
+            btnOpenPreviews = document.querySelectorAll('.btn-open-preview')
+            btnInsertImages = document.querySelectorAll('.btn-insert-image')
+            previewModal()
+            clickInsertImage()
         }
     })
 </script>
