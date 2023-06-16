@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\models\Question;
 use App\models\Step;
+use App\models\AnswerDisable;
 use Core\Controller;
 use Core\View;
 use Core\Http\Request;
@@ -26,11 +27,10 @@ class TableController extends Controller
 
     public function indexAction(Request $request)
     {
-        // $get_ary = $request->getGet()->all();
         $this->data_ary['title'] = $this->title;
         $this->data_ary['content'] = 'table/index';
         $this->data_ary['questions'] = $this->renderQuestion(json_decode($this->obj_model->getResultJson(), true));
-        // $this->data_ary['steps'] = Step::getAll();
+        $this->data_ary['steps'] = Step::getAll();
         View::render('admin/table/index.php', $this->data_ary);
     }
 
@@ -83,7 +83,7 @@ class TableController extends Controller
                             $html .= '<div class="step_name">' . $stepName . '</div>';
                             $html .= '</div>';
                         }
-                        
+
                         $html .= '</div>';
                     } elseif (!empty($answer['questions'])) {
                         $html .= '<div class="content_question">';

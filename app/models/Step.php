@@ -22,9 +22,8 @@ class Step extends Model
      *
      * @return array
      */
-    public function getAll()
-    {
-        return $this->all();
+    public static function getAll() {
+        return (new self)->all();
     }
 
     public function getBy($column, $operator, $value, $select_column = '*')
