@@ -62,7 +62,7 @@ class TableController extends AppController
                     $html .= '<div class="answer bg-info p-3 d-flex justify-content-between align-items-center">';
                     $html .= '<div data-answer-id="' . $answerId . '" class="answer_content">' . $answerContent . '</div>';
                     $html .= '<div>';
-                    $html .= '<button data-answer-id="' . $answerId . '" type="button" class="mx-1 btn btn-warning button_answer_dialog">Dialog</button>';
+                    $html .= '<button data-answer-id="' . $answerId . '" type="button" class="mx-1 btn btn-warning button_answer_disable">Disable</button>';
                     $html .= '<button data-answer-id="' . $answerId . '" type="button" class="mx-1 btn btn-primary button_answer_edit">Edit</button>';
                     $html .= '<button data-answer-id="' . $answerId . '" type="button" class="mx-1 btn btn-success button_answer_create_question">Create question</button>';
                     $html .= '<button data-answer-id="' . $answerId . '" type="button" class="mx-1 btn btn-success button_answer_create_step">Create steps</button>';

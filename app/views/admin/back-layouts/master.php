@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,19 +13,22 @@
     <link href="/css/back-css/style.css" rel="stylesheet">
 
 </head>
+
 <body class="crm_body_bg">
-    <?php require_once 'sidebar.php' ?>  
+    <?php require_once 'sidebar.php' ?>
+    <?php require_once 'modal.php' ?>
     <section class="main_content dashboard_part large_header_bg">
         <?php require_once 'header.php' ?>
         <div class="main_content_iner overly_inner ">
-            <?php require_once '../app/views/admin/' . $content . '.php'?> 
+            <?php require_once '../app/views/admin/' . $content . '.php' ?>
         </div>
-    </div>
-    <script src="/js/front-js/jquery.min.js"></script>
-    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
-    <script src="/js/front-js/sweetalert2.all.min.js"></script>
-    <script src="/js/back-js/main.js"></script>
-    <script src="/js/boostrap/bootstrap.min.js"></script>
-    <script src="/js/back-js/create-table.js"></script>
+        </div>
+        <script src="/js/front-js/jquery.min.js"></script>
+        <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+        <script src="/js/front-js/sweetalert2.all.min.js"></script>
+        <script src="/js/back-js/main.js"></script>
+        <script src="/js/boostrap/bootstrap.min.js"></script>
+        <script src="/js/back-js/create-table.js"></script>
 </body>
+
 </html>

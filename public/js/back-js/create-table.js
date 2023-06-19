@@ -48,7 +48,7 @@ $(document).ready(function () {
                                     <div class="answer bg-info p-3 d-flex justify-content-between align-items-center">
                                         <div data-answer-id="${id_answer_max + 1}" class="answer_content">${answer_content}</div>
                                         <div>
-                                            <button data-answer-id="${id_answer_max + 1}" type="button" class="mx-1 btn btn-warning button_answer_dialog">Dialog</button>
+                                            <button data-answer-id="${id_answer_max + 1}" type="button" class="mx-1 btn btn-warning button_answer_disable">Disable</button>
                                             <button data-answer-id="${id_answer_max + 1}" type="button" class="mx-1 btn btn-primary button_answer_edit">Edit</button>
                                             <button data-answer-id="${id_answer_max + 1}" type="button" class="mx-1 btn btn-success button_answer_create_question">Create question</button>
                                             <button data-answer-id="${id_answer_max + 1}" type="button" class="mx-1 btn btn-success button_answer_create_step">Create steps</button>
@@ -202,9 +202,30 @@ $(document).ready(function () {
     // End del
 
 
-    // Steps
+    // Steps    
+    $('#search_step').on('keyup', function () {
+        var value = $(this).val().toLowerCase()
+        $('.table-step tbody th input').filter(function () {
+            $(this).closest('tr').toggle(
+                $(this).data('id').toLowerCase().indexOf(value) > -1
+                ||
+                $(this).data('step-name').toLowerCase().indexOf(value) > -1
+            )
+        })
+    })
+
     $(document).on("click", ".button_answer_create_step", function () {
+        $('.table-step tbody tr').show()
+        $("#search_step").val("")
         var id = $(this).data('answer-id')
+        selected_step = $(this).closest('.wrapper_answer').children('.content_step').children('.step')
+        for (var i = 0; i < selected_step.length; i++) {
+            var id_selected_step = $(selected_step[i]).data('step-id')
+            var step_check = $('.table-step tbody th input').filter(function () {
+                return $(this).data('id') === id_selected_step;
+            })
+            step_check.prop('checked', true)
+        }
         $('.modal_step_add').data("id", id)
         $('.modal_step_add').show()
     })
@@ -228,7 +249,7 @@ $(document).ready(function () {
                 content_step.append(step)
             }
         }
-        $('.table-step').find('input').prop('checked', false);
+        $('.table-step').find('input').prop('checked', false)
         closeModal("step_add")
     })
 
@@ -278,6 +299,10 @@ $(document).ready(function () {
                         json[question_id]['answers'][answer_id]['questions'] = {}
                         convertHtmlToJson(json[question_id]['answers'][answer_id]['questions'], $(wrapper_answer).children('.content_question'), 5)
                     }
+                    if ($(wrapper_answer).children('.disable_answer').length > 0) {
+                        var answer_disable = $(wrapper_answer).children('.disable_answer').text()
+                        json[question_id]['answers'][answer_id]['disable_answers'] = answer_disable.split(', ').map(Number).filter(Boolean)    
+                    }
                 })
             })
         })
@@ -303,7 +328,7 @@ $(document).ready(function () {
                     var answer = $(`<div class="answer bg-info p-3 d-flex justify-content-between align-items-center">
                         <div data-answer-id="${value_answers.answer_id}" class="answer_content">${value_answers.answer_content}</div>
                         <div>
-                            <button data-answer-id="${value_answers.answer_id}" type="button" class="mx-1 btn btn-warning button_answer_dialog">Dialog</button>
+                            <button data-answer-id="${value_answers.answer_id}" type="button" class="mx-1 btn btn-warning button_answer_disable">Disable</button>
                             <button data-answer-id="${value_answers.answer_id}" type="button" class="mx-1 btn btn-primary button_answer_edit">Edit</button>
                             <button data-answer-id="${value_answers.answer_id}" type="button" class="mx-1 btn btn-success button_answer_create_question">Create question</button>
                             <button data-answer-id="${value_answers.answer_id}" type="button" class="mx-1 btn btn-success button_answer_create_step">Create steps</button>
@@ -326,6 +351,15 @@ $(document).ready(function () {
                         var content_question = $('<div class="content_question"></div>')
                         convertJsonToHtml((value_answers.questions), content_question, 5)
                         wrapper_answer.append(content_question)
+                    }
+                    if (value_answers.disable_answers) {
+                        var disable_answer = $('<div class="disable_answer" hidden></div>')
+                        var val_disable_answer = ""
+                        $.each((value_answers.disable_answers), function (key, value_disable_answers) {
+                            val_disable_answer = val_disable_answer.concat(value_disable_answers, ', ')
+                            disable_answer.text(val_disable_answer)
+                        })
+                        wrapper_answer.append(disable_answer)
                     }
                     content_answer.append(wrapper_answer)
                 })
@@ -356,14 +390,16 @@ $(document).ready(function () {
 
 
     // Disable
-    $(document).on("click", ".button_answer_dialog", function () {
+    $(document).on("click", ".button_answer_disable", function () {
         var id = $(this).data('answer-id')
-        $('.modal_dialog_add').data("id", id)
-        $('.modal_dialog_add').show()
+        $('.modal_disable_add').data("id", id)
+        $('.modal_disable_add').show()
+        var answer_disable = $(this).closest('.wrapper_answer').children('.disable_answer').text()
+        var arr_answer_disable = answer_disable.split(", ")
         var answer_content = $(`.answer_content[data-answer-id="${id}"]`).closest('.content_answer').children('.wrapper_answer').children('.answer').children('.answer_content')
         for (var i = 0; i < answer_content.length; i++) {
             if ($(answer_content[i]).data('answer-id') !== id) {
-                if ($(answer_content[i]).closest('.wrapper_answer').is(':hidden')) {
+                if (arr_answer_disable.indexOf($(answer_content[i]).data('answer-id').toString()) !== -1) {
                     var trSelect = $(`<tr>
                                         <th>
                                             <input data-answer-name="${$(answer_content[i]).text()}" data-id="${$(answer_content[i]).data('answer-id')}" type="checkbox" checked>
@@ -382,43 +418,37 @@ $(document).ready(function () {
                                         </td>
                                     </tr>`)
                 }
-                $('.table-dialog').find('tbody').append(trSelect)
+                $('.table-disable').find('tbody').append(trSelect)
             }
         }
     })
 
-    $(document).on("click", ".submit_dialog_add", function () {
-        var checked = $('.table-dialog').find('input[type="checkbox"]:checked')
-        for (var i = 0; i < checked.length; i++) {
-            var id = $(checked[i]).data('id')
-            $(`.answer_content[data-answer-id="${id}"]`).closest('.wrapper_answer').hide()
+    $(document).on("click", ".submit_disable_add", function () {
+        var id = $('.modal_disable_add').data("id")
+        if ($(`.answer_content[data-answer-id="${id}"]`).closest('.wrapper_answer').children('.disable_answer').length == 0) {
+            var disable_answer = $('<div class="disable_answer" hidden></div>')
+            $(`.answer_content[data-answer-id="${id}"]`).closest('.wrapper_answer').append(disable_answer)
+        } else {
+            var disable_answer = $(`.answer_content[data-answer-id="${id}"]`).closest('.wrapper_answer').children('.disable_answer')
         }
-        var unchecked = $('.table-dialog').find('input[type="checkbox"]').not(':checked')
-        for (var i = 0; i < unchecked.length; i++) {
-            var id = $(unchecked[i]).data('id')
-            $(`.answer_content[data-answer-id="${id}"]`).closest('.wrapper_answer').show()
+        var val_disable_answer = ""
+        var checked = $('.table-disable').find('input[type="checkbox"]:checked')
+        if (checked.length == 0) {
+            $(disable_answer).text("")
+        } else {
+            for (var i = 0; i < checked.length; i++) {
+                var disabled_answer_id = $(checked[i]).data('id')
+                var val_disable_answer = val_disable_answer.concat(disabled_answer_id, ', ');
+            }
+            $(disable_answer).text(val_disable_answer)
         }
-        $('.table-dialog').find('tbody').text("")
-        closeModal("dialog_add")
+        $('.table-disable').find('tbody').text("")
+        closeModal("disable_add")
     })
 
-    $(document).on("click", ".close_modal_dialog_add", function () {
-        $('.table-dialog').find('tbody').text("")
-        closeModal("dialog_add")
+    $(document).on("click", ".close_modal_disable_add", function () {
+        $('.table-disable').find('tbody').text("")
+        closeModal("disable_add")
     })
     // End disable
-
-
-    // Search step
-    $('#search_step').on('keyup', function () {
-        var value = $(this).val().toLowerCase()
-        $('.table-step tbody th input').filter(function () {
-            $(this).closest('tr').toggle(
-                $(this).data('id').toLowerCase().indexOf(value) > -1
-                ||
-                $(this).data('step-name').toLowerCase().indexOf(value) > -1
-            )
-        })
-    })
-    // End search step
 })
