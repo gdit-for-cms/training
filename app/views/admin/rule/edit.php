@@ -150,10 +150,17 @@
         var closeModalNotice = $('#close-modal-notice')
         var btnUploadTab = document.getElementById('btn-upload-tab')
         //tab format
-        var formatImageImg = document.getElementById('format-image-img')
+        var formatImage = document.getElementById('format-image-img')
         var imgAlt = document.getElementById('img-alt')
         var btnFormatTab = document.getElementById('btn-format-tab')
         var btnToListScreen = document.getElementById('btn-to-list-screen')
+        var imgWidth = document.getElementById('img-width')
+        var imgHeight = document.getElementById('img-height')
+        //page edit 
+        // var ckContent = document.querySelector('.ck-content')
+        // var html = document.createElement('h3')
+        // html.textContent = "i love you"
+        // ckContent.appendChild(html)
 
         previewModal()
         uploadScreen()
@@ -309,10 +316,14 @@
         function clickInsertImage() {
             btnInsertImages.forEach((btn) => {
                 btn.addEventListener("click", () => {
-                    formatImageImg.src = '/' + btn.getAttribute('data-path')
+                    formatImage.src = '/' + btn.getAttribute('data-path')
                     imgAlt.value = btn.getAttribute('data-img-name')
                     btnFormatTab.click()
                     btnListImageTab.classList.add('active-interface')
+                    let realWidth = formatImage.naturalWidth;
+                    let realHeight = formatImage.naturalHeight;
+                    imgWidth.value = realWidth
+                    imgHeight.value = realHeight
                 })
             })
         }

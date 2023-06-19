@@ -281,7 +281,7 @@
                                 <div class="row col-12 format-image-setting">
                                     <div class="col-4 format-image-left">
                                         <div class="row justify-content-center">
-                                            <img class="img-fluid" id="format-image-img" src="/images/library_images/pexels-photo-2490949.jpeg" alt="">
+                                            <img class="img-fluid" id="format-image-img" src="" alt="">
                                         </div>
                                     </div>
                                     <div class="col-8 format-image-right">
@@ -354,7 +354,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-4 d-flex flex-column align-items-start justify-content-start">
-                                                    <img class="img-fluid mx-auto my-2 w-75" for="aligngment-central" src="/images/img-alignment/unspecified.png" alt="">
+                                                    <img class="img-fluid mx-auto my-2 w-75" for="aligngment-central" src="/images/img-alignment/central.png" alt="">
                                                     <div class="form-check ml-4">
                                                         <input class="form-check-input" type="radio" name="update-date" id="aligngment-central">
                                                         <label class="form-check-label" for="aligngment-central">
@@ -363,7 +363,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-4 d-flex flex-column align-items-start justify-content-start">
-                                                    <img class="img-fluid mx-auto my-2 w-75" for="aligngment-superior" src="/images/img-alignment/left.png" alt="">
+                                                    <img class="img-fluid mx-auto my-2 w-75" for="aligngment-superior" src="/images/img-alignment/superior.png" alt="">
                                                     <div class="form-check ml-4">
                                                         <input class="form-check-input" type="radio" name="update-date" id="aligngment-superior">
                                                         <label class="form-check-label" for="aligngment-superior">
@@ -372,7 +372,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-4 d-flex flex-column align-items-start justify-content-start">
-                                                    <img class="img-fluid mx-auto my-2 w-75" for="aligngment-under" src="/images/img-alignment/right.png" alt="">
+                                                    <img class="img-fluid mx-auto my-2 w-75" for="aligngment-under" src="/images/img-alignment/under.png" alt="">
                                                     <div class="form-check ml-4">
                                                         <input class="form-check-input" type="radio" name="update-date" id="aligngment-under">
                                                         <label class="form-check-label" for="aligngment-under">
@@ -405,7 +405,7 @@
                                     <button type="button" class="close " data-bs-dismiss="modal" aria-label="Close">X</button>
                                 </div>
                                 <div class="row justify-content-center image-preview-cover ">
-                                    <img class="" id="image-preview" src="/images/pexels-photo-2490949.jpeg" alt="">
+                                    <img class="" id="image-preview" src="" alt="">
                                 </div>
                             </div>
                         </div>
