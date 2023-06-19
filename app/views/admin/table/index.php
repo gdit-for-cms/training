@@ -18,7 +18,7 @@
         <div class="white_card_body">
           <div class="table-responsive m-b-30">
             <div class="content_question">
-              <?php echo $questions ?>
+              
             </div>
           </div>
         </div>

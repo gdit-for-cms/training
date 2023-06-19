@@ -242,8 +242,8 @@ $(document).ready(function () {
     // HTML to JSON
     function convertHtmlToJson(json, div, margin = 0) {
         $(div).children('.wrapper_question').filter(`.ms-${margin}`).each(function (index_1, wrapper_question) {
-            question_id = $(wrapper_question).find('.question_content').data('question-id')
-            question_content = $(wrapper_question).find('.question_content').first().text().trim()
+            var question_id = $(wrapper_question).children('.question').children('.question_content').data('question-id')
+            var question_content = $(wrapper_question).children('.question').children('.question_content').first().text().trim()
             if ($(wrapper_question).closest('.wrapper_answer').children('.answer').children('.answer_content').length == 0) {
                 var parent_answer_id = 0
             } else {
@@ -256,8 +256,8 @@ $(document).ready(function () {
             json[question_id]['answers'] = {}
             $(wrapper_question).children('.content_answer').each(function (index_2, content_answer) {
                 $(content_answer).children('.wrapper_answer').each(function (index_3, wrapper_answer) {
-                    answer_id = $(wrapper_answer).find('.answer_content').data('answer-id')
-                    answer_content = $(wrapper_answer).find('.answer_content').first().text().trim()
+                    var answer_id = $(wrapper_answer).find('.answer_content').data('answer-id')
+                    var answer_content = $(wrapper_answer).find('.answer_content').first().text().trim()
                     json[question_id]['answers'][answer_id] = {}
                     json[question_id]['answers'][answer_id]['answer_id'] = answer_id
                     json[question_id]['answers'][answer_id]['answer_content'] = answer_content
@@ -265,8 +265,8 @@ $(document).ready(function () {
                         json[question_id]['answers'][answer_id]['steps'] = []
                         $(wrapper_answer).children('.content_step').each(function (index_4, content_step) {
                             $(content_step).children('.step').each(function (index_5, step) {
-                                step_id = $(step).data('step-id')
-                                step_name = $(step).find('.step_name').first().text().trim()
+                                var step_id = $(step).data('step-id')
+                                var step_name = $(step).find('.step_name').first().text().trim()
                                 json[question_id]['answers'][answer_id]['steps'].push({
                                     'step_id': step_id,
                                     'step_name': step_name
