@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?></title>
     <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
+    <link href="/css/back-css/create-table.css" rel="stylesheet">
     <link href="/css/back-css/dashboard.css" rel="stylesheet">
     <link href="/css/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link href="/css/back-css/style.css" rel="stylesheet">
@@ -24,5 +25,6 @@
     <script src="/js/front-js/sweetalert2.all.min.js"></script>
     <script src="/js/back-js/main.js"></script>
     <script src="/js/boostrap/bootstrap.min.js"></script>
+    <script src="/js/back-js/create-table.js"></script>
 </body>
 </html>

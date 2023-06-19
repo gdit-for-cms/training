@@ -83,7 +83,17 @@
                     <img src="" alt="">
                 </div>
                 <div class="nav_title">
-                    <span>CreateJson</span>
+                    <span>Create Table</span>
+                </div>
+            </a>
+        </li>
+        <li class="">
+            <a class="has-arrow" href="/admin/step/index" aria-expanded="false">
+                <div class="nav_icon_small">
+                    <img src="" alt="">
+                </div>
+                <div class="nav_title">
+                    <span>Steps</span>
                 </div>
             </a>
         </li>

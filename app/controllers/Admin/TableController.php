@@ -10,7 +10,7 @@ use Core\View;
 use Core\Http\Request;
 use Core\Http\ResponseTrait;
 
-class TableController extends Controller
+class TableController extends AppController
 {
     use ResponseTrait;
 
@@ -31,7 +31,6 @@ class TableController extends Controller
         $this->data_ary['content'] = 'table/index';
         $this->data_ary['questions'] = $this->renderQuestion(json_decode($this->obj_model->getResultJson(), true));
         $this->data_ary['steps'] = Step::getAll();
-        View::render('admin/table/index.php', $this->data_ary);
     }
 
     private function renderQuestion($jsons, $margin = 0)

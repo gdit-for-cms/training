@@ -407,4 +407,18 @@ $(document).ready(function () {
         closeModal("dialog_add")
     })
     // End disable
+
+
+    // Search step
+    $('#search_step').on('keyup', function () {
+        var value = $(this).val().toLowerCase()
+        $('.table-step tbody th input').filter(function () {
+            $(this).closest('tr').toggle(
+                $(this).data('id').toLowerCase().indexOf(value) > -1
+                ||
+                $(this).data('step-name').toLowerCase().indexOf(value) > -1
+            )
+        })
+    })
+    // End search step
 })
