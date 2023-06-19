@@ -14,15 +14,7 @@
     <link href="/css/back-css/style.css" rel="stylesheet">
     <script src="/js/front-js/jquery.min.js"></script>
     <script src="/ckeditor5-build-classic/ckeditor.js"></script>
-    <script type="text/javascript">
-        (function() {
-            var css = document.createElement('link');
-            css.href = 'https://use.fontawesome.com/releases/v6.2.0/css/all.css';
-            css.rel = 'stylesheet';
-            css.type = 'text/css';
-            document.getElementsByTagName('head')[0].appendChild(css);
-        })();
-    </script>
+    <script src="/js/back-js/loadFontAwesomeAsync.js"></script>
 </head>
 
 <body class="crm_body_bg">
@@ -36,15 +28,9 @@
         <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
         <script src="/js/front-js/sweetalert2.all.min.js"></script>
         <script src="/js/back-js/main.js"></script>
+        <script src="/js/back-js/customCkeditor.js"></script>
         <script src="/js/boostrap/bootstrap.min.js"></script>
-        <script>
-            const url = window.location.href
-            console.log(url);
-            const controller = url.split('/')[4]
-            var navItem = ''
-            navItem = document.querySelector(`.${controller}`)
-            navItem.querySelector('a').classList.add('fw-bold', 'list-group-item', 'active')
-        </script>
+        <script src="/js/back-js/dashboard.js"></script>
 </body>
 
 </html>

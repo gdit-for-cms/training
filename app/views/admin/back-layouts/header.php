@@ -5,7 +5,7 @@
             <div class="modal-content modal-images-setting">
                 <div class="modal-header">
                     <h5 class="modal-title" id="image-settingsLabel">Image settings</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-image-setting" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -289,8 +289,8 @@
                                             <h5 for="img-alt">Altemate text</h5>
                                             <input id="img-alt" class="form-control" type="text" name="image-alt">
                                             <div class="form-check mt-2 ">
-                                                <input id="input-setalt" class="form-check-input" type="checkbox" name="unset-alt" value="true">
-                                                <label for="input-setalt" class="form-check-label ">Dont't set alt text</label>
+                                                <input id="input-setalt" class="form-check-input" type="checkbox" name="unset-alt">
+                                                <label for="input-setalt" class="form-check-label">Don't set alt text</label>
                                             </div>
                                         </div>
                                         <div class="row format-right-middle">
@@ -386,7 +386,7 @@
                                 </div>
                                 <div class="row col-12 justify-content-center mt-4">
                                     <div class="col-5 d-flex justify-content-around">
-                                        <button class="btn-basic m-2">
+                                        <button class="btn-basic  m-2" id="btn-setting-image">
                                             Setting
                                         </button>
                                         <button class="btn-basic m-2" id="btn-to-list-screen">
