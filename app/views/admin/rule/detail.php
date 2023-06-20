@@ -133,14 +133,14 @@
                                             <td><?php echo htmlspecialchars($rule['small_category']) ?></td>
                                             <td><?php echo htmlspecialchars($rule['content']) ?></td>
                                             <td><?php echo htmlspecialchars($rule['detail']) ?></td>
-                                            <td><?php echo htmlspecialchars($rule['note']) ?></td>
+                                            <td><?php echo $rule['note'] ?></td>
                                             <td><?php echo $rule['created_at'] ?></td>
                                             <?php
                                             if ($cur_user['role_id'] != 3) {
                                             ?>
                                                 <td>
                                                     <div class="d-flex ">
-                                                        <a href=" /admin/rule/edit?id=<?php echo $rule['id'] ?>" class="btn btn-info text-white mr-1 ">Edit</a>
+                                                        <a href=" /admin/rule/edit?id=<?php echo $rule['id'] ?>" class="btn btn-primary text-white mx-1 ">Edit</a>
                                                         <button data-id="<?php echo $rule['id'] ?>" type="button" class="btn btn-danger btn-delete-rule text-white ">Delete</button>
                                                     </div>
                                                 </td>
@@ -212,6 +212,10 @@
     const searchInput = document.querySelector('#search_input')
     const searchBtn = document.querySelector('#search_btn')
     const deleteSearchBtn = document.querySelector('#delete_search')
+    const ruleCategory = document.getElementById('rule-category')
+    const ruleContent = document.getElementById('rule-content')
+    const ruleDetail = document.getElementById('rule-detail')
+    const ruleNote = document.getElementById('rule-note')
     const urlParams = new URLSearchParams(window.location.search)
     const typeRuleId = urlParams.get('type_rule_id');
     const PAGE_STORAGE_KEY = 'PAGE RULE FILTER'
@@ -311,7 +315,6 @@
                 newHideElements[1].parentElement.removeChild(newHideElements[0])
             }
         }
-
     }
     searchBtn.addEventListener('click', () => {
         setFilter('page', 1)

@@ -294,7 +294,7 @@
                                             </div>
                                         </div>
                                         <div class="row format-right-middle">
-                                            <div class="col-4">
+                                            <div class="col-5">
                                                 <div class="row">
                                                     <div class="col-4">
                                                         <label for="img-width">Width</label>
@@ -425,6 +425,32 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal  fade" id="viewRuleDetail" tabindex="-1" aria-labelledby="viewRuleDetailLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewRuleDetailLabel">Coding rule detail</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="row" id="rule-category"></div>
+                            <div class="row" id="rule-content"></div>
+                            <div class="row" id="rule-detail"></div>
+                        </div>
+                        <div class="col-6" id="rule-note">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

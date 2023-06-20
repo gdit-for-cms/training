@@ -1,8 +1,10 @@
+
 document.addEventListener('DOMContentLoaded', function() {
     ClassicEditor
-        .create(document.querySelector('#editor-edit-note'))
+        .create(document.querySelector('#editor-edit-note')
+        )
         .catch(error => {
-            console.error('Lỗi khi tạo CKEditor instance:', error);
+            console.error('Error when create CKEditor instance:', error);
         });
 });
 
@@ -19,12 +21,10 @@ $(document).ready(() => {
     var btnInsertImages = document.querySelectorAll('.btn-insert-image')
     const btnListImageTab = document.getElementById('btn-list-image-tab')
     const imgFileListUL = $('#images-file-list-ul')
-
     //tab upload
     const uploadImagesForm = $("#upload-images-form")
     const modalNotice = $('#modal-notice')
     const btnUploadTab = document.getElementById('btn-upload-tab')
-
     //tab format
     const formatImage = document.getElementById('format-image-img')
     var imgAlt = document.getElementById('img-alt')
@@ -35,11 +35,13 @@ $(document).ready(() => {
     const imgHeight = document.getElementById('img-height')
     const btnSettingImage = document.getElementById('btn-setting-image')
     const cbInputSetAlt = document.getElementById('input-setalt')
-
+    const btnWithHeightReset = document.querySelector('.width-height-reload')
+    var realWidth = 1;
+    var realHeight = 1;
     //page edit 
     const domEditableElement = document.querySelector('.ck-editor__editable');
     const editorInstance = domEditableElement.ckeditorInstance;
-    const ckContent = document.querySelector('.ck-content')
+    
 
     addEventTabUpload()
     addEventTabListImage()
@@ -130,8 +132,8 @@ $(document).ready(() => {
                 formatImage.src = '/' + btn.getAttribute('data-path')
                 imgAlt.value = btn.getAttribute('data-img-name')
                 switchToFormatTab()
-                let realWidth = formatImage.naturalWidth;
-                let realHeight = formatImage.naturalHeight;
+                realWidth = formatImage.naturalWidth;
+                realHeight = formatImage.naturalHeight;
                 imgWidth.value = realWidth
                 imgHeight.value = realHeight
                 btnSettingImage.setAttribute('data-path', '/' + btn.getAttribute('data-path'))
@@ -152,17 +154,37 @@ $(document).ready(() => {
             }
             console.log(imgAltValue);
         })
+
+        imgWidth.addEventListener('change', () => {
+           imgHeight.value = (imgWidth.value*realHeight)/realWidth
+        })
+        imgHeight.addEventListener('change', () => {
+            imgWidth.value = (imgHeight.value*realWidth)/realHeight
+        })
+
+        btnWithHeightReset.addEventListener('click', () => {
+            imgWidth.value = realWidth
+            imgHeight.value = realHeight
+        })
+       
         btnSettingImage.addEventListener('click', () => {
             const imageUrl = btnSettingImage.getAttribute('data-path')
             const htmlDP = editorInstance.data.processor;
-            const viewFragment = htmlDP.toView(`<img src="${imageUrl}" alt="${imgAltValue}" />`);
+            const viewFragment = htmlDP.toView(`<img src="${imageUrl}" style="width:${imgWidth.value}px; height:${imgHeight.value}px" alt="${imgAltValue}" />`);
             const modelFragment = editorInstance.data.toModel(viewFragment);
+            console.log(modelFragment);
+            let arrayImgElementsBefore = Array.from(editorInstance.editing.view.getDomRoot().querySelectorAll('img'))
             editorInstance.model.insertContent(modelFragment);
+            let arrayImgElementsAfter = Array.from(editorInstance.editing.view.getDomRoot().querySelectorAll('img'))
+            var newItemImg = null;
+            for (var i = 0; i < arrayImgElementsAfter.length; i++) {
+                if (!arrayImgElementsBefore.includes(arrayImgElementsAfter[i])) {
+                    newItemImg = arrayImgElementsAfter[i];
+                    break;
+                }
+            }
             btnCloseImageSetting.click();
-        })
-        ckContent.addEventListener('click', () => {
-            cursorPosittion = editorInstance.model.document.selection.getFirstPosition()['path']
-        })
+            })
     }
 
     function addNewImageToList(newImages) {

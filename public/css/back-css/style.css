@@ -397,6 +397,7 @@ a {
     color: #000000;
 }
 
+
 .btn-basic{
     background-color: #f8f8f8 !important;
     padding: 4px 8px;
@@ -661,3 +662,7 @@ a {
     cursor: pointer;
   }
 
+#viewRuleDetail .modal-content{
+  height: 80% !important;
+  min-height: 800px !important;
+}

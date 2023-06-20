@@ -13,7 +13,7 @@
     </link>
     <link href="/css/back-css/style.css" rel="stylesheet">
     <script src="/js/front-js/jquery.min.js"></script>
-    <script src="/ckeditor5-build-classic/ckeditor.js"></script>
+    <script src="/ckeditor5custom/build/ckeditor.js"></script>
     <script src="/js/back-js/loadFontAwesomeAsync.js"></script>
 </head>
 
