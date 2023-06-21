@@ -666,3 +666,30 @@ a {
   height: 80% !important;
   min-height: 800px !important;
 }
+/*style for image when insert*/
+.img-align-unspecified{
+  margin-right: 10px;
+  float: unset;
+}
+.img-align-left{
+  margin: 8px 10px 0 10px;
+  float: left;
+}
+.img-align-right{
+  margin: 8px 10px 0 10px;
+  float: right;
+}
+.img-align-central{
+  margin: 0 10px 0 10px;
+  vertical-align: middle;
+}
+.img-align-superior{
+  margin: 8px 10px 0 10px;
+  vertical-align: text-top;
+}
+.img-align-under{
+  margin: 0 10px 0 10px;
+  vertical-align: text-bottom;
+}
+
+

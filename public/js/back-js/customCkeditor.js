@@ -1,9 +1,20 @@
-
 document.addEventListener('DOMContentLoaded', function() {
     var inputElement = document.querySelector('#editor-edit-note') 
     if (inputElement) {
         ClassicEditor
-        .create(inputElement)
+        .create(inputElement,
+            {
+                htmlSupport: {
+                    allow: [
+                        {
+                            name: /.*/,
+                            attributes: true,
+                            classes: true,
+                            styles: true
+                        }
+                    ]
+                } 
+            })
         .catch(error => {
             console.error('Error when create CKEditor instance:', error);
         });
@@ -11,9 +22,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 $(document).ready(() => {
-    setBtnPickImage()
     //modal image setting
+    const modalImageSettings = document.getElementById('image-settings')
     const btnCloseImageSetting = document.querySelector('.btn-close-image-setting')
+    addEventModalImageSetting()
     //tab list
     const modalPreviewImg = $("#myModal")[0]
     const closeChildModal = document.getElementsByClassName("close")[0]
@@ -33,8 +45,8 @@ $(document).ready(() => {
     var imgAltValue = imgAlt.value
     const btnFormatTab = document.getElementById('btn-format-tab')
     const btnToListScreen = document.getElementById('btn-to-list-screen')
-    const imgWidth = document.getElementById('img-width')
-    const imgHeight = document.getElementById('img-height')
+    var imgWidth = document.getElementById('img-width')
+    var imgHeight = document.getElementById('img-height')
     const btnSettingImage = document.getElementById('btn-setting-image')
     const cbInputSetAlt = document.getElementById('input-setalt')
     const btnWithHeightReset = document.querySelector('.width-height-reload')
@@ -42,10 +54,8 @@ $(document).ready(() => {
     var realHeight = 1;
     //page edit 
     const domEditableElement = document.querySelector('.ck-editor__editable');
-    if (domEditableElement) {
-        const editorInstance = domEditableElement.ckeditorInstance;
-    }
-    
+    const editorInstance = domEditableElement.ckeditorInstance;
+    var arrImgInEditorElements = Array.from(editorInstance.editing.view.getDomRoot().querySelectorAll('img'))
 
     addEventTabUpload()
     addEventTabListImage()
@@ -150,49 +160,95 @@ $(document).ready(() => {
         btnToListScreen.addEventListener('click', () => {
             switchToListTab()
         })
+        addEventChangeFormatImage()
+        addEventChangeImage()
+        btnSettingImage.addEventListener('click', () => {
+            var alignrRadios = document.getElementsByName("alignment-type");
+            var alignSelectedValue = Array.from(alignrRadios).find(radio => radio.checked).value;
+            const imageUrl = btnSettingImage.getAttribute('data-path')
+            const htmlDP = editorInstance.data.processor;
+            const viewFragment = htmlDP.toView(`<img class="img-align-${alignSelectedValue}" src="${imageUrl}" style="width:${imgWidth.value}px;" alt="${imgAltValue}" />`);
+            const modelFragment = editorInstance.data.toModel(viewFragment);
+            editorInstance.model.insertContent(modelFragment);
+            btnCloseImageSetting.click();
+            })   
+    }
+
+    function addEventChangeImage(){
+        arrImgInEditorElements = Array.from(editorInstance.editing.view.getDomRoot().querySelectorAll('img'))
+        arrImgInEditorElements.forEach((img)=>{
+            img.addEventListener('dblclick',()=>{
+                var imgParentElement = img.parentElement
+                imgClassStyle = ''
+                const arrClassStyle = ['img-align-unspecified','img-align-left','img-align-right','img-align-central','img-align-superior','img-align-under']
+                arrClassStyle.forEach((item)=>{
+                    if (imgParentElement.classList.includes(item)) {
+                        imgClassStyle = item
+                    }
+                })
+                console.log(imgClassStyle);
+                formatImage.src = img.src
+                imgAlt.value = img.alt
+                switchToFormatTab()
+                btnSettingImage.setAttribute('data-path', img.src)
+                imgWidth.value = img.offsetWidth
+                imgHeight.value = img.offsetHeight
+                imgAltValue = imgAlt.value
+                modalImageSettings.style.display = 'block'
+            })
+        })
+    }
+
+    function addEventChangeFormatImage(){
+        imgAlt.addEventListener('change', () => {
+                imgAltValue = imgAlt.value
+        })
         cbInputSetAlt.addEventListener('change', () => {
             if (cbInputSetAlt.checked == true) {
                 imgAltValue = ""
             } else {
                 imgAltValue = imgAlt.value
             }
-            console.log(imgAltValue);
         })
-
-        imgWidth.addEventListener('change', () => {
-           imgHeight.value = (imgWidth.value*realHeight)/realWidth
-        })
-        imgHeight.addEventListener('change', () => {
-            imgWidth.value = (imgHeight.value*realWidth)/realHeight
-        })
-
         btnWithHeightReset.addEventListener('click', () => {
             imgWidth.value = realWidth
             imgHeight.value = realHeight
         })
-       
-        btnSettingImage.addEventListener('click', () => {
-            const imageUrl = btnSettingImage.getAttribute('data-path')
-            const htmlDP = editorInstance.data.processor;
-            const viewFragment = htmlDP.toView(`<img src="${imageUrl}" style="width:${imgWidth.value}px; height:${imgHeight.value}px" alt="${imgAltValue}" />`);
-            const modelFragment = editorInstance.data.toModel(viewFragment);
-            console.log(modelFragment);
-            let arrayImgElementsBefore = Array.from(editorInstance.editing.view.getDomRoot().querySelectorAll('img'))
-            editorInstance.model.insertContent(modelFragment);
-            let arrayImgElementsAfter = Array.from(editorInstance.editing.view.getDomRoot().querySelectorAll('img'))
-            var newItemImg = null;
-            for (var i = 0; i < arrayImgElementsAfter.length; i++) {
-                if (!arrayImgElementsBefore.includes(arrayImgElementsAfter[i])) {
-                    newItemImg = arrayImgElementsAfter[i];
-                    break;
-                }
+        imgWidth.addEventListener('change', () => {
+            if (imgWidth.value>0) {
+             imgHeight.value = (imgWidth.value*realHeight)/realWidth
+            }else{
+                imgWidth.value=1
             }
-            btnCloseImageSetting.click();
-            })
+         })
+         imgHeight.addEventListener('change', () => {
+            if (imgHeight.value>0) {
+             imgWidth.value = (imgHeight.value*realWidth)/realHeight
+            }
+            else{
+                imgHeight.value
+            }
+         })
+         imgWidth.addEventListener('keyup', () => {
+             if (imgWidth.value>0) {
+              imgHeight.value = (imgWidth.value*realHeight)/realWidth
+             }
+             else{
+                imgWidth.value=1
+             }
+          })
+          imgHeight.addEventListener('keyup', () => {
+             if (imgHeight.value>0) {
+              imgWidth.value = (imgHeight.value*realWidth)/realHeight
+             }
+             else{
+                imgHeight.value
+             }
+          })
+          
     }
-
     function addNewImageToList(newImages) {
-        let htmls = ""
+        var htmls = ""
         newImages.forEach(item => {
             image = item[1][0]
             htmls += `<li class="list-group-item d-flex col-12 ">
@@ -207,7 +263,7 @@ $(document).ready(() => {
                     </div>
                     <div class="d-flex justify-content-around w-75">
                         <button class="btn-basic">Edit</button>
-                        <button class="btn-basic">Delete</button>
+                        <button class="btn-basic">Devare</button>
                         <button class="btn-basic">Properties</button>
                         <button data-path="${image['path']}" data-img-name="${image['name']}" class="btn-basic btn-open-preview">Preview</button>
                     </div>
@@ -224,7 +280,7 @@ $(document).ready(() => {
     }
 
     function showAllInputNotice(result) {
-        let inputIds = ['upload-photo1', 'upload-photo2', 'upload-photo3', 'upload-photo4', 'upload-photo5']
+        var inputIds = ['upload-photo1', 'upload-photo2', 'upload-photo3', 'upload-photo4', 'upload-photo5']
         if (result['success']) {
             inputIds.forEach((id) => {
                 setMessageInput(result, 'success', id)
@@ -272,15 +328,19 @@ $(document).ready(() => {
         addEventTabUpload()
         addEventTabListImage()
     }
-    function setBtnPickImage(){
-        const btnPickImage = $('.ck-file-dialog-button')[0]
+    function addEventModalImageSetting(){
+       const btnPickImage = $('.ck-file-dialog-button')[0]
        if (btnPickImage) {
-        btnPickImage.setAttribute('data-bs-toggle', 'modal')
-        btnPickImage.setAttribute('data-bs-target', '#image-settings')
         btnPickImage.addEventListener('click', (e) => {
             e.preventDefault()
+            modalImageSettings.style.display = 'block'
             switchToListTab() 
         })
        }
+    btnCloseImageSetting.addEventListener('click',()=>{
+        modalImageSettings.style.display = 'none'
+    })
+       
     }
+
 })

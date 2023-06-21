@@ -133,7 +133,7 @@
                                             <td><?php echo htmlspecialchars($rule['small_category']) ?></td>
                                             <td><?php echo htmlspecialchars($rule['content']) ?></td>
                                             <td><?php echo htmlspecialchars($rule['detail']) ?></td>
-                                            <td><?php echo $rule['note'] ?></td>
+                                            <td><?php echo htmlspecialchars($rule['note']) ?></td>
                                             <td><?php echo $rule['created_at'] ?></td>
                                             <?php
                                             if ($cur_user['role_id'] != 3) {
@@ -214,14 +214,42 @@
     const searchBtn = document.querySelector('#search_btn')
     const deleteSearchBtn = document.querySelector('#delete_search')
     const btnShowRules = document.querySelectorAll('.btn-show-rule')
+    const viewRuleDetailModal = document.getElementById('viewRuleDetail')
     const ruleCategory = document.getElementById('rule-category')
     const ruleContent = document.getElementById('rule-content')
     const ruleDetail = document.getElementById('rule-detail')
     const ruleNote = document.getElementById('rule-note')
+    const categoryElement = document.createElement('div')
+    const contentElement = document.createElement('div')
+    const detailElement = document.createElement('div')
+    const noteElement = document.createElement('div')
+    //page edit 
+    var editorViewNoteInstance = ""
     const urlParams = new URLSearchParams(window.location.search)
     const typeRuleId = urlParams.get('type_rule_id');
     const PAGE_STORAGE_KEY = 'PAGE RULE FILTER'
     var config = JSON.parse(localStorage.getItem(PAGE_STORAGE_KEY)) || {}
+    document.addEventListener('DOMContentLoaded', function() {
+        ClassicEditor
+            .create(document.querySelector('#rule-note'), {
+                htmlSupport: {
+                    allow: [{
+                        name: /.*/,
+                        attributes: true,
+                        classes: true,
+                        styles: true
+                    }]
+                }
+            })
+            .then(editor => {
+                const toolbarElement = editor.ui.view.toolbar.element;
+                toolbarElement.style.display = 'none';
+                editorViewNoteInstance = editor
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    });
 
     function start() {
         filterRule()
@@ -319,30 +347,7 @@
         }
 
     }
-    btnShowRules.forEach((btn) => {
-        btn.addEventListener('click', (e) => {
-            ruleId = btn.dataset.id
-            $.ajax({
-                type: "GET",
-                url: `/admin/rule/show?id=${ruleId}`,
-                success: function(data) {
-                    result = data['result']
-                    console.log(result);
-                    ruleCategory.textContent = result['large_category'] + '->' + result['middle_category'] + '->' + result['small_category']
-                    ruleContent.textContent = result['content']
-                    ruleDetail.textContent = result['detail']
-                    ruleNote.textContent = result['note']
-                    btn.setAttribute('data-bs-toggle', 'modal')
-                    btn.setAttribute('data-bs-target', '#viewRuleDetail')
-                },
-                cache: false,
-                contentType: false,
-                processData: false
-            }).fail(function() {
-                e.preventDefault()
-            });
-        })
-    })
+
     searchBtn.addEventListener('click', () => {
         setFilter('page', 1)
         setFilter('category', categorySelect.value)
@@ -356,6 +361,8 @@
         setFilter('results_per_pages', value)
         loadUrlLocalStorage()
     })
+
+
 
     function checkInputsFilter() {
         categorySelect.addEventListener('change', () => {
@@ -432,4 +439,33 @@
         })
         return string
     }
+
+    btnShowRules.forEach((btn) => {
+        btn.setAttribute('data-bs-toggle', 'modal')
+        btn.setAttribute('data-bs-target', '#viewRuleDetail')
+        btn.addEventListener('click', (e) => {
+            ruleId = btn.dataset.id
+            $.ajax({
+                type: "GET",
+                url: `/admin/rule/show?id=${ruleId}`,
+                success: function(data) {
+                    result = data['result']
+                    categoryElement.textContent = result['large_category'] + '->' + result['middle_category'] + '->' + result['small_category']
+                    ruleCategory.appendChild(categoryElement)
+
+                    contentElement.textContent = result['content']
+                    ruleContent.appendChild(contentElement)
+
+                    detailElement.textContent = result['detail']
+                    ruleDetail.appendChild(detailElement)
+                    editorViewNoteInstance.setData(result['note'])
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            }).fail(function() {
+                e.preventDefault()
+            });
+        })
+    })
 </script>

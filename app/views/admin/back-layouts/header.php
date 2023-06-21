@@ -327,7 +327,7 @@
                                                 <div class="col-4 d-flex flex-column align-items-start justify-content-start">
                                                     <img class="img-fluid mx-auto my-2 w-75" for="aligngment-unspecified" src="/images/img-alignment/unspecified.png" alt="">
                                                     <div class="form-check ml-4">
-                                                        <input class="form-check-input" type="radio" name="update-date" checked="true" id="aligngment-unspecified">
+                                                        <input class="form-check-input" type="radio" name="alignment-type" checked="true" value="unspecified" id="aligngment-unspecified">
                                                         <label class="form-check-label" for="aligngment-unspecified">
                                                             Unspecified
                                                         </label>
@@ -336,7 +336,7 @@
                                                 <div class="col-4 d-flex flex-column align-items-start justify-content-start">
                                                     <img class="img-fluid mx-auto my-2 w-75" for="aligngment-left" src="/images/img-alignment/left.png" alt="">
                                                     <div class="form-check ml-4">
-                                                        <input class="form-check-input" type="radio" name="update-date" id="aligngment-left">
+                                                        <input class="form-check-input" type="radio" name="alignment-type" value="left" id="aligngment-left">
                                                         <label class="form-check-label" for="aligngment-left">
                                                             Left
                                                         </label>
@@ -345,7 +345,7 @@
                                                 <div class="col-4 d-flex flex-column align-items-start justify-content-start">
                                                     <img class="img-fluid mx-auto my-2 w-75" for="aligngment-right" src="/images/img-alignment/right.png" alt="">
                                                     <div class="form-check ml-4">
-                                                        <input class="form-check-input" type="radio" name="update-date" id="aligngment-right">
+                                                        <input class="form-check-input" type="radio" name="alignment-type" value="right" id="aligngment-right">
                                                         <label class="form-check-label" for="aligngment-right">
                                                             Right
                                                         </label>
@@ -356,7 +356,7 @@
                                                 <div class="col-4 d-flex flex-column align-items-start justify-content-start">
                                                     <img class="img-fluid mx-auto my-2 w-75" for="aligngment-central" src="/images/img-alignment/central.png" alt="">
                                                     <div class="form-check ml-4">
-                                                        <input class="form-check-input" type="radio" name="update-date" id="aligngment-central">
+                                                        <input class="form-check-input" type="radio" name="alignment-type" value="central" id="aligngment-central">
                                                         <label class="form-check-label" for="aligngment-central">
                                                             Central
                                                         </label>
@@ -365,7 +365,7 @@
                                                 <div class="col-4 d-flex flex-column align-items-start justify-content-start">
                                                     <img class="img-fluid mx-auto my-2 w-75" for="aligngment-superior" src="/images/img-alignment/superior.png" alt="">
                                                     <div class="form-check ml-4">
-                                                        <input class="form-check-input" type="radio" name="update-date" id="aligngment-superior">
+                                                        <input class="form-check-input" type="radio" name="alignment-type" value="superior" id="aligngment-superior">
                                                         <label class="form-check-label" for="aligngment-superior">
                                                             Superior
                                                         </label>
@@ -374,7 +374,7 @@
                                                 <div class="col-4 d-flex flex-column align-items-start justify-content-start">
                                                     <img class="img-fluid mx-auto my-2 w-75" for="aligngment-under" src="/images/img-alignment/under.png" alt="">
                                                     <div class="form-check ml-4">
-                                                        <input class="form-check-input" type="radio" name="update-date" id="aligngment-under">
+                                                        <input class="form-check-input" type="radio" name="alignment-type" value="under" id="aligngment-under">
                                                         <label class="form-check-label" for="aligngment-under">
                                                             Under
                                                         </label>
@@ -437,20 +437,24 @@
                     <h5 class="modal-title" id="viewRuleDetailLabel">Coding rule detail</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-2">
                     <div class="row">
-                        <div class="col-6">
-                            <div class="row" id="rule-category"></div>
-                            <div class="row" id="rule-content"></div>
-                            <div class="row" id="rule-detail"></div>
+                        <div class="col-5 p-3">
+                            <div class="row p-3" id="rule-category">
+                                <h5>Category</h5>
+                            </div>
+                            <div class="row p-3" id="rule-content">
+                                <h5>Content</h5>
+                            </div>
+                            <div class="row p-3" id="rule-detail">
+                                <h5>Detail</h5>
+                            </div>
                         </div>
-                        <div class="col-6" id="rule-note">
-
+                        <div class="col-7 p-3 ">
+                            <h5>Note</h5>
+                            <textarea class="row p-3" id="rule-note"></textarea>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
