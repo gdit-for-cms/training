@@ -140,6 +140,7 @@
                                             ?>
                                                 <td>
                                                     <div class="d-flex ">
+                                                        <button data-id="<?php echo $rule['id'] ?>" type="button" class="btn btn-info btn-show-rule text-white ">View</button>
                                                         <a href=" /admin/rule/edit?id=<?php echo $rule['id'] ?>" class="btn btn-primary text-white mx-1 ">Edit</a>
                                                         <button data-id="<?php echo $rule['id'] ?>" type="button" class="btn btn-danger btn-delete-rule text-white ">Delete</button>
                                                     </div>
@@ -212,6 +213,7 @@
     const searchInput = document.querySelector('#search_input')
     const searchBtn = document.querySelector('#search_btn')
     const deleteSearchBtn = document.querySelector('#delete_search')
+    const btnShowRules = document.querySelectorAll('.btn-show-rule')
     const ruleCategory = document.getElementById('rule-category')
     const ruleContent = document.getElementById('rule-content')
     const ruleDetail = document.getElementById('rule-detail')
@@ -315,7 +317,32 @@
                 newHideElements[1].parentElement.removeChild(newHideElements[0])
             }
         }
+
     }
+    btnShowRules.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+            ruleId = btn.dataset.id
+            $.ajax({
+                type: "GET",
+                url: `/admin/rule/show?id=${ruleId}`,
+                success: function(data) {
+                    result = data['result']
+                    console.log(result);
+                    ruleCategory.textContent = result['large_category'] + '->' + result['middle_category'] + '->' + result['small_category']
+                    ruleContent.textContent = result['content']
+                    ruleDetail.textContent = result['detail']
+                    ruleNote.textContent = result['note']
+                    btn.setAttribute('data-bs-toggle', 'modal')
+                    btn.setAttribute('data-bs-target', '#viewRuleDetail')
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            }).fail(function() {
+                e.preventDefault()
+            });
+        })
+    })
     searchBtn.addEventListener('click', () => {
         setFilter('page', 1)
         setFilter('category', categorySelect.value)

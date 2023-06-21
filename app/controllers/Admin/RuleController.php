@@ -169,6 +169,17 @@ class RuleController extends AppController
         $this->obj_rule->destroyBy("id = $rule_id");
     }
 
+    public function showAction(Request $request)
+    {
+        $rule_id = $request->getGet()->get('id');
+        $rule = $this->obj_rule->getById($rule_id);
+        if ($rule) {
+            return $this->responseShowRule(true, $rule);
+        } else {
+            return $this->responseShowRule(false);
+        }
+    }
+
     public function import(Request $request)
     {
         $type_rule_name = $request->getPost()->get('type_rule_name');
@@ -440,5 +451,16 @@ class RuleController extends AppController
         }
 
         return $spread_sheet;
+    }
+
+    public function responseShowRule($status, $result = [])
+    {
+        $res = [
+            "success" => $status,
+            "result" => $result
+        ];
+        header('Content-Type: application/json');
+        echo json_encode($res);
+        exit();
     }
 }

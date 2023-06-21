@@ -1,11 +1,13 @@
 
 document.addEventListener('DOMContentLoaded', function() {
-    ClassicEditor
-        .create(document.querySelector('#editor-edit-note')
-        )
+    var inputElement = document.querySelector('#editor-edit-note') 
+    if (inputElement) {
+        ClassicEditor
+        .create(inputElement)
         .catch(error => {
             console.error('Error when create CKEditor instance:', error);
         });
+    }
 });
 
 $(document).ready(() => {
@@ -40,7 +42,9 @@ $(document).ready(() => {
     var realHeight = 1;
     //page edit 
     const domEditableElement = document.querySelector('.ck-editor__editable');
-    const editorInstance = domEditableElement.ckeditorInstance;
+    if (domEditableElement) {
+        const editorInstance = domEditableElement.ckeditorInstance;
+    }
     
 
     addEventTabUpload()
@@ -270,11 +274,13 @@ $(document).ready(() => {
     }
     function setBtnPickImage(){
         const btnPickImage = $('.ck-file-dialog-button')[0]
+       if (btnPickImage) {
         btnPickImage.setAttribute('data-bs-toggle', 'modal')
         btnPickImage.setAttribute('data-bs-target', '#image-settings')
         btnPickImage.addEventListener('click', (e) => {
             e.preventDefault()
             switchToListTab() 
         })
+       }
     }
 })
