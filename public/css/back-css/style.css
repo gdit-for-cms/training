@@ -668,27 +668,27 @@ a {
 }
 /*style for image when insert*/
 .img-align-unspecified{
-  margin-right: 10px;
+  margin-right: 8px;
   float: unset;
 }
 .img-align-left{
-  margin: 8px 10px 0 10px;
+  margin: 8px 8px 0 8px;
   float: left;
 }
 .img-align-right{
-  margin: 8px 10px 0 10px;
+  margin: 8px 8px 0 8px;
   float: right;
 }
 .img-align-central{
-  margin: 0 10px 0 10px;
+  margin: 0 8px 0 8px;
   vertical-align: middle;
 }
 .img-align-superior{
-  margin: 8px 10px 0 10px;
+  margin: 8px 8px 0 8px;
   vertical-align: text-top;
 }
 .img-align-under{
-  margin: 0 10px 0 10px;
+  margin: 0 8px 0 8px;
   vertical-align: text-bottom;
 }
 

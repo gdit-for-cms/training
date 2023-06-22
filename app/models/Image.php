@@ -37,8 +37,37 @@ class Image extends Model
         return $this->where($column, $operator, $value)->get();
     }
 
+    public static function getAllRelation($req_method_ary = array(), $limit = 5)
+    {
+        $db = static::getDB();
+        foreach ($req_method_ary as $key => $value) {
+            $req_method_ary[$key] = self::filterSqlInJection($value);
+        }
+        $condition_ary = array();
+        $limit_query = 'LIMIT ' . $limit;
+        $where_condiditon = implode('AND', $condition_ary);
+        if ($where_condiditon != '') {
+            $where_condiditon = 'WHERE' . $where_condiditon;
+        }
+        $query = 'SELECT *
+                FROM library_images
+                '
+            . $where_condiditon;
+        $stmt_count = $db->query($query);
+        $numbers_of_result = count($stmt_count->fetchAll(PDO::FETCH_ASSOC));
+        $stmt = $db->query($query . ' ' . $limit_query);
+        $results_query = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results_ary = array('numbers_of_result' => $numbers_of_result, 'images' => $results_query);
+        return $results_ary;
+    }
+
     public function getById($id, $column)
     {
         return $this->find($id, $column);
+    }
+    public static function filterSqlInJection($string)
+    {
+        $replace = array('UNION', 'SELECT', 'AND', 'OR', '=', '_', '-', '&', '+', '*', '`', '~', '#', '?', '<', '>', '(', ')', '%', '!', "'", "'", ";");
+        return str_replace($replace, '', $string);
     }
 }

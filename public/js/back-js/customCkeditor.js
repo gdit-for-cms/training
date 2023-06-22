@@ -20,29 +20,26 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
 $(document).ready(() => {
     //modal image setting
     const modalImageSettings = document.getElementById('image-settings')
     const btnCloseImageSetting = document.querySelector('.btn-close-image-setting')
     addEventModalImageSetting()
     //tab list
-    const modalPreviewImg = $("#myModal")[0]
-    const closeChildModal = document.getElementsByClassName("close")[0]
     var btnOpenPreviews = document.querySelectorAll('.btn-open-preview')
-    var imagePreview = $('#image-preview')[0]
-    const imagePreviewTitle = $('#image-preview-title')[0]
     var btnInsertImages = document.querySelectorAll('.btn-insert-image')
     const btnListImageTab = document.getElementById('btn-list-image-tab')
     const imgFileListUL = $('#images-file-list-ul')
+    const selectLimitImage = document.getElementById('select-quantity')
     //tab upload
-    const uploadImagesForm = $("#upload-images-form")
+    const uploadImagesForm = document.getElementById('upload-images-form')
     const modalNotice = $('#modal-notice')
     const btnUploadTab = document.getElementById('btn-upload-tab')
     //tab format
     const formatImage = document.getElementById('format-image-img')
     var imgAlt = document.getElementById('img-alt')
     var imgAltValue = imgAlt.value
+    var alignRadios = document.getElementsByName("alignment-type");
     const btnFormatTab = document.getElementById('btn-format-tab')
     const btnToListScreen = document.getElementById('btn-to-list-screen')
     var imgWidth = document.getElementById('img-width')
@@ -95,50 +92,50 @@ $(document).ready(() => {
             }
         })
 
-        uploadImagesForm.submit((e) => {
-            e.preventDefault()
-            var actionUrl = uploadImagesForm.attr('action')
-            var form_data = new FormData(uploadImagesForm[0]);
-            $.ajax({
-                type: "POST",
-                url: actionUrl,
-                data: form_data,
-                success: function(data) {
-                    if (data['success']) {
-                        const newImages = Object.entries(data['result']['new_images'])
-                        addNewImageToList(newImages)
-                        modalNotice.find('#modal-notice-content').html(`<h5 class='text-center text-success'>${data['message']}</h5>`)
-                        modalNotice.css('display', "block");
-                        showAllInputNotice(data['result'])
-                        switchToListTab()
-                    } else {
-                        modalNotice.find('#modal-notice-content').html(`<h5 class='text-center text-danger'>${data['message']}</h5>`)
-                        modalNotice.css('display', "block");
-                        showAllInputNotice(data['result'])
-                    }
-                },
-                cache: false,
-                contentType: false,
-                processData: false
-            }).fail(function() {
-                modalNotice.find('#modal-notice-content').html(`<h5 class='text-center text-danger'>Can not upload image. Please check again!</h5>`)
-                modalNotice.css('display', "block");
-            });
-        });
         btnUploadTab.addEventListener('click', () => {
             btnListImageTab.classList.remove('active-interface')
         })
     }
 
+    uploadImagesForm.addEventListener('submit',(e)=>{
+        e.preventDefault()
+        var actionUrl = uploadImagesForm.getAttribute('action')
+        var form_data = new FormData(uploadImagesForm);
+        const fileNameSelects = document.querySelectorAll('.file-name-select')
+        $.ajax({
+            type: "POST",
+            url: actionUrl,
+            data: form_data,
+            success: function(data) {
+                if (data['success']) {
+                    const newImages = Object.entries(data['result']['new_images'])
+                    addNewImageToList(newImages)
+                    switchToListTab()
+                    uploadImagesForm.reset()
+                    fileNameSelects.forEach(item=>{
+                        item.innerHTML = ""
+                    })
+                } else {
+                    modalNotice.find('#modal-notice-content').html(`<h5 class='text-center text-danger'>${data['message']}</h5>`)
+                    modalNotice.css('display', "block");
+                    showAllInputNotice(data['result'])
+                }
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        }).fail(function() {
+            modalNotice.find('#modal-notice-content').html(`<h5 class='text-center text-danger'>Can not upload image. Please check again!</h5>`)
+            modalNotice.css('display', "block");
+        });
+    })
+
     function addEventTabListImage() {
-        closeChildModal.onclick = function() {
-            modalPreviewImg.style.display = "none";
-        }
         btnOpenPreviews.forEach((btn) => {
-            btn.addEventListener("click", () => {
-                imagePreview.src = '/' + btn.getAttribute('data-path')
-                imagePreviewTitle.textContent = btn.getAttribute('data-img-name')
-                modalPreviewImg.style.display = "block";
+            btn.addEventListener("click", (e) => {
+                e.preventDefault()
+                imageSrc = '/' + btn.getAttribute('data-path')
+                window.open(imageSrc, '_blank');
             })
         })
         btnInsertImages.forEach((btn) => {
@@ -155,6 +152,22 @@ $(document).ready(() => {
             })
         })
     }
+    selectLimitImage.addEventListener('change',()=>{
+        $.ajax({
+            type: "GET",
+            url: `/admin/image/getImages?limit=${selectLimitImage.value}`,
+            success: function(data) {
+                if (data['success']) {
+                    const images = Object.entries(data['result']['images'])
+                    setListImage(images)
+                } 
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        })
+
+    })
 
     function addEventTabFormat() {
         btnToListScreen.addEventListener('click', () => {
@@ -163,8 +176,14 @@ $(document).ready(() => {
         addEventChangeFormatImage()
         addEventChangeImage()
         btnSettingImage.addEventListener('click', () => {
-            var alignrRadios = document.getElementsByName("alignment-type");
-            var alignSelectedValue = Array.from(alignrRadios).find(radio => radio.checked).value;
+            if (cbInputSetAlt.checked==true) {
+                imgAltValue = ""
+            }
+            else{
+                imgAltValue = imgAlt.value
+            }
+            alignRadios = document.getElementsByName("alignment-type");
+            let alignSelectedValue = Array.from(alignRadios).find(radio => radio.checked).value;
             const imageUrl = btnSettingImage.getAttribute('data-path')
             const htmlDP = editorInstance.data.processor;
             const viewFragment = htmlDP.toView(`<img class="img-align-${alignSelectedValue}" src="${imageUrl}" style="width:${imgWidth.value}px;" alt="${imgAltValue}" />`);
@@ -182,13 +201,30 @@ $(document).ready(() => {
                 imgClassStyle = ''
                 const arrClassStyle = ['img-align-unspecified','img-align-left','img-align-right','img-align-central','img-align-superior','img-align-under']
                 arrClassStyle.forEach((item)=>{
-                    if (imgParentElement.classList.includes(item)) {
+                    if (imgParentElement.classList.contains(item)) {
                         imgClassStyle = item
                     }
                 })
-                console.log(imgClassStyle);
+                if (!imgClassStyle) {
+                    imgClassStyle = "img-align-unspecified"
+                }
+                let alignItemSelect = Array.from(alignRadios).find(item=>{
+                    return imgClassStyle.includes(item.value)
+                })
+                if (alignItemSelect) {
+                    alignItemSelect.checked = true
+                }
                 formatImage.src = img.src
-                imgAlt.value = img.alt
+                if (img.alt!='') {
+                    imgAlt.value = img.alt
+                    cbInputSetAlt.checked = false
+                }
+                else{
+                    imgAlt.value = ''
+                    cbInputSetAlt.checked = true
+                }
+                realWidth = img.naturalWidth
+                realHeight = img.naturalHeight
                 switchToFormatTab()
                 btnSettingImage.setAttribute('data-path', img.src)
                 imgWidth.value = img.offsetWidth
@@ -218,7 +254,7 @@ $(document).ready(() => {
             if (imgWidth.value>0) {
              imgHeight.value = (imgWidth.value*realHeight)/realWidth
             }else{
-                imgWidth.value=1
+                imgWidth.value = 1
             }
          })
          imgHeight.addEventListener('change', () => {
@@ -226,7 +262,7 @@ $(document).ready(() => {
              imgWidth.value = (imgHeight.value*realWidth)/realHeight
             }
             else{
-                imgHeight.value
+                imgHeight.value = 1
             }
          })
          imgWidth.addEventListener('keyup', () => {
@@ -242,50 +278,61 @@ $(document).ready(() => {
               imgWidth.value = (imgHeight.value*realWidth)/realHeight
              }
              else{
-                imgHeight.value
+                imgHeight.value = 1
              }
           })
           
     }
+
     function addNewImageToList(newImages) {
         var htmls = ""
         newImages.forEach(item => {
-            image = item[1][0]
-            htmls += `<li class="list-group-item d-flex col-12 ">
-                <div class="col-2 d-flex justify-content-center align-items-center">
-                    <img class="img-thumbnail" src="/${image['path']}" alt="">
-                </div>
-                <div class="col-8">
-                    <div class="d-flex flex-column ml-2">
-                        <h5>${image['name']}</h5>
-                        <span>${image['path']}</span>
-                        <span>Update date: ${image['updated_at']} </span>
-                    </div>
-                    <div class="d-flex justify-content-around w-75">
-                        <button class="btn-basic">Edit</button>
-                        <button class="btn-basic">Devare</button>
-                        <button class="btn-basic">Properties</button>
-                        <button data-path="${image['path']}" data-img-name="${image['name']}" class="btn-basic btn-open-preview">Preview</button>
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="d-flex justify-content-end mt-4 ">
-                        <button class="btn-basic mt-5 btn-insert-image" data-path="${image['path']}" data-img-name="${image['name']}">Insert Image</button>
-                    </div>
-                </div>
-            </li>`
+            let image = item[1][0]
+            htmls += createLiTagImgHtml(image)
         });
         imgFileListUL.prepend(htmls)
         updateDomElements()
     }
 
+    function setListImage(images){
+        var htmls = ""
+        images.forEach(item => {
+           let image = item[1]
+           htmls += createLiTagImgHtml(image)
+        });
+        imgFileListUL.empty()
+        imgFileListUL.append(htmls)
+        updateDomElements()
+    }
+
+    function createLiTagImgHtml(image){
+        return `<li class="list-group-item d-flex col-12 ">
+        <div class="col-2 d-flex justify-content-center align-items-center">
+            <img class="img-thumbnail" src="/${image['path']}" alt="">
+        </div>
+        <div class="col-8">
+            <div class="d-flex flex-column ml-2">
+                <h5>${image['name']}</h5>
+                <span>${image['path']}</span>
+                <span>Update date: ${image['updated_at']} </span>
+            </div>
+            <div class="d-flex justify-content-around w-75">
+                <button class="btn-basic">Edit</button>
+                <button class="btn-basic">Devare</button>
+                <button class="btn-basic">Properties</button>
+                <button data-path="${image['path']}" data-img-name="${image['name']}" class="btn-basic btn-open-preview">Preview</button>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="d-flex justify-content-end mt-4 ">
+                <button class="btn-basic mt-5 btn-insert-image" data-path="${image['path']}" data-img-name="${image['name']}">Insert Image</button>
+            </div>
+        </div>
+    </li>`
+    }
+
     function showAllInputNotice(result) {
         var inputIds = ['upload-photo1', 'upload-photo2', 'upload-photo3', 'upload-photo4', 'upload-photo5']
-        if (result['success']) {
-            inputIds.forEach((id) => {
-                setMessageInput(result, 'success', id)
-            })
-        }
         if (result['failed']) {
             inputIds.forEach((id) => {
                 setMessageInput(result, 'failed', id)
@@ -299,16 +346,7 @@ $(document).ready(() => {
                 'type': status,
                 'msg': result[status][inputId]
             }
-            showEachINputNotice(inputId, message)
         }
-    }
-
-    function showEachINputNotice(inputId, message) {
-        if (message['type'] == 'failed') {
-            message['type'] = 'danger'
-        }
-        const msgHtml = $('#' + inputId).parent().find('.message-input-file');
-        msgHtml.html(`<span class='text-center w-100 text-${message['type']}'>${message['msg']}</span>`)
     }
 
     function switchToListTab() {
@@ -328,6 +366,7 @@ $(document).ready(() => {
         addEventTabUpload()
         addEventTabListImage()
     }
+
     function addEventModalImageSetting(){
        const btnPickImage = $('.ck-file-dialog-button')[0]
        if (btnPickImage) {
@@ -342,5 +381,4 @@ $(document).ready(() => {
     })
        
     }
-
 })

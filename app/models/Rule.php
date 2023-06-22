@@ -70,7 +70,7 @@ class Rule extends Model
             $where_condiditon = 'WHERE' . $where_condiditon;
         }
         $query = 'SELECT *
-                FROM rules AS r
+                FROM rules
                 '
             . $where_condiditon;
 

@@ -17,6 +17,20 @@ class ImageController extends AppController
     {
         $this->obj_image = new Image;
     }
+
+    public function getImagesAction(Request $request)
+    {
+        $limit = $request->getGet()->get('limit');
+        $get_ary = $request->getGet()->all();
+        array_shift($get_ary);
+        $result = $this->obj_image->getAllRelation($get_ary, $limit);
+        if ($result) {
+            return $this->responseImageQuery(true, 'Get images success', $result);
+        } else {
+            return $this->responseImageQuery(false, 'Get images failed', []);
+        }
+    }
+
     public function storeAction(Request $request)
     {
         $post = $request->getPost()->all();
@@ -71,15 +85,15 @@ class ImageController extends AppController
                 }
                 $count_success = count($all_results['success']);
                 if ($count_success == 5) {
-                    $this->responseUpload(true, 'All image uploaded!', $all_results);
+                    $this->responseImageQuery(true, 'All image uploaded!', $all_results);
                 } else {
-                    $this->responseUpload(true, $count_success . ' image uploaded  success', $all_results);
+                    $this->responseImageQuery(true, $count_success . ' image uploaded  success', $all_results);
                 }
             } else {
-                $this->responseUpload(false, 'Select image, enter name and try again!');
+                $this->responseImageQuery(false, 'Select image, enter name and try again!');
             }
         } catch (\Throwable $th) {
-            $this->responseUpload(false, 'Something wrong! Select image and try again!');
+            $this->responseImageQuery(false, 'Something wrong! Select image and try again!');
         }
     }
 
@@ -99,7 +113,7 @@ class ImageController extends AppController
         }
         return $add_item_result;
     }
-    public function responseUpload($status, $message, $result = [])
+    public function responseImageQuery($status, $message, $result = [])
     {
         $res = [
             "success" => $status,
