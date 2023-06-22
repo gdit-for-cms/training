@@ -45,12 +45,15 @@ class Image extends Model
         }
         $condition_ary = array();
         $limit_query = 'LIMIT ' . $limit;
+        if (!empty($req_method_ary['keyword'])) {
+            array_push($condition_ary, ' (l.name  LIKE \'%' . $req_method_ary['keyword'] . '%\' OR l.path LIKE \'%' . $req_method_ary['keyword'] . '%\')');
+        }
         $where_condiditon = implode('AND', $condition_ary);
         if ($where_condiditon != '') {
             $where_condiditon = 'WHERE' . $where_condiditon;
         }
         $query = 'SELECT *
-                FROM library_images
+                FROM library_images as l
                 '
             . $where_condiditon;
         $stmt_count = $db->query($query);

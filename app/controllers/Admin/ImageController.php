@@ -20,7 +20,7 @@ class ImageController extends AppController
 
     public function getImagesAction(Request $request)
     {
-        $limit = $request->getGet()->get('limit');
+        $limit = $request->getGet()->get('limit') ? $request->getGet()->get('limit') : 5;
         $get_ary = $request->getGet()->all();
         array_shift($get_ary);
         $result = $this->obj_image->getAllRelation($get_ary, $limit);
@@ -90,7 +90,7 @@ class ImageController extends AppController
                     $this->responseImageQuery(true, $count_success . ' image uploaded  success', $all_results);
                 }
             } else {
-                $this->responseImageQuery(false, 'Select image, enter name and try again!');
+                $this->responseImageQuery(false, 'Select image with size<, enter name and try again!');
             }
         } catch (\Throwable $th) {
             $this->responseImageQuery(false, 'Something wrong! Select image and try again!');

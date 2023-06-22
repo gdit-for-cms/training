@@ -30,7 +30,8 @@ $(document).ready(() => {
     var btnInsertImages = document.querySelectorAll('.btn-insert-image')
     const btnListImageTab = document.getElementById('btn-list-image-tab')
     const imgFileListUL = $('#images-file-list-ul')
-    const selectLimitImage = document.getElementById('select-quantity')
+    var selectLimitImage = document.getElementById('select-quantity')
+    const filterImageForm = document.getElementById('form-filter-image')
     //tab upload
     const uploadImagesForm = document.getElementById('upload-images-form')
     const modalNotice = $('#modal-notice')
@@ -107,6 +108,7 @@ $(document).ready(() => {
             url: actionUrl,
             data: form_data,
             success: function(data) {
+                console.log(data);
                 if (data['success']) {
                     const newImages = Object.entries(data['result']['new_images'])
                     addNewImageToList(newImages)
@@ -152,6 +154,40 @@ $(document).ready(() => {
             })
         })
     }
+
+    filterImageForm.addEventListener('submit',(e)=>{
+        e.preventDefault()
+        var actionUrl = filterImageForm.getAttribute('action')
+        var limit = 5
+        if (selectLimitImage) {
+            limit = selectLimitImage.value
+        }
+        const formData = new FormData(filterImageForm);
+        console.log(formData);
+        const keyword =  document.getElementsByName('keyword')[0].value
+        $.ajax({
+            type: "get",
+            url: `${actionUrl}?limit=${limit}&keyword=${keyword}`,
+            data: {
+                'keyword':keyword
+            },
+            success: function(data) {
+                console.log(data);
+                if (data['success']) {
+                    const images = Object.entries(data['result']['images'])
+                    setListImage(images)
+                } 
+            },
+            error: function(jqXHR, textStatus, errorThrown) { 
+                console.log(errorThrown);
+            },
+            dataType: 'json',
+            cache: false,
+            contentType: false,
+            processData: false
+       })
+    })
+    
     selectLimitImage.addEventListener('change',()=>{
         $.ajax({
             type: "GET",

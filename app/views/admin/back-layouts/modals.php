@@ -155,77 +155,79 @@
                         </div>
                         <div class="tab-pane " id="list" role="tabpanel" aria-labelledby="btn-list-image-tab">
                             <div class="search-option ">
-                                <div class="row justify-content-around align-items-center  mt-2">
-                                    <div class="col-3 d-flex justify-content-start ">
-                                        <label class="search-option-label">File classification</label>
-                                    </div>
-                                    <div class="col-7">
-                                        <select id="my-select" class="form-select" name="">
-                                            <option>Current location</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-2">
-                                    </div>
-                                </div>
-                                <div class="row justify-content-around align-items-center  mt-2">
-                                    <div class="col-3 d-flex justify-content-start ">
-                                        <label class="search-option-label">Keyword</label>
-                                    </div>
-                                    <div class="col-7">
-                                        <input class="form-control" type="text" name="">
-                                    </div>
-                                    <div class="col-2">
-                                        <button class="btn-basic" type="button">Search</button>
-                                    </div>
-                                </div>
-                                <div class="row justify-content-around align-items-center  mt-2">
-                                    <div class="col-3 d-flex justify-content-start ">
-                                        <label class="search-option-label">Order</label>
-                                    </div>
-                                    <div class="col-7">
-                                        <div class="radio-btn-group-date d-flex">
-                                            <label for="">Update date</label>
-                                            <div class="form-check ml-4">
-                                                <input class="form-check-input" type="radio" name="update-date" id="desc">
-                                                <label class="form-check-label" for="desc">
-                                                    Descending
-                                                </label>
-                                            </div>
-                                            <div class="form-check ml-4">
-                                                <input class="form-check-input" type="radio" name="update-date" id="asc">
-                                                <label class="form-check-label" for="asc">
-                                                    Ascending
-                                                </label>
-                                            </div>
+                                <form action="/admin/image/getImages" id="form-filter-image" method="post">
+                                    <div class="row justify-content-around align-items-center  mt-2">
+                                        <div class="col-3 d-flex justify-content-start ">
+                                            <label class="search-option-label">File classification</label>
+                                        </div>
+                                        <div class="col-7">
+                                            <select id="my-select" class="form-select" name="">
+                                                <option>Current location</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-2">
                                         </div>
                                     </div>
-                                    <div class="col-2">
-                                    </div>
-                                </div>
-                                <div class="row justify-content-around align-items-center  mt-2">
-                                    <div class="col-3 d-flex justify-content-start ">
-                                        <label class="search-option-label">Thumbnail</label>
-                                    </div>
-                                    <div class=" col-7">
-                                        <div class="radio-btn-group-thumnail d-flex">
-                                            <div class="form-check ml-4">
-                                                <input class="form-check-input" type="radio" name="thumbnail" id="Non">
-                                                <label class="form-check-label" for="Non">
-                                                    Non-representation
-                                                </label>
-                                            </div>
-                                            <div class="form-check ml-4">
-                                                <input class="form-check-input" type="radio" name="thumbnail" id="mean">
-                                                <label class="form-check-label" for="mean">
-                                                    Mean
-                                                </label>
-                                            </div>
+                                    <div class="row justify-content-around align-items-center  mt-2">
+                                        <div class="col-3 d-flex justify-content-start ">
+                                            <label class="search-option-label">Keyword</label>
+                                        </div>
+                                        <div class="col-7">
+                                            <input class="form-control" type="text" name="keyword">
+                                        </div>
+                                        <div class="col-2">
+                                            <button class="btn-basic" type="submit">Search</button>
                                         </div>
                                     </div>
-                                    <div class="col-2">
+                                    <div class="row justify-content-around align-items-center  mt-2">
+                                        <div class="col-3 d-flex justify-content-start ">
+                                            <label class="search-option-label">Order</label>
+                                        </div>
+                                        <div class="col-7">
+                                            <div class="radio-btn-group-date d-flex">
+                                                <label for="">Update date</label>
+                                                <div class="form-check ml-4">
+                                                    <input class="form-check-input" type="radio" name="update-date" id="desc">
+                                                    <label class="form-check-label" for="desc">
+                                                        Descending
+                                                    </label>
+                                                </div>
+                                                <div class="form-check ml-4">
+                                                    <input class="form-check-input" type="radio" name="update-date" id="asc">
+                                                    <label class="form-check-label" for="asc">
+                                                        Ascending
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-around align-items-center  mt-2">
+                                        <div class="col-3 d-flex justify-content-start ">
+                                            <label class="search-option-label">Thumbnail</label>
+                                        </div>
+                                        <div class=" col-7">
+                                            <div class="radio-btn-group-thumnail d-flex">
+                                                <div class="form-check ml-4">
+                                                    <input class="form-check-input" type="radio" name="thumbnail" id="Non">
+                                                    <label class="form-check-label" for="Non">
+                                                        Non-representation
+                                                    </label>
+                                                </div>
+                                                <div class="form-check ml-4">
+                                                    <input class="form-check-input" type="radio" name="thumbnail" id="mean">
+                                                    <label class="form-check-label" for="mean">
+                                                        Mean
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
 
+                                        </div>
                                     </div>
-                                </div>
+                                </form>
                             </div>
                             <div class="select-quantity ">
                                 <div class="row justify-content-end align-items-end mt-3">
