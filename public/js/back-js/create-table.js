@@ -6,21 +6,26 @@ $(document).ready(function () {
     }
 
     function closeModal(name) {
-        $(`.modal_${name}`).hide();
+        $(`.modal_${name}`).hide()
     }
 
     function addQuestion(div_add_question, margin = 0) {
-        $('.modal_question_add').hide();
+        $('.modal_question_add').hide()
         if ($('.question_content').length == 0) {
             var id_question_max = 0
         } else {
             var id_question_max = Math.max(...$('.question_content').map(function () {
-                return $(this).data('question-id');
-            }));
+                return $(this).data('question-id')
+            }))
         }
         var question_content = $(".input_question_add").val()
+        if ($(".input_question_add_required").is(':checked')) {
+            var required_or_multi = 1
+        } else if ($(".input_question_add_multi").is(':checked')) {
+            var required_or_multi = 0
+        }
         var question = $(`<div class="question bg-question p-3 d-flex justify-content-between align-items-center">
-                <div data-question-id="${id_question_max + 1}" class="question_content">${question_content}</div>
+                <div data-question-id="${id_question_max + 1}" data-required="${required_or_multi}" class="question_content">${question_content}</div>
                 <div>
                     <button data-question-id="${id_question_max + 1}" type="button" class="mx-1 btn btn-primary button_question_edit">Edit</button>
                     <button data-question-id="${id_question_max + 1}" type="button" class="mx-1 btn btn-success button_question_create_answer">Create answer</button>
@@ -35,7 +40,7 @@ $(document).ready(function () {
     }
 
     function addAnswer(div_add_answer) {
-        $('.modal_answer_add').hide();
+        $('.modal_answer_add').hide()
         if ($('.answer_content').length == 0) {
             var id_answer_max = 0
         } else {
@@ -113,17 +118,46 @@ $(document).ready(function () {
 
 
     // Edit question
+    function oneCheckbox(name) {
+        $(`.input_question_${name}_required`).change(function () {
+            if ($(this).is(':checked')) {
+                $(`.input_question_${name}_multi`).prop('checked', false)
+            }
+        })
+        $(`.input_question_${name}_multi`).change(function () {
+            if ($(this).is(':checked')) {
+                $(`.input_question_${name}_required`).prop('checked', false)
+            }
+        })
+    }
+    oneCheckbox('add')
+    oneCheckbox('edit')
+
     function openModalEdit(name, id) {
         $(`.modal_${name}_edit`).data(`${name}-id`, id)
         var content = $(`.${name}_content[data-${name}-id="${id}"]`)
+        var checkbox = $(content).data('required')
+        $('.input_question_edit_required').prop('checked', false)
+        $('.input_question_edit_multi').prop('checked', false)
+        if (name == "question" && checkbox == 1) {
+            $('.input_question_edit_required').prop('checked', true)
+        } else if (name == "question" && checkbox == 0) {
+            $('.input_question_edit_multi').prop('checked', true)
+        }
         $(`.input_${name}_edit`).val(content.text())
         $(`.modal_${name}_edit`).show()
     }
 
     function submitModalEdit(name) {
-        $(`.modal_${name}_edit`).hide();
+        $(`.modal_${name}_edit`).hide()
         if ($(`.input_${name}_edit`).val() !== "") {
-            $(`.${name}_content[data-${name}-id="${$(`.modal_${name}_edit`).data(`${name}-id`)}"]`).text($(`.input_${name}_edit`).val().trim())
+            var question = $(`.${name}_content[data-${name}-id="${$(`.modal_${name}_edit`).data(`${name}-id`)}"]`)
+            question.text($(`.input_${name}_edit`).val().trim())
+            if ($('.input_question_edit_required').is(':checked')) {
+                question.data('required', 1)
+            } else if ($('.input_question_edit_multi').is(':checked')) {
+                question.data('required', 0)
+            }
         } else {
             alert(`Pls enter ${name}`)
         }
@@ -265,6 +299,7 @@ $(document).ready(function () {
         $(div).children('.wrapper_question').filter(`.ms-${margin}`).each(function (index_1, wrapper_question) {
             var question_id = $(wrapper_question).children('.question').children('.question_content').data('question-id')
             var question_content = $(wrapper_question).children('.question').children('.question_content').first().text().trim()
+            var question_required = $(wrapper_question).children('.question').children('.question_content').data('required')
             if ($(wrapper_question).closest('.wrapper_answer').children('.answer').children('.answer_content').length == 0) {
                 var parent_answer_id = 0
             } else {
@@ -273,6 +308,7 @@ $(document).ready(function () {
             json[question_id] = {}
             json[question_id]['question_id'] = question_id
             json[question_id]['question_content'] = question_content
+            json[question_id]['question_required'] = question_required
             json[question_id]['parent_answer_id'] = parent_answer_id
             json[question_id]['answers'] = {}
             $(wrapper_question).children('.content_answer').each(function (index_2, content_answer) {
@@ -301,7 +337,7 @@ $(document).ready(function () {
                     }
                     if ($(wrapper_answer).children('.disable_answer').length > 0) {
                         var answer_disable = $(wrapper_answer).children('.disable_answer').text()
-                        json[question_id]['answers'][answer_id]['disable_answers'] = answer_disable.split(', ').map(Number).filter(Boolean)    
+                        json[question_id]['answers'][answer_id]['disable_answers'] = answer_disable.split(', ').map(Number).filter(Boolean)
                     }
                 })
             })
@@ -313,7 +349,7 @@ $(document).ready(function () {
         $.each(json, function (key, value_json) {
             var wrapper_question = $(`<div class="wrapper_question ms-${margin}"></div>`)
             var question = $(`<div class="question bg-question p-3 d-flex justify-content-between align-items-center">
-                <div data-question-id="${value_json.question_id}" class="question_content">${value_json.question_content}</div>
+                <div data-question-id="${value_json.question_id}" data-required="${value_json.question_required}" class="question_content">${value_json.question_content}</div>
                 <div>
                     <button data-question-id="${value_json.question_id}" type="button" class="mx-1 btn btn-primary button_question_edit">Edit</button>
                     <button data-question-id="${value_json.question_id}" type="button" class="mx-1 btn btn-success button_question_create_answer">Create answer</button>
@@ -451,4 +487,14 @@ $(document).ready(function () {
         closeModal("disable_add")
     })
     // End disable
+
+
+    // Preview
+    $(document).on("click", ".button_preview", function () {
+        var json = {}
+        var json_string = JSON.stringify(convertHtmlToJson(json, $('.content_question').first()))
+        $('.json_data').val(json_string)
+        $('.json_form').submit()
+    })
+    // End Preview
 })

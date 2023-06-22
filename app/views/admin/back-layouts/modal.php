@@ -2,11 +2,23 @@
 <div class="modal_question_add modal">
     <div class="modal-content modal-dialog modal-lg">
         <div class="modal-header">
-            <h6 class="modal-title">Create question</h6>
+            <h5 class="modal-title">Create question</h5>
             <span class="close_modal_question_add close">&times;</span>
         </div>
         <div class="modal-body">
-            <input class="input_question_add input-group form-control" type="text">
+            <input class="input_question_add input-group form-control mb-3" type="text">
+            <div class="form-check">
+                <input class="input_question_add_required form-check-input" type="checkbox" id="input_question_add_required" checked>
+                <label class="form-check-label" for="input_question_add_required">
+                    Question has only 1 answer
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="input_question_add_multi form-check-input" type="checkbox" id="input_question_add_multi">
+                <label class="form-check-label" for="input_question_add_multi">
+                    Questions with multiple answers
+                </label>
+            </div>
         </div>
         <div class="modal-footer">
             <span class="close_modal_question_add btn btn-secondary">Back</span>
@@ -21,11 +33,23 @@
 <div class="modal_question_edit modal">
     <div class="modal-content modal-dialog modal-lg">
         <div class="modal-header">
-            <h6 class="modal-title">Edit question</h6>
+            <h5 class="modal-title">Edit question</h5>
             <span class="close_modal_question_edit close">&times;</span>
         </div>
         <div class="modal-body">
-            <input class="input_question_edit input-group form-control" type="text">
+            <input class="input_question_edit input-group form-control mb-3" type="text">
+            <div class="form-check">
+                <input class="input_question_edit_required form-check-input" type="checkbox" id="input_question_edit_required">
+                <label class="form-check-label" for="input_question_edit_required">
+                    Question has only 1 answer
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="input_question_edit_multi form-check-input" type="checkbox" id="input_question_edit_multi">
+                <label class="form-check-label" for="input_question_edit_multi">
+                    Questions with multiple answers
+                </label>
+            </div>
         </div>
         <div class="modal-footer">
             <span class="close_modal_question_edit btn btn-secondary">Back</span>
@@ -40,7 +64,7 @@
 <div class="modal_answer_add modal">
     <div class="modal-content modal-dialog modal-lg">
         <div class="modal-header">
-            <h6 class="modal-title">Create answer</h6>
+            <h5 class="modal-title">Create answer</h5>
             <span class="close_modal_answer_add close">&times;</span>
         </div>
         <div class="modal-body">
@@ -59,7 +83,7 @@
 <div class="modal_answer_edit modal">
     <div class="modal-content modal-dialog modal-lg">
         <div class="modal-header">
-            <h6 class="modal-title">Edit answer</h6>
+            <h5 class="modal-title">Edit answer</h5>
             <span class="close_modal_answer_edit close">&times;</span>
         </div>
         <div class="modal-body">
@@ -78,7 +102,7 @@
 <div class="modal_alert_delete modal">
     <div class="modal-content modal-dialog">
         <div class="modal-header">
-            <h6 class="modal-title">Are you sure?</h6>
+            <h5 class="modal-title">Are you sure?</h5>
             <span class="close_modal_alert_delete close">&times;</span>
         </div>
         <div class="modal-footer">
@@ -94,7 +118,7 @@
 <div class="modal_import_json modal">
     <div class="modal-content modal-dialog modal-lg">
         <div class="modal-header">
-            <h6 class="modal-title">Import Json</h6>
+            <h5 class="modal-title">Import Json</h5>
             <span class="close_modal_import_json close">&times;</span>
         </div>
         <div class="modal-body">
@@ -113,7 +137,7 @@
 <div class="modal_step_add modal">
     <div class="modal-content modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-header">
-            <h6 class="modal-title">Create step</h6>
+            <h5 class="modal-title">Create step</h5>
             <span class="close_modal_step_add close">&times;</span>
         </div>
         <div class="modal-body">
@@ -157,11 +181,11 @@
 <div class="modal_disable_add modal">
     <div class="modal-content modal-dialog modal-lg">
         <div class="modal-header">
-            <h6 class="modal-title">Selection control</h6>
+            <h5 class="modal-title">Selection control</h5>
             <span class="close_modal_disable_add close">&times;</span>
         </div>
         <div class="modal-body">
-            <h6 class="modal-title mb-3">Disable the following options:</h6>
+            <h5 class="modal-title mb-3">Disable the following options:</h5>
             <table class="table table-striped table-disable">
                 <thead>
                     <tr>
@@ -185,7 +209,7 @@
 <div class="modal_create_step modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h6 class="modal-title">Create step</h6>
+            <h5 class="modal-title">Create step</h5>
             <span class="close_modal_create_step close">&times;</span>
         </div>
         <div class="modal-body">
@@ -208,7 +232,7 @@
 <div class="modal_edit_step modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h6 class="modal-title">Edit step</h6>
+            <h5 class="modal-title">Edit step</h5>
             <span class="close_modal_edit_step close">&times;</span>
         </div>
         <div class="modal-body">
@@ -231,7 +255,7 @@
 <div class="modal_alert_delete_step modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h6 class="modal-title">Are you sure?</h6>
+            <h5 class="modal-title">Are you sure?</h5>
             <span class="close_modal_alert_delete_step close">&times;</span>
         </div>
         <div class="modal-footer">
