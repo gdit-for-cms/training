@@ -20,12 +20,17 @@ $(document).ready(function () {
         }
         var question_content = $(".input_question_add").val()
         if ($(".input_question_add_required").is(':checked')) {
-            var required_or_multi = 1
-        } else if ($(".input_question_add_multi").is(':checked')) {
-            var required_or_multi = 0
+            var question_required = 1       
+        } else {
+            var question_required = 0   
+        }
+        if ($(".input_question_add_multi").is(':checked')) {
+            var question_multi_answer = 1
+        } else {
+            var question_multi_answer = 0
         }
         var question = $(`<div class="question bg-question p-3 d-flex justify-content-between align-items-center">
-                <div data-question-id="${id_question_max + 1}" data-required="${required_or_multi}" class="question_content">${question_content}</div>
+                <div data-question-id="${id_question_max + 1}" data-question-required="${question_required}" data-multi-answer="${question_multi_answer}" class="question_content">${question_content}</div>
                 <div>
                     <button data-question-id="${id_question_max + 1}" type="button" class="mx-1 btn btn-primary button_question_edit">Edit</button>
                     <button data-question-id="${id_question_max + 1}" type="button" class="mx-1 btn btn-success button_question_create_answer">Create answer</button>
@@ -118,31 +123,22 @@ $(document).ready(function () {
 
 
     // Edit question
-    function oneCheckbox(name) {
-        $(`.input_question_${name}_required`).change(function () {
-            if ($(this).is(':checked')) {
-                $(`.input_question_${name}_multi`).prop('checked', false)
-            }
-        })
-        $(`.input_question_${name}_multi`).change(function () {
-            if ($(this).is(':checked')) {
-                $(`.input_question_${name}_required`).prop('checked', false)
-            }
-        })
-    }
-    oneCheckbox('add')
-    oneCheckbox('edit')
-
     function openModalEdit(name, id) {
         $(`.modal_${name}_edit`).data(`${name}-id`, id)
         var content = $(`.${name}_content[data-${name}-id="${id}"]`)
-        var checkbox = $(content).data('required')
+        var question_required = $(content).data('question-required')
+        var multi_answer = $(content).data('multi-answer')
         $('.input_question_edit_required').prop('checked', false)
         $('.input_question_edit_multi').prop('checked', false)
-        if (name == "question" && checkbox == 1) {
+        if (name == "question" && question_required == 1) {
             $('.input_question_edit_required').prop('checked', true)
-        } else if (name == "question" && checkbox == 0) {
+        } else {
+            $('.input_question_edit_required').prop('checked', false)
+        }
+        if (name == "question" && multi_answer == 1) {
             $('.input_question_edit_multi').prop('checked', true)
+        } else {
+            $('.input_question_edit_multi').prop('checked', false)
         }
         $(`.input_${name}_edit`).val(content.text())
         $(`.modal_${name}_edit`).show()
@@ -154,9 +150,14 @@ $(document).ready(function () {
             var question = $(`.${name}_content[data-${name}-id="${$(`.modal_${name}_edit`).data(`${name}-id`)}"]`)
             question.text($(`.input_${name}_edit`).val().trim())
             if ($('.input_question_edit_required').is(':checked')) {
-                question.data('required', 1)
-            } else if ($('.input_question_edit_multi').is(':checked')) {
-                question.data('required', 0)
+                question.data('question-required', 1)
+            } else {
+                question.data('question-required', 0)
+            }
+            if ($('.input_question_edit_multi').is(':checked')) {
+                question.data('multi-answer', 1)
+            } else {
+                question.data('multi-answer', 0)
             }
         } else {
             alert(`Pls enter ${name}`)
@@ -299,7 +300,8 @@ $(document).ready(function () {
         $(div).children('.wrapper_question').filter(`.ms-${margin}`).each(function (index_1, wrapper_question) {
             var question_id = $(wrapper_question).children('.question').children('.question_content').data('question-id')
             var question_content = $(wrapper_question).children('.question').children('.question_content').first().text().trim()
-            var question_required = $(wrapper_question).children('.question').children('.question_content').data('required')
+            var question_required = $(wrapper_question).children('.question').children('.question_content').data('question-required')
+            var question_multi_answer = $(wrapper_question).children('.question').children('.question_content').data('multi-answer')
             if ($(wrapper_question).closest('.wrapper_answer').children('.answer').children('.answer_content').length == 0) {
                 var parent_answer_id = 0
             } else {
@@ -309,6 +311,7 @@ $(document).ready(function () {
             json[question_id]['question_id'] = question_id
             json[question_id]['question_content'] = question_content
             json[question_id]['question_required'] = question_required
+            json[question_id]['question_multi_answer'] = question_multi_answer
             json[question_id]['parent_answer_id'] = parent_answer_id
             json[question_id]['answers'] = {}
             $(wrapper_question).children('.content_answer').each(function (index_2, content_answer) {
@@ -349,7 +352,7 @@ $(document).ready(function () {
         $.each(json, function (key, value_json) {
             var wrapper_question = $(`<div class="wrapper_question ms-${margin}"></div>`)
             var question = $(`<div class="question bg-question p-3 d-flex justify-content-between align-items-center">
-                <div data-question-id="${value_json.question_id}" data-required="${value_json.question_required}" class="question_content">${value_json.question_content}</div>
+                <div data-question-id="${value_json.question_id}" data-question-required="${value_json.question_required}" data-multi-answer="${value_json.question_multi_answer}" class="question_content">${value_json.question_content}</div>
                 <div>
                     <button data-question-id="${value_json.question_id}" type="button" class="mx-1 btn btn-primary button_question_edit">Edit</button>
                     <button data-question-id="${value_json.question_id}" type="button" class="mx-1 btn btn-success button_question_create_answer">Create answer</button>

@@ -25,74 +25,92 @@ class PreviewController extends Controller
         $this->obj_model = new Question;
     }
 
-    public function indexAction()
+    protected function before()
     {
-        View::render('admin/table/preview.php');
+        if (!checkAdmin()) {
+            header('Location: /admin/auth/login');
+            exit;
+        }
+        $this->data_ary['title'] = $this->title;
     }
 
-    private function renderQuestion($jsons, $margin = 0)
+    public function indexAction(Request $request)
+    {
+        $json = $request->getPost()->all();
+        // var_dump($json["json"]);
+        // die;
+
+        $this->data_ary['render'] = $this->renderPreview(json_decode($json["json"], true));
+
+        View::render('admin/table/preview.php', $this->data_ary);
+    }
+
+    private function renderPreview($jsons, $hidden = "")
     {
         $html = '';
         foreach ($jsons as $json) {
             $questionId = $json['question_id'];
             $questionContent = $json['question_content'];
+            $questionRequired = $json['question_required'];
+            $questionMultiAnswer = $json['question_multi_answer'];
+            $questionContent = $json['question_content'];
             $answers = $json['answers'];
-            $html .= '<div class="wrapper_question ms-' . $margin . '">';
-            $html .= '<div class="question bg-question p-3 d-flex justify-content-between align-items-center">';
-            $html .= '<div data-question-id="' . $questionId . '" class="question_content">' . $questionContent . '</div>';
-            $html .= '<div>';
-            $html .= '<button data-question-id="' . $questionId . '" type="button" class="mx-1 btn btn-primary button_question_edit">Edit</button>';
-            $html .= '<button data-question-id="' . $questionId . '" type="button" class="mx-1 btn btn-success button_question_create_answer">Create answer</button>';
-            $html .= '<button data-question-id="' . $questionId . '" type="button" class="mx-1 btn btn-danger button_question_delete">Delete</button>';
-            $html .= '</div>';
+            $html .= '<div class="content_question my-5" ' . $hidden . '>';
+            $html .= '<div class="wrapper_question p-3">';
+            $html .= '<img src="/img/1.png" alt="" width="50px" height="50px">';
+            $html .= '<h5 class="question">Question</h5>';
+            $html .= '<h5 class="question_title p-3" data-question-id="' . $questionId . '" data-question-required="' . $questionRequired . '" data-multi-answer="' . $questionMultiAnswer . '">' . $questionContent . '</h5>';
             $html .= '</div>';
 
-            $html .= '<div class="content_answer">';
+
+            $html .= '<div class="content_answer row">';
 
             if (!empty($answers)) {
                 foreach ($answers as $answer) {
+
                     $answerId = $answer['answer_id'];
                     $answerContent = $answer['answer_content'];
 
-                    $html .= '<div class="wrapper_answer ms-5">';
-                    $html .= '<div class="answer bg-info p-3 d-flex justify-content-between align-items-center">';
-                    $html .= '<div data-answer-id="' . $answerId . '" class="answer_content">' . $answerContent . '</div>';
-                    $html .= '<div>';
-                    $html .= '<button data-answer-id="' . $answerId . '" type="button" class="mx-1 btn btn-warning button_answer_disable">Disable</button>';
-                    $html .= '<button data-answer-id="' . $answerId . '" type="button" class="mx-1 btn btn-primary button_answer_edit">Edit</button>';
-                    $html .= '<button data-answer-id="' . $answerId . '" type="button" class="mx-1 btn btn-success button_answer_create_question">Create question</button>';
-                    $html .= '<button data-answer-id="' . $answerId . '" type="button" class="mx-1 btn btn-success button_answer_create_step">Create steps</button>';
-                    $html .= '<button data-answer-id="' . $answerId . '" type="button" class="mx-1 btn btn-danger button_answer_delete">Delete</button>';
-                    $html .= '</div>';
-                    $html .= '</div>';
-
-
+                    $html .= '<div class="wrapper_answer col-4">';
+                    $html .= '<div class="answer d-flex flex-row m-3 p-2">';
+                    $htmlDisableAnswer = "";
+                    if (!empty($answer['disable_answers'])) {
+                        foreach ($answer['disable_answers'] as $disable_answer) {
+                            $htmlDisableAnswer .= '' . $disable_answer . ', ';
+                        }
+                    }
+                    $htmlStep = "";
                     if (!empty($answer['steps'])) {
-                        $html .= '<div class="content_step ms-5">';
                         foreach ($answer['steps'] as $step) {
                             $stepId = $step['step_id'];
-                            $stepName = $step['step_name'];
-
-                            $html .= '<div data-step-id="' . $stepId . '" class="step bg-step p-3 d-flex justify-content-between align-items-center">';
-                            $html .= '<div class="step_id">' . $stepId . '</div>';
-                            $html .= '<div class="step_name">' . $stepName . '</div>';
-                            $html .= '</div>';
+                            $htmlStep .= '' . $stepId . ', ';
                         }
-
-                        $html .= '</div>';
-                    } elseif (!empty($answer['questions'])) {
-                        $html .= '<div class="content_question">';
-                        $html .= $this->renderQuestion($answer['questions'], 5);
-                        $html .= '</div>';
                     }
-
+                    $htmlQuestionChild = "";
+                    if (!empty($answer['questions'])) {
+                        foreach ($answer['questions'] as $question) {
+                            $htmlQuestionChild .= '' . $question['question_id'] . '';
+                        }
+                    }
+                    $html .= '<input class="answer_checkbox ms-3" id="answer_' . $answerId . '" type="checkbox" data-answer-id="' . $answerId . '" data-disable-answer="' . $htmlDisableAnswer . '" data-step="' . $htmlStep . '" data-question-id-child="' . $htmlQuestionChild . '">';
+                    $html .= '<label class="answer_content h5 p-3" for="answer_' . $answerId . '">';
+                    $html .= $answerContent;
+                    $html .= '</label>';
+                    $html .= '</div>';
                     $html .= '</div>';
                 }
             }
 
             $html .= '</div>';
-
+            $html .= '<hr>';
             $html .= '</div>';
+            if (!empty($answers)) {
+                foreach ($answers as $answer) {
+                    if (!empty($answer['questions'])) {
+                        $html .= $this->renderPreview($answer['questions'], "hidden");
+                    }
+                }
+            }
         }
 
         return $html;
@@ -104,6 +122,6 @@ class PreviewController extends Controller
         // $json = $request->getPost()->all();
         // $this->data_ary['questions'] = $this->renderQuestion(json_decode($json["json"], true));
         // var_dump($this->data_ary['questions']);die;
-        
+
     }
 }

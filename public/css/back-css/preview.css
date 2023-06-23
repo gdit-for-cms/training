@@ -35,3 +35,8 @@
 .answer input {
   width: 20px;
 }
+
+.button_view_result {
+  background-color: #ff991d;
+  font-size: 24px;
+}

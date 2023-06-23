@@ -29,8 +29,6 @@ class StepController extends Controller
         $this->data_ary['title'] = $this->title;
         $this->data_ary['content'] = 'step/index';
         $this->data_ary['steps'] = $this->obj_model->getAll();
-        View::render('admin/step/index.php', $this->data_ary);
-        exit;
     }
 
     public function create(Request $request) {
@@ -52,7 +50,7 @@ class StepController extends Controller
     public function deleteAction(Request $request) {
         $id = $request->getPost()->get('step_id');
         try {
-            $this->obj_model->destroyOne("step_id = $id");;
+            $this->obj_model->destroyOne("step_id = $id");
             return $this->successResponse();
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());

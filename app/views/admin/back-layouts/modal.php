@@ -8,9 +8,9 @@
         <div class="modal-body">
             <input class="input_question_add input-group form-control mb-3" type="text">
             <div class="form-check">
-                <input class="input_question_add_required form-check-input" type="checkbox" id="input_question_add_required" checked>
+                <input class="input_question_add_required form-check-input" type="checkbox" id="input_question_add_required">
                 <label class="form-check-label" for="input_question_add_required">
-                    Question has only 1 answer
+                    Question requires an answer choice
                 </label>
             </div>
             <div class="form-check">
@@ -41,7 +41,7 @@
             <div class="form-check">
                 <input class="input_question_edit_required form-check-input" type="checkbox" id="input_question_edit_required">
                 <label class="form-check-label" for="input_question_edit_required">
-                    Question has only 1 answer
+                    Question requires an answer choice
                 </label>
             </div>
             <div class="form-check">
