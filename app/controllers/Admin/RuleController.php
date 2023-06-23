@@ -59,7 +59,7 @@ class RuleController extends AppController
         $rule_edit = $this->obj_rule->getById($rule_id);
         $type_rule = $this->obj_type_rule->getById($rule_edit['type_rule_id']);
         $all_categories = $this->obj_rule->getAllCategories($rule_edit['type_rule_id']);
-        $getImageResults = $this->obj_image->getAllRelation([], 5);
+        $getImageResults = $this->obj_image->getAllRelation(['update-date-order' => 'desc', 'thumbnail' => 'yes'], 5);
         $this->data_ary['library_images'] = $getImageResults['images'];
         $this->data_ary['numberAllImage'] = $getImageResults['numbers_of_result'];
         $this->data_ary['all_categories'] = $all_categories;

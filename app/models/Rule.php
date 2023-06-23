@@ -61,6 +61,7 @@ class Rule extends Model
         if (!empty($req_method_ary['category'])) {
             array_push($condition_ary, '(r.large_category =\'' . $req_method_ary['category'] . '\' OR r.middle_category =\'' . $req_method_ary['category'] . '\'OR r.small_category=\'' . $req_method_ary['category'] . '\')');
         }
+
         if (!empty($req_method_ary['search'])) {
             array_push($condition_ary, ' (r.large_category LIKE \'%' . $req_method_ary['search'] . '%\' OR r.middle_category LIKE \'%' . $req_method_ary['search'] . '%\'OR r.small_category LIKE \'%'
                 . $req_method_ary['search'] . '%\'OR r.content LIKE \'%' . $req_method_ary['search'] . '%\'OR r.detail LIKE \'%' . $req_method_ary['search'] . '%\'OR r.note LIKE \'%' . $req_method_ary['search'] . '%\')');
@@ -70,7 +71,7 @@ class Rule extends Model
             $where_condiditon = 'WHERE' . $where_condiditon;
         }
         $query = 'SELECT *
-                FROM rules
+                FROM rules as r
                 '
             . $where_condiditon;
 

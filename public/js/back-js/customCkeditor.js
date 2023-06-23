@@ -31,9 +31,13 @@ $(document).ready(() => {
     const btnListImageTab = document.getElementById('btn-list-image-tab')
     const imgFileListUL = $('#images-file-list-ul')
     var selectLimitImage = document.getElementById('select-quantity')
-    const filterImageForm = document.getElementById('form-filter-image')
+    const filterImageForm = $('#form-filter-image')
+    const btnSearchImg = document.getElementById('btn-search-img')
+    const optionAllResult = document.getElementById('option-all-result')
+    const inputKeyword = document.getElementById('input-keyword')
+    const btnDeleteImages = document.querySelectorAll('.btn-delete-image')
     //tab upload
-    const uploadImagesForm = document.getElementById('upload-images-form')
+    const uploadImagesForm = $('#upload-images-form')
     const modalNotice = $('#modal-notice')
     const btnUploadTab = document.getElementById('btn-upload-tab')
     //tab format
@@ -97,30 +101,30 @@ $(document).ready(() => {
             btnListImageTab.classList.remove('active-interface')
         })
     }
-
-    uploadImagesForm.addEventListener('submit',(e)=>{
+    uploadImagesForm.on('submit',(e)=>{
         e.preventDefault()
-        var actionUrl = uploadImagesForm.getAttribute('action')
-        var form_data = new FormData(uploadImagesForm);
+        var actionUrl = uploadImagesForm.attr('action')
+        var form_data = new FormData(uploadImagesForm[0]);
         const fileNameSelects = document.querySelectorAll('.file-name-select')
         $.ajax({
             type: "POST",
             url: actionUrl,
             data: form_data,
             success: function(data) {
-                console.log(data);
                 if (data['success']) {
                     const newImages = Object.entries(data['result']['new_images'])
+                    filterImageForm[0].reset()
+                    btnSearchImg.click()
+                    updateSelectLimitValue(newImages.length+selectLimitImage.value)
                     addNewImageToList(newImages)
                     switchToListTab()
-                    uploadImagesForm.reset()
+                    uploadImagesForm[0].reset()
                     fileNameSelects.forEach(item=>{
                         item.innerHTML = ""
                     })
                 } else {
                     modalNotice.find('#modal-notice-content').html(`<h5 class='text-center text-danger'>${data['message']}</h5>`)
                     modalNotice.css('display', "block");
-                    showAllInputNotice(data['result'])
                 }
             },
             cache: false,
@@ -154,32 +158,71 @@ $(document).ready(() => {
             })
         })
     }
+    btnDeleteImages.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            let deleteID = btn.getAttribute('data-id');
+            let url = `/admin/image/delete?id=${deleteID}`
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        success: function () {
+                           btn.closest('.list-group-item').remove()
+                        }
+                    });
+                }
+            })
+        })
+    })
 
-    filterImageForm.addEventListener('submit',(e)=>{
+    btnSearchImg.addEventListener('click',(e)=>{
         e.preventDefault()
-        var actionUrl = filterImageForm.getAttribute('action')
-        var limit = 5
-        if (selectLimitImage) {
-            limit = selectLimitImage.value
-        }
-        const formData = new FormData(filterImageForm);
-        console.log(formData);
-        const keyword =  document.getElementsByName('keyword')[0].value
+        var actionUrl = filterImageForm.attr('action')
+        var queryString = filterImageForm.serialize()
+        var arrQueryString = queryString.split('&')
+        arrQueryString = arrQueryString.map((item)=>{
+            if(item.includes('keyword')){
+                keywordValue = item.substring(8,item.length)
+                newItem = 'keyword='.keywordValue
+                return newItem
+            }
+            else {
+                return item
+            }
+        })
+        queryString = arrQueryString.join('&')
         $.ajax({
-            type: "get",
-            url: `${actionUrl}?limit=${limit}&keyword=${keyword}`,
-            data: {
-                'keyword':keyword
-            },
+            type: "GET",
+            url: actionUrl,
+            data:  queryString,
             success: function(data) {
-                console.log(data);
+                const number_of_results = data['result']['numbers_of_result']
+                const thumbnail = data['result']['thumbnail']
                 if (data['success']) {
+                    updateSelectLimitValue(number_of_results)
                     const images = Object.entries(data['result']['images'])
                     setListImage(images)
+                    if (thumbnail=='no') {
+                        const thumnailElements = document.querySelectorAll('.img-thumbnail-item') 
+                        thumnailElements.forEach((item)=>{
+                            item.classList.add('d-none')
+                        })
+                    }
+                    else{
+                        const thumnailElements = document.querySelectorAll('.img-thumbnail-item') 
+                        thumnailElements.forEach((item)=>{
+                            item.classList.remove('d-none')
+                        })
+                    }
                 } 
-            },
-            error: function(jqXHR, textStatus, errorThrown) { 
-                console.log(errorThrown);
             },
             dataType: 'json',
             cache: false,
@@ -189,28 +232,22 @@ $(document).ready(() => {
     })
     
     selectLimitImage.addEventListener('change',()=>{
-        $.ajax({
-            type: "GET",
-            url: `/admin/image/getImages?limit=${selectLimitImage.value}`,
-            success: function(data) {
-                if (data['success']) {
-                    const images = Object.entries(data['result']['images'])
-                    setListImage(images)
-                } 
-            },
-            cache: false,
-            contentType: false,
-            processData: false
-        })
-
+        btnSearchImg.click()
     })
+
+    function updateSelectLimitValue(quantity){
+        if (optionAllResult) {
+            optionAllResult.value = quantity
+            optionAllResult.innerText = `All (${quantity})`
+        }
+    }
 
     function addEventTabFormat() {
         btnToListScreen.addEventListener('click', () => {
             switchToListTab()
         })
+        addEventChangeImage() 
         addEventChangeFormatImage()
-        addEventChangeImage()
         btnSettingImage.addEventListener('click', () => {
             if (cbInputSetAlt.checked==true) {
                 imgAltValue = ""
@@ -225,8 +262,9 @@ $(document).ready(() => {
             const viewFragment = htmlDP.toView(`<img class="img-align-${alignSelectedValue}" src="${imageUrl}" style="width:${imgWidth.value}px;" alt="${imgAltValue}" />`);
             const modelFragment = editorInstance.data.toModel(viewFragment);
             editorInstance.model.insertContent(modelFragment);
+            addEventChangeImage() 
             btnCloseImageSetting.click();
-            })   
+        })  
     }
 
     function addEventChangeImage(){
@@ -344,7 +382,7 @@ $(document).ready(() => {
     function createLiTagImgHtml(image){
         return `<li class="list-group-item d-flex col-12 ">
         <div class="col-2 d-flex justify-content-center align-items-center">
-            <img class="img-thumbnail" src="/${image['path']}" alt="">
+            <img class="img-thumbnail-item img-thumbnail " src="/${image['path']}" alt="">
         </div>
         <div class="col-8">
             <div class="d-flex flex-column ml-2">
@@ -354,7 +392,7 @@ $(document).ready(() => {
             </div>
             <div class="d-flex justify-content-around w-75">
                 <button class="btn-basic">Edit</button>
-                <button class="btn-basic">Devare</button>
+                <button data-id="${image['id']}" data-path="${image['path']}" data-img-name="${image['name']}" class="btn-basic">Delete</button>
                 <button class="btn-basic">Properties</button>
                 <button data-path="${image['path']}" data-img-name="${image['name']}" class="btn-basic btn-open-preview">Preview</button>
             </div>
@@ -367,23 +405,6 @@ $(document).ready(() => {
     </li>`
     }
 
-    function showAllInputNotice(result) {
-        var inputIds = ['upload-photo1', 'upload-photo2', 'upload-photo3', 'upload-photo4', 'upload-photo5']
-        if (result['failed']) {
-            inputIds.forEach((id) => {
-                setMessageInput(result, 'failed', id)
-            })
-        }
-    }
-
-    function setMessageInput(result, status, inputId) {
-        if (result[status][inputId]) {
-            const message = {
-                'type': status,
-                'msg': result[status][inputId]
-            }
-        }
-    }
 
     function switchToListTab() {
         btnListImageTab.click()
@@ -415,6 +436,14 @@ $(document).ready(() => {
     btnCloseImageSetting.addEventListener('click',()=>{
         modalImageSettings.style.display = 'none'
     })
-       
+   
+    }
+    function removeSqlInJection(string) {
+        sqlKeyword = ['SELECT', 'UNION', 'DROP', 'DELETE', 'WHERE', 'FROM', 'SET', 'ALTER', 'INSERT', 'UPDATE', 'ADD', 'OR', 'AND', 'CREATE', 'JOIN']
+        string = string.replace(/[^A-Za-z\s\u00C0-\u1EF9]/g, '');
+        sqlKeyword.forEach((item) => {
+            string = string.replace(item, '')
+        })
+        return string
     }
 })

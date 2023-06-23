@@ -154,14 +154,14 @@
                             </form>
                         </div>
                         <div class="tab-pane " id="list" role="tabpanel" aria-labelledby="btn-list-image-tab">
-                            <div class="search-option ">
-                                <form action="/admin/image/getImages" id="form-filter-image" method="post">
+                            <form action="/admin/image/getImages" id="form-filter-image" name="form-filter-image" method="post">
+                                <div class="search-option ">
                                     <div class="row justify-content-around align-items-center  mt-2">
                                         <div class="col-3 d-flex justify-content-start ">
                                             <label class="search-option-label">File classification</label>
                                         </div>
                                         <div class="col-7">
-                                            <select id="my-select" class="form-select" name="">
+                                            <select id="my-select" class="form-select" name="current-location">
                                                 <option>Current location</option>
                                             </select>
                                         </div>
@@ -173,10 +173,10 @@
                                             <label class="search-option-label">Keyword</label>
                                         </div>
                                         <div class="col-7">
-                                            <input class="form-control" type="text" name="keyword">
+                                            <input class="form-control" type="text" id="input-keyword" name="keyword">
                                         </div>
                                         <div class="col-2">
-                                            <button class="btn-basic" type="submit">Search</button>
+                                            <button class="btn-basic" id="btn-search-img" type="submit">Search</button>
                                         </div>
                                     </div>
                                     <div class="row justify-content-around align-items-center  mt-2">
@@ -187,13 +187,13 @@
                                             <div class="radio-btn-group-date d-flex">
                                                 <label for="">Update date</label>
                                                 <div class="form-check ml-4">
-                                                    <input class="form-check-input" type="radio" name="update-date" id="desc">
+                                                    <input class="form-check-input" type="radio" checked name="update-date-order" value="desc" id="desc">
                                                     <label class="form-check-label" for="desc">
                                                         Descending
                                                     </label>
                                                 </div>
                                                 <div class="form-check ml-4">
-                                                    <input class="form-check-input" type="radio" name="update-date" id="asc">
+                                                    <input class="form-check-input" type="radio" name="update-date-order" value="asc" id="asc">
                                                     <label class="form-check-label" for="asc">
                                                         Ascending
                                                     </label>
@@ -210,13 +210,13 @@
                                         <div class=" col-7">
                                             <div class="radio-btn-group-thumnail d-flex">
                                                 <div class="form-check ml-4">
-                                                    <input class="form-check-input" type="radio" name="thumbnail" id="Non">
-                                                    <label class="form-check-label" for="Non">
+                                                    <input class="form-check-input" type="radio" name="thumbnail" value="no" id="non">
+                                                    <label class="form-check-label" for="non">
                                                         Non-representation
                                                     </label>
                                                 </div>
                                                 <div class="form-check ml-4">
-                                                    <input class="form-check-input" type="radio" name="thumbnail" id="mean">
+                                                    <input class="form-check-input" type="radio" checked name="thumbnail" value="yes" id="mean">
                                                     <label class="form-check-label" for="mean">
                                                         Mean
                                                     </label>
@@ -227,25 +227,24 @@
 
                                         </div>
                                     </div>
-                                </form>
-                            </div>
-                            <div class="select-quantity ">
-                                <div class="row justify-content-end align-items-end mt-3">
-                                    <select id="select-quantity" class="form-select w-25 mr-4" name="select-quantity">
-                                        <option value="5">5 pieces</option>
-                                        <option value="10">10 pieces</option>
-                                        <option value="15">15 pieces</option>
-                                        <?php
-                                        if (!empty($numberAllImage)) {
-                                        ?>
-                                            <option value="<?php echo $numberAllImage ?>">All (<?php echo $numberAllImage ?>)</option>
-                                        <?php
-                                        }
-                                        ?>
-                                    </select>
                                 </div>
-                            </div>
-
+                                <div class="select-quantity ">
+                                    <div class="row justify-content-end align-items-end mt-3">
+                                        <select id="select-quantity" class="form-select w-25 mr-4" name="limit">
+                                            <option value="5">5 pieces</option>
+                                            <option value="10">10 pieces</option>
+                                            <option value="15">15 pieces</option>
+                                            <?php
+                                            if (!empty($numberAllImage)) {
+                                            ?>
+                                                <option id="option-all-result" value="<?php echo $numberAllImage ?>">All (<?php echo $numberAllImage ?>)</option>
+                                            <?php
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
                             <div class="images-file-list">
                                 <div class="row justify-content-around align-items-center">
                                     <ul id="images-file-list-ul" class="list-group d-flex flex-column  align-items-center ">
@@ -254,8 +253,8 @@
                                             foreach ($library_images as $image) {
                                         ?>
                                                 <li class="list-group-item d-flex col-12 ">
-                                                    <div class="col-2 d-flex justify-content-center align-items-center">
-                                                        <img class="img-thumbnail" src="<?php echo '/' . $image['path'] ?>" alt="">
+                                                    <div class="col-2 d-flex justify-content-center align-items-center ">
+                                                        <img class="img-thumbnail-item img-thumbnail" src="<?php echo '/' . $image['path'] ?>" alt="">
                                                     </div>
                                                     <div class="col-8">
                                                         <div class="d-flex flex-column ml-2">
@@ -265,9 +264,9 @@
                                                         </div>
                                                         <div class="d-flex justify-content-around w-75">
                                                             <button class="btn-basic">Edit</button>
-                                                            <button class="btn-basic">Delete</button>
+                                                            <button data-id="<?php echo $image['id'] ?>" data-path="<?php echo $image['path'] ?>" data-img-name="<?php echo $image['name'] ?>" class="btn-basic btn-delete-image">Delete</button>
                                                             <button class="btn-basic">Properties</button>
-                                                            <a href="" data-path="<?php echo $image['path'] ?>" data-img-name="<?php echo $image['name'] ?>" class="btn-basic btn-open-preview">Preview</a>
+                                                            <button data-path="<?php echo $image['path'] ?>" data-img-name="<?php echo $image['name'] ?>" class="btn-basic btn-open-preview">Preview</button>
                                                         </div>
                                                     </div>
                                                     <div class="col-2">

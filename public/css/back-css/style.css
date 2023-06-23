@@ -466,8 +466,7 @@ a {
 .modal-images-setting .file-name-message{
   min-height: 48px;
 }
- .modal-images-setting .images-file-list .list-group-item:first-child{
- }
+ 
  .images-file-list .list-group-item{
     border-top: none;
     border-left: none;
