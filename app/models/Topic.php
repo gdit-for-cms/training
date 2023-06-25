@@ -11,8 +11,7 @@ use Core\QueryBuilder;
  *
  * PHP version 7.0
  */
-class Topic extends Model
-{
+class Topic extends Model {
     use QueryBuilder;
     private $_table = 'topic';
 
@@ -21,33 +20,29 @@ class Topic extends Model
      *
      * @return string
      */
-    public static function checkExist($name)
-    {
-        $db = static::getDB();
+    public static function checkExist($name) {
+        $db   = static::getDB();
         $stmt = $db->query("SELECT EXISTS(SELECT * FROM topic WHERE name = '$name') AS mycheck LIMIT 1")->fetch(PDO::FETCH_ASSOC);
         return $stmt;
     }
 
-    public static function all()
-    {
-        $db = static::getDB();
+    public static function all() {
+        $db   = static::getDB();
         $stmt = $db->query('SELECT * FROM `topic` ');
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public static function create($name)
-    {
+    public static function create($name) {
         $model = new Topic();
         return $model->insert([
-            'name' => $name, 
+            'name' => $name,
         ]);
     }
 
-    public static function delete($name)
-    {
+    public static function delete($name) {
         $model = new Topic();
         return self::insert([
-            'name' => $name, 
+            'name' => $name,
         ]);
     }
 }

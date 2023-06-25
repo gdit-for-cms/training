@@ -9,8 +9,7 @@ use App\models\Room;
 use Core\Http\Request;
 use Core\Http\ResponseTrait;
 
-class AdminController extends AppController
-{
+class AdminController extends AppController {
     use ResponseTrait;
 
     public array $data_ary;
@@ -18,27 +17,23 @@ class AdminController extends AppController
     public $title = 'Chủ';
     public object $obj_model;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->obj_model = new User;
     }
 
-    public function indexAction()
-    {
+    public function indexAction() {
         $this->data_ary['content'] = 'dashboard';
     }
 
-    public function showAction(Request $request)
-    {
-        $user = $request->getUser();
+    public function showAction(Request $request) {
+        $user     = $request->getUser();
         $user_ary = $this->obj_model->getById($user['id'])[0];
 
         $this->data_ary['content'] = 'show';
-        $this->data_ary['user'] = $user_ary;
+        $this->data_ary['user']    = $user_ary;
     }
 
-    public function uploadAvatar(Request $request)
-    {
+    public function uploadAvatar(Request $request) {
         try {
             $image_file = $request->getFiles()->get('image');
 
@@ -47,12 +42,12 @@ class AdminController extends AppController
             }
 
             $user = $request->getUser();
-            $id = $user['id'];
+            $id   = $user['id'];
 
             $before_avatar = $this->obj_model->getById($id)[0]['avatar_image'];
 
             $image_dir = 'ckfinder/userfiles/images/avatars/';
-            $name = $id . '_' . date("Y-m-d_h-i-s") . '_' . $image_file['name'];
+            $name      = $id . '_' . date("Y-m-d_h-i-s") . '_' . $image_file['name'];
             move_uploaded_file($image_file["tmp_name"], $image_dir . $name);
 
             $this->obj_model->updateOne(
@@ -71,11 +66,11 @@ class AdminController extends AppController
             return $this->successResponse();
         } catch (\Throwable $th) {
             return $this->errorResponse('An error occurred during upload');
-        };
+        }
+        ;
     }
 
-    public function deleteAvatar(Request $request)
-    {
+    public function deleteAvatar(Request $request) {
         $user = $request->getUser();
         if (empty($user['avatar_image'])) {
             return $this->errorResponse('Please update avatar');
@@ -97,13 +92,11 @@ class AdminController extends AppController
         return $this->successResponse();
     }
 
-    public function diffAction()
-    {
+    public function diffAction() {
         $this->data_ary['content'] = 'diff-file/diff';
     }
 
-    public function compareAction()
-    {
+    public function compareAction() {
         if (isset($_POST['importSubmit'])) {
 
             $fileAccept = array('application/octet-stream', 'application/inc', 'application/php');
@@ -117,7 +110,7 @@ class AdminController extends AppController
 
                 // Read the import file contents
                 $before = fopen($_FILES['file1']['tmp_name'], 'r');
-                $after = fopen($_FILES['file2']['tmp_name'], 'r');
+                $after  = fopen($_FILES['file2']['tmp_name'], 'r');
 
                 // Set variables form import file
                 $variableInFile1 = [];
@@ -128,15 +121,16 @@ class AdminController extends AppController
                 $variableGLOBALS2 = [];
 
                 $findArray = [];
-                $inBefore = [];
+                $inBefore  = [];
 
                 $data = file_get_contents($_FILES['file1']['tmp_name']);
                 $data = explode("\n", $data);
                 for ($line = 0; $line < count($data); $line++) {
                     if (preg_match('/setDefineArray\(\'(.+?)\', \$(.+?)\)/i', $data[$line], $match)) {
-                        $variableGLOBALS1[] = $match[1];
+                        $variableGLOBALS1[]  = $match[1];
                         $inBefore[$match[1]] = array($match[2], $line);
-                    };
+                    }
+                    ;
                 }
 
                 foreach ($variableGLOBALS1 as $each) {
@@ -178,12 +172,11 @@ class AdminController extends AppController
                 exit;
             } else {
                 $this->data_ary['uploadStatus'] = 'failed';
-                $this->data_ary['content'] = 'diff-file/compare';
+                $this->data_ary['content']      = 'diff-file/compare';
             }
         }
     }
-    public function hehe($data, $index)
-    {
+    public function hehe($data, $index) {
         for ($line = 0; $line < $index; $line++) {
             if (preg_match('/\$(.+?)( = array\()/i', $data[$line], $match)) {
                 for ($i = $line + 1; $i < count($data); $i++) {
@@ -200,9 +193,8 @@ class AdminController extends AppController
     }
 
 
-    public function executeImportFile($fileImport, $variableInFile, $variableGLOBALS)
-    {
-        while (($line  = fgets($fileImport))) {
+    public function executeImportFile($fileImport, $variableInFile, $variableGLOBALS) {
+        while (($line = fgets($fileImport))) {
             if (preg_match('/define\("(.+?)\", \"(.+?)\"/i', $line, $match)) {
                 $i = 1;
                 if (isset($variableInFile[$match[1]])) {
@@ -214,7 +206,8 @@ class AdminController extends AppController
                 $variableInFile[$match[1]] = '';
             } else if (preg_match('/setDefineArray\(\'(.+?)\'/i', $line, $match)) {
                 $variableGLOBALS[] = $match[1];
-            };
+            }
+            ;
 
             // Write data to init file
 
@@ -223,12 +216,12 @@ class AdminController extends AppController
         return array($variableInFile, $variableGLOBALS);
     }
 
-    public function getDefineArray($data, $line)
-    {
+    public function getDefineArray($data, $line) {
         if (preg_match('/setDefineArray\(\'(.+?)\'/i', $data[$line], $match)) {
             // $variableGLOBALS[] = $match[1];
             print_r($match);
             echo $data[$line];
-        };
+        }
+        ;
     }
 }

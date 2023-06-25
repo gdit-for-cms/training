@@ -8,18 +8,15 @@ use Core\Controller;
 use Core\View;
 use Core\Http\Request;
 
-class QuestionController extends  AppController
-{
+class QuestionController extends AppController {
     public $title = "Question";
     public array $data_ary;
 
-    protected function after()
-    {
+    protected function after() {
         View::render('admin/back-layouts/master.php', $this->data_ary);
     }
 
-    public function indexAction()
-    {
+    public function indexAction() {
         $this->data_ary['content'] = 'question/list';
     }
 }

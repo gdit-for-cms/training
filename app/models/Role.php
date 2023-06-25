@@ -13,7 +13,7 @@ use Core\QueryBuilder;
  */
 class Role extends Model {
     use QueryBuilder;
-    
+
     private $_table = 'role';
 
     /**

@@ -5,8 +5,7 @@ namespace App\Controllers;
 use Core\Controller;
 use Core\View;
 
-class DefaultController extends Controller
-{   
+class DefaultController extends Controller {
     public array $data_ary;
 
     public $title = 'default';
@@ -15,9 +14,8 @@ class DefaultController extends Controller
      *
      * @return void
      */
-    public function indexAction()
-    {   
-        $this->data_ary['title'] = $this->title;
+    public function indexAction() {
+        $this->data_ary['title']   = $this->title;
         $this->data_ary['content'] = 'admin/dashboard';
         View::render('admin/back-layouts/master.php', $this->data_ary);
     }

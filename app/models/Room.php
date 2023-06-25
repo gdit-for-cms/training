@@ -10,8 +10,7 @@ use Core\QueryBuilder;
  *
  * PHP version 7.0
  */
-class Room extends Model
-{
+class Room extends Model {
     use QueryBuilder;
 
     private $_table = 'room';
@@ -22,44 +21,36 @@ class Room extends Model
      * @return array
      */
 
-    public static function getAll()
-    {
+    public static function getAll() {
         return (new self)->latest()->get();
     }
 
-    public function create($data)
-    {
+    public function create($data) {
         return $this->insert($data);
     }
 
-    public function getBy($column, $operator, $value)
-    {
+    public function getBy($column, $operator, $value) {
         return $this->where($column, $operator, $value)->get();
     }
 
-    public function getById($id, $column = '*')
-    {
+    public function getById($id, $column = '*') {
         return $this->find($id, $column);
     }
 
-    public function updateOne($data, $condition)
-    {
+    public function updateOne($data, $condition) {
         return $this->update($data, $condition);
     }
 
-    public function destroyOne($condition)
-    {
+    public function destroyOne($condition) {
         return $this->destroy($condition);
     }
-    public static function getPermissionsAccess($id)
-    {
+    public static function getPermissionsAccess($id) {
         return PermissionRoom::getPermissionByRoom($id);
     }
 
-    public static function rules($change = '', $value = [])
-    {
+    public static function rules($change = '', $value = []) {
         $rules_ary = [
-            'name' => [
+            'name'        => [
                 'required',
                 'name',
                 'filled',

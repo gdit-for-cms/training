@@ -11,8 +11,7 @@ use Core\QueryBuilder;
  *
  * PHP version 7.0
  */
-class User extends Model
-{
+class User extends Model {
     use QueryBuilder;
 
     private $_table = 'user';
@@ -22,33 +21,29 @@ class User extends Model
      *
      * @return array
      */
-    public function getAll()
-    {
+    public function getAll() {
         return $this->all();
     }
 
-    public function getBy($column, $operator, $value, $select_column = '*')
-    {
+    public function getBy($column, $operator, $value, $select_column = '*') {
         return $this->where($column, $operator, $value)->get($select_column);
     }
 
-    public function getById($id)
-    {
-        $db = static::getDB();
-        $query = 'SELECT u.id, u.name, u.email, u.role_id, u.room_id, u.position_id, u.gender, u.avatar_image, role.name role_name, room.name room_name, position.name position_name
+    public function getById($id) {
+        $db          = static::getDB();
+        $query       = 'SELECT u.id, u.name, u.email, u.role_id, u.room_id, u.position_id, u.gender, u.avatar_image, role.name role_name, room.name room_name, position.name position_name
                     FROM user AS u
                     JOIN role ON u.role_id = role.id
                     JOIN room ON u.room_id = room.id
                     JOIN position ON u.position_id = position.id
                     WHERE u.id =' . $id .
             ' ORDER BY u.id DESC';
-        $stmt = $db->query($query);
+        $stmt        = $db->query($query);
         $results_ary = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $results_ary;
     }
 
-    public function getByRelation($req_method_ary, $name, $results_per_page = 5)
-    {
+    public function getByRelation($req_method_ary, $name, $results_per_page = 5) {
         $db = static::getDB();
         $id = $req_method_ary['id'];
 
@@ -65,47 +60,44 @@ class User extends Model
                 $req_method_ary['page'] = '1';
             }
 
-            $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
-            $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
+            $page_first_result = ((int) $req_method_ary['page'] - 1) * $results_per_page;
+            $limit_query       = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
 
-            $stmt_count = $db->query($query);
+            $stmt_count      = $db->query($query);
             $numbers_of_page = count($stmt_count->fetchAll(PDO::FETCH_ASSOC));
-            $stmt = $db->query($query . " " . $limit_query);
-            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results);
+            $stmt            = $db->query($query . " " . $limit_query);
+            $results         = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $results_ary     = array('numbers_of_page' => $numbers_of_page, 'results' => $results);
 
             return $results_ary;
         } else {
-            $stmt = $db->query($query);
+            $stmt        = $db->query($query);
             $results_ary = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $results_ary;
         }
     }
 
-    public function create($data)
-    {
+    public function create($data) {
         return $this->insert($data);
     }
 
-    public function updateOne($data, $condition)
-    {
+    public function updateOne($data, $condition) {
         return $this->update($data, $condition);
     }
 
-    public function updateMultiByName($data, $column)
-    {
-        $condition_query = '';
+    public function updateMultiByName($data, $column) {
+        $condition_query      = '';
         $condition_value_name = '';
 
         foreach ($data as $key => $value) {
-            $condition_query .= 'WHEN ' . '\'' . $key . '\'' .  ' THEN ' . $value . ' ';
+            $condition_query .= 'WHEN ' . '\'' . $key . '\'' . ' THEN ' . $value . ' ';
             if ($condition_value_name == '') {
                 $condition_value_name .= '\'' . $key . '\'';
             } else {
                 $condition_value_name .= ', ' . '\'' . $key . '\'';
             }
         }
-        $db = static::getDB();
+        $db   = static::getDB();
         $stmt = $db->query('UPDATE user 
                             SET ' . $column . ' = CASE `name` '
             . $condition_query .
@@ -114,22 +106,20 @@ class User extends Model
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function destroyOne($condition)
-    {
+    public function destroyOne($condition) {
         return $this->destroy($condition);
     }
 
-    public static function getAllRelation($req_method_ary = array(), $results_per_page = 10)
-    {
-        $db = static::getDB();
+    public static function getAllRelation($req_method_ary = array(), $results_per_page = 10) {
+        $db              = static::getDB();
         $condition_query = "";
 
         if (!isset($req_method_ary['page'])) {
             $req_method_ary['page'] = '1';
         }
 
-        $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
-        $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
+        $page_first_result = ((int) $req_method_ary['page'] - 1) * $results_per_page;
+        $limit_query       = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
 
         unset($req_method_ary['page']);
         foreach ($req_method_ary as $key => $value) {
@@ -158,43 +148,42 @@ class User extends Model
             . $condition_query .
             ' ORDER BY u.id DESC';
 
-        $stmt_count = $db->query($query);
+        $stmt_count      = $db->query($query);
         $numbers_of_page = count($stmt_count->fetchAll(PDO::FETCH_ASSOC));
-        $stmt = $db->query($query . ' ' . $limit_query);
-        $results_query = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results_query);
+        $stmt            = $db->query($query . ' ' . $limit_query);
+        $results_query   = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results_ary     = array('numbers_of_page' => $numbers_of_page, 'results' => $results_query);
 
         return $results_ary;
     }
 
-    public function rules($change = '', $value = array())
-    {
+    public function rules($change = '', $value = array()) {
         $rules_ary = array(
-            'name' => array(
+            'name'        => array(
                 'required',
                 'name',
                 'filled',
                 'maxLen:30',
             ),
-            'email' => array(
+            'email'       => array(
                 'required',
                 'email',
                 'filled',
             ),
-            'gender' => array(
+            'gender'      => array(
                 'required',
                 'gender'
             ),
-            'password' => array(
+            'password'    => array(
                 'required',
                 'password',
                 'filled',
                 'minLen:8',
             ),
-            'role_id' => array(
+            'role_id'     => array(
                 'required',
             ),
-            'room_id' => array(
+            'room_id'     => array(
                 'required',
             ),
             'position_id' => array(

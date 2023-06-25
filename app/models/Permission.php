@@ -11,8 +11,7 @@ use Core\QueryBuilder;
  *
  * PHP version 7.0
  */
-class Permission extends Model
-{
+class Permission extends Model {
     use QueryBuilder;
 
     private $_table = 'permissions';
@@ -22,24 +21,20 @@ class Permission extends Model
      *
      * @return array
      */
-    public static function getAll()
-    {
+    public static function getAll() {
         return (new self)->all();
     }
 
 
-    public function create($data)
-    {
+    public function create($data) {
         return $this->insert($data);
     }
 
-    public function getBy($column, $operator, $value)
-    {
+    public function getBy($column, $operator, $value) {
         return $this->where($column, $operator, $value)->get();
     }
 
-    public function getById($id, $column)
-    {
+    public function getById($id, $column) {
         return $this->find($id, $column);
     }
 }

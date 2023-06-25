@@ -6,22 +6,18 @@ namespace App\Controllers\Admin;
 use App\Controllers\Admin\AppController;
 use Core\View;
 
-class ExamController extends AppController
-{
+class ExamController extends AppController {
     public array $data_ary;
 
-    protected function after()
-    {
+    protected function after() {
         View::render('admin/back-layouts/master.php', $this->data_ary);
     }
 
-    public function indexAction()
-    {
+    public function indexAction() {
         $this->data_ary['content'] = 'exam/list';
     }
 
-    public function newAction()
-    {
+    public function newAction() {
         $this->data_ary['content'] = 'exam/new';
     }
 }

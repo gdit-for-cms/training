@@ -81,14 +81,14 @@ if (!function_exists('minLen')) {
 }
 
 if (!function_exists('pageExisted')) {
-    function pageExisted($value) { 
+    function pageExisted($value) {
         $controller_ary = array_diff(scandir('../app/controllers/User'), array('..', '.'));
-        $result_ary = array();
-        foreach($controller_ary as $filename) {
+        $result_ary     = array();
+        foreach ($controller_ary as $filename) {
             array_push($result_ary, strtolower((preg_split('/(?=[A-Z])/', $filename)[1])));
         }
         $result_ary = array_diff($value, $result_ary);
-        
+
         if (empty($result_ary)) {
             return TRUE;
         } else {

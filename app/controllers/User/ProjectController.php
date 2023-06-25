@@ -8,13 +8,11 @@ use App\models\User;
 use Core\Http\Request;
 use Core\Http\ResponseTrait;
 
-class ProjectController extends Controller
-{
+class ProjectController extends Controller {
     use ResponseTrait;
     public array $data;
 
-    protected function before()
-    {  
+    protected function before() {
         if (!isLogged()) {
             header('Location: /');
             exit;
@@ -28,13 +26,11 @@ class ProjectController extends Controller
         $this->data['title'] = 'Homepage';
     }
 
-    protected function after() 
-    {
-        View::render('homepage/front-layouts/master.php',$this->data);
+    protected function after() {
+        View::render('homepage/front-layouts/master.php', $this->data);
     }
 
-    public function homepageAction()
-    {
+    public function homepageAction() {
         $this->data['content'] = 'home/homepage';
     }
 }

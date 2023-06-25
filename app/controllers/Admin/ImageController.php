@@ -6,21 +6,18 @@ use App\Models\Image;
 use Core\Http\Request;
 use Core\Http\ResponseTrait;
 
-class ImageController extends AppController
-{
+class ImageController extends AppController {
     use ResponseTrait;
     public object $obj_image;
 
     public array $data_ary;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->obj_image = new Image;
     }
 
-    public function getImagesAction(Request $request)
-    {
-        $limit = $request->getGet()->get('limit') ? $request->getGet()->get('limit') : 5;
+    public function getImagesAction(Request $request) {
+        $limit   = $request->getGet()->get('limit') ? $request->getGet()->get('limit') : 5;
         $get_ary = $request->getGet()->all();
         array_shift($get_ary);
         $result = $this->obj_image->getAllRelation($get_ary, $limit);
@@ -31,10 +28,9 @@ class ImageController extends AppController
         }
     }
 
-    public function deleteAction(Request $request)
-    {
+    public function deleteAction(Request $request) {
         $image_id = $request->getGet()->get('id');
-        $image = $this->obj_image->getById($image_id, '*');
+        $image    = $this->obj_image->getById($image_id, '*');
         if (!empty($image['path'])) {
             unlink($image['path']);
         }
@@ -45,20 +41,19 @@ class ImageController extends AppController
             return $this->responseImageQuery(false, 'Delete images failed', []);
         }
     }
-    public function storeAction(Request $request)
-    {
-        $post = $request->getPost()->all();
-        $files =  $request->getFiles();
-        $data_upload = array();
-        $all_results = array();
+    public function storeAction(Request $request) {
+        $post            = $request->getPost()->all();
+        $files           = $request->getFiles();
+        $data_upload     = array();
+        $all_results     = array();
         $add_item_result = [
             'all_results' => [],
             'data_upload' => [],
         ];
         try {
             for ($i = 1; $i <= 5; $i++) {
-                $name_key = 'name-file' . $i;
-                $file_key = 'upload-photo' . $i;
+                $name_key        = 'name-file' . $i;
+                $file_key        = 'upload-photo' . $i;
                 $add_item_result = $this->addItemUpload($post[$name_key], $files->get($file_key), $file_key, $add_item_result);
             }
             $data_upload = $add_item_result['data_upload'];
@@ -78,10 +73,10 @@ class ImageController extends AppController
                                     'name' => $value['name'],
                                     'path' => $file_path
                                 ];
-                                $result = $this->obj_image->create($file_data);
+                                $result    = $this->obj_image->create($file_data);
                                 if ($result) {
                                     $all_results['success'][$key] = 'Uploaded!';
-                                    $get_data_from_db = $this->obj_image->getBy('path', '=', $file_path);
+                                    $get_data_from_db             = $this->obj_image->getBy('path', '=', $file_path);
                                     if ($get_data_from_db) {
                                         $all_results['new_images'][$key] = $get_data_from_db;
                                     }
@@ -112,8 +107,7 @@ class ImageController extends AppController
     }
 
 
-    public function addItemUpload($name, $file, $file_key, $add_item_result)
-    {
+    public function addItemUpload($name, $file, $file_key, $add_item_result) {
         if (!empty($name) && ($file['size'] > 0)) {
             if ($file['size'] < 4000000) {
                 $add_item_result['data_upload'][$file_key] = [
@@ -128,12 +122,11 @@ class ImageController extends AppController
         }
         return $add_item_result;
     }
-    public function responseImageQuery($status, $message, $result = [])
-    {
+    public function responseImageQuery($status, $message, $result = []) {
         $res = [
             "success" => $status,
             "message" => $message,
-            "result" => $result
+            "result"  => $result
         ];
         header('Content-Type: application/json');
         echo json_encode($res);

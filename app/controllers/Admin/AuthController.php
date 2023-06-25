@@ -6,12 +6,10 @@ use Core\View;
 use App\models\User;
 use Core\Http\Request;
 
-class AuthController extends AppController
-{
+class AuthController extends AppController {
     public array $data_ary;
 
-    protected function before()
-    {
+    protected function before() {
         if (checkAuth()) {
             header('Location: /admin');
             exit;
@@ -20,23 +18,20 @@ class AuthController extends AppController
         $this->data_ary['title'] = 'Login';
     }
 
-    protected function after()
-    {
+    protected function after() {
     }
 
-    public function loginAction()
-    {
+    public function loginAction() {
         View::render('admin/auth/login.php');
     }
 
-    public function loginProcessAction(Request $request)
-    {
+    public function loginProcessAction(Request $request) {
         $post = $request->getPost();
 
-        $email = $post->get('email');
+        $email    = $post->get('email');
         $password = $post->get('password');
 
-        $user = new User();
+        $user      = new User();
         $inputUser = $user->table('user')
             ->where('email', '=', $email)
             ->where('password', '=', $password)
@@ -50,12 +45,12 @@ class AuthController extends AppController
         }
 
         $data_ary = [
-            'id' => $inputUser['id'],
-            'name' => $inputUser['name'],
-            'email' => $inputUser['email'],
-            'role_id' => $inputUser['role_id'],
-            'room_id' => $inputUser['room_id'],
-            'position_id' => $inputUser['position_id'],
+            'id'           => $inputUser['id'],
+            'name'         => $inputUser['name'],
+            'email'        => $inputUser['email'],
+            'role_id'      => $inputUser['role_id'],
+            'room_id'      => $inputUser['room_id'],
+            'position_id'  => $inputUser['position_id'],
             'avatar_image' => $inputUser['avatar_image'],
         ];
 
@@ -65,8 +60,7 @@ class AuthController extends AppController
         exit;
     }
 
-    public function logout(Request $request)
-    {
+    public function logout(Request $request) {
         $request->deleteUser();
 
         header('Location: /');

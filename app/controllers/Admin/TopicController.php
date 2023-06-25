@@ -10,24 +10,20 @@ use Core\Http\Request;
 use Core\Http\Response;
 use Core\Http\ResponseTrait;
 
-class TopicController  extends AppController
-{
+class TopicController extends AppController {
     use ResponseTrait;
     public array $data_ary;
 
-    public function indexAction()
-    {
-        $this->data_ary['topics'] = Topic::all();
+    public function indexAction() {
+        $this->data_ary['topics']  = Topic::all();
         $this->data_ary['content'] = 'topic/list';
     }
 
-    public function newAction()
-    {
+    public function newAction() {
         $this->data_ary['content'] = 'topic/new';
     }
 
-    public function create(Request $request)
-    {
+    public function create(Request $request) {
         try {
             $name = $request->getPost()['name'];
             Topic::create($name);
@@ -37,8 +33,7 @@ class TopicController  extends AppController
         }
     }
 
-    public function delete(Request $request)
-    {
+    public function delete(Request $request) {
         // try {
         //     $id = $request->getGet()->get('id');
         //     // Topic::de($name);
@@ -48,10 +43,9 @@ class TopicController  extends AppController
         // }
     }
 
-    public function apiCheckName(Request $request)
-    {
-        $name = $request->getGet()['name'];
+    public function apiCheckName(Request $request) {
+        $name  = $request->getGet()['name'];
         $check = Topic::checkExist($name);
-        return $this->successResponse((int)$check['mycheck']);
+        return $this->successResponse((int) $check['mycheck']);
     }
 }

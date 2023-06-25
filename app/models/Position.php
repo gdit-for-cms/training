@@ -51,7 +51,7 @@ class Position extends Model {
 
     public static function rules($change = '', $value = []) {
         $rules_ary = [
-            'name' => [
+            'name'        => [
                 'required',
                 'name',
                 'filled',
@@ -73,8 +73,8 @@ class Position extends Model {
                 foreach ($value as $each) {
                     if (array_key_exists($each, $rules_ary)) {
                         unset($rules_ary[$each]);
-                    } 
-                } 
+                    }
+                }
                 return $rules_ary;
                 break;
             case 'replace':

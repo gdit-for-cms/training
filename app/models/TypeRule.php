@@ -11,8 +11,7 @@ use Core\QueryBuilder;
  *
  * PHP version 7.0
  */
-class TypeRule extends Model
-{
+class TypeRule extends Model {
     use QueryBuilder;
 
     private $_table = 'types_rule';
@@ -22,33 +21,27 @@ class TypeRule extends Model
      *
      * @return array
      */
-    public function getAll()
-    {
+    public function getAll() {
         return $this->all();
     }
 
-    public function getBy($column, $operator, $value, $select_column = '*')
-    {
+    public function getBy($column, $operator, $value, $select_column = '*') {
         return $this->where($column, $operator, $value)->get($select_column);
     }
 
-    public function getById($id)
-    {
+    public function getById($id) {
         return $this->where('id', '=', $id)->get('*')[0];
     }
 
-    public function create($data)
-    {
+    public function create($data) {
         return $this->insert($data);
     }
 
-    public function updateOne($data, $condition)
-    {
+    public function updateOne($data, $condition) {
         return $this->update($data, $condition);
     }
 
-    public function destroyOne($condition)
-    {
+    public function destroyOne($condition) {
         return $this->destroy($condition);
     }
 }

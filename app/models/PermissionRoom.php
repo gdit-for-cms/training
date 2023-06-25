@@ -11,8 +11,7 @@ use Core\QueryBuilder;
  *
  * PHP version 7.0
  */
-class PermissionRoom extends Model
-{
+class PermissionRoom extends Model {
     use QueryBuilder;
 
     private $_table = 'permission_room';
@@ -22,27 +21,22 @@ class PermissionRoom extends Model
      *
      * @return array
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->permission = new Permission;
     }
-    public static function getAll()
-    {
+    public static function getAll() {
         return (new self)->all();
     }
 
-    public function create($data)
-    {
+    public function create($data) {
         return $this->insert($data);
     }
-    public function destroyOne($condition)
-    {
+    public function destroyOne($condition) {
         return $this->destroy($condition);
     }
-    public static function getPermissionIdsByRoomId($room_id)
-    {
-        $db = static::getDB();
-        $query = "SELECT permission_id FROM permission_room WHERE room_id='$room_id'";
+    public static function getPermissionIdsByRoomId($room_id) {
+        $db     = static::getDB();
+        $query  = "SELECT permission_id FROM permission_room WHERE room_id='$room_id'";
         $result = $db->query($query);
         if ($result) {
             $result_ary = [];
@@ -54,10 +48,9 @@ class PermissionRoom extends Model
         return FALSE;
     }
 
-    public static function getPermissionByRoom($room_id)
-    {
-        $db = static::getDB();
-        $query = "SELECT permission_id,permissions.name as 'permisson_name',controller FROM `permission_room`,`permissions` WHERE room_id='$room_id' AND permissions.id=permission_room.permission_id";
+    public static function getPermissionByRoom($room_id) {
+        $db     = static::getDB();
+        $query  = "SELECT permission_id,permissions.name as 'permisson_name',controller FROM `permission_room`,`permissions` WHERE room_id='$room_id' AND permissions.id=permission_room.permission_id";
         $result = $db->query($query);
         if ($result) {
             $result_ary = [];
@@ -69,13 +62,11 @@ class PermissionRoom extends Model
         return FALSE;
     }
 
-    public function getBy($column, $operator, $value)
-    {
+    public function getBy($column, $operator, $value) {
         return $this->where($column, $operator, $value)->get();
     }
 
-    public function getById($id, $column)
-    {
+    public function getById($id, $column) {
         return $this->find($id, $column);
     }
 }

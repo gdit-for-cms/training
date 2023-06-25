@@ -8,13 +8,11 @@ use App\models\User;
 use Core\Http\Request;
 use Core\Http\ResponseTrait;
 
-class HomeController extends Controller
-{
+class HomeController extends Controller {
     use ResponseTrait;
     public array $data;
 
-    protected function before() 
-    {
+    protected function before() {
         if (!checkAdmin()) {
             header('Location: /default/index');
             exit;
@@ -22,32 +20,29 @@ class HomeController extends Controller
         $this->data['title'] = 'Homepage';
     }
 
-    protected function after() 
-    {
-        View::render('homepage/front-layouts/master.php',$this->data);
+    protected function after() {
+        View::render('homepage/front-layouts/master.php', $this->data);
     }
 
-    public function homepageAction()
-    {
+    public function homepageAction() {
         $this->data['content'] = 'home/homepage';
     }
-    
-    public function login(Request $request)
-    {
-        $email = htmlspecialchars(addslashes($request->getPost()['email']));
+
+    public function login(Request $request) {
+        $email    = htmlspecialchars(addslashes($request->getPost()['email']));
         $password = addslashes($request->getPost()['password']);
 
-        $user = new User();
+        $user        = new User();
         $currentUser = $user->table('user')
-                     ->where('email', '=', $email)
-                     ->where('password', '=', $password)
-                     ->get();
+            ->where('email', '=', $email)
+            ->where('password', '=', $password)
+            ->get();
         $number_rows = count($currentUser);
 
         if ($number_rows == 1) {
             $data = [
-                'name' => $currentUser[0]['name'],
-                'email' => $currentUser[0]['email'],
+                'name'    => $currentUser[0]['name'],
+                'email'   => $currentUser[0]['email'],
                 'role_id' => $currentUser[0]['role_id'],
                 'room_id' => $currentUser[0]['room_id'],
             ];
@@ -60,10 +55,9 @@ class HomeController extends Controller
         }
     }
 
-    public function logout()
-    {   
+    public function logout() {
         $this->session->__unset('currentUser');
-        setcookie('remember',null,-1);
+        setcookie('remember', null, -1);
 
         header('location: /home/homepage');
         exit;
