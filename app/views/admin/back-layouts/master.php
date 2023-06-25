@@ -13,8 +13,6 @@
     </link>
     <link href="/css/back-css/style.css" rel="stylesheet">
     <script src="/js/front-js/jquery.min.js"></script>
-    <script src="/ckeditor5custom/build/ckeditor.js"></script>
-    <script src="/js/back-js/loadFontAwesomeAsync.js"></script>
 </head>
 
 <body class="crm_body_bg">
@@ -27,10 +25,12 @@
         </div>
         <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
         <script src="/js/front-js/sweetalert2.all.min.js"></script>
-        <script src="/js/back-js/main.js"></script>
-        <script src="/js/back-js/customCkeditor.js"></script>
+        <script src="/ckeditor5custom/build/ckeditor.js"></script>
+        <script src="/js/back-js/loadFontAwesomeAsync.js"></script>
         <script src="/js/boostrap/bootstrap.min.js"></script>
         <script src="/js/back-js/dashboard.js"></script>
+        <script src="/js/back-js/main.js"></script>
+        <script src="/js/back-js/customCkeditor.js"></script>
 </body>
 
 </html>

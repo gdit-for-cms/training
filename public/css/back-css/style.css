@@ -476,7 +476,7 @@ a {
  .modal-images-setting .images-file-list .list-group{
     width: 98%;
     max-height: 350px;
-    overflow-y: scroll;
+    overflow-y: auto;
  }
  .modal-images-setting .w-90{
     width: 86%;

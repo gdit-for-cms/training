@@ -173,10 +173,10 @@
                                             <label class="search-option-label">Keyword</label>
                                         </div>
                                         <div class="col-7">
-                                            <input class="form-control" type="text" id="input-keyword" name="keyword">
+                                            <input class="form-control" type="text" id="input-keyword" name="keyword" value="">
                                         </div>
                                         <div class="col-2">
-                                            <button class="btn-basic" id="btn-search-img" type="submit">Search</button>
+                                            <button class="btn-basic" id="btn-search-img">Search</button>
                                         </div>
                                     </div>
                                     <div class="row justify-content-around align-items-center  mt-2">

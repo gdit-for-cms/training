@@ -133,7 +133,9 @@
                                             <td><?php echo htmlspecialchars($rule['small_category']) ?></td>
                                             <td><?php echo htmlspecialchars($rule['content']) ?></td>
                                             <td><?php echo htmlspecialchars($rule['detail']) ?></td>
-                                            <td><?php echo htmlspecialchars($rule['note']) ?></td>
+                                            <td>
+                                                <div class="overflow-auto" style='width: 400px;height: 120px; max-height: 100%;'><?php echo htmlspecialchars($rule['note']) ?></div>
+                                            </td>
                                             <td><?php echo $rule['created_at'] ?></td>
                                             <?php
                                             if ($cur_user['role_id'] != 3) {

@@ -96,6 +96,7 @@ class RuleController extends AppController
             }
         } catch (\Throwable $th) {
             $this->createMessage('danger', 'Update failed! Please try again!');
+            header('Location: /admin/rule/edit?id=' . $rule_id);
         }
     }
     public function updateListAction(Request $request)

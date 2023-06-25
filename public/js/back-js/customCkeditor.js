@@ -28,6 +28,8 @@ $(document).ready(() => {
     //tab list
     var btnOpenPreviews = document.querySelectorAll('.btn-open-preview')
     var btnInsertImages = document.querySelectorAll('.btn-insert-image')
+    var btnDeleteImages = document.querySelectorAll('.btn-delete-image')
+
     const btnListImageTab = document.getElementById('btn-list-image-tab')
     const imgFileListUL = $('#images-file-list-ul')
     var selectLimitImage = document.getElementById('select-quantity')
@@ -35,7 +37,6 @@ $(document).ready(() => {
     const btnSearchImg = document.getElementById('btn-search-img')
     const optionAllResult = document.getElementById('option-all-result')
     const inputKeyword = document.getElementById('input-keyword')
-    const btnDeleteImages = document.querySelectorAll('.btn-delete-image')
     //tab upload
     const uploadImagesForm = $('#upload-images-form')
     const modalNotice = $('#modal-notice')
@@ -59,9 +60,9 @@ $(document).ready(() => {
     const editorInstance = domEditableElement.ckeditorInstance;
     var arrImgInEditorElements = Array.from(editorInstance.editing.view.getDomRoot().querySelectorAll('img'))
 
+    addEventTabFormat()
     addEventTabUpload()
     addEventTabListImage()
-    addEventTabFormat()
 
     function addEventTabUpload() {
         $.each($('.upload-photo'), (key, item) => {
@@ -137,6 +138,30 @@ $(document).ready(() => {
     })
 
     function addEventTabListImage() {
+        btnDeleteImages.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                let deleteID = btn.getAttribute('data-id');
+                let url = `/admin/image/delete?id=${deleteID}`
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: url,
+                            success: function () {
+                                btnSearchImg.click()
+                            }
+                        });
+                    }
+                })
+            })
+        })
         btnOpenPreviews.forEach((btn) => {
             btn.addEventListener("click", (e) => {
                 e.preventDefault()
@@ -157,52 +182,30 @@ $(document).ready(() => {
                 imgAltValue = imgAlt.value
             })
         })
+       
     }
-    btnDeleteImages.forEach((btn) => {
-        btn.addEventListener("click", () => {
-            let deleteID = btn.getAttribute('data-id');
-            let url = `/admin/image/delete?id=${deleteID}`
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: url,
-                        success: function () {
-                           btn.closest('.list-group-item').remove()
-                        }
-                    });
-                }
-            })
-        })
-    })
 
     btnSearchImg.addEventListener('click',(e)=>{
         e.preventDefault()
-        var actionUrl = filterImageForm.attr('action')
-        var queryString = filterImageForm.serialize()
-        var arrQueryString = queryString.split('&')
-        arrQueryString = arrQueryString.map((item)=>{
+        inputKeyword.value = removeSqlInJection(inputKeyword.value)
+        const actionUrl = filterImageForm.attr('action')
+        const queryString = filterImageForm.serialize()
+        const arrQueryString = queryString.split('&')
+        const newArrQueryString = arrQueryString.map((item)=>{
             if(item.includes('keyword')){
-                keywordValue = item.substring(8,item.length)
-                newItem = 'keyword='.keywordValue
+                const keywordValue = item.substring(8,item.length)
+                const newItem = 'keyword='+keywordValue
                 return newItem
             }
             else {
                 return item
             }
         })
-        queryString = arrQueryString.join('&')
+        const newQueryString = newArrQueryString.join('&')
         $.ajax({
             type: "GET",
             url: actionUrl,
-            data:  queryString,
+            data:  newQueryString,
             success: function(data) {
                 const number_of_results = data['result']['numbers_of_result']
                 const thumbnail = data['result']['thumbnail']
@@ -240,31 +243,6 @@ $(document).ready(() => {
             optionAllResult.value = quantity
             optionAllResult.innerText = `All (${quantity})`
         }
-    }
-
-    function addEventTabFormat() {
-        btnToListScreen.addEventListener('click', () => {
-            switchToListTab()
-        })
-        addEventChangeImage() 
-        addEventChangeFormatImage()
-        btnSettingImage.addEventListener('click', () => {
-            if (cbInputSetAlt.checked==true) {
-                imgAltValue = ""
-            }
-            else{
-                imgAltValue = imgAlt.value
-            }
-            alignRadios = document.getElementsByName("alignment-type");
-            let alignSelectedValue = Array.from(alignRadios).find(radio => radio.checked).value;
-            const imageUrl = btnSettingImage.getAttribute('data-path')
-            const htmlDP = editorInstance.data.processor;
-            const viewFragment = htmlDP.toView(`<img class="img-align-${alignSelectedValue}" src="${imageUrl}" style="width:${imgWidth.value}px;" alt="${imgAltValue}" />`);
-            const modelFragment = editorInstance.data.toModel(viewFragment);
-            editorInstance.model.insertContent(modelFragment);
-            addEventChangeImage() 
-            btnCloseImageSetting.click();
-        })  
     }
 
     function addEventChangeImage(){
@@ -307,6 +285,30 @@ $(document).ready(() => {
                 modalImageSettings.style.display = 'block'
             })
         })
+    }
+    function addEventTabFormat() {
+        btnToListScreen.addEventListener('click', () => {
+            switchToListTab()
+        })
+        addEventChangeFormatImage()
+        addEventChangeImage() 
+        btnSettingImage.addEventListener('click', () => {
+            if (cbInputSetAlt.checked==true) {
+                imgAltValue = ""
+            }
+            else{
+                imgAltValue = imgAlt.value
+            }
+            alignRadios = document.getElementsByName("alignment-type");
+            let alignSelectedValue = Array.from(alignRadios).find(radio => radio.checked).value;
+            const imageUrl = btnSettingImage.getAttribute('data-path')
+            const htmlDP = editorInstance.data.processor;
+            const viewFragment = htmlDP.toView(`<img class="img-align-${alignSelectedValue}" src="${imageUrl}" style="width:${imgWidth.value}px;" alt="${imgAltValue}" />`);
+            const modelFragment = editorInstance.data.toModel(viewFragment);
+            editorInstance.model.insertContent(modelFragment);
+            addEventChangeImage() 
+            btnCloseImageSetting.click();
+        })  
     }
 
     function addEventChangeFormatImage(){
@@ -370,10 +372,15 @@ $(document).ready(() => {
 
     function setListImage(images){
         var htmls = ""
-        images.forEach(item => {
-           let image = item[1]
-           htmls += createLiTagImgHtml(image)
-        });
+        if (images.length>0) {
+            images.forEach(item => {
+                let image = item[1]
+                htmls += createLiTagImgHtml(image)
+             });
+        }
+        else{
+            htmls += '<div className="d-flex justify-content-center align-items-center" style="margin-top:170px"><p>Empty result!</p></div>'
+        }
         imgFileListUL.empty()
         imgFileListUL.append(htmls)
         updateDomElements()
@@ -392,7 +399,7 @@ $(document).ready(() => {
             </div>
             <div class="d-flex justify-content-around w-75">
                 <button class="btn-basic">Edit</button>
-                <button data-id="${image['id']}" data-path="${image['path']}" data-img-name="${image['name']}" class="btn-basic">Delete</button>
+                <button data-id="${image['id']}" data-path="${image['path']}" data-img-name="${image['name']}" class="btn-basic btn-delete-image">Delete</button>
                 <button class="btn-basic">Properties</button>
                 <button data-path="${image['path']}" data-img-name="${image['name']}" class="btn-basic btn-open-preview">Preview</button>
             </div>
@@ -404,7 +411,6 @@ $(document).ready(() => {
         </div>
     </li>`
     }
-
 
     function switchToListTab() {
         btnListImageTab.click()
@@ -420,7 +426,7 @@ $(document).ready(() => {
     function updateDomElements() {
         btnOpenPreviews = document.querySelectorAll('.btn-open-preview')
         btnInsertImages = document.querySelectorAll('.btn-insert-image')
-        addEventTabUpload()
+        btnDeleteImages = document.querySelectorAll('.btn-delete-image')
         addEventTabListImage()
     }
 
@@ -440,7 +446,7 @@ $(document).ready(() => {
     }
     function removeSqlInJection(string) {
         sqlKeyword = ['SELECT', 'UNION', 'DROP', 'DELETE', 'WHERE', 'FROM', 'SET', 'ALTER', 'INSERT', 'UPDATE', 'ADD', 'OR', 'AND', 'CREATE', 'JOIN']
-        string = string.replace(/[^A-Za-z\s\u00C0-\u1EF9]/g, '');
+        string = string.replace(/[^A-Za-z0-9\s\u00C0-\u1EF9]/g, '');
         sqlKeyword.forEach((item) => {
             string = string.replace(item, '')
         })

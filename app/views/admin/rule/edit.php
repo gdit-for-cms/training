@@ -62,6 +62,14 @@
                                 ?>
                             </datalist>
                         </div>
+                        <div class="mb-3">
+                            <label for="content" class="form-label ">Content</label>
+                            <textarea class="form-control h-120px rule_content" name="content" id="content" rows="3"><?php echo htmlspecialchars(trim($rule_edit['content'])) ?></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="detail" class="form-label">Detail</label>
+                            <textarea class="form-control h-120px" name="detail" id="detail" rows="3"><?php echo htmlspecialchars(trim($rule_edit['detail'])) ?></textarea>
+                        </div>
                         <?php if (isset($_SESSION['msg'])) {
                             $msg =  $_SESSION['msg']['message'];
                             $type =  $_SESSION['msg']['type'];
@@ -72,18 +80,9 @@
                             unset($_SESSION['msg']);
                         }
                         ?>
-                        <button type="submit" id="submit" class="btn btn-primary mt-5">Save</button>
+                        <button type="submit" id="submit" class="btn btn-primary mt-1">Save</button>
                     </div>
                     <div class="card-body-right w-50">
-                        <div class="mb-3">
-                            <label for="content" class="form-label ">Content</label>
-                            <textarea class="form-control h-120px rule_content" name="content" id="content" rows="3"><?php echo htmlspecialchars(trim($rule_edit['content'])) ?></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="detail" class="form-label">Detail</label>
-                            <textarea class="form-control h-120px" name="detail" id="detail" rows="3"><?php echo htmlspecialchars(trim($rule_edit['detail'])) ?></textarea>
-                        </div>
-
                         <div class="mb-3">
                             <label for="note" class="form-label">Note</label>
                             <textarea id="editor-edit-note" class="form-control h-120px" name="note" id="note" rows="3"><?php echo htmlspecialchars(trim($rule_edit['note'])) ?></textarea>
