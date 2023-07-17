@@ -7,7 +7,6 @@
         </div>
     </div>
     <ul id="sidebar_menu" class="metismenu">
-
         <?php
         if ($cur_user) {
             if ($cur_user['role_id'] == 1) {
