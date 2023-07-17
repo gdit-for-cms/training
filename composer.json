@@ -14,5 +14,13 @@
             "app/functions/errors.php",
             "app/functions/validation.php"
         ]
+    },
+    "require": {
+        "phpoffice/phpspreadsheet": "^1.23"
+    },
+    "config": {
+        "platform": {
+            "php": "7.4"
+        }
     }
 }

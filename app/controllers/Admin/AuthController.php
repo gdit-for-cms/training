@@ -6,26 +6,31 @@ use Core\View;
 use App\models\User;
 use Core\Http\Request;
 
-class AuthController extends AppController {
-    public array $data;
+class AuthController extends AppController
+{
+    public array $data_ary;
 
-    protected function before() {
-        if (checkAdmin()) {
+    protected function before()
+    {
+        if (checkAuth()) {
             header('Location: /admin');
             exit;
         }
-        
-        $this->data['title'] = 'Login';
+
+        $this->data_ary['title'] = 'Login';
     }
 
-    protected function after() {
+    protected function after()
+    {
     }
 
-    public function loginAction() {
+    public function loginAction()
+    {
         View::render('admin/auth/login.php');
     }
 
-    public function loginProcessAction(Request $request) {
+    public function loginProcessAction(Request $request)
+    {
         $post = $request->getPost();
 
         $email = $post->get('email');
@@ -33,19 +38,18 @@ class AuthController extends AppController {
 
         $user = new User();
         $inputUser = $user->table('user')
-                     ->where('email', '=', $email)
-                     ->where('password', '=', $password)
-                     ->where('role_id', '=', 1)
-                     ->first();
+            ->where('email', '=', $email)
+            ->where('password', '=', $password)
+            ->first();
 
         if (!$inputUser) {
-            $this->data['error'] = showError('login');
+            $this->data_ary['error'] = showError('login');
 
-            View::render('admin/auth/login.php', $this->data);
+            View::render('admin/auth/login.php', $this->data_ary);
             exit;
         }
 
-        $data = [
+        $data_ary = [
             'id' => $inputUser['id'],
             'name' => $inputUser['name'],
             'email' => $inputUser['email'],
@@ -54,16 +58,17 @@ class AuthController extends AppController {
             'position_id' => $inputUser['position_id'],
             'avatar_image' => $inputUser['avatar_image'],
         ];
-        
-        $request->saveUser($data);
-        
+
+        $request->saveUser($data_ary);
+
         header('Location: /admin');
         exit;
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         $request->deleteUser();
-        
+
         header('Location: /');
         exit;
     }

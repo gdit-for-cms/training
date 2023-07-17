@@ -47,7 +47,7 @@ class User extends Model
         return $results_ary;
     }
 
-    public function getByRelation($req_method_ary = array(), $name, $results_per_page = 5)
+    public function getByRelation($req_method_ary, $name, $results_per_page = 5)
     {
         $db = static::getDB();
         $id = $req_method_ary['id'];

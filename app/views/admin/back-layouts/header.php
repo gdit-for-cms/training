@@ -1,4 +1,5 @@
 <div class="container-fluid g-0">
+    <?php require_once 'modals.php' ?>
     <div class="row">
         <div class="col-lg-12 p-0 ">
             <div class="header_iner d-flex justify-content-between align-items-center">
@@ -22,7 +23,7 @@
                     <div class="header_notification_warp d-flex align-items-center">
                     </div>
                     <div class="profile_info">
-                        <?php if ($_SESSION['user']['avatar_image'] == '') { ?>
+                        <?php if ($_SESSION['user']['avatar_image']) { ?>
                             <div class="rounded-circle border cursor-pointer flex items-center justify-center w-10 h-10 bg-gray-600 text-sm text-white font-bold align-middle"><?php echo strtoupper(substr($_SESSION['user']['name'], 0, 1)) ?></div>
                         <?php } else { ?>
                             <img src="/<?php echo $_SESSION['user']['avatar_image'] ?>" class="rounded-circle cursor-pointer border" alt="example placeholder" />

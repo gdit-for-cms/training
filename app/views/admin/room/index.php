@@ -7,7 +7,11 @@
     </div>
     <div class="box_body">
         <div class="default-according" id="accordion2">
-            <?php foreach ($rooms as $room) { ?>
+            <?php
+
+            use App\Models\PermissionRoom;
+
+            foreach ($rooms as $room) { ?>
                 <div class="card" data-name="<?= $room['name'] ?>">
                     <div class="card-header parpel_bg cursor-pointer" id="headingseven" data-id="<?= $room['id'] ?>">
                         <h5 class="mb-0 flex items-center justify-between">
@@ -24,22 +28,59 @@
                             <a href='/admin/room/edit?id=<?= $room['id'] ?>' class="edit-btn btn btn-info text-white mr-2">Edit</a>
                             <button type="button" data-id="<?= $room['id'] ?>" class="btn btn-danger delete-btn text-white">Delete</button>
                         </div>
-                        <div class="card-body row justify-content-center" style="padding-top: 25px;">
+                        <div class="card-body row justify-content-center d-flex col-12 " style="padding-top: 25px;">
                             <div class="col-lg-6">
-                                <div class="card_box box_shadow position-relative mb_30     ">
-                                    <div class="white_box_tittle">
-                                        <div class="main-title2 ">
-                                            <h4 class="mb-2 nowrap ">Description</h4>
+                                <div class="col-lg-12">
+                                    <div class="card_box box_shadow position-relative mb_30     ">
+                                        <div class="white_box_tittle">
+                                            <div class="main-title2 ">
+                                                <h4 class="mb-2 nowrap ">Description</h4>
+                                            </div>
+                                        </div>
+                                        <div class="box_body">
+                                            <p class="f-w-400 ">
+                                                <?= empty($room['description']) ? 'Add description for room...' : $room['description'] ?>
+                                            </p>
                                         </div>
                                     </div>
-                                    <div class="box_body">
-                                        <p class="f-w-400 ">
-                                            <?= empty($room['description']) ? 'Add description for room...' : $room['description'] ?>
-                                        </p>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="card_box box_shadow position-relative mb_30     ">
+                                        <div class="white_box_tittle">
+                                            <div class="main-title2 ">
+                                                <h4 class="ml-6">Permissions for Managers</h4>
+
+                                            </div>
+                                        </div>
+                                        <div class="box_body">
+                                            <p class="f-w-400 ">
+                                            <div class="permission-content ">
+                                                <div class="d-flex mt-4  justify-content-around flex-wrap">
+                                                    <?php
+                                                    $permission_enable = PermissionRoom::getPermissionIdsByRoomId($room['id']);
+                                                    if (!empty($permission_ary)) {
+                                                        foreach ($permission_ary as $permission) {
+                                                    ?>
+                                                            <div class="form-check ">
+                                                                <label for="<?php echo lcfirst(str_replace(' ', '-', $permission['name'])) ?>" class="form-check-label  rounded-1 p-1 <?php if (in_array($permission['id'], $permission_enable)) {
+                                                                                                                                                                                            echo 'bg-success';
+                                                                                                                                                                                        } else {
+                                                                                                                                                                                            echo ' bg-light text-black  text-decoration-line-through';
+                                                                                                                                                                                        } ?>"><?php echo $permission['name'] ?></label>
+                                                            </div>
+                                                    <?php
+                                                        }
+                                                    }
+                                                    ?>
+                                                </div>
+                                            </div>
+                                            </p>
+                                        </div>
                                     </div>
+
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-6 ">
                                 <div class="white_card box_shadow card_height_100 mb_30" data-user="">
                                     <div class="white_box_tittle">
                                         <div class="main-title2 ">
@@ -49,7 +90,7 @@
                                     <div class="btn_sort_group d-flex justify-content-end align-items-center text-white mt-2 mr-2">
                                         <button type="button" disabled class="btn_sort btn_sort-pagi bg-gray-300 pe-none rounded border d-flex justify-content-end align-items-cente ml-2 hover:bg-gray-300">
                                             <box-icon name='list-plus'></box-icon>
-                                        </button>    
+                                        </button>
                                         <button type="button" class="btn_sort btn_sort-all rounded border d-flex justify-content-end align-items-cente ml-2 hover:bg-gray-300">
                                             <box-icon name='list-ul'></box-icon>
                                         </button>
@@ -77,6 +118,7 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -163,7 +205,8 @@
         Array.prototype.slice.call(bodyTableEles).forEach(ele => {
             if (ele.childNodes.length == 1) {
                 ele.parentNode.classList.add('hidden')
-                ele.parentNode.parentNode.innerHTML = '<div class="box_body"><p class="f-w-400 ">No memeber</p></div>'
+                ele.parentNode.parentNode.innerHTML =
+                    '<div class="box_body"><p class="f-w-400 ">No memeber</p></div>'
                 console.log(ele.parentNode.parentNode.parentNode.childNodes)
             }
         })
