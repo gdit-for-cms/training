@@ -18,16 +18,19 @@ class PositionController extends AppController
 
     public array $data_ary;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->obj_model = new Position;
     }
 
-    public function indexAction() {
+    public function indexAction()
+    {
         $this->data_ary['positions'] = $this->obj_model->getAll();
         $this->data_ary['content'] = 'position/index';
     }
 
-    public function newAction() {
+    public function newAction()
+    {
         $array = array_diff(scandir('../app/controllers/User'), array('..', '.'));
         $result = array();
         foreach ($array as $filename) {
@@ -38,7 +41,8 @@ class PositionController extends AppController
         $this->data_ary['content'] = 'position/new';
     }
 
-    public function create(Request $request) {
+    public function create(Request $request)
+    {
         $app_request = new AppRequest;
         $result_vali_ary = $app_request->validate(Position::rules(), $request, 'post');
 
@@ -73,7 +77,8 @@ class PositionController extends AppController
         }
     }
 
-    public function editAction(Request $request) {
+    public function editAction(Request $request)
+    {
         $id = $request->getGet()->get('id');
 
         $array = array_diff(scandir('../app/controllers/User'), array('..', '.'));
@@ -89,7 +94,8 @@ class PositionController extends AppController
         $this->data_ary['content'] = 'position/edit';
     }
 
-    public function update(Request $request) {
+    public function update(Request $request)
+    {
         $post_ary = $request->getPost()->all();
 
         $check_position = $this->obj_model->getById($post_ary['id']);
@@ -144,7 +150,8 @@ class PositionController extends AppController
         };
     }
 
-    public function delete(Request $request) {
+    public function delete(Request $request)
+    {
         $id = $request->getGet()->get('id');
 
         $this->obj_model->destroyOne("id = $id");
@@ -153,7 +160,8 @@ class PositionController extends AppController
         exit;
     }
 
-    public function changePosition(Request $request) {
+    public function changePosition(Request $request)
+    {
         try {
             $post_ary = $request->getPost()->all();
             $post_ary = $post_ary['data'];

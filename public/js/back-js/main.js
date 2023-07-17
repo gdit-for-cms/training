@@ -76,7 +76,6 @@ function checkPathName() {
 
 function submitForm(formId) {
     $(formId).submit(function (e) {
-        console.log('123');
         var content = checkPathName()
         e.preventDefault()
         Swal.fire({
@@ -483,6 +482,11 @@ $(document).ready(function () {
     submitForm('#form_new_room');
     submitForm('#form_update_room');
     // submitForm('#form_upload_avatar');
+    
+    //Ngo Duy Hung
+    alertDeleteListRule();
+    alertDeleteRule();
+    //end Ngo Duy Hung
 
     submitForm('.add-form');
     alertDelete();
@@ -674,7 +678,59 @@ $(document).ready(function () {
     //         }
     //     })
     // });
+   
+
+   
 });
+ //Ngo Duy Hung
+function alertDeleteListRule() {
+    $('.btn-delete-list-rule').click(function (e) {
+        let deleteID = $(this).data('id');
+        let pathName = window.location.pathname.split('/')[2]
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/admin/${pathName}/deleteList?id=${deleteID}`,
+                    success: function () {
+                        document.location.reload(true);
+                    }
+                });
+            }
+        })
+    });
+}
+function alertDeleteRule() {
+    $('.btn-delete-rule').click(function (e) {
+        let deleteID = $(this).data('id');
+        let pathName = window.location.pathname.split('/')[2]
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/admin/${pathName}/delete?id=${deleteID}`,
+                    success: function () {
+                        document.location.reload(true);
+                    }
+                });
+            }
+        })
+    });
+}
 
 
 

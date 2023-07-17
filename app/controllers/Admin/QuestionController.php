@@ -1,22 +1,25 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Admin;
 
+
+use App\Controllers\Admin\AppController;
 use Core\Controller;
 use Core\View;
 use Core\Http\Request;
 
-class QuestionController extends Controller
+class QuestionController extends  AppController
 {
-    public array $data;
-    
-    protected function after() 
+    public $title = "Question";
+    public array $data_ary;
+
+    protected function after()
     {
-        View::render('admin/back-layouts/master.php', $this->data);
+        View::render('admin/back-layouts/master.php', $this->data_ary);
     }
-    
-    public function listAction()
+
+    public function indexAction()
     {
-        $this->data['content'] = 'question/list';
+        $this->data_ary['content'] = 'question/list';
     }
 }

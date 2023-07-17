@@ -2,6 +2,7 @@
 
 namespace App\Controllers\Admin;
 
+
 use Core\View;
 use App\models\User;
 use App\models\Room;
@@ -15,16 +16,20 @@ class AdminController extends AppController
     public array $data_ary;
 
     public $title = 'Chủ';
+    public object $obj_model;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->obj_model = new User;
     }
 
-    public function indexAction() {
-        $this->data_ary['content'] = 'admin/dashboard';
+    public function indexAction()
+    {
+        $this->data_ary['content'] = 'dashboard';
     }
 
-    public function showAction(Request $request) {   
+    public function showAction(Request $request)
+    {
         $user = $request->getUser();
         $user_ary = $this->obj_model->getById($user['id'])[0];
 
@@ -32,7 +37,8 @@ class AdminController extends AppController
         $this->data_ary['user'] = $user_ary;
     }
 
-    public function uploadAvatar(Request $request) {
+    public function uploadAvatar(Request $request)
+    {
         try {
             $image_file = $request->getFiles()->get('image');
 
@@ -42,7 +48,7 @@ class AdminController extends AppController
 
             $user = $request->getUser();
             $id = $user['id'];
-            
+
             $before_avatar = $this->obj_model->getById($id)[0]['avatar_image'];
 
             $image_dir = 'ckfinder/userfiles/images/avatars/';
@@ -68,7 +74,8 @@ class AdminController extends AppController
         };
     }
 
-    public function deleteAvatar(Request $request) {
+    public function deleteAvatar(Request $request)
+    {
         $user = $request->getUser();
         if (empty($user['avatar_image'])) {
             return $this->errorResponse('Please update avatar');
@@ -92,7 +99,7 @@ class AdminController extends AppController
 
     public function diffAction()
     {
-        $this->data['content'] = 'diff-file/diff';
+        $this->data_ary['content'] = 'diff-file/diff';
     }
 
     public function compareAction()
@@ -106,7 +113,7 @@ class AdminController extends AppController
                 && in_array($_FILES['file1']['type'], $fileAccept) && in_array($_FILES['file2']['type'], $fileAccept)
             ) {
 
-                $this->data['uploadStatus'] = 'success';
+                $this->data_ary['uploadStatus'] = 'success';
 
                 // Read the import file contents
                 $before = fopen($_FILES['file1']['tmp_name'], 'r');
@@ -170,8 +177,8 @@ class AdminController extends AppController
                 // print_r($variableGLOBALS1);
                 exit;
             } else {
-                $this->data['uploadStatus'] = 'failed';
-                $this->data['content'] = 'diff-file/compare';
+                $this->data_ary['uploadStatus'] = 'failed';
+                $this->data_ary['content'] = 'diff-file/compare';
             }
         }
     }
