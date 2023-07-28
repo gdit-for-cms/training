@@ -3,6 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Models\Image;
+use App\Models\Link;
 use Core\Http\Request;
 use Core\Http\ResponseTrait;
 use App\models\Rule;
@@ -23,6 +24,7 @@ class RuleController extends AppController
     public object $obj_rule;
     public object $obj_type_rule;
     public object $obj_image;
+    public object $obj_link;
     public array $data_ary;
 
     public function __construct()
@@ -30,6 +32,7 @@ class RuleController extends AppController
         $this->obj_rule = new Rule;
         $this->obj_type_rule = new TypeRule;
         $this->obj_image = new Image;
+        $this->obj_link = new Link;
     }
 
     public function indexAction(Request $request)
@@ -60,8 +63,11 @@ class RuleController extends AppController
         $type_rule = $this->obj_type_rule->getById($rule_edit['type_rule_id']);
         $all_categories = $this->obj_rule->getAllCategories($rule_edit['type_rule_id']);
         $getImageResults = $this->obj_image->getAllRelation(['update-date-order' => 'desc', 'thumbnail' => 'yes'], 5);
+        $getFileResults = $this->obj_link->getAllRelation(['update-date-order' => 'desc', 'thumbnail' => 'yes'], 5);
+        $this->data_ary['library_file'] = $getFileResults['file'];
         $this->data_ary['library_images'] = $getImageResults['images'];
         $this->data_ary['numberAllImage'] = $getImageResults['numbers_of_result'];
+        $this->data_ary['numberAllFile'] = $getFileResults['numbers_of_result'];
         $this->data_ary['all_categories'] = $all_categories;
         $this->data_ary['type_rule'] = $type_rule;
         $this->data_ary['rule_edit'] = $rule_edit;
@@ -464,5 +470,10 @@ class RuleController extends AppController
         header('Content-Type: application/json');
         echo json_encode($res);
         exit();
+    }
+
+    public function linkAction(Request $request)
+    {
+        echo($request->getPost()->all());
     }
 }

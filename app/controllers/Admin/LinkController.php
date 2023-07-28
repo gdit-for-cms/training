@@ -19,16 +19,7 @@ class LinkController extends AppController
     {
         $this->obj_file = new Link;
     }
-
-    /**
-     *
-     * Convert an object to an array
-     *
-     * @param    object  $object The object to convert
-     * @param    object  $object The object to convert
-     * @return      array
-     *
-     */
+    
     public function storeAction(Request $request)
     {
         $post = $request->getPost()->all();
@@ -39,7 +30,7 @@ class LinkController extends AppController
             'all_results' => [],
             'data_upload' => [],
         ];
-        try {
+        try { 
             $name_key = 'name-file';
             $file_key = 'upload-file';
             $add_item_result = $this->addItemUpload($post[$name_key], $files->get($file_key), $file_key, $add_item_result);
