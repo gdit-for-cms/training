@@ -37,7 +37,7 @@ class Link extends Model
         return $this->where($column, $operator, $value)->get();
     }
 
-    public static function getAllRelation($req_method_ary = array(), $limit = 5)
+    public static function getAllRelation($req_method_ary = array(), $limit)
     {
         $db = static::getDB();
         $condition_ary = array();
@@ -90,13 +90,14 @@ class Link extends Model
                   ORDER BY updated_at
                   ";
         if($order == 'descending') {
-            $query .= " DESC";
+            $query .= " DESC ";
         }
+
+        $query .= "LIMIT 5";
         $result = $db->query($query);
         $result_ary = [];
         if ($result) {
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                // echo $row;
                 $result_ary[] = $row;
             }
             return $result_ary;
@@ -104,14 +105,60 @@ class Link extends Model
         return $result_ary;
     }
 
-    public function getByQty($qty)
+    public function searchAll($search, $order)
+    {
+        $db = static::getDB();
+        $query = "SELECT * 
+                  FROM library_file 
+                  WHERE name LIKE '%$search%' OR path LIKE '%$search%'
+                  ";
+
+        $result = $db->query($query);
+        $result_ary = [];
+        if ($result) {
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $result_ary[] = $row;
+            }
+            return $result_ary;
+        }
+        return $result_ary;
+    }
+
+    public function getByQty($qty, $search, $desc)
     {
         $db = static::getDB();
         $query = "SELECT * 
                   FROM library_file
-                  ORDER BY created_at DESC 
-                  LIMIT $qty
-                  ";
+                  WHERE name LIKE '%$search%' OR path LIKE '%$search%'
+                  ORDER BY created_at ";
+        if($desc == 'true') {
+            $query .= "DESC ";
+        }
+
+        $query .= "LIMIT $qty";
+        $result = $db->query($query);
+        $result_ary = [];
+        if ($result) {
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $result_ary[] = $row;
+            }
+            return $result_ary;
+        }
+        return $result_ary;
+    }
+
+    public function getValueForPaginate($current_page, $limit, $search, $desc)
+    {
+        $db = static::getDB();
+        $query = "SELECT * 
+                  FROM library_file
+                  WHERE name LIKE '%$search%' OR path LIKE '%$search%'
+                  ORDER BY created_at ";
+        if($desc == 'true') {
+            $query .= "DESC ";
+        }
+
+        $query .= "LIMIT $current_page, $limit";
         $result = $db->query($query);
         $result_ary = [];
         if ($result) {

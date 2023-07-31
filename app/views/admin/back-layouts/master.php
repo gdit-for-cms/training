@@ -31,6 +31,7 @@
         <script src="/js/back-js/dashboard.js"></script>
         <script src="/js/back-js/main.js"></script>
         <script src="/js/back-js/customCkeditor.js"></script>
+        <script src="/js/back-js/customFileCkeditor.js"></script>
 </body>
 
 </html>

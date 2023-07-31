@@ -456,13 +456,13 @@
     <!-- Modal setting link -->
     <div class="modal modal-lg" id="link-settings" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="link-settingsLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content modal-link-setting">
+            <div class="modal-content modal-images-setting">
                 <div class="modal-header">
                     <h5 class="modal-title" id="link-settingsLabel">Link</h5>
                     <button type="button" class="btn-close btn-close-link-setting" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="link-option">
+                    <div class="search-option">
                         <div class="col-7">
                             <div class="radio-btn-group-date d-flex mt-3">
                                 <div class="form-check ml-4">
@@ -498,7 +498,7 @@
                         <!-- action="/admin/image/store" -->
                         <!-- <form action="/admin/rule/link" method="post"> -->
                             <div class="row justify-content-around align-items-center mt-4">
-                                <label for="">Enter the URL</label>
+                                <label>Enter the URL</label>
                                 <div class="col-1 mt-2">
                                     <button class="btn btn-secondary">http://</button>
                                 </div>
@@ -511,7 +511,7 @@
                                     <input id="new_tab" type="checkbox" name="new_tab">
                                 </div>
                                 <div class="col-5" style="margin-left: -40px;">
-                                    <label for="">Opens in a new tab</label>
+                                    <label>Opens in a new tab</label>
                                 </div>
                             </div>
                             <div class="row justify-content-around align-items-center mt-5">
@@ -662,10 +662,13 @@
                                     </div>
                                 </div>
                             </form>
-                            <form action="/admin/link/pagination" id="form_pagination_file" name="form-pagination-file" method="post">
+                            <form action="/admin/link/qtyofonepage" id="form_pagination_file" name="form-pagination-file" method="post">
                                 <div class="select-quantity">
                                     <div class="row justify-content-end align-items-end mt-3">
                                         <select id="select-quantity-file" class="form-select w-25 mr-4" name="qty">
+                                            <option value="5">5 pieces</option>
+                                            <option value="10">10 pieces</option>
+                                            <option value="15">15 pieces</option>
                                             <?php
                                                 if (!empty($numberAllFile)) {
                                                 ?>
@@ -673,9 +676,6 @@
                                                 <?php
                                                 }
                                             ?>
-                                            <option value="5">5 pieces</option>
-                                            <option value="10">10 pieces</option>
-                                            <option value="15">15 pieces</option>
                                         </select>
                                         <input id="input_qty" name="qty" type="text" hidden>
                                     </div>
@@ -715,6 +715,17 @@
                                         ?>
                                     </ul>
                                 </div>
+                            </div>
+                            <div class="flex justify-center items-center mt-2">
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination">
+                                        <li class="page-item cursor-pointer hidden"><a class="page-link text-dark">Previous</a></li>
+                                        <?php for ($i = 1; $i <= $qtyPageOfFIle; $i++) { ?>
+                                            <li class="page-item cursor-pointer"><a class="page-link text-dark"><?= $i ?></a></li>
+                                        <?php } ?>
+                                        <li class="page-item cursor-pointer"><a class="page-link text-dark">Next</a></li>
+                                    </ul>
+                                </nav>
                             </div>
                         </div>
                         <div class="tab-pane " id="image-format" role="tabpanel" aria-labelledby="image-format-tab">

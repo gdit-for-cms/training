@@ -19,7 +19,7 @@ class LinkController extends AppController
     {
         $this->obj_file = new Link;
     }
-    
+
     public function storeAction(Request $request)
     {
         $post = $request->getPost()->all();
@@ -101,9 +101,9 @@ class LinkController extends AppController
         array_shift($get_ary);
         $result = $this->obj_file->getAllRelation($get_ary, $limit);
         if ($result) {
-            return $this->responseFileQuery(true, 'Get images success', $result);
+            return $this->responseFileQuery(true, 'Get link success', $result);
         } else {
-            return $this->responseFileQuery(false, 'Get images failed', []);
+            return $this->responseFileQuery(false, 'Get link failed', []);
         }
     }
 
@@ -132,19 +132,43 @@ class LinkController extends AppController
 
         $result = $this->obj_file->searchBy($post['input_search'], $post['order']);
 
-        if(count($result) == 0) {
-            $result = $this->obj_file->getAll();
+        $all_results = $this->obj_file->searchAll($post['input_search'], $post['order']);
+        $qtyPageOfFIle = (int)(count($all_results) / 5);
+        if((int)(count($all_results) % 5 != 0)) {
+            $qtyPageOfFIle = (int)(count($all_results) / 5) + 1;
         }
 
-        return $this->responseFileQuery(true, 'Search file success', $result);
+        return $this->responseFileObj(true, 'Search file success', $result, $qtyPageOfFIle);
+    }
+
+    public function qtyofonepageAction(Request $request)
+    {
+        $post = $request->getPost()->all();
+
+        $qty = (int)$post['qty'];
+        $result = $this->obj_file->getByQty($qty, $post['input_search'], $post['desc']);
+
+        $all_results = $this->obj_file->searchAll($post['input_search'], $post['desc']);
+
+        $qtyPageOfFIle = (int)(count($all_results) / $qty);
+        if((count($all_results) % $qty != 0)) {
+            $qtyPageOfFIle = (int)(count($all_results) / $qty) + 1;
+        }
+
+        $object = $qtyPageOfFIle;
+
+        return $this->responseFileObj(true, 'Change qty file success', $result, $object);
     }
 
     public function paginationAction(Request $request)
     {
         $post = $request->getPost()->all();
+        $qty_file_page = (int)$post['qty_file_page'];
+        $valueFirst = ((int)$post['current_page'] - 1) * $qty_file_page;
+        $search = $post['input_search'];
+        $desc = $post['desc'];
 
-        $qty = (int)$post['qty'];
-        $result = $this->obj_file->getByQty($qty);
+        $result = $this->obj_file->getValueForPaginate($valueFirst, $qty_file_page, $search, $desc);
 
         return $this->responseFileQuery(true, 'Change qty file success', $result);
     }
@@ -171,7 +195,20 @@ class LinkController extends AppController
         $res = [
             "success" => $status,
             "message" => $message,
-            "result" => $result
+            "result" => $result,
+        ];
+        header('Content-Type: application/json');
+        echo json_encode($res);
+        exit();
+    }
+
+    public function responseFileObj($status, $message, $result = [], $object)
+    {
+        $res = [
+            "success" => $status,
+            "message" => $message,
+            "result" => $result,
+            "object" => $object,
         ];
         header('Content-Type: application/json');
         echo json_encode($res);
