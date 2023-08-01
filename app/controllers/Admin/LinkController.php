@@ -4,9 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Models\Link;
 use Core\Http\Request;
-use Core\Http\Response;
 use Core\Http\ResponseTrait;
-use LDAP\Result;
 
 class LinkController extends AppController
 {
@@ -20,26 +18,11 @@ class LinkController extends AppController
         $this->obj_file = new Link;
     }
 
+    // Upload the file to the server and send the uploaded file to js
     public function storeAction(Request $request)
     {
         $post = $request->getPost()->all();
         $files =  $request->getFiles();
-        // $targetDir = "/htdocs/training2/training/public/file/";
-        // $targetFile = $targetDir . basename($_FILES["upload-file"]["name"]);
-        // if (file_exists($targetFile)) {
-        //     $this->responseFileQuery(false, 'File already exists', []);
-        // }
-        
-        // // Giới hạn kích thước tệp (vd: giới hạn kích thước 2MB)
-        // if ($_FILES["fileToUpload"]["size"] > 2 * 1024 * 1024) {
-        //     $this->responseFileQuery(false, 'File size too large', []);
-        // }
-
-        // if (move_uploaded_file($_FILES["upload-file"]["tmp_name"], $targetFile)) {
-        //     echo "Tệp " . basename($_FILES["upload-file"]["name"]) . " đã được tải lên thành công.";
-        // } else {
-        //     echo "Có lỗi xảy ra khi tải lên tệp của bạn.";
-        // }
 
         $data_upload = array();
         $all_results = array();
@@ -56,19 +39,21 @@ class LinkController extends AppController
             
             if (!empty($data_upload)) {
                 foreach ($data_upload as $key => $value) {
-                    $extension = explode('.', $value['file']['name'])[1];
-                    $file_name = rand(10, 1000000) . time() . '.' . $extension;
+                    $file_name = $value['file']['name'];
                     $file_path = '/htdocs/training2/training/public/file/' . $file_name;
                     if (file_exists($file_path)) {
                         $all_results['failed'][$key] = 'File already exists';
                     } else {
                         try {
+                            // Upload files to the server
                             if (move_uploaded_file($value['file']['tmp_name'], $file_path)) {
                                 $file_data = [
                                     'name' => $value['name'],
                                     'path' => $file_path
                                 ];
                                 $result = $this->obj_file->create($file_data);
+
+                                // Send files outside js
                                 if ($result) {
                                     $all_results['success'][$key] = 'Uploaded!';
                                     $get_data_from_db = $this->obj_file->getBy('path', '=', $file_path);
@@ -96,13 +81,16 @@ class LinkController extends AppController
         }
     }
 
+    // Delete File
     public function deleteAction(Request $request)
     {
         $file_id = $request->getGet()->get('id');
         $file = $this->obj_file->getById($file_id, '*');
-        // if (!empty($file['path'])) {
-        //     unlink($file['path']);
-        // }
+
+        // Check the file on the server and delete the file
+        if (!empty($file['path'])) {
+            unlink($file['path']);
+        }
         $result = $this->obj_file->destroyBy("id = $file_id");
         if ($result) {
             return $this->responseFileQuery(true, 'Delete files success', []);
@@ -111,19 +99,7 @@ class LinkController extends AppController
         }
     }
 
-    public function loadAction(Request $request)
-    {
-        $limit = $request->getGet()->get('limit') ? $request->getGet()->get('limit') : 5;
-        $get_ary = $request->getGet()->all();
-        array_shift($get_ary);
-        $result = $this->obj_file->getAllRelation($get_ary, $limit);
-        if ($result) {
-            return $this->responseFileQuery(true, 'Get link success', $result);
-        } else {
-            return $this->responseFileQuery(false, 'Get link failed', []);
-        }
-    }
-
+    // Update file
     public function updateAction(Request $request)
     {
         $post = $request->getPost()->all();
@@ -143,22 +119,25 @@ class LinkController extends AppController
         }
     }
 
+    // Search file
     public function searchAction(Request $request)
     {
         $post = $request->getPost()->all();
 
         $result = $this->obj_file->searchBy($post['input_search'], $post['order']);
 
+        // Returns the page number corresponding to the number of results after searching
         $all_results = $this->obj_file->searchAll($post['input_search'], $post['order']);
-        $qtyPageOfFIle = (int)(count($all_results) / 5);
+        $qty_page_of_fIle = (int)(count($all_results) / 5);
         if((int)(count($all_results) % 5 != 0)) {
-            $qtyPageOfFIle = (int)(count($all_results) / 5) + 1;
+            $qty_page_of_fIle = (int)(count($all_results) / 5) + 1;
         }
-        $object = $qtyPageOfFIle;
+        $object = $qty_page_of_fIle;
 
         return $this->responseFileObj(true, 'Search file success', $result, $object);
     }
 
+    // Load the number of results after searching in a page
     public function qtyofonepageAction(Request $request)
     {
         $post = $request->getPost()->all();
@@ -168,25 +147,26 @@ class LinkController extends AppController
 
         $all_results = $this->obj_file->searchAll($post['input_search'], $post['desc']);
 
-        $qtyPageOfFIle = (int)(count($all_results) / $qty);
+        $qty_page_of_fIle = (int)(count($all_results) / $qty);
         if((count($all_results) % $qty != 0)) {
-            $qtyPageOfFIle = (int)(count($all_results) / $qty) + 1;
+            $qty_page_of_fIle = (int)(count($all_results) / $qty) + 1;
         }
 
-        $object = $qtyPageOfFIle;
+        $object = $qty_page_of_fIle;
 
         return $this->responseFileObj(true, 'Change qty file success', $result, $object);
     }
 
+    // Load results when turning pages
     public function paginationAction(Request $request)
     {
         $post = $request->getPost()->all();
         $qty_file_page = (int)$post['qty_file_page'];
-        $valueFirst = ((int)$post['current_page'] - 1) * $qty_file_page;
+        $value_first = ((int)$post['current_page'] - 1) * $qty_file_page;
         $search = $post['input_search'];
         $desc = $post['desc'];
 
-        $result = $this->obj_file->getValueForPaginate($valueFirst, $qty_file_page, $search, $desc);
+        $result = $this->obj_file->getValueForPaginate($value_first, $qty_file_page, $search, $desc);
 
         return $this->responseFileQuery(true, 'Change qty file success', $result);
     }

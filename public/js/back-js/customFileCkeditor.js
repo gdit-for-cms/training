@@ -22,146 +22,170 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 $(document).ready(() => {
-    //Modal link setting
-    const modalLinkSettings = document.getElementById('link-settings')
-    const btnCloseLinkSetting = document.querySelector('.btn-close-link-setting')
-    const modalPropertiesFile = document.getElementById('properties-file');
-    const btnClosePropertiesFile = document.getElementById('close-modal-properties-file')
-    const inputSearch = document.getElementById('input_search')
+    // Modal link setting
+    const modal_link_settings = document.getElementById('link-settings')
+    const btn_close_link_setting = document.querySelector('.btn-close-link-setting')
+
+    // Modal properties fille
+    const modal_properties_file = document.getElementById('properties-file');
+    const btn_closeproperties_file = document.getElementById('close-modal-properties-file')
+
+    // Search file
+    const input_search = document.getElementById('input_search')
     const descending = document.getElementById('descending')
     const ascending = document.getElementById('ascending')
-    const paginateFileForm = document.getElementById('form_pagination_file')
-    const selectQtyFile = document.getElementById('select-quantity-file');
-    const btnPickLink = document.querySelectorAll("[data-cke-tooltip-text]");
 
-    addEventModalLinkSetting() //Hiển thị modal insert link
-
-    const checkBoxLink = document.getElementById("tab1");
-    const checkBoxMail = document.getElementById("tab2");
-    const checkBoxFile = document.getElementById("tab3");
-
-
-    const tabContents = document.querySelectorAll('.tab-link');
-    indexLink(); // Hiển thị tab đầu tiên trong insert link
+    // Paginate file
+    const paginate_file_form = document.getElementById('form_pagination_file')
+    const select_qty_file = document.getElementById('select-quantity-file')
+    const btn_paginattion = $('.pagination');
+    var current_page = 1;
     
-    
-    const radioButtons = document.querySelectorAll('input[type="radio"]');
-    changeTabInsertLink() // Thay đổi các tab trong insert link
+    // Btn open link setting
+    const btn_pick_link = document.querySelectorAll("[data-cke-tooltip-text]")
 
-    var selectedText = '';
-    takeHighLight() //Lấy phần bôi đen
+    // Radio buttons in insert link 
+    const radio_btn_link = document.getElementById("tab1")
+    const radio_btn_mail = document.getElementById("tab2")
+    const radio_btn_file = document.getElementById("tab3")
+    
+    // Radio buttons are declared a common variable
+    const radio_buttons = document.querySelectorAll('input[type="radio"]')
+
+    // Tabs in link settings
+    const tab_contents = document.querySelectorAll('.tab-link')
+
+    // The content of the word is highlighted
+    var selected_text = ''
 
     //Insert Link
-        var buttonOpenURL = document.getElementById("open_url");
-        var inputUrl = document.getElementById("input_url");
-        var newTab = document.getElementById("new_tab");
+    const button_open_url = document.getElementById("open_url")
+    const input_url = document.getElementById("input_url")
+    const new_tab = document.getElementById("new_tab")
+
+    // Insert Email
+    const button_open_mail = document.getElementById("open_mail")
+    const input_mail = document.getElementById("input_mail")
+
+    // Insert File
+    const button_open_file = document.getElementById("open_file");
+    const input_file = document.getElementById("input_file");
+    const new_tab_file = document.getElementById("newtab_file");
+
+    // Modal setting upload file
+    const modal_file_settings = document.getElementById('file-settings');
+    const btn_close_file_setting = document.querySelector('.btn-close-file-setting');
+    
+    // Form upload file
+    const upload_file_form = $('#upload-file-form');
+
+    // Form update file
+    const update_file_form = $('#update-file-form');
+
+    // Form search file
+    const search_file_form = $('#form-search-file');
+
+    // List of uploaded files
+    const file_list_ul = $('#file-list-ul');
+
+    // button list file tab
+    const btn_list_file_tab = document.getElementById('list-file-tab')
+
+    // Modal notice file
+    const modal_notice_file = $('#modal-notice-file')
+
+    // Take the highlighted part
+    take_high_light()
+
+    // Show modal insert link
+    add_event_modal_link_setting()
+
+    // Show first tab in insert link
+    index_link()
+    
+    // Change tabs in insert link
+    change_tab_insert_link()
+
+    // When clicking the open button in insert link
+    open_link()
         
-        //Khi bấm nút open trong insert link
-        openLink();
+    // When clicking the open button in insert email
+    open_mail()
 
-    //Insert Email
-        var buttonOpenMail = document.getElementById("open_mail");
-        const inputMail = document.getElementById("input_mail");
-        
-        //Khi bấm nút open trong insert email
-        openMail();
+    // Modal upload file
+    add_event_modal_file_setting();
 
-    //Insert File
-        var buttonOpenFile = document.getElementById("open_file");
-        var inputFile = document.getElementById("input_file");
-        var newTabFile = document.getElementById("newtab_file");
+    // Insert FIle
+    insert_file()
 
-        const modalFileSettings = document.getElementById('file-settings');
-        const btnCloseFileSetting = document.querySelector('.btn-close-file-setting');
+    // Delete file
+    delete_file();
 
-        const updateFileForm = $('#update-file-form');
+    // Properties file
+    open_modal_properties_file()
 
-        //Mở thêm modal cho chức năng upload file
-        addEventModalFileSetting();
+    // When clicking the open button in insert file
+    open_file();
 
-        //Insert FIle
-        insertFile()
+    // Pagination
+    paginate();
 
-        //Xóa file
-        deleteFile();
+    // Change page
+    change_paginate();
 
-        //Properties file
-        openModalPropertiesFile()
-
-        //Khi bấm nút open trong insert file
-        openFile();
-
-        //Phân trang
-        paginate();
-
-        //Khi bấm chuyển trang
-        ChangePaginate();
-
-    const uploadFileForm = $('#upload-file-form');
-    const searchFileForm = $('#form-search-file');
-    const fileListUL = $('#file-list-ul');
-    const btnListFileTab = document.getElementById('list-file-tab');
-    const btnSearchFile = document.getElementById('btn-search-file')
-    const modalNoticeFile = $('#modal-notice-file')
-    var currentPage = 1;
-    var lastPage = 0;
-    const btnPaginattion = $('.pagination');
-
-    //Phân trang
     function paginate() {
-        var paginationElements = document.querySelectorAll(".page-item");
+        var pagination_elements = document.querySelectorAll(".page-item");
         var count = 0;
-        paginationElements.forEach(element => {
+        pagination_elements.forEach(element => {
             count++;
+            // Focus on current page
             if(element.getElementsByTagName('a')[0].textContent == '1'){
-                console.log(1);
                 element.getElementsByTagName('a')[0].style.backgroundColor = '#C5C5C5';
             }
         });
-        lastPage = parseInt(count) - 2;
     }
 
-    //Đổi màu
-    function changeColorPaginate(currentPage_tmp, newPage_tmp) {
-        var paginationElements = document.querySelectorAll(".page-item");
-        paginationElements.forEach(element => {
-            if(element.getElementsByTagName('a')[0].textContent == currentPage_tmp){
+    //Focus on the current page every time you switch pages
+    function change_color_paginate(current_page_tmp, new_page_tmp) {
+        var pagination_elements = document.querySelectorAll(".page-item");
+        pagination_elements.forEach(element => {
+            if(element.getElementsByTagName('a')[0].textContent == current_page_tmp){
                 element.getElementsByTagName('a')[0].style.backgroundColor = '#fff';
             }
         });
-        paginationElements.forEach(element => {
-            if(element.getElementsByTagName('a')[0].textContent == newPage_tmp){
+        pagination_elements.forEach(element => {
+            if(element.getElementsByTagName('a')[0].textContent == new_page_tmp){
                 element.getElementsByTagName('a')[0].style.backgroundColor = '#C5C5C5';
             }
         });
-        currentPage = newPage_tmp;
+        current_page = new_page_tmp;
     }
 
-    //Khi bấm chuyển trang
-    function ChangePaginate() {
-        var paginationElements = document.querySelectorAll(".page-item");
-        paginationElements.forEach(element => {
+    //When you click to switch pages
+    function change_paginate() {
+        var pagination_elements = document.querySelectorAll(".page-item");
+        pagination_elements.forEach(element => {
             element.addEventListener('click', () => {
-                var currentPage_tmp = currentPage;
-                var newPage_tmp = 0;
+                var current_page_tmp = current_page;
+                var new_page_tmp = 0;
                 if(element.getElementsByTagName('a')[0].textContent == 'Next') {
-                    newPage_tmp = parseInt(currentPage_tmp) + 1;
-                    changeColorPaginate(currentPage_tmp, newPage_tmp);
-                    viewPreNext(newPage_tmp);
+                    new_page_tmp = parseInt(current_page_tmp) + 1;
+                    change_color_paginate(current_page_tmp, new_page_tmp);
+                    view_pre_next(new_page_tmp);
                 } else if(element.getElementsByTagName('a')[0].textContent == 'Previous') {
-                    newPage_tmp = parseInt(currentPage_tmp) - 1;
-                    changeColorPaginate(currentPage_tmp, newPage_tmp);
-                    viewPreNext(newPage_tmp);
+                    new_page_tmp = parseInt(current_page_tmp) - 1;
+                    change_color_paginate(current_page_tmp, new_page_tmp);
+                    view_pre_next(new_page_tmp);
                 } else {
-                    newPage_tmp = element.getElementsByTagName('a')[0].textContent;
-                    changeColorPaginate(currentPage_tmp, newPage_tmp);
-                    viewPreNext(newPage_tmp);
+                    new_page_tmp = element.getElementsByTagName('a')[0].textContent;
+                    change_color_paginate(current_page_tmp, new_page_tmp);
+                    view_pre_next(new_page_tmp);
                 }
 
                 var data = {
-                    'current_page'  :   currentPage,
-                    'qty_file_page' :   selectQtyFile.value,
-                    'input_search'  :   inputSearch.value,
+                    'current_page'  :   current_page,
+                    'qty_file_page' :   select_qty_file.value,
+                    'input_search'  :   input_search.value,
                     'desc'          :   descending.checked,
                     'asc'           :   ascending.checked,
                 }
@@ -172,66 +196,66 @@ $(document).ready(() => {
                     data: data,
                     success: function(data) {
                         if (data['success']) {
-                            fileListUL.innerHTML = ''
+                            file_list_ul.innerHTML = ''
                             var htmls = ""
                             data['result'].forEach(file => {
-                                htmls += createLiTagFileHtml(file)
+                                htmls += create_list_tag_file_html(file)
                             });
-                            fileListUL.html(htmls)
+                            file_list_ul.html(htmls)
 
-                            insertFile();
-                            deleteFile()
-                            openModalPropertiesFile()
+                            insert_file();
+                            delete_file()
+                            open_modal_properties_file()
         
                         } else {
-                            modalNoticeFile.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>${data['message']}</h5>`)
-                            modalNoticeFile.css('display', "block");
+                            modal_notice_file.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>${data['message']}</h5>`)
+                            modal_notice_file.css('display', "block");
                         }
                     },
                     cache: false,
                 }).fail(function() {
-                    modalNoticeFile.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>Please check again!</h5>`)
-                    modalNoticeFile.css('display', "block");
+                    modal_notice_file.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>Please check again!</h5>`)
+                    modal_notice_file.css('display', "block");
                 });
             });
         });
         
     }
 
-    //Thay đổi pre và next
-    function viewPreNext(newPage_tmp) {
-        var paginationElements = document.querySelectorAll(".page-item");
-        var count = paginationElements.length;
+    //Change pre và next
+    function view_pre_next(new_page_tmp) {
+        var pagination_elements = document.querySelectorAll(".page-item");
+        var count = pagination_elements.length;
         var lastPage = count - 2;
-        if (newPage_tmp == lastPage) {
-            paginationElements.forEach(element => {
+        if (new_page_tmp == lastPage) {
+            pagination_elements.forEach(element => {
                 if(element.getElementsByTagName('a')[0].textContent == 'Next'){
                     element.classList.add('hidden');
                 }
             });
-            paginationElements.forEach(element => {
+            pagination_elements.forEach(element => {
                 if(element.getElementsByTagName('a')[0].textContent == 'Previous'){
                     element.classList.remove('hidden');
                 }
             });
-        } else if (newPage_tmp == 1) {
-            paginationElements.forEach(element => {
+        } else if (new_page_tmp == 1) {
+            pagination_elements.forEach(element => {
                 if(element.getElementsByTagName('a')[0].textContent == 'Previous'){
                     element.classList.add('hidden');
                 }
             });
-            paginationElements.forEach(element => {
+            pagination_elements.forEach(element => {
                 if(element.getElementsByTagName('a')[0].textContent == 'Next'){
                     element.classList.remove('hidden');
                 }
             });
         } else {
-            paginationElements.forEach(element => {
+            pagination_elements.forEach(element => {
                 if(element.getElementsByTagName('a')[0].textContent == 'Previous'){
                     element.classList.remove('hidden');
                 }
             });
-            paginationElements.forEach(element => {
+            pagination_elements.forEach(element => {
                 if(element.getElementsByTagName('a')[0].textContent == 'Next'){
                     element.classList.remove('hidden');
                 }
@@ -240,59 +264,61 @@ $(document).ready(() => {
     }
 
     document.addEventListener("click", function(event) {
-        // Lấy phần tử mà con trỏ chuột đang đứng
-        var targetElement = event.target;
-        // Kiểm tra xem phần tử đó có chứa văn bản không
-        if (targetElement && targetElement.nodeName === "A") {
+        // Get the element the mouse pointer is on
+        var target_element = event.target;
+
+        // Check if the element is in the a tag
+        if (target_element && target_element.nodeName === "A") {
             var selection = window.getSelection();
             const anchorNode = selection.anchorNode;
             const focusNode = selection.focusNode;
 
-            // Xác định thẻ chứa văn bản được bôi đen (nếu anchorNode và focusNode cùng cha)
+            // Specifies the tag containing the highlighted text (if anchorNode and focusNode have the same parent)
             const commonParent = anchorNode.parentElement === focusNode.parentElement ? anchorNode.parentElement : findCommonParent(anchorNode, focusNode);
 
-            // Lấy các thuộc tính của thẻ
+            // Get the attributes of the tag
             const attributes = Array.from(commonParent.attributes).map(attr => `${attr.name}="${attr.value}"`);
-
-            //Lấy nội dung của toàn bộ thẻ A
 
             var name = '';
             var count = 0;
             attributes.forEach(element => {
                 if (element.slice(0, 14) == 'href="https://') {
-                    modalLinkSettings.style.display = 'block';
+                    modal_link_settings.style.display = 'block';
 
-                    const range = selection.getRangeAt(0);//VỊ trí hiện tại của trỏ chuột
-                    // Bôi đen toàn bộ nội dung trong thẻ <a>
+                    //Current position of the mouse pointer
+                    const range = selection.getRangeAt(0);
+                    // Highlight all content in <a> . tag
                     range.selectNodeContents(selection.anchorNode.parentNode);
-                    selectedText = targetElement.textContent;
+                    selected_text = target_element.textContent;
         
-                    indexLink();
-                    var countLink = element.length - 1;
-                    inputUrl.value = element.slice(14, countLink)
+                    index_link();
+                    var count_link = element.length - 1;
+                    input_url.value = element.slice(14, count_link)
                     name = 'link';
                 } else if (element.slice(0, 13) == 'href="mailto:') {
-                    modalLinkSettings.style.display = 'block';
+                    modal_link_settings.style.display = 'block';
 
-                    const range = selection.getRangeAt(0);//VỊ trí hiện tại của trỏ chuột
-                    // Bôi đen toàn bộ nội dung trong thẻ <a>
+                    //Current position of the mouse pointer
+                    const range = selection.getRangeAt(0);
+                    // Highlight all content in <a> . tag
                     range.selectNodeContents(selection.anchorNode.parentNode);
-                    selectedText = targetElement.textContent;
+                    selected_text = target_element.textContent;
 
-                    emailLink();
-                    var countLink = element.length - 1;
-                    inputMail.value = element.slice(13, countLink)
+                    email_link();
+                    var count_link = element.length - 1;
+                    input_mail.value = element.slice(13, count_link)
                 } else if (element.slice(0, 6) == 'href="'){
-                    modalLinkSettings.style.display = 'block';
+                    modal_link_settings.style.display = 'block';
 
-                    const range = selection.getRangeAt(0);//VỊ trí hiện tại của trỏ chuột
-                    // Bôi đen toàn bộ nội dung trong thẻ <a>
+                    //Current position of the mouse pointer
+                    const range = selection.getRangeAt(0);
+                    // Highlight all content in <a> . tag
                     range.selectNodeContents(selection.anchorNode.parentNode);
-                    selectedText = targetElement.textContent;
+                    selected_text = target_element.textContent;
 
-                    fileLink();
-                    var countLink = element.length - 1;
-                    inputFile.value = element.slice(6, countLink)
+                    file_link();
+                    var count_link = element.length - 1;
+                    input_file.value = element.slice(6, count_link)
                     name = 'file';
                 }
 
@@ -302,257 +328,250 @@ $(document).ready(() => {
             });
             if(count > 0) {
                 if (name == 'link') {
-                    newTab.checked = true;
+                    new_tab.checked = true;
                 } else if (name == 'file'){
-                    newTabFile.checked = true;
+                    new_tab_file.checked = true;
                 }
             } else {
                 if (name == 'link') {
-                    newTab.checked = false;
+                    new_tab.checked = false;
                 } else if (name == 'file'){
-                    newTabFile.checked = false;
+                    new_tab_file.checked = false;
                 }
             }
         }
     });
 
-    function takeHighLight() {
-        //Lấy được text của phần bôi đen
+    function take_high_light() {
+        //Get the text of the highlighted part
         document.addEventListener("mouseup", function (event) {
             var selection = window.getSelection();
             var location = selection.getRangeAt(0);
             if(location.endOffset - location.startOffset != 0){
-                selectedText = window.getSelection().toString()
+                selected_text = window.getSelection().toString()
             }
         });
     }
 
-    function indexLink() {
-        //Xoá tất cả các tab trừ tab đầu tiên
-        tabContents.forEach((tabContent) => {
-            if (tabContent.id !== 'externallink') {
-                tabContent.style.display = 'none';
+    function index_link() {
+        //Delete all tabs except the first one
+        tab_contents.forEach((tab_content) => {
+            if (tab_content.id !== 'externallink') {
+                tab_content.style.display = 'none';
             } else {
-                checkBoxLink.checked = true;
-                tabContent.style.display = 'block';
+                radio_btn_link.checked = true;
+                tab_content.style.display = 'block';
             }
         });
     }
 
-    function emailLink() {
-        //Xoá tất cả các tab trừ tab thứ 2
-        tabContents.forEach((tabContent) => {
-            if (tabContent.id !== 'email') {
-                tabContent.style.display = 'none';
+    function email_link() {
+        //Remove all tabs except the 2nd tab
+        tab_contents.forEach((tab_content) => {
+            if (tab_content.id !== 'email') {
+                tab_content.style.display = 'none';
             } else {
-                checkBoxMail.checked = true;
-                tabContent.style.display = 'block';
+                radio_btn_mail.checked = true;
+                tab_content.style.display = 'block';
             }
         });
     }
 
-    function fileLink() {
-        //Xoá tất cả các tab trừ tab thứ 3
-        tabContents.forEach((tabContent) => {
-            if (tabContent.id !== 'uploadfile') {
-                tabContent.style.display = 'none';
+    function file_link() {
+        //Remove all tabs except the 3rd tab
+        tab_contents.forEach((tab_content) => {
+            if (tab_content.id !== 'uploadfile') {
+                tab_content.style.display = 'none';
             } else {
-                checkBoxFile.checked = true;
-                tabContent.style.display = 'block';
+                radio_btn_file.checked = true;
+                tab_content.style.display = 'block';
             }
         });
     }
 
-    function changeTabInsertLink(params) {
-        radioButtons.forEach((radio) => {
+    function change_tab_insert_link() {
+        radio_buttons.forEach((radio) => {
             radio.addEventListener('change', () => {
-                // Ẩn tất cả các tab-content
-                const tabContents = document.querySelectorAll('.tab-link');
-                tabContents.forEach((tabContent) => {
-                tabContent.style.display = 'none';
+                // Hide all tabs-content
+                const tab_contents = document.querySelectorAll('.tab-link');
+                tab_contents.forEach((tab_content) => {
+                tab_content.style.display = 'none';
                 });
 
-                // Hiển thị tab-content tương ứng với radio button được chọn
-                const selectedTabValue = document.querySelector('input[name="link"]:checked').value;
-                const selectedTabContent = document.getElementById(selectedTabValue);
-                selectedTabContent.style.display = 'block';
+                // Display the tab-content corresponding to the selected radio button
+                const selected_tab_value = document.querySelector('input[name="link"]:checked').value;
+                const selected_tab_content = document.getElementById(selected_tab_value);
+                selected_tab_content.style.display = 'block';
             });
         });
     }
 
-    function openLink() {
-        buttonOpenURL.addEventListener("click", function(event) {
-            if (inputUrl.value == '' || inputUrl.value == null) {
+    function open_link() {
+        button_open_url.addEventListener("click", function(event) {
+            if (input_url.value == '' || input_url.value == null) {
                 alert('Link không được để trống!')
             } else {
-                const domEditableElement = document.querySelector('.ck-editor__editable');
-                const editorInstance = domEditableElement.ckeditorInstance;
-                // const modalLinkSettings = document.getElementById('link-settings')
-                // const btnCloseLinkSetting = document.querySelector('.btn-close-link-setting');
+                const dom_edit_able_element = document.querySelector('.ck-editor__editable');
+                const editor_instance = dom_edit_able_element.ckeditorInstance;
+                const input_url_value = "https://" + input_url.value;
+                var new_tab_value = new_tab.checked;
                 
-                // var targetElement = event.target;
-                // if (targetElement && targetElement.nodeName === "A") {
-                //     console.log(selectedText);
-                // }
-                const inputUrlValue = "https://" + inputUrl.value;
-                var newTabValue = newTab.checked;
-                
-                const htmlDP = editorInstance.data.processor;
-                if(newTabValue == true){
-                    const viewFragment = htmlDP.toView(`<a href="${inputUrlValue}" target="_blank">${selectedText}</a>`);
-                    const modelFragment = editorInstance.data.toModel(viewFragment);
-                    editorInstance.model.insertContent(modelFragment);
+                const html_dp = editor_instance.data.processor;
+                if(new_tab_value == true){
+                    const view_fragment = html_dp.toView(`<a href="${input_url_value}" target="_blank">${selected_text}</a>`);
+                    const model_fragment = editor_instance.data.toModel(view_fragment);
+                    editor_instance.model.insertContent(model_fragment);
                 } else {
-                    const viewFragment = htmlDP.toView(`<a href="${inputUrlValue}">${selectedText}</a>`);
-                    const modelFragment = editorInstance.data.toModel(viewFragment);
-                    editorInstance.model.insertContent(modelFragment);
+                    const view_fragment = html_dp.toView(`<a href="${input_url_value}">${selected_text}</a>`);
+                    const model_fragment = editor_instance.data.toModel(view_fragment);
+                    editor_instance.model.insertContent(model_fragment);
                 }
 
-                btnCloseLinkSetting.addEventListener('click',()=>{
-                    modalLinkSettings.style.display = 'none';
+                btn_close_link_setting.addEventListener('click',()=>{
+                    modal_link_settings.style.display = 'none';
                 })
-                btnCloseLinkSetting.click();
+                btn_close_link_setting.click();
             }
         });
     }
 
+    // Validate for email
     function isValidEmail(email) {
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailPattern.test(email);
+        const email_pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return email_pattern.test(email);
     }
 
-    function openMail() {
-        buttonOpenMail.addEventListener("click", function() {
-            if (isValidEmail(inputMail.value)) {
-                const domEditableElement = document.querySelector('.ck-editor__editable');
-                const editorInstance = domEditableElement.ckeditorInstance;
+    function open_mail() {
+        button_open_mail.addEventListener("click", function() {
+            if (isValidEmail(input_mail.value)) {
+                const dom_edit_able_element = document.querySelector('.ck-editor__editable');
+                const editor_instance = dom_edit_able_element.ckeditorInstance;
 
-                var inputMailValue = "mailto:" + inputMail.value;
+                var input_mail_value = "mailto:" + input_mail.value;
 
-                const htmlDP = editorInstance.data.processor;
-                const viewMail = htmlDP.toView(`<a href="${inputMailValue}">${selectedText}</a>`);
-                const modelMail = editorInstance.data.toModel(viewMail);
-                editorInstance.model.insertContent(modelMail);
+                const html_dp = editor_instance.data.processor;
+                const viewMail = html_dp.toView(`<a href="${input_mail_value}">${selected_text}</a>`);
+                const modelMail = editor_instance.data.toModel(viewMail);
+                editor_instance.model.insertContent(modelMail);
                 
 
-                btnCloseLinkSetting.addEventListener('click',()=>{
-                    modalLinkSettings.style.display = 'none';
+                btn_close_link_setting.addEventListener('click',()=>{
+                    modal_link_settings.style.display = 'none';
                 })
-                btnCloseLinkSetting.click();
+                btn_close_link_setting.click();
             } else {
                 alert('Email chưa đúng định dạng!');
             }
-            
         });
     }
 
-    function addEventModalFileSetting(){
+    function add_event_modal_file_setting(){
         const btnPickFile = document.getElementById("upload_file");
         if(btnPickFile){
             btnPickFile.addEventListener('click', (e) => {
                 e.preventDefault()
-                modalFileSettings.style.display = 'block'
+                modal_file_settings.style.display = 'block'
             })
         }
-        btnCloseFileSetting.addEventListener('click',()=>{
-            modalFileSettings.style.display = 'none'
+        btn_close_file_setting.addEventListener('click',()=>{
+            modal_file_settings.style.display = 'none'
         })
     }
 
-    function openFile() {
-        buttonOpenFile.addEventListener("click", function() {
-            if (inputFile.value == '' || inputFile.value == null) {
+    function open_file() {
+        button_open_file.addEventListener("click", function() {
+            if (input_file.value == '' || input_file.value == null) {
                 alert('Đường dẫn file không được để trống!');
             } else {
-                const domEditableElement = document.querySelector('.ck-editor__editable');
-                const editorInstance = domEditableElement.ckeditorInstance;
+                const dom_edit_able_element = document.querySelector('.ck-editor__editable');
+                const editor_instance = dom_edit_able_element.ckeditorInstance;
 
-                const htmlDP = editorInstance.data.processor;
-                const inputFileValue =  inputFile.value;
-                var newTab = newTabFile.checked;
+                const html_dp = editor_instance.data.processor;
+                const input_file_value =  input_file.value;
+                var new_tab = new_tab_file.checked;
 
-                if(newTab == true){
-                    const viewFile = htmlDP.toView(`<a href="${inputFileValue}" target="_blank">${selectedText}</a>`);
-                    const modelFile = editorInstance.data.toModel(viewFile);
-                    editorInstance.model.insertContent(modelFile);
+                if(new_tab == true){
+                    const view_file = html_dp.toView(`<a href="${input_file_value}" target="_blank">${selected_text}</a>`);
+                    const model_file = editor_instance.data.toModel(view_file);
+                    editor_instance.model.insertContent(model_file);
                 } else {
-                    const viewFile = htmlDP.toView(`<a href="${inputFileValue}">${selectedText}</a>`);
-                    const modelFile = editorInstance.data.toModel(viewFile);
-                    editorInstance.model.insertContent(modelFile);
+                    const view_file = html_dp.toView(`<a href="${input_file_value}">${selected_text}</a>`);
+                    const model_file = editor_instance.data.toModel(view_file);
+                    editor_instance.model.insertContent(model_file);
                 }
                 
 
-                btnCloseLinkSetting.addEventListener('click',()=>{
-                    modalLinkSettings.style.display = 'none';
+                btn_close_link_setting.addEventListener('click',()=>{
+                    modal_link_settings.style.display = 'none';
                 })
-                btnCloseLinkSetting.click();
+                btn_close_link_setting.click();
             }
         });
     }
 
-    // Khi bấm upload file
-    uploadFileForm.on('submit',(e)=>{
+    // When you click upload file
+    upload_file_form.on('submit',(e)=>{
         e.preventDefault()
-        var actionUrl = uploadFileForm.attr('action')
-        var form_data = new FormData(uploadFileForm[0]);
-        const fileNameSelected = document.querySelectorAll('.file-name-selected')
+        var action_url = upload_file_form.attr('action')
+        var form_data = new FormData(upload_file_form[0]);
+        const file_name_selected = document.querySelectorAll('.file-name-selected')
         $.ajax({
             type: "POST",
-            url: actionUrl,
+            url: action_url,
             data: form_data,
             success: function(data) {
                 if (data['success']) {
-                    const newFile = Object.entries(data['result']['new_images'])
-                    searchFileForm[0].reset()
-                    addNewFileToList(newFile)
+                    const new_file = Object.entries(data['result']['new_images'])
+                    search_file_form[0].reset()
 
-                    // Insert File sau khi upload xong
-                    insertFile()
+                    // Add an item to the file list
+                    add_new_file_to_list(new_file)
+
+                    // Insert File after upload is done
+                    insert_file()
 
                     switchToListFileTab()
-                    uploadFileForm[0].reset()
-                    fileNameSelected.forEach(item=>{
+                    upload_file_form[0].reset()
+                    file_name_selected.forEach(item=>{
                         item.innerHTML = ""
                     });
 
-                    //Xóa File sau khi upload
-                    deleteFile()
+                    //Delete file after uploading
+                    delete_file()
 
                     //Properties file
-                    openModalPropertiesFile()
+                    open_modal_properties_file()
                 } else {
-                    modalNoticeFile.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>${data['message']}</h5>`)
-                    modalNoticeFile.css('display', "block");
+                    modal_notice_file.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>${data['message']}</h5>`)
+                    modal_notice_file.css('display', "block");
                 }
             },
             cache: false,
-        })
-        .fail(function() {
-            // modalNoticeFile.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>Can not upload file. Please check again!</h5>`)
-            // modalNoticeFile.css('display', "block");
+        }).fail(function() {
+            modal_notice_file.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>Can not upload image. Please check again!</h5>`)
+            modal_notice_file.css('display', "block");
         });
     })
 
     function switchToListFileTab() {
-        btnListFileTab.click()
-        btnListFileTab.classList.remove('active-interface')
-        btnListFileTab.classList.add('active')
+        btn_list_file_tab.click()
+        btn_list_file_tab.classList.remove('active-interface')
+        btn_list_file_tab.classList.add('active')
     }
 
     //Khi bấm update file
-    updateFileForm.on('submit',(e)=>{
+    update_file_form.on('submit',(e)=>{
         e.preventDefault()
-        var actionUrl = updateFileForm.attr('action')
-        var form_data = new FormData(updateFileForm[0]);
-        // const fileNameSelected = document.querySelectorAll('.file-name-selected')
+        var action_url = update_file_form.attr('action')
+        var form_data = new FormData(update_file_form[0]);
 
         $.ajax({
             type: "POST",
-            url: actionUrl,
+            url: action_url,
             data: form_data,
             success: function(data) {
                 if (data['success']) {
-                    btnClosePropertiesFile.click();
+                    btn_closeproperties_file.click();
 
                     var properties_id = document.getElementById('properties_id');
                     var properties_name = document.getElementById('properties_name');
@@ -567,28 +586,26 @@ $(document).ready(() => {
                 }
             },
             cache: false,
-            contentType: false,
-            processData: false
         }).fail(function() {
-            modalNoticeFile.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>Can not upload image. Please check again!</h5>`)
-            modalNoticeFile.css('display', "block");
+            modal_notice_file.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>Can not upload image. Please check again!</h5>`)
+            modal_notice_file.css('display', "block");
         });
     })
 
-    function insertFile() {
-        const buttonInsertFile = document.querySelectorAll('.button-insert-file');
-        buttonInsertFile.forEach(button => {
+    function insert_file() {
+        const button_insert_file = document.querySelectorAll('.button-insert-file');
+        button_insert_file.forEach(button => {
             button.addEventListener("click", function() {
                 const path = this.dataset.path;
-                inputFile.value = path;
-                btnCloseFileSetting.click();
+                input_file.value = path;
+                btn_close_file_setting.click();
             });
         });
     }
 
-    function deleteFile() {
-        var buttonDeleteFile = document.querySelectorAll('.button-delete-file');
-        buttonDeleteFile.forEach(button => {
+    function delete_file() {
+        var button_delete_file = document.querySelectorAll('.button-delete-file');
+        button_delete_file.forEach(button => {
             button.addEventListener("click", function() {
                 var idDelete = this.dataset.id;
                 let url = `/admin/link/delete?id=${idDelete}`
@@ -601,13 +618,13 @@ $(document).ready(() => {
                     cancelButtonColor: '#3085d6',
                     confirmButtonText: 'Delete!'
                 }).then((result) => {
-                    var listItem = this.closest('.library-item');
+                    var list_item = this.closest('.library-item');
                     if (result.isConfirmed) {
                         $.ajax({
                             url: url,
                             success: function () {
-                                if (listItem) {
-                                    listItem.remove();
+                                if (list_item) {
+                                    list_item.remove();
                                 }
                             }
                         });
@@ -617,12 +634,12 @@ $(document).ready(() => {
         });
     }
 
-    function openModalPropertiesFile(){
+    function open_modal_properties_file(){
         const btnPropertiesFile = document.querySelectorAll('.btn-properties-file');
         btnPropertiesFile.forEach(button => {
             button.addEventListener("click", function(e) {
                 e.preventDefault()
-                modalPropertiesFile.style.display = 'block'
+                modal_properties_file.style.display = 'block'
                 var id = this.dataset.idfile;
                 var name = this.dataset.name;
                 var path = this.dataset.path;
@@ -638,143 +655,132 @@ $(document).ready(() => {
                 properties_path.textContent = path;
                 properties_update.textContent = update;
             });
-            btnClosePropertiesFile.addEventListener('click',()=>{
-                modalPropertiesFile.style.display = 'none'
+            btn_closeproperties_file.addEventListener('click',()=>{
+                modal_properties_file.style.display = 'none'
             })
         });
     }
     
-    searchFileForm.on('submit',(e)=>{
-    // btnSearchFile.addEventListener('click',(e)=>{
+    // When searching for files
+    search_file_form.on('submit',(e)=>{
         e.preventDefault()
-        const actionUrlFile = searchFileForm.attr('action')
-        var form_data = new FormData(searchFileForm[0]);
+        const action_url_file = search_file_form.attr('action')
+        var form_data = new FormData(search_file_form[0]);
         $.ajax({
             type    : "POST",
-            url     : actionUrlFile,
+            url     : action_url_file,
             data    : form_data,
             success: function(data) {
                 if (data['success']) {
-                    var qtyPage = data['object'];
-                    btnPaginattion.innerHTML = '';
+                    var qty_page = data['object'];
+                    btn_paginattion.innerHTML = '';
                     var html = `<li class="page-item cursor-pointer hidden"><a class="page-link text-dark">Previous</a></li>`;
-                    for (let index = 1; index <= qtyPage; index++) {
-                        if(qtyPage == 1 || qtyPage == 0){
+                    for (let index = 1; index <= qty_page; index++) {
+                        if(qty_page == 1 || qty_page == 0){
                             html += `<li class="cursor-pointer"><a class="page-link text-dark">${index}</a></li>`;
                         } else {
                             html += `<li class="page-item cursor-pointer"><a class="page-link text-dark">${index}</a></li>`;
                         }
                     }
-                    if(qtyPage == 1 || qtyPage == 0){
+                    if(qty_page == 1 || qty_page == 0){
                         html += `<li class="page-item cursor-pointer hidden"><a class="page-link text-dark">Next</a></li>`;
                     } else {
                         html += `<li class="page-item cursor-pointer"><a class="page-link text-dark">Next</a></li>`;
                     }
-                    btnPaginattion.html(html);
+                    btn_paginattion.html(html);
                     paginate();
-                    ChangePaginate();
+                    change_paginate();
 
-                    selectQtyFile.value = 5;
+                    select_qty_file.value = 5;
 
-                    fileListUL.innerHTML = ''
+                    file_list_ul.innerHTML = ''
                     var htmls = ""
                     data['result'].forEach(file => {
-                        htmls += createLiTagFileHtml(file)
+                        htmls += create_list_tag_file_html(file)
                     });
-                    fileListUL.html(htmls)
+                    file_list_ul.html(htmls)
 
-                    insertFile();
-                    deleteFile()
-                    openModalPropertiesFile()
+                    insert_file();
+                    delete_file()
+                    open_modal_properties_file()
 
                 }
             },
             dataType: 'json',
             cache: false,
-            contentType: false,
-            processData: false
        })
     })
     
-    selectQtyFile.addEventListener('change',(e)=>{
-        const inputQty = document.getElementById('input_qty');
-        inputQty.value = selectQtyFile.value;
-        // changeQtyFile();
+    select_qty_file.addEventListener('change',(e)=>{
+        const input_qty = document.getElementById('input_qty');
+        input_qty.value = select_qty_file.value;
         e.preventDefault()
-        const actionQtyFile = paginateFileForm.getAttribute('action')
-        // var form_data = new FormData(paginateFileForm[0]);
-        
-        // var form_data = new FormData(searchFileForm[0]);
+        const action_qty_file = paginate_file_form.getAttribute('action')
 
-        // const formData = new FormData(paginateFileForm);
-        // var form_data = Object.fromEntries(formData.entries());
         var form_data = {
-            'qty'           :   selectQtyFile.value,
-            'input_search'  :   inputSearch.value,
+            'qty'           :   select_qty_file.value,
+            'input_search'  :   input_search.value,
             'desc'          :   descending.checked,
             'asc'           :   ascending.checked,
         }
         
         $.ajax({
             type    : "POST",
-            url     : actionQtyFile,
+            url     : action_qty_file,
             data    : form_data,
             success: function(data) {
                 if (data['success']) {
-                    var qtyPage = data['object'];
-                    btnPaginattion.innerHTML = '';
+                    var qty_page = data['object'];
+                    btn_paginattion.innerHTML = '';
                     var html = `<li class="page-item cursor-pointer hidden"><a class="page-link text-dark">Previous</a></li>`;
-                    for (let index = 1; index <= qtyPage; index++) {
-                        if(qtyPage == 1){
+                    for (let index = 1; index <= qty_page; index++) {
+                        if(qty_page == 1){
                             html += `<li class="cursor-pointer"><a class="page-link text-dark">${index}</a></li>`;
                         } else {
                             html += `<li class="page-item cursor-pointer"><a class="page-link text-dark">${index}</a></li>`;
                         }
                     }
-                    if(qtyPage == 1){
+                    if(qty_page == 1){
                         html += `<li class="page-item cursor-pointer hidden"><a class="page-link text-dark">Next</a></li>`;
                     } else {
                         html += `<li class="page-item cursor-pointer"><a class="page-link text-dark">Next</a></li>`;
                     }
-                    btnPaginattion.html(html);
+                    btn_paginattion.html(html);
                     paginate();
-                    ChangePaginate();
+                    change_paginate();
                     
-                    fileListUL.innerHTML = ''
+                    file_list_ul.innerHTML = ''
                     var htmls = ""
                     data['result'].forEach(file => {
-                        htmls += createLiTagFileHtml(file)
+                        htmls += create_list_tag_file_html(file)
                     });
-                    fileListUL.html(htmls)
+                    file_list_ul.html(htmls)
 
-                    insertFile();
-                    //Xóa File sau khi upload
-                    deleteFile()
+                    insert_file();
+                    // Delete File After Uploading
+                    delete_file()
 
                     //Properties file
-                    openModalPropertiesFile()
+                    open_modal_properties_file()
                 }
             },
             dataType: 'json',
-            // cache: false,
-            // contentType: false,
-            // processData: false
         })
     })
     
-    function addNewFileToList(newFile) {
+    function add_new_file_to_list(new_file) {
         var htmls = ""
-        newFile.forEach(item => {
+        new_file.forEach(item => {
             let file = item[1][0]
-            htmls += createLiTagFileHtml(file)
+            htmls += create_list_tag_file_html(file)
         });
-        fileListUL.prepend(htmls)
+        file_list_ul.prepend(htmls)
     }
     
-    function createLiTagFileHtml(file){
+    function create_list_tag_file_html(file){
         return `<li class="list-group-item d-flex col-12 library-item">
         <div class="col-2 d-flex justify-content-center align-items-center">
-            <img class="img-thumbnail-item img-thumbnail" src="/${file['path']}" alt="">
+            <img class="img-thumbnail-item img-thumbnail" alt="">
         </div>
         <div class="col-8">
             <div class="d-flex flex-column ml-2">
@@ -795,18 +801,18 @@ $(document).ready(() => {
     </li>`
     }
     
-    function addEventModalLinkSetting(){
-        if(btnPickLink[3]){
-            btnPickLink[3].addEventListener('click', (e) => {
+    function add_event_modal_link_setting(){
+        if(btn_pick_link[3]){
+            btn_pick_link[3].addEventListener('click', (e) => {
                 e.preventDefault()
-                modalLinkSettings.style.display = 'block'
-                indexLink();
-                inputUrl.value = null;
-                newTab.checked = false;
+                modal_link_settings.style.display = 'block'
+                index_link();
+                input_url.value = null;
+                new_tab.checked = false;
             })
         }
-        btnCloseLinkSetting.addEventListener('click',()=>{
-            modalLinkSettings.style.display = 'none'
+        btn_close_link_setting.addEventListener('click',()=>{
+            modal_link_settings.style.display = 'none'
         })
     }
 })
