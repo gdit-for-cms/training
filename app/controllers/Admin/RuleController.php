@@ -64,8 +64,9 @@ class RuleController extends AppController
         $all_categories = $this->obj_rule->getAllCategories($rule_edit['type_rule_id']);
         $getImageResults = $this->obj_image->getAllRelation(['update-date-order' => 'desc', 'thumbnail' => 'yes'], 5);
         $getFileResults = $this->obj_link->getAllRelation(['update-date-order' => 'desc', 'thumbnail' => 'yes'], 5);
+
         $qtyPageOfFIle = (int)($getFileResults['numbers_of_result'] / 5);
-        if((int)($getFileResults['numbers_of_result'] % 5 != 0)) {
+        if(($getFileResults['numbers_of_result'] % 5 != 0)) {
             $qtyPageOfFIle = (int)($getFileResults['numbers_of_result'] / 5) + 1;
         }
 

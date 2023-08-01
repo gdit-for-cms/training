@@ -21,7 +21,7 @@ class Role extends Model {
      *
      * @return array
      */
-    public static function getAll() { 
+    public static function getAll() {
         return (new self)->all();
     }
 
