@@ -589,7 +589,7 @@
                     </ul>
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane show active" id="upload_file_tab" role="tabpanel" aria-labelledby="upload-tab">
-                            <form action="/admin/link/store" name="upload-images-form" id="upload-file-form" method="post">
+                            <form action="/admin/link/store" name="upload-images-form" id="upload-file-form" method="post" enctype="multipart/form-data">
                                 <div class=" row group-select-one-file">
                                     <div class="row">
                                         <div class="col-3">

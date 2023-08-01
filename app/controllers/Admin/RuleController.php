@@ -62,7 +62,7 @@ class RuleController extends AppController
         $rule_edit = $this->obj_rule->getById($rule_id);
         $type_rule = $this->obj_type_rule->getById($rule_edit['type_rule_id']);
         $all_categories = $this->obj_rule->getAllCategories($rule_edit['type_rule_id']);
-        $getImageResults = $this->obj_image->getAllRelation(['update-date-order' => 'desc', 'thumbnail' => 'yes'], 5);
+
         $getFileResults = $this->obj_link->getAllRelation(['update-date-order' => 'desc', 'thumbnail' => 'yes'], 5);
 
         $qtyPageOfFIle = (int)($getFileResults['numbers_of_result'] / 5);
@@ -70,14 +70,18 @@ class RuleController extends AppController
             $qtyPageOfFIle = (int)($getFileResults['numbers_of_result'] / 5) + 1;
         }
 
-        $this->data_ary['library_file'] = $getFileResults['file'];
+        $getImageResults = $this->obj_image->getAllRelation(['update-date-order' => 'desc', 'thumbnail' => 'yes'], 5);
+
         $this->data_ary['library_images'] = $getImageResults['images'];
         $this->data_ary['numberAllImage'] = $getImageResults['numbers_of_result'];
-        $this->data_ary['numberAllFile'] = $getFileResults['numbers_of_result'];
-        $this->data_ary['qtyPageOfFIle'] = $qtyPageOfFIle;
         $this->data_ary['all_categories'] = $all_categories;
         $this->data_ary['type_rule'] = $type_rule;
         $this->data_ary['rule_edit'] = $rule_edit;
+
+        $this->data_ary['library_file'] = $getFileResults['file'];
+        $this->data_ary['numberAllFile'] = $getFileResults['numbers_of_result'];
+        $this->data_ary['qtyPageOfFIle'] = $qtyPageOfFIle;
+
         $this->data_ary['content'] = "rule/edit";
     }
 

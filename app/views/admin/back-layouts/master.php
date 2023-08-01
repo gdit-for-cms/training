@@ -8,7 +8,7 @@
     <title><?= $title ?></title>
     <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
     <link href="/css/back-css/dashboard.css" rel="stylesheet">
-    <link href="/css/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.css">
     </link>
     <link href="/css/back-css/style.css" rel="stylesheet">
@@ -30,8 +30,8 @@
         <script src="/js/boostrap/bootstrap.min.js"></script>
         <script src="/js/back-js/dashboard.js"></script>
         <script src="/js/back-js/main.js"></script>
-        <script src="/js/back-js/customCkeditor.js"></script>
         <script src="/js/back-js/customFileCkeditor.js"></script>
+        <script src="/js/back-js/customCkeditor.js"></script>
 </body>
 
 </html>

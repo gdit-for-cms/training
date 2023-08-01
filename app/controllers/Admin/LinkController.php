@@ -24,11 +24,28 @@ class LinkController extends AppController
     {
         $post = $request->getPost()->all();
         $files =  $request->getFiles();
+        // $targetDir = "/htdocs/training2/training/public/file/";
+        // $targetFile = $targetDir . basename($_FILES["upload-file"]["name"]);
+        // if (file_exists($targetFile)) {
+        //     $this->responseFileQuery(false, 'File already exists', []);
+        // }
+        
+        // // Giới hạn kích thước tệp (vd: giới hạn kích thước 2MB)
+        // if ($_FILES["fileToUpload"]["size"] > 2 * 1024 * 1024) {
+        //     $this->responseFileQuery(false, 'File size too large', []);
+        // }
+
+        // if (move_uploaded_file($_FILES["upload-file"]["tmp_name"], $targetFile)) {
+        //     echo "Tệp " . basename($_FILES["upload-file"]["name"]) . " đã được tải lên thành công.";
+        // } else {
+        //     echo "Có lỗi xảy ra khi tải lên tệp của bạn.";
+        // }
+
         $data_upload = array();
         $all_results = array();
         $add_item_result = [
-            'all_results' => [],
-            'data_upload' => [],
+            'all_results' => array(),
+            'data_upload' => array(),
         ];
         try { 
             $name_key = 'name-file';
@@ -41,12 +58,12 @@ class LinkController extends AppController
                 foreach ($data_upload as $key => $value) {
                     $extension = explode('.', $value['file']['name'])[1];
                     $file_name = rand(10, 1000000) . time() . '.' . $extension;
-                    $file_path = '/public/file' . $file_name;
+                    $file_path = '/htdocs/training2/training/public/file/' . $file_name;
                     if (file_exists($file_path)) {
                         $all_results['failed'][$key] = 'File already exists';
                     } else {
                         try {
-                            // if (move_uploaded_file($value['file']['tmp_name'], $file_path)) {
+                            if (move_uploaded_file($value['file']['tmp_name'], $file_path)) {
                                 $file_data = [
                                     'name' => $value['name'],
                                     'path' => $file_path
@@ -62,9 +79,9 @@ class LinkController extends AppController
                                     unlink($file_path);
                                     $all_results['failed'][$key] = 'Failed!';
                                 }
-                            // } else {
-                            //     $all_results['failed'][$key] = 'Failed!';
-                            // }
+                            } else {
+                                $all_results['failed'][$key] = 'Failed!';
+                            }
                         } catch (\Throwable $th) {
                             $all_results['failed'][$key] = 'Failed!';
                         }
@@ -137,8 +154,9 @@ class LinkController extends AppController
         if((int)(count($all_results) % 5 != 0)) {
             $qtyPageOfFIle = (int)(count($all_results) / 5) + 1;
         }
+        $object = $qtyPageOfFIle;
 
-        return $this->responseFileObj(true, 'Search file success', $result, $qtyPageOfFIle);
+        return $this->responseFileObj(true, 'Search file success', $result, $object);
     }
 
     public function qtyofonepageAction(Request $request)

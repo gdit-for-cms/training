@@ -504,8 +504,6 @@ $(document).ready(() => {
                 if (data['success']) {
                     const newFile = Object.entries(data['result']['new_images'])
                     searchFileForm[0].reset()
-                    // btnSearchImg.click()
-                    // updateSelectLimitValue(newFile.length+selectLimitImage.value)
                     addNewFileToList(newFile)
 
                     // Insert File sau khi upload xong
@@ -528,11 +526,10 @@ $(document).ready(() => {
                 }
             },
             cache: false,
-            contentType: false,
-            processData: false
-        }).fail(function() {
-            modalNoticeFile.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>Can not upload image. Please check again!</h5>`)
-            modalNoticeFile.css('display', "block");
+        })
+        .fail(function() {
+            // modalNoticeFile.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>Can not upload file. Please check again!</h5>`)
+            // modalNoticeFile.css('display', "block");
         });
     })
 
