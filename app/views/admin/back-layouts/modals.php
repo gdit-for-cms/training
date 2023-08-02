@@ -235,7 +235,7 @@
                                             <option value="10">10 pieces</option>
                                             <option value="15">15 pieces</option>
                                             <?php
-                                            if (!empty($numberAllImage)) {
+                                                if (!empty($numberAllImage)) {
                                             ?>
                                                 <option id="option-all-result" value="<?php echo $numberAllImage ?>">All (<?php echo $numberAllImage ?>)</option>
                                             <?php
@@ -690,7 +690,7 @@
                                         ?>
                                             <li class="list-group-item d-flex col-12 library-item">
                                                 <div class="col-2 d-flex justify-content-center align-items-center">
-                                                    <img class="file-thumbnail-item img-thumbnail" src="<?php echo '/' . $file['path'] ?>" alt="">
+                                                    <img class="file-thumbnail-item img-thumbnail" alt="">
                                                 </div>
                                                 <div class="col-8">
                                                     <div class="d-flex flex-column ml-2">
@@ -720,8 +720,10 @@
                                 <nav aria-label="Page navigation example">
                                     <ul class="pagination">
                                         <li class="page-item cursor-pointer hidden"><a class="page-link text-dark">Previous</a></li>
-                                        <?php for ($i = 1; $i <= $qtyPageOfFIle; $i++) { ?>
-                                            <li class="page-item cursor-pointer"><a class="page-link text-dark"><?= $i ?></a></li>
+                                        <?php if (isset($qtyPageOfFIle)) {?>
+                                            <?php for ($i = 1; $i <= $qtyPageOfFIle; $i++) { ?>
+                                                <li class="page-item cursor-pointer"><a class="page-link text-dark"><?= $i ?></a></li>
+                                            <?php } ?>
                                         <?php } ?>
                                         <li class="page-item cursor-pointer"><a class="page-link text-dark">Next</a></li>
                                     </ul>

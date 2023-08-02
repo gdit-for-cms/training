@@ -93,6 +93,7 @@ $(document).ready(() => {
 
     // Modal notice file
     const modal_notice_file = $('#modal-notice-file')
+    const btn_close_modal_note_file = $('#close-modal-notice-file')
 
     // Take the highlighted part
     take_high_light()
@@ -115,11 +116,14 @@ $(document).ready(() => {
     // Modal upload file
     add_event_modal_file_setting();
 
+    // Upload file
+    upload_file()
+
     // Insert FIle
     insert_file()
 
     // Delete file
-    delete_file();
+    delete_file()
 
     // Properties file
     open_modal_properties_file()
@@ -210,6 +214,10 @@ $(document).ready(() => {
                         } else {
                             modal_notice_file.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>${data['message']}</h5>`)
                             modal_notice_file.css('display', "block");
+
+                            btn_close_modal_note_file.addEventListener('click', () => {
+                                modal_notice_file.style.display = 'none'
+                            })
                         }
                     },
                     cache: false,
@@ -510,47 +518,54 @@ $(document).ready(() => {
     }
 
     // When you click upload file
-    upload_file_form.on('submit',(e)=>{
-        e.preventDefault()
-        var action_url = upload_file_form.attr('action')
-        var form_data = new FormData(upload_file_form[0]);
-        const file_name_selected = document.querySelectorAll('.file-name-selected')
-        $.ajax({
-            type: "POST",
-            url: action_url,
-            data: form_data,
-            success: function(data) {
-                if (data['success']) {
-                    const new_file = Object.entries(data['result']['new_images'])
-                    search_file_form[0].reset()
-
-                    // Add an item to the file list
-                    add_new_file_to_list(new_file)
-
-                    // Insert File after upload is done
-                    insert_file()
-
-                    switchToListFileTab()
-                    upload_file_form[0].reset()
-                    file_name_selected.forEach(item=>{
-                        item.innerHTML = ""
-                    });
-
-                    //Delete file after uploading
-                    delete_file()
-
-                    //Properties file
-                    open_modal_properties_file()
-                } else {
-                    modal_notice_file.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>${data['message']}</h5>`)
-                    modal_notice_file.css('display', "block");
-                }
+    function upload_file() {
+        upload_file_form.on('submit',(e)=>{
+            e.preventDefault()
+            var action_url = upload_file_form.attr('action')
+            var form_data = new FormData(upload_file_form[0]);
+            $.ajax({
+                type: "POST",
+                url: action_url,
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    if (data['success']) {
+                        // const new_file = Object.entries(data['result']['new_images'])
+                        search_file_form[0].reset()
+    
+                        // Add an item to the file list
+                        add_new_file_to_list(data['result'])
+    
+                        // Insert File after upload is done
+                        insert_file()
+    
+                        switchToListFileTab()
+                        upload_file_form[0].reset()
+    
+                        //Delete file after uploading
+                        delete_file()
+    
+                        //Properties file
+                        open_modal_properties_file()
+                    } else {
+                        modal_notice_file.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>${data['message']}</h5>`)
+                        modal_notice_file.css('display', "block");
+                    }
             },
             cache: false,
-        }).fail(function() {
-            modal_notice_file.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>Can not upload image. Please check again!</h5>`)
-            modal_notice_file.css('display', "block");
-        });
+            })
+            .fail(function() {
+                modal_notice_file.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>Something is wrong, please try again!</h5>`)
+                modal_notice_file.css('display', "block");
+            });
+        })
+    }
+
+    $('#close-modal-notice-file').on('click', () => {
+        if (modal_notice_file != null) {
+            modal_notice_file?.css('display', 'none')
+        }
     })
 
     function switchToListFileTab() {
@@ -569,6 +584,8 @@ $(document).ready(() => {
             type: "POST",
             url: action_url,
             data: form_data,
+            contentType: false,
+            processData: false,
             success: function(data) {
                 if (data['success']) {
                     btn_closeproperties_file.click();
@@ -670,6 +687,8 @@ $(document).ready(() => {
             type    : "POST",
             url     : action_url_file,
             data    : form_data,
+            contentType: false,
+            processData: false,
             success: function(data) {
                 if (data['success']) {
                     var qty_page = data['object'];
@@ -771,8 +790,7 @@ $(document).ready(() => {
     function add_new_file_to_list(new_file) {
         var htmls = ""
         new_file.forEach(item => {
-            let file = item[1][0]
-            htmls += create_list_tag_file_html(file)
+            htmls += create_list_tag_file_html(item)
         });
         file_list_ul.prepend(htmls)
     }

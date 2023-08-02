@@ -1,3 +1,5 @@
+// import Editor from "../../ckeditor5custom/src/ckeditor";
+
 document.addEventListener('DOMContentLoaded', function() {
     var inputElement = document.querySelector('#editor-edit-note') 
     if (inputElement) {
@@ -22,150 +24,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 $(document).ready(() => {
-    //Modal link setting
-        const modalLinkSettings = document.getElementById('link-settings')
-        const btnCloseLinkSetting = document.querySelector('.btn-close-link-setting')
-        addEventModalLinkSetting()
-
-        //Xpá tất cả các tab trừ tab đầu tiên
-        const tabContents = document.querySelectorAll('.tab-link');
-        tabContents.forEach((tabContent) => {
-            if (tabContent.id !== 'externallink') {
-                tabContent.style.display = 'none';
-            }
-        });
-
-        const radioButtons = document.querySelectorAll('input[type="radio"]');
-        radioButtons.forEach((radio) => {
-            radio.addEventListener('change', () => {
-                // Ẩn tất cả các tab-content
-                const tabContents = document.querySelectorAll('.tab-link');
-                tabContents.forEach((tabContent) => {
-                tabContent.style.display = 'none';
-                });
-
-                // Hiển thị tab-content tương ứng với radio button được chọn
-                const selectedTabValue = document.querySelector('input[name="link"]:checked').value;
-                const selectedTabContent = document.getElementById(selectedTabValue);
-                selectedTabContent.style.display = 'block';
-            });
-        });
-
-        //Insert Link
-        var buttonOpenURL = document.getElementById("open_url");
-        var inputUrl = document.getElementById("input_url");
-        var newTab = document.getElementById("new_tab");
-        var selectedText = '';
-
-        //Lấy được text của phần bôi đen
-        document.addEventListener("mouseup", function (event) {
-            var selection = window.getSelection().getRangeAt(0);
-            if(selection.endOffset - selection.startOffset != 0){
-                selectedText = window.getSelection().toString()
-            }
-        });
-        
-        //Khi bấm nút open trong insert link
-        buttonOpenURL.addEventListener("click", function() {
-            const domEditableElement = document.querySelector('.ck-editor__editable');
-            const editorInstance = domEditableElement.ckeditorInstance;
-            // const modalLinkSettings = document.getElementById('link-settings')
-            // const btnCloseLinkSetting = document.querySelector('.btn-close-link-setting');
-
-            inputUrlValue = "https://" + inputUrl.value;
-            newTabValue = newTab.checked;
-
-            const htmlDP = editorInstance.data.processor;
-            if(newTabValue == true){
-                const viewFragment = htmlDP.toView(`<a href="${inputUrlValue}" target="_blank">${selectedText}</a>`);
-                const modelFragment = editorInstance.data.toModel(viewFragment);
-                editorInstance.model.insertContent(modelFragment);
-            } else {
-                const viewFragment = htmlDP.toView(`<a href="${inputUrlValue}">${selectedText}</a>`);
-                const modelFragment = editorInstance.data.toModel(viewFragment);
-                editorInstance.model.insertContent(modelFragment);
-            }
-
-            btnCloseLinkSetting.addEventListener('click',()=>{
-                modalLinkSettings.style.display = 'none';
-            })
-            btnCloseLinkSetting.click();
-        });
-
-        //Insert Email
-        var buttonOpenMail = document.getElementById("open_mail");
-        var inputMail = document.getElementById("input_mail");
-        
-        //Khi bấm nút open trong insert email
-        buttonOpenMail.addEventListener("click", function() {
-            const domEditableElement = document.querySelector('.ck-editor__editable');
-            const editorInstance = domEditableElement.ckeditorInstance;
-            // const modalLinkSettings = document.getElementById('link-settings')
-            // const btnCloseLinkSetting = document.querySelector('.btn-close-link-setting');
-
-            inputMailValue = "mailto:" + inputMail.value;
-
-            const htmlDP = editorInstance.data.processor;
-            const viewMail = htmlDP.toView(`<a href="${inputMailValue}">${selectedText}</a>`);
-            const modelMail = editorInstance.data.toModel(viewMail);
-            editorInstance.model.insertContent(modelMail);
-            
-
-            btnCloseLinkSetting.addEventListener('click',()=>{
-                modalLinkSettings.style.display = 'none';
-            })
-            btnCloseLinkSetting.click();
-        });
-
-        //Insert File
-        var buttonOpenFile = document.getElementById("open_file");
-        var inputFile = document.getElementById("input_file");
-        var newTabFile = document.getElementById("newtab_file");
-
-        const modalFileSettings = document.getElementById('file-settings');
-        const btnCloseFileSetting = document.querySelector('.btn-close-file-setting');
-
-        function addEventModalFileSetting(){
-            const btnPickFile = document.getElementById("upload_file");
-            if(btnPickFile){
-                btnPickFile.addEventListener('click', (e) => {
-                    e.preventDefault()
-                    modalFileSettings.style.display = 'block'
-                })
-            }
-            btnCloseFileSetting.addEventListener('click',()=>{
-                modalFileSettings.style.display = 'none'
-            })
-        }
-        addEventModalFileSetting();
-        //Khi bấm nút open trong insert email
-        buttonOpenFile.addEventListener("click", function() {
-            const domEditableElement = document.querySelector('.ck-editor__editable');
-            const editorInstance = domEditableElement.ckeditorInstance;
-
-            const htmlDP = editorInstance.data.processor;
-            var inputFileValue =  inputFile.value;
-            var newTab = newTabFile.checked;
-
-            if(newTab == true){
-                const viewFile = htmlDP.toView(`<a href="${inputFileValue}" target="_blank">${selectedText}</a>`);
-                const modelFile = editorInstance.data.toModel(viewFile);
-                editorInstance.model.insertContent(modelFile);
-            } else {
-                const viewFile = htmlDP.toView(`<a href="${inputFileValue}">${selectedText}</a>`);
-                const modelFile = editorInstance.data.toModel(viewFile);
-                editorInstance.model.insertContent(modelFile);
-            }
-            
-
-            btnCloseLinkSetting.addEventListener('click',()=>{
-                modalLinkSettings.style.display = 'none';
-            })
-            btnCloseLinkSetting.click();
-        });
-
-    const uploadFileForm = $('#upload-file-form');
-
     //modal image setting
     const modalImageSettings = document.getElementById('image-settings')
     const btnCloseImageSetting = document.querySelector('.btn-close-image-setting')
@@ -282,40 +140,6 @@ $(document).ready(() => {
         });
     })
 
-    uploadFileForm.on('submit',(e)=>{
-        e.preventDefault()
-        var actionUrl = uploadFileForm.attr('action')
-        // var form_data = new FormData(uploadImagesForm[0]);
-        // const fileNameSelects = document.querySelectorAll('.file-name-select')
-        // $.ajax({
-        //     type: "POST",
-        //     url: actionUrl,
-        //     data: form_data,
-        //     success: function(data) {
-        //         if (data['success']) {
-        //             const newImages = Object.entries(data['result']['new_images'])
-        //             filterImageForm[0].reset()
-        //             btnSearchImg.click()
-        //             updateSelectLimitValue(newImages.length+selectLimitImage.value)
-        //             addNewImageToList(newImages)
-        //             switchToListTab()
-        //             uploadImagesForm[0].reset()
-        //             fileNameSelects.forEach(item=>{
-        //                 item.innerHTML = ""
-        //             })
-        //         } else {
-        //             modalNotice.find('#modal-notice-content').html(`<h5 class='text-center text-danger'>${data['message']}</h5>`)
-        //             modalNotice.css('display', "block");
-        //         }
-        //     },
-        //     cache: false,
-        //     contentType: false,
-        //     processData: false
-        // }).fail(function() {
-        //     modalNotice.find('#modal-notice-content').html(`<h5 class='text-center text-danger'>Can not upload image. Please check again!</h5>`)
-        //     modalNotice.css('display', "block");
-        // });
-    })
 
     function addEventTabListImage() {
         btnDeleteImages.forEach((btn) => {
@@ -365,6 +189,7 @@ $(document).ready(() => {
        
     }
 
+
     btnSearchImg.addEventListener('click',(e)=>{
         e.preventDefault()
         inputKeyword.value = removeSqlInJection(inputKeyword.value)
@@ -413,6 +238,55 @@ $(document).ready(() => {
             processData: false
        })
     })
+
+    function addEventTabListFile() {
+        btnDeleteImages.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                let deleteID = btn.getAttribute('data-id');
+                let url = `/admin/image/delete?id=${deleteID}`
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: url,
+                            success: function () {
+                                btnSearchImg.click()
+                            }
+                        });
+                    }
+                })
+            })
+        })
+        btnOpenPreviews.forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault()
+                imageSrc = '/' + btn.getAttribute('data-path')
+                window.open(imageSrc, '_blank');
+            })
+        })
+        btnInsertImages.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                formatImage.src = '/' + btn.getAttribute('data-path')
+                imgAlt.value = btn.getAttribute('data-img-name')
+                switchToFormatTab()
+                realWidth = formatImage.naturalWidth;
+                realHeight = formatImage.naturalHeight;
+                imgWidth.value = realWidth
+                imgHeight.value = realHeight
+                btnSettingImage.setAttribute('data-path', '/' + btn.getAttribute('data-path'))
+                imgAltValue = imgAlt.value
+            })
+        })
+       
+    }
+    // searchFileForm.on('submit',(e)=>{
     
     selectLimitImage.addEventListener('change',()=>{
         btnSearchImg.click()
@@ -550,6 +424,7 @@ $(document).ready(() => {
         updateDomElements()
     }
 
+
     function setListImage(images){
         var htmls = ""
         if (images.length>0) {
@@ -586,11 +461,12 @@ $(document).ready(() => {
         </div>
         <div class="col-2">
             <div class="d-flex justify-content-end mt-4 ">
-                <button class="btn-basic mt-5 btn-insert-image" data-path="${image['path']}" data-img-name="${image['name']}">Insert Image</button>
+                <button class="btn-basic mt-5 btn-insert-image" data-path="${image['path']}" data-img-name="${image['name']}">Insert File</button>
             </div>
         </div>
     </li>`
     }
+
 
     function switchToListTab() {
         btnListImageTab.click()
@@ -610,6 +486,12 @@ $(document).ready(() => {
         addEventTabListImage()
     }
 
+    // function updatedDomElements() {
+    //     btnOpenPreviews = document.querySelectorAll('.open-preview')
+    //     btnInsertImages = document.querySelectorAll('.insert-file')
+    //     btnDeleteImages = document.querySelectorAll('.delete-file')
+    // }
+
     function addEventModalImageSetting(){
         const btnPickImage = $('.ck-file-dialog-button')[0]
         if (btnPickImage) {
@@ -625,18 +507,6 @@ $(document).ready(() => {
    
     }
 
-    function addEventModalLinkSetting(){
-        const btnPickLink = document.querySelectorAll("[data-cke-tooltip-text]");
-        if(btnPickLink[3]){
-            btnPickLink[3].addEventListener('click', (e) => {
-                e.preventDefault()
-                modalLinkSettings.style.display = 'block'
-            })
-        }
-        btnCloseLinkSetting.addEventListener('click',()=>{
-            modalLinkSettings.style.display = 'none'
-        })
-    }
 
     function removeSqlInJection(string) {
         sqlKeyword = ['SELECT', 'UNION', 'DROP', 'DELETE', 'WHERE', 'FROM', 'SET', 'ALTER', 'INSERT', 'UPDATE', 'ADD', 'OR', 'AND', 'CREATE', 'JOIN']

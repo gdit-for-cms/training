@@ -86,42 +86,51 @@ class Link extends Model
         $db = static::getDB();
         $query = "SELECT * 
                   FROM library_file 
-                  WHERE name LIKE '%$search%' OR path LIKE '%$search%'
+                  WHERE name LIKE :search OR path LIKE :search
                   ORDER BY updated_at
                   ";
         if($order == 'descending') {
-            $query .= " DESC ";
+            $query .= " DESC";
         }
 
-        $query .= "LIMIT 5";
-        $result = $db->query($query);
-        $result_ary = [];
-        if ($result) {
-            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                $result_ary[] = $row;
-            }
+        $query .= " LIMIT 5";
+
+        $stmt = $db->prepare($query);
+
+        // Xử lý giá trị của biến $search để tránh lỗi SQL injection
+        $searchValue = '%' . addcslashes($search, "%_") . '%';
+        $stmt->bindValue(':search', $searchValue, PDO::PARAM_STR);
+
+        if ($stmt->execute()) {
+            // Lấy kết quả
+            $result_ary = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $result_ary;
         }
-        return $result_ary;
+
+        return [];
     }
 
-    public function searchAll($search, $order)
+    public function searchAll($search)
     {
         $db = static::getDB();
         $query = "SELECT * 
                   FROM library_file 
-                  WHERE name LIKE '%$search%' OR path LIKE '%$search%'
+                  WHERE name LIKE :search OR path LIKE :search
                   ";
 
-        $result = $db->query($query);
-        $result_ary = [];
-        if ($result) {
-            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                $result_ary[] = $row;
-            }
+        $stmt = $db->prepare($query);
+
+        // Xử lý giá trị của biến $search để tránh lỗi SQL injection
+        $searchValue = '%' . addcslashes($search, "%_") . '%';
+        $stmt->bindValue(':search', $searchValue, PDO::PARAM_STR);
+
+        if ($stmt->execute()) {
+            // Lấy kết quả
+            $result_ary = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $result_ary;
         }
-        return $result_ary;
+
+        return [];
     }
 
     public function getByQty($qty, $search, $desc)
@@ -129,22 +138,27 @@ class Link extends Model
         $db = static::getDB();
         $query = "SELECT * 
                   FROM library_file
-                  WHERE name LIKE '%$search%' OR path LIKE '%$search%'
+                  WHERE name LIKE :search OR path LIKE :search
                   ORDER BY created_at ";
         if($desc == 'true') {
             $query .= "DESC ";
         }
 
         $query .= "LIMIT $qty";
-        $result = $db->query($query);
-        $result_ary = [];
-        if ($result) {
-            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                $result_ary[] = $row;
-            }
+
+        $stmt = $db->prepare($query);
+
+        // Xử lý giá trị của biến $search để tránh lỗi SQL injection
+        $searchValue = '%' . addcslashes($search, "%_") . '%';
+        $stmt->bindValue(':search', $searchValue, PDO::PARAM_STR);
+
+        if ($stmt->execute()) {
+            // Lấy kết quả
+            $result_ary = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $result_ary;
         }
-        return $result_ary;
+
+        return [];
     }
 
     public function getValueForPaginate($current_page, $limit, $search, $desc)
@@ -152,21 +166,26 @@ class Link extends Model
         $db = static::getDB();
         $query = "SELECT * 
                   FROM library_file
-                  WHERE name LIKE '%$search%' OR path LIKE '%$search%'
+                  WHERE name LIKE :search OR path LIKE :search
                   ORDER BY created_at ";
         if($desc == 'true') {
             $query .= "DESC ";
         }
 
         $query .= "LIMIT $current_page, $limit";
-        $result = $db->query($query);
-        $result_ary = [];
-        if ($result) {
-            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                $result_ary[] = $row;
-            }
+        
+        $stmt = $db->prepare($query);
+
+        // Xử lý giá trị của biến $search để tránh lỗi SQL injection
+        $searchValue = '%' . addcslashes($search, "%_") . '%';
+        $stmt->bindValue(':search', $searchValue, PDO::PARAM_STR);
+
+        if ($stmt->execute()) {
+            // Lấy kết quả
+            $result_ary = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $result_ary;
         }
-        return $result_ary;
+
+        return [];
     }
 }

@@ -22,63 +22,41 @@ class LinkController extends AppController
     public function storeAction(Request $request)
     {
         $post = $request->getPost()->all();
-        $files =  $request->getFiles();
+        $results = array();
 
-        $data_upload = array();
-        $all_results = array();
-        $add_item_result = [
-            'all_results' => array(),
-            'data_upload' => array(),
-        ];
-        try { 
-            $name_key = 'name-file';
-            $file_key = 'upload-file';
-            $add_item_result = $this->addItemUpload($post[$name_key], $files->get($file_key), $file_key, $add_item_result);
-            $data_upload = $add_item_result['data_upload'];
-            $all_results = $add_item_result['all_results'];
-            
-            if (!empty($data_upload)) {
-                foreach ($data_upload as $key => $value) {
-                    $file_name = $value['file']['name'];
-                    $file_path = '/htdocs/training2/training/public/file/' . $file_name;
-                    if (file_exists($file_path)) {
-                        $all_results['failed'][$key] = 'File already exists';
-                    } else {
-                        try {
-                            // Upload files to the server
-                            if (move_uploaded_file($value['file']['tmp_name'], $file_path)) {
-                                $file_data = [
-                                    'name' => $value['name'],
-                                    'path' => $file_path
-                                ];
-                                $result = $this->obj_file->create($file_data);
-
-                                // Send files outside js
-                                if ($result) {
-                                    $all_results['success'][$key] = 'Uploaded!';
-                                    $get_data_from_db = $this->obj_file->getBy('path', '=', $file_path);
-                                    if ($get_data_from_db) {
-                                        $all_results['new_images'][$key] = $get_data_from_db;
-                                    }
-                                } else {
-                                    unlink($file_path);
-                                    $all_results['failed'][$key] = 'Failed!';
-                                }
-                            } else {
-                                $all_results['failed'][$key] = 'Failed!';
-                            }
-                        } catch (\Throwable $th) {
-                            $all_results['failed'][$key] = 'Failed!';
-                        }
-                    }
-                }
-                    $this->responseFileQuery(true, 'All file uploaded!', $all_results);
-            } else {
-                $this->responseFileQuery(false, 'Filename and path cannot be empty, try again!', $all_results);
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["upload-file"])) {
+            $targetDir = "file/";
+            if(!file_exists($targetDir)){
+                mkdir($targetDir, 0777, true);
             }
-        } catch (\Throwable $th) {
-            $this->responseFileQuery(false, 'Something wrong! Select file and try again!');
+            $targetFile = $targetDir . basename($_FILES["upload-file"]["name"]);
+        
+            // Check if the file already exists
+            if (file_exists($targetFile)) {
+                $status = false;
+                $message = 'File already exists';
+            }
+            // 
+            else if (move_uploaded_file($_FILES["upload-file"]["tmp_name"], $targetFile)) {
+                $file_data = [
+                    'name' => $post['name-file'],
+                    'path' => $targetFile
+                ];
+                $this->obj_file->create($file_data);
+                
+                $results = $this->obj_file->getBy('path', '=', $targetFile);
+                $status = true;
+                $message = 'File uploaded successfully';
+            } else {
+                $status = false;
+                $message = 'Unable to upload file to server';
+            }
+        } else {
+            $status = false;
+            $message = 'Something is wrong, please try again!';
         }
+
+        $this->responseFileQuery($status, $message, $results);
     }
 
     // Delete File
@@ -93,10 +71,13 @@ class LinkController extends AppController
         }
         $result = $this->obj_file->destroyBy("id = $file_id");
         if ($result) {
-            return $this->responseFileQuery(true, 'Delete files success', []);
+            $status = true;
+            $message = 'Delete files success';
         } else {
-            return $this->responseFileQuery(false, 'Delete files failed', []);
+            $status = false;
+            $message = 'Delete files failed';
         }
+        return $this->responseFileQuery($status, $message);
     }
 
     // Update file
@@ -113,10 +94,13 @@ class LinkController extends AppController
         );
 
         if ($result) {
-            return $this->responseFileQuery(true, 'Update file success', $result);
+            $status = true;
+            $message = 'Update file success';
         } else {
-            return $this->responseFileQuery(false, 'Update file failed', []);
+            $status = false;
+            $message = 'Update file failed';
         }
+        return $this->responseFileQuery($status, $message);
     }
 
     // Search file
@@ -127,10 +111,12 @@ class LinkController extends AppController
         $result = $this->obj_file->searchBy($post['input_search'], $post['order']);
 
         // Returns the page number corresponding to the number of results after searching
-        $all_results = $this->obj_file->searchAll($post['input_search'], $post['order']);
-        $qty_page_of_fIle = (int)(count($all_results) / 5);
-        if((int)(count($all_results) % 5 != 0)) {
-            $qty_page_of_fIle = (int)(count($all_results) / 5) + 1;
+        $all_results = $this->obj_file->searchAll($post['input_search']);
+        $count_res = count($all_results);
+        $qty_page_of_fIle = (int)($count_res / 5);
+
+        if((int)($count_res % 5 != 0)) {
+            $qty_page_of_fIle = (int)($count_res / 5) + 1;
         }
         $object = $qty_page_of_fIle;
 
@@ -145,11 +131,12 @@ class LinkController extends AppController
         $qty = (int)$post['qty'];
         $result = $this->obj_file->getByQty($qty, $post['input_search'], $post['desc']);
 
-        $all_results = $this->obj_file->searchAll($post['input_search'], $post['desc']);
+        $all_results = $this->obj_file->searchAll($post['input_search']);
+        $count_res = count($all_results);
 
-        $qty_page_of_fIle = (int)(count($all_results) / $qty);
-        if((count($all_results) % $qty != 0)) {
-            $qty_page_of_fIle = (int)(count($all_results) / $qty) + 1;
+        $qty_page_of_fIle = (int)($count_res / $qty);
+        if(($count_res % $qty != 0)) {
+            $qty_page_of_fIle = (int)($count_res / $qty) + 1;
         }
 
         $object = $qty_page_of_fIle;
@@ -169,23 +156,6 @@ class LinkController extends AppController
         $result = $this->obj_file->getValueForPaginate($value_first, $qty_file_page, $search, $desc);
 
         return $this->responseFileQuery(true, 'Change qty file success', $result);
-    }
-
-    public function addItemUpload($name, $file, $file_key, $add_item_result)
-    {
-        if (!empty($name) && ($file['size'] > 0)) {
-            if ($file['size'] < 4000000) {
-                $add_item_result['data_upload'][$file_key] = [
-                    'name' => $name,
-                    'file' => $file
-                ];
-            } else {
-                $add_item_result['all_results']['failed'][$file_key] = 'File too large!';
-            }
-        } else {
-            $add_item_result['all_results']['failed'][$file_key] = 'Please enter name input and select image file!';
-        }
-        return $add_item_result;
     }
 
     public function responseFileQuery($status, $message, $result = [])
