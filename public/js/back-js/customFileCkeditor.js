@@ -1,26 +1,3 @@
-document.addEventListener('DOMContentLoaded', function() {
-    var inputElement = document.querySelector('#editor-edit-note') 
-    if (inputElement) {
-        ClassicEditor
-        .create(inputElement,
-            {
-                htmlSupport: {
-                    allow: [
-                        {
-                            name: /.*/,
-                            attributes: true,
-                            classes: true,
-                            styles: true
-                        }
-                    ]
-                } 
-            })
-        .catch(error => {
-            console.error('Error when create CKEditor instance:', error);
-        });
-    }
-});
-
 $(document).ready(() => {
     // Modal link setting
     const modal_link_settings = document.getElementById('link-settings')
@@ -38,6 +15,7 @@ $(document).ready(() => {
     // Paginate file
     const paginate_file_form = document.getElementById('form_pagination_file')
     const select_qty_file = document.getElementById('select-quantity-file')
+
     const btn_paginattion = $('.pagination');
     var current_page = 1;
     
@@ -121,6 +99,12 @@ $(document).ready(() => {
 
     // Insert FIle
     insert_file()
+
+    // Search file
+    search_file()
+
+    // Change file display amount
+    change_qty_file()
 
     // Delete file
     delete_file()
@@ -235,7 +219,18 @@ $(document).ready(() => {
         var pagination_elements = document.querySelectorAll(".page-item");
         var count = pagination_elements.length;
         var lastPage = count - 2;
-        if (new_page_tmp == lastPage) {
+        if(count == 3){
+            pagination_elements.forEach(element => {
+                if(element.getElementsByTagName('a')[0].textContent == 'Next'){
+                    element.classList.add('hidden');
+                }
+            });
+            pagination_elements.forEach(element => {
+                if(element.getElementsByTagName('a')[0].textContent == 'Previous'){
+                    element.classList.add('hidden');
+                }
+            });
+        } else if (new_page_tmp == lastPage) {
             pagination_elements.forEach(element => {
                 if(element.getElementsByTagName('a')[0].textContent == 'Next'){
                     element.classList.add('hidden');
@@ -271,92 +266,15 @@ $(document).ready(() => {
         }
     }
 
-    document.addEventListener("click", function(event) {
-        // Get the element the mouse pointer is on
-        var target_element = event.target;
-
-        // Check if the element is in the a tag
-        if (target_element && target_element.nodeName === "A") {
-            var selection = window.getSelection();
-            const anchorNode = selection.anchorNode;
-            const focusNode = selection.focusNode;
-
-            // Specifies the tag containing the highlighted text (if anchorNode and focusNode have the same parent)
-            const commonParent = anchorNode.parentElement === focusNode.parentElement ? anchorNode.parentElement : findCommonParent(anchorNode, focusNode);
-
-            // Get the attributes of the tag
-            const attributes = Array.from(commonParent.attributes).map(attr => `${attr.name}="${attr.value}"`);
-
-            var name = '';
-            var count = 0;
-            attributes.forEach(element => {
-                if (element.slice(0, 14) == 'href="https://') {
-                    modal_link_settings.style.display = 'block';
-
-                    //Current position of the mouse pointer
-                    const range = selection.getRangeAt(0);
-                    // Highlight all content in <a> . tag
-                    range.selectNodeContents(selection.anchorNode.parentNode);
-                    selected_text = target_element.textContent;
-        
-                    index_link();
-                    var count_link = element.length - 1;
-                    input_url.value = element.slice(14, count_link)
-                    name = 'link';
-                } else if (element.slice(0, 13) == 'href="mailto:') {
-                    modal_link_settings.style.display = 'block';
-
-                    //Current position of the mouse pointer
-                    const range = selection.getRangeAt(0);
-                    // Highlight all content in <a> . tag
-                    range.selectNodeContents(selection.anchorNode.parentNode);
-                    selected_text = target_element.textContent;
-
-                    email_link();
-                    var count_link = element.length - 1;
-                    input_mail.value = element.slice(13, count_link)
-                } else if (element.slice(0, 6) == 'href="'){
-                    modal_link_settings.style.display = 'block';
-
-                    //Current position of the mouse pointer
-                    const range = selection.getRangeAt(0);
-                    // Highlight all content in <a> . tag
-                    range.selectNodeContents(selection.anchorNode.parentNode);
-                    selected_text = target_element.textContent;
-
-                    file_link();
-                    var count_link = element.length - 1;
-                    input_file.value = element.slice(6, count_link)
-                    name = 'file';
-                }
-
-                if(element.slice(0, 15) == 'target="_blank"') {
-                    count++;
-                }
-            });
-            if(count > 0) {
-                if (name == 'link') {
-                    new_tab.checked = true;
-                } else if (name == 'file'){
-                    new_tab_file.checked = true;
-                }
-            } else {
-                if (name == 'link') {
-                    new_tab.checked = false;
-                } else if (name == 'file'){
-                    new_tab_file.checked = false;
-                }
-            }
-        }
-    });
-
     function take_high_light() {
         //Get the text of the highlighted part
         document.addEventListener("mouseup", function (event) {
             var selection = window.getSelection();
-            var location = selection.getRangeAt(0);
-            if(location.endOffset - location.startOffset != 0){
-                selected_text = window.getSelection().toString()
+            if (!selection.isCollapsed) {
+                var location = selection.getRangeAt(0);
+                if (location.endOffset - location.startOffset != 0) {
+                    selected_text = window.getSelection().toString()
+                }
             }
         });
     }
@@ -417,7 +335,7 @@ $(document).ready(() => {
     function open_link() {
         button_open_url.addEventListener("click", function(event) {
             if (input_url.value == '' || input_url.value == null) {
-                alert('Link không được để trống!')
+                alert('Link cannot be left blank!')
             } else {
                 const dom_edit_able_element = document.querySelector('.ck-editor__editable');
                 const editor_instance = dom_edit_able_element.ckeditorInstance;
@@ -444,14 +362,14 @@ $(document).ready(() => {
     }
 
     // Validate for email
-    function isValidEmail(email) {
+    function is_valid_email(email) {
         const email_pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return email_pattern.test(email);
     }
 
     function open_mail() {
         button_open_mail.addEventListener("click", function() {
-            if (isValidEmail(input_mail.value)) {
+            if (is_valid_email(input_mail.value)) {
                 const dom_edit_able_element = document.querySelector('.ck-editor__editable');
                 const editor_instance = dom_edit_able_element.ckeditorInstance;
 
@@ -468,7 +386,7 @@ $(document).ready(() => {
                 })
                 btn_close_link_setting.click();
             } else {
-                alert('Email chưa đúng định dạng!');
+                alert('Incorrect email format!');
             }
         });
     }
@@ -489,7 +407,7 @@ $(document).ready(() => {
     function open_file() {
         button_open_file.addEventListener("click", function() {
             if (input_file.value == '' || input_file.value == null) {
-                alert('Đường dẫn file không được để trống!');
+                alert('File path cannot be empty!');
             } else {
                 const dom_edit_able_element = document.querySelector('.ck-editor__editable');
                 const editor_instance = dom_edit_able_element.ckeditorInstance;
@@ -540,7 +458,7 @@ $(document).ready(() => {
                         // Insert File after upload is done
                         insert_file()
     
-                        switchToListFileTab()
+                        switch_to_list_file_tab()
                         upload_file_form[0].reset()
     
                         //Delete file after uploading
@@ -568,7 +486,7 @@ $(document).ready(() => {
         }
     })
 
-    function switchToListFileTab() {
+    function switch_to_list_file_tab() {
         btn_list_file_tab.click()
         btn_list_file_tab.classList.remove('active-interface')
         btn_list_file_tab.classList.add('active')
@@ -679,113 +597,134 @@ $(document).ready(() => {
     }
     
     // When searching for files
-    search_file_form.on('submit',(e)=>{
-        e.preventDefault()
-        const action_url_file = search_file_form.attr('action')
-        var form_data = new FormData(search_file_form[0]);
-        $.ajax({
-            type    : "POST",
-            url     : action_url_file,
-            data    : form_data,
-            contentType: false,
-            processData: false,
-            success: function(data) {
-                if (data['success']) {
-                    var qty_page = data['object'];
-                    btn_paginattion.innerHTML = '';
-                    var html = `<li class="page-item cursor-pointer hidden"><a class="page-link text-dark">Previous</a></li>`;
-                    for (let index = 1; index <= qty_page; index++) {
+    function search_file() {
+        search_file_form.on('submit',(e)=>{
+            e.preventDefault()
+            const action_url_file = search_file_form.attr('action')
+            var form_data = new FormData(search_file_form[0]);
+            $.ajax({
+                type    : "POST",
+                url     : action_url_file,
+                data    : form_data,
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    if (data['success']) {
+                        var qty_page = data['object'];
+                        btn_paginattion.innerHTML = '';
+                        var html = `<li class="page-item cursor-pointer hidden"><a class="page-link text-dark">Previous</a></li>`;
+                        for (let index = 1; index <= qty_page; index++) {
+                            if(qty_page == 1 || qty_page == 0){
+                                html += `<li class="cursor-pointer"><a class="page-link text-dark">${index}</a></li>`;
+                            } else {
+                                html += `<li class="page-item cursor-pointer"><a class="page-link text-dark">${index}</a></li>`;
+                            }
+                        }
                         if(qty_page == 1 || qty_page == 0){
-                            html += `<li class="cursor-pointer"><a class="page-link text-dark">${index}</a></li>`;
+                            html += `<li class="page-item cursor-pointer hidden"><a class="page-link text-dark">Next</a></li>`;
                         } else {
-                            html += `<li class="page-item cursor-pointer"><a class="page-link text-dark">${index}</a></li>`;
+                            html += `<li class="page-item cursor-pointer"><a class="page-link text-dark">Next</a></li>`;
                         }
-                    }
-                    if(qty_page == 1 || qty_page == 0){
-                        html += `<li class="page-item cursor-pointer hidden"><a class="page-link text-dark">Next</a></li>`;
-                    } else {
-                        html += `<li class="page-item cursor-pointer"><a class="page-link text-dark">Next</a></li>`;
-                    }
-                    btn_paginattion.html(html);
-                    paginate();
-                    change_paginate();
-
-                    select_qty_file.value = 5;
-
-                    file_list_ul.innerHTML = ''
-                    var htmls = ""
-                    data['result'].forEach(file => {
-                        htmls += create_list_tag_file_html(file)
-                    });
-                    file_list_ul.html(htmls)
-
-                    insert_file();
-                    delete_file()
-                    open_modal_properties_file()
-
-                }
-            },
-            dataType: 'json',
-            cache: false,
-       })
-    })
+                        btn_paginattion.html(html);
+                        paginate();
+                        change_paginate();
     
-    select_qty_file.addEventListener('change',(e)=>{
-        const input_qty = document.getElementById('input_qty');
-        input_qty.value = select_qty_file.value;
-        e.preventDefault()
-        const action_qty_file = paginate_file_form.getAttribute('action')
-
-        var form_data = {
-            'qty'           :   select_qty_file.value,
-            'input_search'  :   input_search.value,
-            'desc'          :   descending.checked,
-            'asc'           :   ascending.checked,
-        }
-        
-        $.ajax({
-            type    : "POST",
-            url     : action_qty_file,
-            data    : form_data,
-            success: function(data) {
-                if (data['success']) {
-                    var qty_page = data['object'];
-                    btn_paginattion.innerHTML = '';
-                    var html = `<li class="page-item cursor-pointer hidden"><a class="page-link text-dark">Previous</a></li>`;
-                    for (let index = 1; index <= qty_page; index++) {
-                        if(qty_page == 1){
-                            html += `<li class="cursor-pointer"><a class="page-link text-dark">${index}</a></li>`;
+                        select_qty_file.value = 5;
+    
+                        file_list_ul.innerHTML = ''
+                        var htmls = ""
+    
+                        if(input_search.value != null && data['result'].length == 0) {
+                            htmls +=    `<div class="row">
+                                            <div class="col-12">
+                                                <span class="text-danger">No results</span>
+                                            </div>
+                                        </div>`
                         } else {
-                            html += `<li class="page-item cursor-pointer"><a class="page-link text-dark">${index}</a></li>`;
+                            data['result'].forEach(file => {
+                                htmls += create_list_tag_file_html(file)
+                            });
                         }
+                        file_list_ul.html(htmls)
+    
+                        insert_file();
+                        delete_file()
+                        open_modal_properties_file()
+    
                     }
-                    if(qty_page == 1){
-                        html += `<li class="page-item cursor-pointer hidden"><a class="page-link text-dark">Next</a></li>`;
-                    } else {
-                        html += `<li class="page-item cursor-pointer"><a class="page-link text-dark">Next</a></li>`;
-                    }
-                    btn_paginattion.html(html);
-                    paginate();
-                    change_paginate();
-                    
-                    file_list_ul.innerHTML = ''
-                    var htmls = ""
-                    data['result'].forEach(file => {
-                        htmls += create_list_tag_file_html(file)
-                    });
-                    file_list_ul.html(htmls)
-
-                    insert_file();
-                    // Delete File After Uploading
-                    delete_file()
-
-                    //Properties file
-                    open_modal_properties_file()
-                }
-            },
-            dataType: 'json',
+                },
+                dataType: 'json',
+                cache: false,
+           })
         })
-    })
+    }
+    
+    function change_qty_file() {
+        select_qty_file.addEventListener('change',(e)=>{
+            const input_qty = document.getElementById('input_qty');
+            input_qty.value = select_qty_file.value;
+            e.preventDefault()
+            const action_qty_file = paginate_file_form.getAttribute('action')
+    
+            var form_data = {
+                'qty'           :   select_qty_file.value,
+                'input_search'  :   input_search.value,
+                'desc'          :   descending.checked,
+                'asc'           :   ascending.checked,
+            }
+            
+            $.ajax({
+                type    : "POST",
+                url     : action_qty_file,
+                data    : form_data,
+                success: function(data) {
+                    if (data['success']) {
+                        var qty_page = data['object'];
+                        btn_paginattion.innerHTML = '';
+                        var html = `<li class="page-item cursor-pointer hidden"><a class="page-link text-dark">Previous</a></li>`;
+                        for (let index = 1; index <= qty_page; index++) {
+                            if(qty_page == 1){
+                                html += `<li class="cursor-pointer"><a class="page-link text-dark">${index}</a></li>`;
+                            } else {
+                                html += `<li class="page-item cursor-pointer"><a class="page-link text-dark">${index}</a></li>`;
+                            }
+                        }
+                        if(qty_page == 1 || qty_page == 0){
+                            html += `<li class="page-item cursor-pointer hidden"><a class="page-link text-dark">Next</a></li>`;
+                        } else {
+                            html += `<li class="page-item cursor-pointer"><a class="page-link text-dark">Next</a></li>`;
+                        }
+                        btn_paginattion.html(html);
+                        paginate();
+                        change_paginate();
+                        
+                        file_list_ul.innerHTML = ''
+                        var htmls = ""
+                        if(input_search.value != null && data['result'].length == 0) {
+                            htmls +=    `<div class="row">
+                                            <div class="col-12">
+                                                <span class="text-danger">No results</span>
+                                            </div>
+                                        </div>`
+                        } else {
+                            data['result'].forEach(file => {
+                                htmls += create_list_tag_file_html(file)
+                            });
+                        }
+                        file_list_ul.html(htmls)
+    
+                        insert_file();
+                        // Delete File After Uploading
+                        delete_file()
+    
+                        //Properties file
+                        open_modal_properties_file()
+                    }
+                },
+                dataType: 'json',
+            })
+        })
+    }
     
     function add_new_file_to_list(new_file) {
         var htmls = ""
@@ -820,13 +759,97 @@ $(document).ready(() => {
     }
     
     function add_event_modal_link_setting(){
+        var target_element = '';
+        document.addEventListener("click", function(e) {
+            // Get the element the mouse pointer is on
+            target_element = e.target
+        });
         if(btn_pick_link[3]){
             btn_pick_link[3].addEventListener('click', (e) => {
-                e.preventDefault()
-                modal_link_settings.style.display = 'block'
-                index_link();
-                input_url.value = null;
-                new_tab.checked = false;
+
+                // Check if the element is in the a tag
+                if (target_element && target_element.nodeName === "A") {
+                    var selection = window.getSelection()
+                    const anchorNode = selection.anchorNode
+                    const focusNode = selection.focusNode
+
+                    // Specifies the tag containing the highlighted text (if anchorNode and focusNode have the same parent)
+                    const commonParent = anchorNode.parentElement === focusNode.parentElement ? anchorNode.parentElement : findCommonParent(anchorNode, focusNode)
+
+                    // Get the attributes of the tag
+                    const attributes = Array.from(commonParent.attributes).map(attr => `${attr.name}="${attr.value}"`)
+
+                    var name = ''
+                    var count = 0
+                    
+                    attributes.forEach(element => {
+                        if (element.slice(0, 14) == 'href="https://') {
+                            modal_link_settings.style.display = 'block'
+
+                            // Current position of the mouse pointer
+                            const range = selection.getRangeAt(0)
+
+                            // Highlight all content in <a> . tag
+                            range.selectNodeContents(selection.anchorNode.parentNode)
+                            selected_text = target_element.textContent
+                            
+                            index_link()
+                            var count_link = element.length - 1
+                            input_url.value = element.slice(14, count_link)
+                            name = 'link'
+                        } else if (element.slice(0, 13) == 'href="mailto:') {
+                            modal_link_settings.style.display = 'block'
+
+                            // Current position of the mouse pointer
+                            const range = selection.getRangeAt(0)
+
+                            // Highlight all content in <a> . tag
+                            range.selectNodeContents(selection.anchorNode.parentNode)
+                            selected_text = target_element.textContent
+
+                            email_link()
+                            var count_link = element.length - 1
+                            input_mail.value = element.slice(13, count_link)
+                        } else if (element.slice(0, 6) == 'href="'){
+                            modal_link_settings.style.display = 'block'
+
+                            // Current position of the mouse pointer
+                            const range = selection.getRangeAt(0)
+
+                            // Highlight all content in <a> . tag
+                            range.selectNodeContents(selection.anchorNode.parentNode)
+                            selected_text = target_element.textContent
+
+                            file_link()
+                            var count_link = element.length - 1
+                            input_file.value = element.slice(6, count_link)
+                            name = 'file'
+                        }
+
+                        if(element.slice(0, 15) == 'target="_blank"') {
+                            count++;
+                        }
+                    });
+                    if(count > 0) {
+                        if (name == 'link') {
+                            new_tab.checked = true;
+                        } else if (name == 'file'){
+                            new_tab_file.checked = true;
+                        }
+                    } else {
+                        if (name == 'link') {
+                            new_tab.checked = false;
+                        } else if (name == 'file'){
+                            new_tab_file.checked = false;
+                        }
+                    }
+                } else {
+                    e.preventDefault()
+                    modal_link_settings.style.display = 'block'
+                    index_link();
+                    input_url.value = null;
+                    new_tab.checked = false;
+                }
             })
         }
         btn_close_link_setting.addEventListener('click',()=>{

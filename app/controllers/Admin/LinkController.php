@@ -24,20 +24,16 @@ class LinkController extends AppController
         $post = $request->getPost()->all();
         $results = array();
 
-        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["upload-file"])) {
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && $_FILES["upload-file"]['error'] == 0 && $post['name-file'] != null) {
             $targetDir = "file/";
             if(!file_exists($targetDir)){
                 mkdir($targetDir, 0777, true);
             }
             $targetFile = $targetDir . basename($_FILES["upload-file"]["name"]);
-        
-            // Check if the file already exists
             if (file_exists($targetFile)) {
                 $status = false;
                 $message = 'File already exists';
-            }
-            // 
-            else if (move_uploaded_file($_FILES["upload-file"]["tmp_name"], $targetFile)) {
+            } else if (move_uploaded_file($_FILES["upload-file"]["tmp_name"], $targetFile)) {
                 $file_data = [
                     'name' => $post['name-file'],
                     'path' => $targetFile
