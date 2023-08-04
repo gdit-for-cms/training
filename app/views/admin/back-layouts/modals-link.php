@@ -42,31 +42,31 @@
                         </div>
                     </div>
                     <div id="externallink" class="tab-link checked mt-2">
-                        <!-- action="/admin/image/store" -->
-                        <!-- <form action="/admin/rule/link" method="post"> -->
-                            <div class="row justify-content-around align-items-center mt-4">
-                                <label>Enter the URL</label>
-                                <div class="col-1 mt-2">
-                                    <button class="btn btn-secondary">http://</button>
-                                </div>
-                                <div class="col-11 mt-2">
-                                    <input id="input_url" class="form-control" type="text" name="link">
-                                </div>
+                        <div class="row justify-content-around align-items-center mt-4">
+                            <label>Enter the URL</label>
+                            <div class="col-1 mt-2">
+                                <button class="btn btn-secondary">http://</button>
                             </div>
-                            <div class="row mt-1">
-                                <div class="col-1">
-                                    <input id="new_tab" type="checkbox" name="new_tab">
-                                </div>
-                                <div class="col-5" style="margin-left: -40px;">
-                                    <label>Opens in a new tab</label>
-                                </div>
+                            <div class="col-11 mt-2">
+                                <input id="input_url" class="form-control" type="text" name="link">
                             </div>
-                            <div class="row justify-content-around align-items-center mt-5">
-                                <div class="col-1">
-                                    <button id="open_url" class="btn btn-primary">Open</button>
-                                </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-1">
+                                <input id="new_tab" type="checkbox" name="new_tab">
                             </div>
-                        <!-- </form> -->
+                            <div class="col-5" style="margin-left: -40px;">
+                                <label>Opens in a new tab</label>
+                            </div>
+                        </div>
+                        <div class="row justify-content-around align-items-center mt-5">
+                            <div class="col-6 text-end">
+                                <button id="open_url" class="btn btn-primary" style="margin-right: -10px;">Open</button>
+                            </div>
+                            <div class="col-6">
+                                <button id="remove_url" class="btn btn-danger" style="margin-left: -10px;">Remove</button>
+                            </div>
+                        </div>
                     </div>
                     <div id="email" class="tab-link mt-2">
                         <div class="row justify-content-around align-items-center mt-4">
@@ -76,9 +76,12 @@
                             </div>
                         </div>
                         <div class="row justify-content-around align-items-center mt-5">
-                            <div class="col-1">
-                                <button id="open_mail" class="btn btn-primary">Open</button>
+                            <div class="col-6 text-end">
+                                <button id="open_mail" class="btn btn-primary" style="margin-right: -10px;">Open</button>
                             </div>
+                            <div class="col-6">
+                                <button id="remove_mail" class="btn btn-danger" style="margin-left: -10px;">Remove</button>
+                            </div> 
                         </div>
                     </div>
                     <div id="uploadfile" class="tab-link mt-2">
@@ -104,8 +107,11 @@
                             </div>
                         </div>
                         <div class="row justify-content-around align-items-center mt-5">
-                            <div class="col-1">
-                                <button id="open_file" class="btn btn-primary">Open</button>
+                            <div class="col-6 text-end">
+                                <button id="open_file" class="btn btn-primary" style="margin-right: -10px;">Open</button>
+                            </div>
+                            <div class="col-6">
+                                <button id="remove_file" class="btn btn-danger" style="margin-left: -10px;">Remove</button>
                             </div>
                         </div>
                     </div>
