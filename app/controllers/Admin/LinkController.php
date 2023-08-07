@@ -5,10 +5,13 @@ namespace App\Controllers\Admin;
 use App\Models\Link;
 use Core\Http\Request;
 use Core\Http\ResponseTrait;
+use Core\Http\Config;
 
 class LinkController extends AppController
 {
     use ResponseTrait;
+    use Config;
+
     public object $obj_file;
 
     public array $data_ary;
@@ -25,22 +28,40 @@ class LinkController extends AppController
         $results = array();
 
         if ($_SERVER["REQUEST_METHOD"] == "POST" && $_FILES["upload-file"]['error'] == 0 && $post['name-file'] != null) {
-            $targetDir = "file/";
-            if(!file_exists($targetDir)){
-                mkdir($targetDir, 0777, true);
+            // Check if the folder is there
+            $target_dir = "file/";
+            if(!file_exists($target_dir)){
+                mkdir($target_dir, 0777, true);
             }
-            $targetFile = $targetDir . basename($_FILES["upload-file"]["name"]);
-            if (file_exists($targetFile)) {
+
+            // Get the file extension being uploaded
+            $file_extension = pathinfo($_FILES["upload-file"]['name'], PATHINFO_EXTENSION);
+
+            $target_file = $target_dir . basename($_FILES["upload-file"]["name"]);
+            // Check if the file already exists
+            if (file_exists($target_file)) {
                 $status = false;
                 $message = 'File already exists';
-            } else if (move_uploaded_file($_FILES["upload-file"]["tmp_name"], $targetFile)) {
+            }
+            // Check file type
+            else if(!in_array($file_extension, $this->allowed_extensions)) {
+                $status = false;
+                $message = 'The file must be in one of the following formats: ' . implode(', ', $this->allowed_extensions);
+            } 
+            //  Check file size
+            else if($_FILES["upload-file"]["size"] > $this->max_size) {
+                $status = false;
+                $message = 'File size too large!';
+            } 
+            // Upload files to the server
+            else if (move_uploaded_file($_FILES["upload-file"]["tmp_name"], $target_file)) {
                 $file_data = [
                     'name' => $post['name-file'],
-                    'path' => $targetFile
+                    'path' => $target_file
                 ];
                 $this->obj_file->create($file_data);
                 
-                $results = $this->obj_file->getBy('path', '=', $targetFile);
+                $results = $this->obj_file->getBy('path', '=', $target_file);
                 $status = true;
                 $message = 'File uploaded successfully';
             } else {
@@ -52,7 +73,7 @@ class LinkController extends AppController
             $message = 'Something is wrong, please try again!';
         }
 
-        $this->responseFileQuery($status, $message, $results);
+        return $this->responseFileQuery($status, $message, $results);
     }
 
     // Delete File
@@ -152,30 +173,5 @@ class LinkController extends AppController
         $result = $this->obj_file->getValueForPaginate($value_first, $qty_file_page, $search, $desc);
 
         return $this->responseFileQuery(true, 'Change qty file success', $result);
-    }
-
-    public function responseFileQuery($status, $message, $result = [])
-    {
-        $res = [
-            "success" => $status,
-            "message" => $message,
-            "result" => $result,
-        ];
-        header('Content-Type: application/json');
-        echo json_encode($res);
-        exit();
-    }
-
-    public function responseFileObj($status, $message, $result = [], $object)
-    {
-        $res = [
-            "success" => $status,
-            "message" => $message,
-            "result" => $result,
-            "object" => $object,
-        ];
-        header('Content-Type: application/json');
-        echo json_encode($res);
-        exit();
     }
 }

@@ -73,11 +73,14 @@ $(document).ready(() => {
     const modal_notice_file = $('#modal-notice-file')
     const btn_close_modal_note_file = $('#close-modal-notice-file')
 
-    //Btn remove link
+    // Btn remove link
     const btn_remove_url = document.getElementById('remove_url')
     const btn_remove_mail = document.getElementById('remove_mail')
     const btn_remove_file = document.getElementById('remove_file')
 
+    // File extension
+    const allowed_extensions = ['.txt', '.pdf', '.jpg', '.png']
+    
     // Take the highlighted part
     take_high_light()
 
@@ -155,60 +158,60 @@ $(document).ready(() => {
 
                 // Check if the element is in the a tag
                 if (target_element && target_element.nodeName === "A") {
-                    var selection = window.getSelection()
-                    const anchorNode = selection.anchorNode
-                    const focusNode = selection.focusNode
-
-                    // Specifies the tag containing the highlighted text (if anchorNode and focusNode have the same parent)
-                    const commonParent = anchorNode.parentElement === focusNode.parentElement ? anchorNode.parentElement : findCommonParent(anchorNode, focusNode)
-
-                    // Get the attributes of the tag
-                    const attributes = Array.from(commonParent.attributes).map(attr => `${attr.name}="${attr.value}"`)
+                    var attributes = get_the_attributes()
 
                     var name = ''
                     var count = 0
                     
                     attributes.forEach(element => {
-                        if (element.slice(0, 14) == 'href="https://') {
+                        if (element.slice(0, 14) == 'href="https://' || element.slice(0, 13) == 'href="http://') {
+                            // Open modal
                             modal_link_settings.style.display = 'block'
 
-                            // Current position of the mouse pointer
-                            const range = selection.getRangeAt(0)
-
-                            // Highlight all content in <a> . tag
-                            range.selectNodeContents(selection.anchorNode.parentNode)
-                            selected_text = target_element.textContent
-                            
+                            // Highlight the position that has been inserted link 
+                            highlight_card_a()
+                            // Open tab in correct insert
                             index_link()
+
+                            // Get the highlighted text
+                            selected_text = target_element.textContent
+
+                            // Get link content
                             var count_link = element.length - 1
                             input_url.value = element.slice(14, count_link)
+                            input_mail.value = null
+                            input_file.value = null
+                            new_tab_file.checked = false;
+
                             name = 'link'
                         } else if (element.slice(0, 13) == 'href="mailto:') {
                             modal_link_settings.style.display = 'block'
 
-                            // Current position of the mouse pointer
-                            const range = selection.getRangeAt(0)
+                            highlight_card_a()
+                            email_link()
 
-                            // Highlight all content in <a> . tag
-                            range.selectNodeContents(selection.anchorNode.parentNode)
                             selected_text = target_element.textContent
 
-                            email_link()
                             var count_link = element.length - 1
                             input_mail.value = element.slice(13, count_link)
+                            input_url.value = null
+                            input_file.value = null
+                            new_tab.checked = false
+                            new_tab_file.checked = false;
                         } else if (element.slice(0, 6) == 'href="'){
                             modal_link_settings.style.display = 'block'
 
-                            // Current position of the mouse pointer
-                            const range = selection.getRangeAt(0)
+                            highlight_card_a()
+                            file_link()
 
-                            // Highlight all content in <a> . tag
-                            range.selectNodeContents(selection.anchorNode.parentNode)
                             selected_text = target_element.textContent
 
-                            file_link()
                             var count_link = element.length - 1
                             input_file.value = element.slice(6, count_link)
+                            input_url.value = null
+                            input_mail.value = null
+                            new_tab.checked = false
+
                             name = 'file'
                         }
 
@@ -311,28 +314,45 @@ $(document).ready(() => {
                 alert('File path cannot be empty!');
             } else {
                 const input_file_value =  input_file.value;
-                var new_tab = new_tab_file.checked;
-
-                var content = `<a href="${input_file_value}">${selected_text}</a>`
-                if(new_tab == true){
-                    var content = `<a href="${input_file_value}" target="_blank">${selected_text}</a>`
+                var is_valid = false;
+                for (var i = 0; i < allowed_extensions.length; i++) {
+                    if (input_file_value.endsWith(allowed_extensions[i])) {
+                        is_valid = true;
+                        break;
+                    }
                 }
+                if (is_valid) {
+                    var new_tab = new_tab_file.checked;
 
-                change_content(content)
-                btn_close_link_setting.click()
+                    var content = `<a href="${input_file_value}">${selected_text}</a>`
+                    if(new_tab == true){
+                        var content = `<a href="${input_file_value}" target="_blank">${selected_text}</a>`
+                    }
+
+                    change_content(content)
+                    btn_close_link_setting.click()
+                } else {
+                    alert('The file must be in one of the following formats: ' + allowed_extensions.join(', '));
+                }
             }
         });
     }
 
     function remove_url() {
-        var target_element = '';
+        var target_ele = '';
         var target_element_tmp = null;
-        document.addEventListener("click", function(e) {
+        document.addEventListener('click', function(e) {
             // Get the element the mouse pointer is on
-            target_element = e.target
-            if (target_element && target_element.nodeName === "A") {
-                target_element_tmp = target_element
-                selected_text = target_element_tmp.textContent
+            target_ele = e.target
+            if (target_ele && target_ele.nodeName === 'A') {
+                target_element_tmp = target_ele
+
+                var attributes = get_the_attributes()
+                attributes.forEach(element => {
+                    if(element.slice(0, 6) == 'href="') {
+                        selected_text = target_element_tmp.textContent
+                    }
+                })
             }
         });
         btn_remove_url.addEventListener('click', ()=>{
@@ -351,14 +371,20 @@ $(document).ready(() => {
         })
     }
     function remove_mail() {
-        var target_element = '';
+        var target_el = '';
         var target_element_tmp = null;
         document.addEventListener("click", function(e) {
             // Get the element the mouse pointer is on
-            target_element = e.target
-            if (target_element && target_element.nodeName === "A") {
-                target_element_tmp = target_element
-                selected_text = target_element_tmp.textContent
+            target_el = e.target
+            if (target_el && target_el.nodeName === "A") {
+                target_element_tmp = target_el
+
+                var attributes = get_the_attributes()
+                attributes.forEach(element => {
+                    if(element.slice(0, 6) == 'href="') {
+                        selected_text = target_element_tmp.textContent
+                    }
+                })
             }
         });
         btn_remove_mail.addEventListener('click', ()=>{
@@ -376,14 +402,20 @@ $(document).ready(() => {
         })
     }
     function remove_file() {
-        var target_element = '';
+        var target_e = '';
         var target_element_tmp = null;
         document.addEventListener("click", function(e) {
             // Get the element the mouse pointer is on
-            target_element = e.target
-            if (target_element && target_element.nodeName === "A") {
-                target_element_tmp = target_element
-                selected_text = target_element_tmp.textContent
+            target_e = e.target
+            if (target_e && target_e.nodeName === "A") {
+                target_element_tmp = target_e
+
+                var attributes = get_the_attributes()
+                attributes.forEach(element => {
+                    if(element.slice(0, 6) == 'href="') {
+                        selected_text = target_element_tmp.textContent
+                    }
+                })
             }
         });
         btn_remove_file.addEventListener('click', ()=>{
@@ -419,7 +451,7 @@ $(document).ready(() => {
         upload_file_form.on('submit',(e)=>{
             e.preventDefault()
             var action_url = upload_file_form.attr('action')
-            var form_data = new FormData(upload_file_form[0]);
+            var form_data = new FormData(upload_file_form[0])
             $.ajax({
                 type: "POST",
                 url: action_url,
@@ -447,7 +479,7 @@ $(document).ready(() => {
                         open_modal_properties_file()
                     } else {
                         modal_notice_file.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>${data['message']}</h5>`)
-                        modal_notice_file.css('display', "block");
+                        modal_notice_file.css('display', "block")
                     }
             },
             cache: false,
@@ -620,7 +652,9 @@ $(document).ready(() => {
                             url: url,
                             success: function () {
                                 if (list_item) {
-                                    list_item.remove();
+                                    list_item.remove()
+                                    input_file.value = null
+                                    new_tab_file.checked = false
                                 }
                             }
                         });
@@ -927,5 +961,29 @@ $(document).ready(() => {
         const view_fragment = html_dp.toView(content);
         const model_fragment = editor_instance.data.toModel(view_fragment);
         editor_instance.model.insertContent(model_fragment);
+    }
+
+    function get_the_attributes() {
+        var selection = window.getSelection()
+        const anchorNode = selection.anchorNode
+        const focusNode = selection.focusNode
+
+        // Specifies the tag containing the highlighted text (if anchorNode and focusNode have the same parent)
+        const commonParent = anchorNode.parentElement === focusNode.parentElement ? anchorNode.parentElement : findCommonParent(anchorNode, focusNode)
+
+        // Get the attributes of the tag
+        const attributes = Array.from(commonParent.attributes).map(attr => `${attr.name}="${attr.value}"`)
+        return attributes
+    }
+
+    // highlight part of card A
+    function highlight_card_a() {
+        var selection = window.getSelection()
+
+        // Current position of the mouse pointer
+        const range = selection.getRangeAt(0)
+
+        // Highlight all content in <a> . tag
+        range.selectNodeContents(selection.anchorNode.parentNode)
     }
 })
