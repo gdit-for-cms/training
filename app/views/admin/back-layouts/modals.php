@@ -446,7 +446,9 @@
                         </div>
                         <div class="col-7 p-3 ">
                             <h5>Note</h5>
-                            <textarea class="row p-3" id="rule-note"></textarea>
+                            <div class="row p-3" id="rule-notes">
+                            </div>
+                            <!-- <textarea class="row p-3" id="rule-note"></textarea> -->
                         </div>
                     </div>
                 </div>

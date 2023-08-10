@@ -3,7 +3,7 @@
     <!-- Modal setting link -->
     <div class="modal modal-lg" id="link-settings" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="link-settingsLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content modal-images-setting">
+            <div class="modal-content modal-link-setting">
                 <div class="modal-header">
                     <h5 class="modal-title" id="link-settingsLabel">Link</h5>
                     <button type="button" class="btn-close btn-close-link-setting" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -56,15 +56,15 @@
                                 <input id="new_tab" type="checkbox" name="new_tab">
                             </div>
                             <div class="col-5" style="margin-left: -40px;">
-                                <label>Opens in a new tab</label>
+                                <label id="open_url_text">Opens in a new tab</label>
                             </div>
                         </div>
                         <div class="row justify-content-around align-items-center mt-5">
                             <div class="col-6 text-end">
-                                <button id="open_url" class="btn btn-primary" style="margin-right: -10px;">Open</button>
+                                <button id="open_url" class="btn btn-primary" style="margin-right: -10px;">Insert</button>
                             </div>
                             <div class="col-6">
-                                <button id="remove_url" class="btn btn-danger" style="margin-left: -10px;">Remove</button>
+                                <button id="remove_url" class="btn btn-danger" style="margin-left: -10px;">Remove Link</button>
                             </div>
                         </div>
                     </div>
@@ -77,10 +77,10 @@
                         </div>
                         <div class="row justify-content-around align-items-center mt-5">
                             <div class="col-6 text-end">
-                                <button id="open_mail" class="btn btn-primary" style="margin-right: -10px;">Open</button>
+                                <button id="open_mail" class="btn btn-primary" style="margin-right: -10px;">Insert</button>
                             </div>
                             <div class="col-6">
-                                <button id="remove_mail" class="btn btn-danger" style="margin-left: -10px;">Remove</button>
+                                <button id="remove_mail" class="btn btn-danger" style="margin-left: -10px;">Remove Link</button>
                             </div> 
                         </div>
                     </div>
@@ -96,7 +96,7 @@
                                 <input id="newtab_file" type="checkbox">
                             </div>
                             <div class="col-5" style="margin-left: -40px;">
-                                <label>Opens in a new tab</label>
+                                <label id="open_file_text">Opens in a new tab</label>
                             </div>
                         </div>
                         <div class="search-option">
@@ -108,10 +108,10 @@
                         </div>
                         <div class="row justify-content-around align-items-center mt-5">
                             <div class="col-6 text-end">
-                                <button id="open_file" class="btn btn-primary" style="margin-right: -10px;">Open</button>
+                                <button id="open_file" class="btn btn-primary" style="margin-right: -10px;">Insert</button>
                             </div>
                             <div class="col-6">
-                                <button id="remove_file" class="btn btn-danger" style="margin-left: -10px;">Remove</button>
+                                <button id="remove_file" class="btn btn-danger" style="margin-left: -10px;">Remove Link</button>
                             </div>
                         </div>
                     </div>
@@ -123,7 +123,7 @@
     <!-- Modal setting insert file -->
     <div class="modal modal-lg " id="file-settings" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="image-settingsLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content modal-images-setting">
+            <div class="modal-content modal-list-file">
                 <div class="modal-header">
                     <h5 class="modal-title" id="image-settingsLabel">File settings</h5>
                     <button type="button" class="btn-close btn-close-file-setting" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -234,7 +234,7 @@
                                     </div>
                                 </div>
                             </form>
-                            <div class="images-file-list">
+                            <div class="link-file-list">
                                 <div class="row justify-content-around align-items-center">
                                     <ul id="file-list-ul" class="list-group d-flex flex-column  align-items-center ">
                                         <?php
@@ -272,17 +272,28 @@
                             <div class="flex justify-center items-center mt-2">
                                 <nav aria-label="Page navigation example">
                                     <ul class="pagination">
+                                        <li class="page-item cursor-pointer hidden"><a class="page-link text-dark"><<</a></li>
                                         <li class="page-item cursor-pointer hidden"><a class="page-link text-dark">Previous</a></li>
                                         <?php if (isset($qtyPageOfFIle)) {?>
-                                            <?php for ($i = 1; $i <= $qtyPageOfFIle; $i++) { ?>
-                                                <li class="page-item cursor-pointer"><a class="page-link text-dark"><?= $i ?></a></li>
-                                            <?php } ?>
-                                            <?php if ($qtyPageOfFIle <= 1) {?>
-                                                <li class="page-item cursor-pointer hidden"><a class="page-link text-dark">Next</a></li>
+                                            <?php if ($qtyPageOfFIle <= 5) {?>
+                                                <?php for ($i = 1; $i <= $qtyPageOfFIle; $i++) { ?>
+                                                    <li class="page-item cursor-pointer"><a class="page-link text-dark"><?= $i ?></a></li>
+                                                <?php } ?>
+                                                <?php if ($qtyPageOfFIle <= 1) {?>
+                                                    <li class="page-item cursor-pointer hidden"><a class="page-link text-dark">Next</a></li>
+                                                    <li class="page-item cursor-pointer hidden"><a class="page-link text-dark">>></a></li>
+                                                <?php } else {?>
+                                                    <li class="page-item cursor-pointer"><a class="page-link text-dark">Next</a></li>
+                                                    <li class="page-item cursor-pointer"><a class="page-link text-dark">>></a></li>
+                                                <?php }?>
                                             <?php } else {?>
-                                                <li class="page-item cursor-pointer"><a class="page-link text-dark">Next</a></li>
+                                                <?php for ($i = 1; $i <= 5; $i++) { ?>
+                                                    <li class="page-item cursor-pointer"><a class="page-link text-dark"><?= $i ?></a></li>
+                                                <?php } ?>
+                                                    <li class="page-item cursor-pointer"><a class="page-link text-dark">Next</a></li>
+                                                    <li class="page-item cursor-pointer"><a class="page-link text-dark">>></a></li>
                                             <?php }?>
-                                        <?php } ?>
+                                        <?php }?>
                                     </ul>
                                 </nav>
                             </div>
@@ -431,7 +442,7 @@
     <!-- Modal properties file -->
     <div class="modal modal-lg" id="properties-file" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content modal-images-setting">
+            <div class="modal-content modal-link-setting">
                 <div class="modal-header">
                     <h5 class="modal-title" id="link-settingsLabel">Properties File</h5>
                     <button type="button" id="close-modal-properties-file" class="btn-close btn-close-link-setting" data-bs-dismiss="modal" aria-label="Close"></button>

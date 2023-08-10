@@ -26,7 +26,7 @@ class LinkController extends AppController
     {
         $post = $request->getPost()->all();
         $results = array();
-
+        $message = '';
         if ($_SERVER["REQUEST_METHOD"] == "POST" && $_FILES["upload-file"]['error'] == 0 && $post['name-file'] != null) {
             // Check if the folder is there
             $target_dir = "file/";
@@ -41,7 +41,7 @@ class LinkController extends AppController
             // Check if the file already exists
             if (file_exists($target_file)) {
                 $status = false;
-                $message = 'File already exists';
+                $message = 'File already exists!';
             }
             // Check file type
             else if(!in_array($file_extension, $this->allowed_extensions)) {
@@ -51,7 +51,7 @@ class LinkController extends AppController
             //  Check file size
             else if($_FILES["upload-file"]["size"] > $this->max_size) {
                 $status = false;
-                $message = 'File size too large!';
+                $message = 'File size too large! The maximum file size is 5MB.';
             } 
             // Upload files to the server
             else if (move_uploaded_file($_FILES["upload-file"]["tmp_name"], $target_file)) {
@@ -61,16 +61,17 @@ class LinkController extends AppController
                 ];
                 $this->obj_file->create($file_data);
                 
-                $results = $this->obj_file->getBy('path', '=', $target_file);
+                // $results = $this->obj_file->getBy('path', '=', $target_file);
+                $results = $this->obj_file->searchBy('', 'descending');
                 $status = true;
-                $message = 'File uploaded successfully';
+                $message = 'File uploaded successfully!';
             } else {
                 $status = false;
-                $message = 'Unable to upload file to server';
+                $message = 'Unable to upload file to server!';
             }
         } else {
             $status = false;
-            $message = 'Something is wrong, please try again!';
+            $message = 'You must enter a file name and file, try again!';
         }
 
         return $this->responseFileQuery($status, $message, $results);
@@ -80,21 +81,33 @@ class LinkController extends AppController
     public function deleteAction(Request $request)
     {
         $file_id = $request->getGet()->get('id');
-        $file = $this->obj_file->getById($file_id, '*');
 
+        $current_page = (int)($request->getGet()->get('current_page'));
+        $qty_file_page = (int)($request->getGet()->get('qty_file_page'));
+        $input_search = $request->getGet()->get('input_search');
+        $desc = $request->getGet()->get('desc');
+
+        
+
+        $file = $this->obj_file->getById($file_id, '*');
+        
         // Check the file on the server and delete the file
         if (!empty($file['path'])) {
             unlink($file['path']);
         }
         $result = $this->obj_file->destroyBy("id = $file_id");
         if ($result) {
+            $value_first = ($current_page - 1) * $qty_file_page;
+
+            $results = $this->obj_file->getValueForPaginate($value_first, $qty_file_page, $input_search, $desc);
+
             $status = true;
             $message = 'Delete files success';
         } else {
             $status = false;
             $message = 'Delete files failed';
         }
-        return $this->responseFileQuery($status, $message);
+        return $this->responseFileQuery($status, $message, $results);
     }
 
     // Update file
@@ -173,5 +186,20 @@ class LinkController extends AppController
         $result = $this->obj_file->getValueForPaginate($value_first, $qty_file_page, $search, $desc);
 
         return $this->responseFileQuery(true, 'Change qty file success', $result);
+    }
+
+    public function totalPagesAction()
+    {
+        $all_results = $this->obj_file->getAll();
+
+        $count = count($all_results);
+
+        $total_page = (int)($count / 5);
+
+        if(($count % 5 != 0)) {
+            $total_page = (int)($count / 5) + 1;
+
+        }
+        return $this->responseFileQuery(true, '', $total_page);
     }
 }

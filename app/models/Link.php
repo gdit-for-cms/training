@@ -85,11 +85,13 @@ class Link extends Model
     {
         $db = static::getDB();
         
-        $where = $this->whereLike('name', $search);
+        $where = $this->whereLikeWithOr('name', $search);
+        $where = $this->whereLikeWithOr('path', $search);
         
         $query = "SELECT * 
                   FROM library_file ";
         $query .= $where->where;
+
         $query .= " ORDER BY updated_at";
         if($order == 'descending') {
             $query .= " DESC";
@@ -108,7 +110,8 @@ class Link extends Model
     {
         $db = static::getDB();
 
-        $where = $this->whereLike('name', $search);
+        $where = $this->whereLikeWithOr('name', $search);
+        $where = $this->whereLikeWithOr('path', $search);
 
         $query = "SELECT * 
                   FROM library_file ";
@@ -126,7 +129,8 @@ class Link extends Model
     {
         $db = static::getDB();
 
-        $where = $this->whereLike('name', $search);
+        $where = $this->whereLikeWithOr('name', $search);
+        $where = $this->whereLikeWithOr('path', $search);
 
         $query = "SELECT * 
                   FROM library_file ";
@@ -150,7 +154,8 @@ class Link extends Model
     {
         $db = static::getDB();
 
-        $where = $this->whereLike('name', $search);
+        $where = $this->whereLikeWithOr('name', $search);
+        $where = $this->whereLikeWithOr('path', $search);
 
         $query = "SELECT * 
                   FROM library_file ";

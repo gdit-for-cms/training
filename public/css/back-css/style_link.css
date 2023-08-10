@@ -1,0 +1,302 @@
+      
+.search-option{
+    margin-top: 20px;
+    border: 2px solid #a1a1a1;
+}
+.link-file-list{
+    margin-top: 20px;
+}
+
+.modal-list-file{
+  width: 760px !important;
+  min-width: 760px !important;
+  height: 840px !important;
+  min-height: 840px !important;
+}
+
+.modal-list-file label {
+  cursor: pointer;
+  /* Style as you please, it will become the visible UI component. */
+}
+
+.modal-list-file .label-select-file{
+  background-color: #f8f8f8 !important;
+  padding: 4px 14px;
+  border: .5px solid #d4d2d2;
+  border-radius: 4px;
+  max-height: 34.22px;
+} 
+.modal-list-file .label-select-file:hover{
+background-color: #d1d1d1 !important;
+}
+.modal-list-file .file-name-message{
+min-height: 48px;
+}
+
+.link-file-list .list-group-item{
+  border-top: none;
+  border-left: none;
+  border-right: none;
+ 
+}
+.modal-list-file .link-file-list .list-group{
+  width: 98%;
+  max-height: 350px;
+  overflow-y: auto;
+}
+.modal-list-file .w-90{
+  width: 86%;
+}
+.modal-list-file  .link-file-list,.search-option  {
+  position: relative;
+  border: 1px solid rgb(92, 91, 91);
+  padding: 10px;
+}
+.modal-list-file  .link-file-list  {
+height: 400px;
+}
+
+.modal-list-file  .link-file-list::before {
+  content: 'File list';
+  position: absolute;
+  top: -10px;
+  padding: 0 10px;
+  background: #fff;
+}
+.modal-list-file  .search-option::before {
+  content: 'Link options';
+  position: absolute;
+  top: -10px;
+  padding: 0 10px;
+  background: #fff;
+}
+
+.modal-list-file  .group-select-one-file:first-child{
+  margin-top: 30px;
+}
+.modal-list-file  .group-select-one-file{
+  margin-top: 10px;
+  width: 90%;
+  margin-left: 5%;
+}
+.modal-list-file  .search-option-label{
+  margin-left: 30px;
+}
+.modal-list-file  .btn-close{
+  background-color: #f05454;
+  color: #ffff !important;
+  font-weight: bold !important;
+  opacity: 1 !important;
+}
+
+.modal-link-setting{
+  width: 760px !important;
+  min-width: 760px !important;
+  height: 540px !important;
+  min-height: 540px !important;
+}
+
+.modal-link-setting label {
+    cursor: pointer;
+    /* Style as you please, it will become the visible UI component. */
+ }
+
+ .modal-link-setting .label-select-file{
+    background-color: #f8f8f8 !important;
+    padding: 4px 14px;
+    border: .5px solid #d4d2d2;
+    border-radius: 4px;
+    max-height: 34.22px;
+ } 
+ .modal-link-setting .label-select-file:hover{
+  background-color: #d1d1d1 !important;
+}
+.modal-link-setting .file-name-message{
+  min-height: 48px;
+}
+ 
+ .link-file-list .list-group-item{
+    border-top: none;
+    border-left: none;
+    border-right: none;
+   
+ }
+ .modal-link-setting .link-file-list .list-group{
+    width: 98%;
+    max-height: 350px;
+    overflow-y: auto;
+ }
+ .modal-link-setting .w-90{
+    width: 86%;
+ }
+ .modal-link-setting  .link-file-list,.search-option  {
+    position: relative;
+    border: 1px solid rgb(92, 91, 91);
+    padding: 10px;
+  }
+  .modal-link-setting  .link-file-list  {
+  height: 400px;
+  }
+  
+ .modal-link-setting  .link-file-list::before {
+    content: 'File list';
+    position: absolute;
+    top: -10px;
+    padding: 0 10px;
+    background: #fff;
+  }
+ .modal-link-setting  .search-option::before {
+    content: 'Link options';
+    position: absolute;
+    top: -10px;
+    padding: 0 10px;
+    background: #fff;
+  }
+
+ .modal-link-setting  .group-select-one-file:first-child{
+    margin-top: 30px;
+  }
+ .modal-link-setting  .group-select-one-file{
+    margin-top: 10px;
+    width: 90%;
+    margin-left: 5%;
+  }
+ .modal-link-setting  .search-option-label{
+    margin-left: 30px;
+  }
+  .modal-link-setting  .btn-close{
+    background-color: #f05454;
+    color: #ffff !important;
+    font-weight: bold !important;
+    opacity: 1 !important;
+  }
+
+
+  /* The Preview Modal (background) */
+#myModal,#modal-notice.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.2) !important; /* Black w/ opacity */
+  }
+
+  #modal-notice-file .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 50%; /* Full width */
+    height: 50%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.2) !important; /* Black w/ opacity */
+  }
+  
+  /* Modal Content/Box */
+#myModal .modal-content {
+    background-color: #fefefe;
+    margin: 10% 36% auto auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width:30% !important; /* Could be more or less, depending on screen size */
+    height: 40%;
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+  }
+
+#modal-notice .modal-content {
+    background-color: #fefefe;
+    margin: 16% 41% auto auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width:20% !important; /* Could be more or less, depending on screen size */
+    height: 20%;
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+  }
+
+  #modal-notice-file .modal-content {
+    background-color: #fefefe;
+    margin: 16% 41% auto auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width:20% !important; /* Could be more or less, depending on screen size */
+    height: 20%;
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+  }
+  #modal-notice  .close-modal-notice {
+    font-size: 16px;
+    padding: 0 10px;
+    background-color: #e25050;
+    color: black;
+    border-radius: 4px;
+    font-weight: bold;
+  }
+
+  #modal-notice-file  .close-modal-notice {
+    font-size: 16px;
+    padding: 0 10px;
+    background-color: #e25050;
+    color: black;
+    border-radius: 4px;
+    font-weight: bold;
+  }
+  
+  /* The Close Button */
+  #myModal  .close {
+    font-size: 16px;
+    padding: 0 10px;
+    background-color: #e25050;
+    color: black;
+    border-radius: 4px;
+    font-weight: bold;
+  }
+
+ #myModal  .close:hover,
+ #myModal  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .modal-child-header{
+    display: flex;
+    justify-content:space-between;
+    margin-right: 6px;
+    margin-left: 6px;
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+    border-bottom: 1px #ccc solid !important;
+  }
+
+  .width-height-link{
+    margin-top: 14px;
+    margin-left: -12px !important;
+    width: 14px;
+    height: 50px;
+    border: 1px solid #5f5d5d !important;
+    border-left: none !important;
+  }
+  .width-height-link{
+    position: relative;
+  }
+  .width-height-link::before{
+    font: var(--fa-font-solid);
+    content: ' \f023';
+    color: #dbae0b;
+    position: absolute;
+    top: 15px;
+    margin-left: -5px;
+    padding: 0 10px;
+    background: #fff;
+  }
+  .width-height-reload{
+    margin-top:27px;
+    margin-left: 5px;
+    font-weight: bold;
+    color: #030303;
+  }
+
+  

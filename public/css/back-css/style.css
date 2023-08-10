@@ -491,14 +491,14 @@ a {
   }
   
  .modal-images-setting  .images-file-list::before {
-    content: 'File list';
+    content: 'Images file';
     position: absolute;
     top: -10px;
     padding: 0 10px;
     background: #fff;
   }
  .modal-images-setting  .search-option::before {
-    content: 'Link options';
+    content: 'Search options';
     position: absolute;
     top: -10px;
     padding: 0 10px;
