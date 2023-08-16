@@ -43,15 +43,18 @@
                     </div>
                     <div id="externallink" class="tab-link checked mt-2">
                         <div class="row justify-content-around align-items-center mt-4">
-                            <label>Enter the URL</label>
-                            <div class="col-1 mt-2">
-                                <button class="btn btn-secondary">http://</button>
+                            <label style="margin-left: 30px;">Enter the URL</label>
+                            <div class="col-2 mt-2 mb-2">
+                                <select class="form-select" id="http">
+                                    <option value="http://">http://</option>
+                                    <option value="https://">https://</option>
+                                </select>
                             </div>
-                            <div class="col-11 mt-2">
-                                <input id="input_url" class="form-control" type="text" name="link">
-                            </div>
+                            <div class="col-10 mt-2 mb-2" style="margin-left: -40px;">
+                                <input id="input_url" class="form-control" type="text" name="link" placeholder="example.com">
+                            </div>  
                         </div>
-                        <div class="row mt-1">
+                        <div class="row mt-1" style="margin-left: 0px;">
                             <div class="col-1">
                                 <input id="new_tab" type="checkbox" name="new_tab">
                             </div>
@@ -72,7 +75,7 @@
                         <div class="row justify-content-around align-items-center mt-4">
                             <label for="">Enter your Email</label>
                             <div class="col-12 mt-2">
-                                <input id="input_mail" class="form-control" type="mail">
+                                <input id="input_mail" class="form-control" type="mail" placeholder="example@gmail.com">
                             </div>
                         </div>
                         <div class="row justify-content-around align-items-center mt-5">
@@ -88,7 +91,7 @@
                         <div class="row justify-content-around align-items-center mt-4">
                             <label>Enter the file path</label>
                             <div class="col-12 mt-2">
-                                <input id="input_file" class="form-control" type="text">
+                                <input id="input_file" class="form-control" type="text" placeholder="/folder/example.txt">
                             </div>
                         </div>
                         <div class="row mt-1">
@@ -435,6 +438,24 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-already-exists" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-child-header">
+                <h5 class="modal-title">Message!</h5>
+                <button type="button" id="close-modal-already-exists-file" class="close-modal-notice" data-bs-dismiss="modal" aria-label="Close">X</button>
+            </div>
+            <div class="row justify-content-center image-preview-cover">
+                <div class="alert" id="content-already-exists-file" role="alert" style="padding-bottom: 0px; padding-top: 0px;">
+
+                </div>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-primary" id="accept_replace_file">Accept</button>
             </div>
         </div>
     </div>

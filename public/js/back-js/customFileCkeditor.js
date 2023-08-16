@@ -38,6 +38,7 @@ $(document).ready(() => {
 
     //Insert Link
     const button_open_url = document.getElementById("open_url")
+    const btn_http = document.getElementById("http")
     const input_url = document.getElementById("input_url")
     const new_tab = document.getElementById("new_tab")
 
@@ -71,6 +72,7 @@ $(document).ready(() => {
 
     // Modal notice file
     const modal_notice_file = $('#modal-notice-file')
+    const modal_already_exists = $('#modal-already-exists')
     const btn_close_modal_note_file = $('#close-modal-notice-file')
 
     // Btn remove link
@@ -82,13 +84,19 @@ $(document).ready(() => {
     const allowed_extensions = ['.txt', '.pdf', '.jpg', '.png', '.xlsx', '.docx', '.pptx']
 
     // Opens in a new tab
-    const open_url_text = document.getElementById('open_url_text');
-    const open_file_text = document.getElementById('open_file_text');
+    const open_url_text = document.getElementById('open_url_text')
+    const open_file_text = document.getElementById('open_file_text')
 
     // Get target element
     var target_element = ''
 
     var total_pages = 0;
+
+    // Btn accept replace file
+    const accept_replace_file = document.getElementById('accept_replace_file')
+
+    // Element
+    const attributes = ['A', 'P', 'STRONG', 'I']
 
     // Show/close modal insert link
     btn_close_modal_link_setting()
@@ -129,13 +137,18 @@ $(document).ready(() => {
     // Total pages
     get_total_pages()
 
-    var target_element_tmp = null;
+    var target_element_tmp = null
+    var check = false
     document.addEventListener("click", function (e) {
         var selection = window.getSelection();
         // Check if that position is being highlighted
         if (!selection.isCollapsed) {
             //Get the text of the highlighted part
-            take_high_light()
+            var element = e.target.nodeName
+            check = true
+            take_high_light(element)
+        } else {
+            check = false
         }
 
         // Get the element inside the A tag
@@ -147,6 +160,7 @@ $(document).ready(() => {
             attributes.forEach(element => {
                 if(element.slice(0, 6) == 'href="') {
                     selected_text = target_element.textContent
+                    check = true
                 }
             })
         }
@@ -155,16 +169,28 @@ $(document).ready(() => {
     // When clicking the function button insert link
     if (btn_pick_link[3]) {
         btn_pick_link[3].addEventListener('click', (e) => {
-            // Check if the element is in the a tag
-            if(target_element && target_element.nodeName === "A"){
-                // Open modal when editing link
-                add_event_modal_link_setting()
+            if (check) {
+                // Check if the element is in the a tag
+                if(target_element && target_element.nodeName === "A"){
+                    // Open modal when editing link
+                    add_event_modal_link_setting()
+                } else {
+                    // Open modal when inserting link
+                    add_event_modal_link()
+                }
             } else {
-                // Open modal when inserting link
-                add_event_modal_link()
+                alert('You must highlight the element you want to insert link to use this function!')
             }
         })
     }
+
+    input_url.addEventListener("blur", function () {
+        if (input_url.value.slice(0, 8) == 'https://') {
+            input_url.value = input_url.value.slice(8, input_url.value.length)
+        }else if (input_url.value.slice(0, 7) == 'http://') {
+            input_url.value = input_url.value.slice(7, input_url.value.length)
+        }
+    })
 
     // When clicking the open button in insert link/email/file
     button_open_url.addEventListener("click", function() {
@@ -192,11 +218,13 @@ $(document).ready(() => {
         switch_to_list_file_tab()
     })
     
-    function take_high_light() {
+    function take_high_light(element) {
         var selection = window.getSelection();
         var location = selection.getRangeAt(0);
         if (location.endOffset - location.startOffset != 0) {
-            selected_text = window.getSelection().toString()
+            if(attributes.includes(element)){
+                selected_text = window.getSelection().toString()
+            }
         }
     }
     
@@ -221,7 +249,13 @@ $(document).ready(() => {
 
                 // Get link content
                 var count_link = element.length - 1
-                input_url.value = element.slice(14, count_link)
+                if (element.slice(0, 14) == 'href="https://') {
+                    input_url.value = element.slice(14, count_link)
+                    btn_http.value = 'https://'
+                } else {
+                    input_url.value = element.slice(13, count_link)
+                    btn_http.value = 'http://'
+                }
                 input_mail.value = null
                 input_file.value = null
                 new_tab_file.checked = false;
@@ -278,9 +312,12 @@ $(document).ready(() => {
     }
     function add_event_modal_link() {
         modal_link_settings.style.display = 'block'
-        index_link();
-        input_url.value = null;
-        new_tab.checked = false;
+        index_link()
+        input_url.value = null
+        input_mail.value = null
+        input_file.value = null
+        new_tab.checked = false
+        new_tab_file.checked = false
     }
 
     function btn_close_modal_link_setting() {
@@ -322,12 +359,12 @@ $(document).ready(() => {
         if (input_url.value == '' || input_url.value == null) {
             alert('External link cannot be empty!')
         } else {
-            const input_url_value = "https://" + input_url.value
+            var input_url_value = btn_http.value + input_url.value
             var new_tab_value = new_tab.checked
 
-            var content = `<a href="${input_url_value}">${selected_text}</a>`
+            var content = `<a href="${input_url_value}" style="text-decoration: underline; color: rgb(54 103 198);">${selected_text}</a>`
             if(new_tab_value == true){
-                var content = `<a href="${input_url_value}" target="_blank">${selected_text}</a>`
+                var content = `<a href="${input_url_value}" target="_blank" style="text-decoration: underline; color: rgb(54 103 198);">${selected_text}</a>`
             }
 
             change_content(content)
@@ -340,7 +377,7 @@ $(document).ready(() => {
     function open_mail() {
         if (is_valid_email(input_mail.value)) {
             var input_mail_value = "mailto:" + input_mail.value;
-            var content = `<a href="${input_mail_value}">${selected_text}</a>`
+            var content = `<a href="${input_mail_value}" style="text-decoration: underline; color: rgb(54 103 198);">${selected_text}</a>`
 
             change_content(content)
             btn_close_link_setting.click()
@@ -365,9 +402,9 @@ $(document).ready(() => {
             if (is_valid) {
                 var new_tab = new_tab_file.checked;
 
-                var content = `<a href="${input_file_value}" download>${selected_text}</a>`
+                var content = `<a href="${input_file_value}" style="text-decoration: underline; color: rgb(54 103 198);" download>${selected_text}</a>`
                 if(new_tab == true){
-                    var content = `<a href="${input_file_value}" target="_blank" download>${selected_text}</a>`
+                    var content = `<a href="${input_file_value}" style="text-decoration: underline; color: rgb(54 103 198);" target="_blank" download>${selected_text}</a>`
                 }
 
                 change_content(content)
@@ -476,8 +513,13 @@ $(document).ready(() => {
                         open_modal_properties_file()
                         update_file()
                     } else {
-                        modal_notice_file.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>${data['message']}</h5>`)
-                        modal_notice_file.css('display', "block")
+                        if(data['message'].slice(0, 19) == 'File already exists'){
+                            modal_already_exists.find('#content-already-exists-file').html(`<h5 class='text-center text-danger'>${data['message']}</h5>`)
+                            modal_already_exists.css('display', "block")
+                        } else {
+                            modal_notice_file.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>${data['message']}</h5>`)
+                            modal_notice_file.css('display', "block")
+                        }
                     }
             },
             cache: false,
@@ -488,6 +530,58 @@ $(document).ready(() => {
             });
         })
     }
+
+    accept_replace_file.addEventListener('click', function (e) {
+        e.preventDefault()
+        var action_url = '/admin/link/upload'
+        var form_data = new FormData(upload_file_form[0])
+        $.ajax({
+            type: "POST",
+            url: action_url,
+            data: form_data,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                if (data['success']) {
+                    modal_already_exists?.css('display', 'none')
+                    search_file_form[0].reset()
+
+                    // Add an item to the file list
+                    // add_new_file_to_list(data['result'])
+                    file_list_ul.innerHTML = ''
+                    var htmls = ""
+                    
+                    data['result'].forEach(file => {
+                        htmls += create_list_tag_file_html(file)
+                    });
+                    file_list_ul.html(htmls)
+
+                    get_total_pages()
+
+                    // Insert File after upload is done
+                    insert_file()
+
+                    switch_to_list_file_tab()
+                    upload_file_form[0].reset()
+
+                    //Delete file after uploading
+                    delete_file()
+
+                    //Properties file
+                    open_modal_properties_file()
+                    update_file()
+                } else {
+                    modal_notice_file.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>${data['message']}</h5>`)
+                    modal_notice_file.css('display', "block")
+                }
+        },
+        cache: false,
+        })
+        .fail(function() {
+            modal_notice_file.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>Something is wrong, please try again!</h5>`)
+            modal_notice_file.css('display', "block");
+        });
+    })
 
     function insert_file() {
         const button_insert_file = document.querySelectorAll('.button-insert-file');
@@ -1001,6 +1095,13 @@ $(document).ready(() => {
     $('#close-modal-notice-file').on('click', () => {
         if (modal_notice_file != null) {
             modal_notice_file?.css('display', 'none')
+        }
+    })
+
+    // Modal notice already exists file
+    $('#close-modal-already-exists-file').on('click', () => {
+        if (modal_already_exists != null) {
+            modal_already_exists?.css('display', 'none')
         }
     })
 

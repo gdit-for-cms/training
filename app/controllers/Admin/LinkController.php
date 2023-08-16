@@ -38,13 +38,9 @@ class LinkController extends AppController
             $file_extension = pathinfo($_FILES["upload-file"]['name'], PATHINFO_EXTENSION);
 
             $target_file = $target_dir . basename($_FILES["upload-file"]["name"]);
-            // Check if the file already exists
-            if (file_exists($target_file)) {
-                $status = false;
-                $message = 'File already exists!';
-            }
+            
             // Check file type
-            else if(!in_array($file_extension, $this->allowed_extensions)) {
+            if(!in_array($file_extension, $this->allowed_extensions)) {
                 $status = false;
                 $message = 'The file must be in one of the following formats: ' . implode(', ', $this->allowed_extensions);
             } 
@@ -53,15 +49,60 @@ class LinkController extends AppController
                 $status = false;
                 $message = 'File size too large! The maximum file size is 5MB.';
             } 
+            // Check if the file already exists
+            else if (file_exists($target_file)) {
+                $status = false;
+                $message = 'File already exists! Do you want to REPLACE it with a new file?';
+            }
             // Upload files to the server
             else if (move_uploaded_file($_FILES["upload-file"]["tmp_name"], $target_file)) {
                 $file_data = [
                     'name' => $post['name-file'],
-                    'path' => $target_file
+                    'path' => '/' . $target_file
                 ];
                 $this->obj_file->create($file_data);
                 
-                // $results = $this->obj_file->getBy('path', '=', $target_file);
+                $results = $this->obj_file->searchBy('', 'descending');
+                $status = true;
+                $message = 'File uploaded successfully!';
+            } else {
+                $status = false;
+                $message = 'Unable to upload file to server!';
+            }
+        } else {
+            $status = false;
+            $message = 'You must enter a file name and file, try again!';
+        }
+
+        return $this->responseFileQuery($status, $message, $results);
+    }
+
+    public function uploadAction(Request $request)
+    {
+        $post = $request->getPost()->all();
+        $results = array();
+        $message = '';
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && $_FILES["upload-file"]['error'] == 0 && $post['name-file'] != null) {
+            // Check if the folder is there
+            $target_dir = "file/";
+            if(!file_exists($target_dir)){
+                mkdir($target_dir, 0777, true);
+            }
+
+            $target_file = $target_dir . basename($_FILES["upload-file"]["name"]);
+            if (!empty($target_file)) {
+                unlink($target_file);
+            }
+            // var_dump($this->obj_file->destroyBy("path = '$target_file'"));
+            $this->obj_file->destroyBy("path = '/$target_file'");
+
+            if (move_uploaded_file($_FILES["upload-file"]["tmp_name"], $target_file)) {
+                $file_data = [
+                    'name' => $post['name-file'],
+                    'path' => '/' . $target_file
+                ];
+                $this->obj_file->create($file_data);
+                
                 $results = $this->obj_file->searchBy('', 'descending');
                 $status = true;
                 $message = 'File uploaded successfully!';
