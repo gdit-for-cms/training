@@ -89,6 +89,8 @@ $(document).ready(() => {
 
     // Get target element
     var target_element = ''
+    var anchor_element = null
+    var temp_element = ''
 
     var total_pages = 0;
 
@@ -96,7 +98,7 @@ $(document).ready(() => {
     const accept_replace_file = document.getElementById('accept_replace_file')
 
     // Element
-    const attributes = ['A', 'P', 'STRONG', 'I']
+    const attributes = ['A', 'P', 'STRONG', 'I', 'SPAN', 'UL', 'LI', 'OL', 'H2', 'H3', 'H4']
 
     // Show/close modal insert link
     btn_close_modal_link_setting()
@@ -137,6 +139,18 @@ $(document).ready(() => {
     // Total pages
     get_total_pages()
 
+    function find_parent_anchor(node) {
+        if (!node) {
+          return null;
+        }
+
+        if (node.nodeName === 'A') {
+            return node;
+        }
+      
+        return find_parent_anchor(node.parentNode);
+    }
+
     var target_element_tmp = null
     var check = false
     document.addEventListener("click", function (e) {
@@ -151,18 +165,51 @@ $(document).ready(() => {
             check = false
         }
 
-        // Get the element inside the A tag
-        target_element = e.target.nodeName === "A" ? e.target : null;
+        target_element = e.target
+    
+        if(attributes.includes(target_element.nodeName) && target_element.nodeName != 'P'){
+            var anchor_node = find_parent_anchor(target_element)
 
-        if(target_element && target_element.nodeName === "A"){
-            target_element_tmp = target_element
-            var attributes = get_the_attributes()
-            attributes.forEach(element => {
-                if(element.slice(0, 6) == 'href="') {
-                    selected_text = target_element.textContent
-                    check = true
+            if (anchor_node) {
+                var anchor_html = "'" + anchor_node.outerHTML + "'"
+                
+                var temp_element_tmp = document.createElement('div')
+                temp_element_tmp.innerHTML = anchor_html
+
+                // Take tag <a>
+                anchor_element = temp_element_tmp.querySelector('a')
+                
+                if (anchor_element) {
+                    // Take attributes
+                    target_element_tmp = target_element
+
+                    var href = anchor_element.getAttribute('href')
+
+                    if(href) {
+                        selected_text = anchor_element.textContent
+                        check = true
+                        temp_element = temp_element_tmp
+                    }
+                } else {
+                    target_element_tmp = null
+                    check = false
                 }
-            })
+            }
+        } else {
+            anchor_element = null
+        }
+    })
+
+    document.addEventListener("dblclick", function (e) {
+        var selection = window.getSelection();
+        // Check if that position is being highlighted
+        if (!selection.isCollapsed) {
+            //Get the text of the highlighted part
+            var element = e.target.nodeName
+            check = true
+            take_high_light(element)
+        } else {
+            check = false
         }
     })
 
@@ -171,7 +218,7 @@ $(document).ready(() => {
         btn_pick_link[3].addEventListener('click', (e) => {
             if (check) {
                 // Check if the element is in the a tag
-                if(target_element && target_element.nodeName === "A"){
+                if(anchor_element && anchor_element.nodeName === "A"){
                     // Open modal when editing link
                     add_event_modal_link_setting()
                 } else {
@@ -187,8 +234,10 @@ $(document).ready(() => {
     input_url.addEventListener("blur", function () {
         if (input_url.value.slice(0, 8) == 'https://') {
             input_url.value = input_url.value.slice(8, input_url.value.length)
+            btn_http.value = 'https://'
         }else if (input_url.value.slice(0, 7) == 'http://') {
             input_url.value = input_url.value.slice(7, input_url.value.length)
+            btn_http.value = 'http://'
         }
     })
 
@@ -229,13 +278,15 @@ $(document).ready(() => {
     }
     
     function add_event_modal_link_setting(){
-        var attributes = get_the_attributes()
+        // var attributes = get_the_attributes()
+        var href = anchor_element.getAttribute('href')
+        var target = anchor_element.getAttribute('target')
 
         var name = ''
         var count = 0
         
-        attributes.forEach(element => {
-            if (element.slice(0, 14) == 'href="https://' || element.slice(0, 13) == 'href="http://') {
+        if(href){
+            if (href.slice(0, 8) == 'https://' || href.slice(0, 7) == 'http://') {
                 // Open modal
                 modal_link_settings.style.display = 'block'
 
@@ -245,46 +296,45 @@ $(document).ready(() => {
                 index_link()
 
                 // Get the highlighted text
-                selected_text = target_element.textContent
+                selected_text = anchor_element.textContent
 
                 // Get link content
-                var count_link = element.length - 1
-                if (element.slice(0, 14) == 'href="https://') {
-                    input_url.value = element.slice(14, count_link)
+                var count_link = href.length
+                if (href.slice(0, 8) == 'https://') {
+                    input_url.value = href.slice(8, count_link)
                     btn_http.value = 'https://'
                 } else {
-                    input_url.value = element.slice(13, count_link)
+                    input_url.value = href.slice(7, count_link)
                     btn_http.value = 'http://'
                 }
                 input_mail.value = null
                 input_file.value = null
-                new_tab_file.checked = false;
+                new_tab_file.checked = false
 
                 name = 'link'
-            } else if (element.slice(0, 13) == 'href="mailto:') {
+            } else if (href.slice(0, 7) == 'mailto:') {
                 modal_link_settings.style.display = 'block'
 
                 highlight_card_a()
                 email_link()
 
-                selected_text = target_element.textContent
+                selected_text = anchor_element.textContent
 
-                var count_link = element.length - 1
-                input_mail.value = element.slice(13, count_link)
+                var count_link = href.length
+                input_mail.value = href.slice(7, count_link)
                 input_url.value = null
                 input_file.value = null
                 new_tab.checked = false
-                new_tab_file.checked = false;
-            } else if (element.slice(0, 6) == 'href="'){
+                new_tab_file.checked = false
+            } else if (href.slice(0, 1) == '/'){
                 modal_link_settings.style.display = 'block'
 
                 highlight_card_a()
                 file_link()
 
-                selected_text = target_element.textContent
+                selected_text = anchor_element.textContent
 
-                var count_link = element.length - 1
-                input_file.value = element.slice(6, count_link)
+                input_file.value = href
                 input_url.value = null
                 input_mail.value = null
                 new_tab.checked = false
@@ -292,10 +342,10 @@ $(document).ready(() => {
                 name = 'file'
             }
 
-            if(element.slice(0, 15) == 'target="_blank"') {
+            if(target) {
                 count++;
             }
-        });
+        }
         if(count > 0) {
             if (name == 'link') {
                 new_tab.checked = true;
@@ -362,10 +412,7 @@ $(document).ready(() => {
             var input_url_value = btn_http.value + input_url.value
             var new_tab_value = new_tab.checked
 
-            var content = `<a href="${input_url_value}" style="text-decoration: underline; color: rgb(54 103 198);">${selected_text}</a>`
-            if(new_tab_value == true){
-                var content = `<a href="${input_url_value}" target="_blank" style="text-decoration: underline; color: rgb(54 103 198);">${selected_text}</a>`
-            }
+            var content = make_content_insert(input_url_value, new_tab_value, 0)
 
             change_content(content)
             btn_close_link_setting.click()
@@ -377,7 +424,8 @@ $(document).ready(() => {
     function open_mail() {
         if (is_valid_email(input_mail.value)) {
             var input_mail_value = "mailto:" + input_mail.value;
-            var content = `<a href="${input_mail_value}" style="text-decoration: underline; color: rgb(54 103 198);">${selected_text}</a>`
+
+            var content = make_content_insert(input_mail_value, false, 0)
 
             change_content(content)
             btn_close_link_setting.click()
@@ -402,11 +450,8 @@ $(document).ready(() => {
             if (is_valid) {
                 var new_tab = new_tab_file.checked;
 
-                var content = `<a href="${input_file_value}" style="text-decoration: underline; color: rgb(54 103 198);" download>${selected_text}</a>`
-                if(new_tab == true){
-                    var content = `<a href="${input_file_value}" style="text-decoration: underline; color: rgb(54 103 198);" target="_blank" download>${selected_text}</a>`
-                }
-
+                var content = make_content_insert(input_file_value, new_tab, 1)
+                console.log(content);
                 change_content(content)
                 btn_close_link_setting.click()
 
@@ -417,10 +462,54 @@ $(document).ready(() => {
             }
         }
     }
+
+    function make_content_insert(input, new_tab = false, num) {
+        if(temp_element){
+            var span_element = temp_element.querySelector('span')
+            var i_element = temp_element.querySelector('i')
+            var strong_element = temp_element.querySelector('strong')
+        }
+        console.log(span_element)
+        console.log(i_element)
+        console.log(strong_element)
+
+        var content = `<a href="${input}" style="text-decoration: underline; color: rgb(54 103 198);"`
+        
+        if(new_tab == true){
+            content += ` target="_blank"`
+        }
+        if(num == 1){
+            content += ` download`
+        }
+        content += `>`
+        if(span_element){
+            var attr_class = span_element.getAttribute('class')
+            content += `<span class="${attr_class}">`
+        }
+        if(i_element){
+            content += `<i>`
+        }
+        if(strong_element){
+            content += `<strong>`
+        }
+        content += `${selected_text}`
+        if(strong_element){
+            content += `</strong>`
+        }
+        if(i_element){
+            content += `</i>`
+        }
+        if(span_element){
+            content += `</span>`
+        }
+        content += `</a>`
+
+        return content
+    }
   
     function remove_url() {
         if(target_element_tmp != null) {
-            var content = `${selected_text}`
+            var content = make_content_remove()
             change_content(content)
 
             input_url.value = null
@@ -434,7 +523,7 @@ $(document).ready(() => {
     }
     function remove_mail() {
         if(target_element_tmp != null) {
-            var content = `${selected_text}`
+            var content = make_content_remove()
             change_content(content)
 
             input_mail.value = null
@@ -447,7 +536,7 @@ $(document).ready(() => {
     }
     function remove_file() {
         if(target_element_tmp != null) {
-            var content = `${selected_text}`
+            var content = make_content_remove()
             change_content(content)
 
             input_file.value = null
@@ -458,6 +547,39 @@ $(document).ready(() => {
         } else {
             alert("Couldn't find the file to delete!")
         }
+    }
+
+    function make_content_remove() {
+        if(temp_element){
+            var span_element = temp_element.querySelector('span')
+            var i_element = temp_element.querySelector('i')
+            var strong_element = temp_element.querySelector('strong')
+        }
+
+        var content = ``
+
+        if(span_element){
+            var attr_class = span_element.getAttribute('class')
+            content += `<span class="${attr_class}">`
+        }
+        if(i_element){
+            content += `<i>`
+        }
+        if(strong_element){
+            content += `<strong>`
+        }
+        content += `${selected_text}`
+        if(strong_element){
+            content += `</strong>`
+        }
+        if(i_element){
+            content += `</i>`
+        }
+        if(span_element){
+            content += `</span>`
+        }
+
+        return content
     }
 
     function add_event_modal_file_setting(){
