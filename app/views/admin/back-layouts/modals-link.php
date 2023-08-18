@@ -40,6 +40,16 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-7">
+                            <div class="radio-btn-group-date d-flex mt-2">
+                                <div class="form-check ml-4">
+                                    <input class="form-check-input" type="radio" name="link" id="tab4" value="anchor">
+                                    <label class="form-check-label" for="tab4">
+                                        Anchor 
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div id="externallink" class="tab-link checked mt-2">
                         <div class="row justify-content-around align-items-center mt-4">
@@ -116,6 +126,28 @@
                             <div class="col-6">
                                 <button id="remove_file" class="btn btn-danger" style="margin-left: -10px;">Remove Link</button>
                             </div>
+                        </div>
+                    </div>
+                    <div id="anchor" class="tab-link mt-2">
+                        <div class="row justify-content-around align-items-center mt-4">
+                            <label for="">Select anchor name</label>
+                            <div class="col-12 mt-2">
+                            <select class="form-select" aria-label="Default select example" id="select_anchor_name">
+                                <?php if (isset($anchor_name)) {?>
+                                    <?php foreach ($anchor_name as $name) { ?>
+                                        <option value="<?php echo $name['name'] ?>"><?php echo $name['name'] ?></option>
+                                    <?php }?>
+                                <?php }?>
+                            </select>
+                            </div>
+                        </div>
+                        <div class="row justify-content-around align-items-center mt-5">
+                            <div class="col-6 text-end">
+                                <button id="open_anchor" class="btn btn-primary" style="margin-right: -10px;">Insert</button>
+                            </div>
+                            <div class="col-6">
+                                <button id="remove_anchor" class="btn btn-danger" style="margin-left: -10px;">Remove Link</button>
+                            </div> 
                         </div>
                     </div>
                 </div>
@@ -498,6 +530,33 @@
                         <div class="row justify-content-around align-items-center mt-5">
                             <div class="col-1">
                                 <button id="update_file" class="btn btn-primary">Update</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal anchor name -->
+    <div class="modal modal-lg" id="anchor-name" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="anchor-nameLabel" aria-hidden="true" style="margin-left: 200px; margin-top: 100px;">
+        <div class="modal-dialog">
+            <div class="modal-content modal-anchor-name">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="link-settingsLabel">Anchor</h5>
+                    <button type="button" class="btn-close btn-close-anchor-name" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/admin/link/anchor" name="anchor-name-form" id="anchor-name-form" method="post">
+                        <div class="row justify-content-around align-items-center">
+                            <label for="">Enter anchor name</label>
+                            <div class="col-12 mt-2">
+                                <input class="form-control" type="text" id="input_anchor_name" name="input_anchor_name" placeholder="Anchor name...">
+                            </div>
+                        </div>
+                        <div class="row justify-content-around align-items-center mt-4">
+                            <div class="col-12 text-end">
+                                <button type="submit" class="btn btn-primary">Accept</button>
                             </div>
                         </div>
                     </form>

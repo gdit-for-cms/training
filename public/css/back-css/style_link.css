@@ -89,89 +89,6 @@ height: 400px;
   opacity: 1 !important;
 }
 
-.modal-link-setting{
-  width: 760px !important;
-  min-width: 760px !important;
-  height: 540px !important;
-  min-height: 540px !important;
-}
-
-.modal-link-setting label {
-    cursor: pointer;
-    /* Style as you please, it will become the visible UI component. */
- }
-
- .modal-link-setting .label-select-file{
-    background-color: #f8f8f8 !important;
-    padding: 4px 14px;
-    border: .5px solid #d4d2d2;
-    border-radius: 4px;
-    max-height: 34.22px;
- } 
- .modal-link-setting .label-select-file:hover{
-  background-color: #d1d1d1 !important;
-}
-.modal-link-setting .file-name-message{
-  min-height: 48px;
-}
- 
- .link-file-list .list-group-item{
-    border-top: none;
-    border-left: none;
-    border-right: none;
-   
- }
- .modal-link-setting .link-file-list .list-group{
-    width: 98%;
-    max-height: 350px;
-    overflow-y: auto;
- }
- .modal-link-setting .w-90{
-    width: 86%;
- }
- .modal-link-setting  .link-file-list,.search-option  {
-    position: relative;
-    border: 1px solid rgb(92, 91, 91);
-    padding: 10px;
-  }
-  .modal-link-setting  .link-file-list  {
-  height: 400px;
-  }
-  
- .modal-link-setting  .link-file-list::before {
-    content: 'File list';
-    position: absolute;
-    top: -10px;
-    padding: 0 10px;
-    background: #fff;
-  }
- .modal-link-setting  .search-option::before {
-    content: 'Link options';
-    position: absolute;
-    top: -10px;
-    padding: 0 10px;
-    background: #fff;
-  }
-
- .modal-link-setting  .group-select-one-file:first-child{
-    margin-top: 30px;
-  }
- .modal-link-setting  .group-select-one-file{
-    margin-top: 10px;
-    width: 90%;
-    margin-left: 5%;
-  }
- .modal-link-setting  .search-option-label{
-    margin-left: 30px;
-  }
-  .modal-link-setting  .btn-close{
-    background-color: #f05454;
-    color: #ffff !important;
-    font-weight: bold !important;
-    opacity: 1 !important;
-  }
-
-
   /* The Preview Modal (background) */
 #myModal,#modal-notice.modal {
     display: none; /* Hidden by default */
@@ -328,5 +245,164 @@ height: 400px;
     font-weight: bold;
     color: #030303;
   }
+
+  .modal-anchor-name{
+  width: 500px !important;
+  min-width: 500px !important;
+  height: 240px !important;
+  min-height: 240px !important;
+}
+
+.modal-anchor-name label {
+  cursor: pointer;
+  /* Style as you please, it will become the visible UI component. */
+}
+
+.modal-anchor-name .label-select-file{
+  background-color: #f8f8f8 !important;
+  padding: 4px 14px;
+  border: .5px solid #d4d2d2;
+  border-radius: 4px;
+  max-height: 34.22px;
+} 
+.modal-anchor-name .label-select-file:hover{
+background-color: #d1d1d1 !important;
+}
+.modal-anchor-name .file-name-message{
+min-height: 48px;
+}
+
+.modal-anchor-name .link-file-list .list-group{
+  width: 98%;
+  max-height: 350px;
+  overflow-y: auto;
+}
+.modal-anchor-name .w-90{
+  width: 86%;
+}
+.modal-anchor-name  .link-file-list,.search-option  {
+  position: relative;
+  border: 1px solid rgb(92, 91, 91);
+  padding: 10px;
+}
+.modal-anchor-name  .link-file-list  {
+height: 400px;
+}
+
+.modal-anchor-name  .link-file-list::before {
+  content: 'File list';
+  position: absolute;
+  top: -10px;
+  padding: 0 10px;
+  background: #fff;
+}
+.modal-anchor-name  .search-option::before {
+  content: 'Link options';
+  position: absolute;
+  top: -10px;
+  padding: 0 10px;
+  background: #fff;
+}
+
+.modal-anchor-name  .group-select-one-file:first-child{
+  margin-top: 30px;
+}
+.modal-anchor-name  .group-select-one-file{
+  margin-top: 10px;
+  width: 90%;
+  margin-left: 5%;
+}
+.modal-anchor-name  .search-option-label{
+  margin-left: 30px;
+}
+.modal-anchor-name  .btn-close{
+  background-color: #f05454;
+  color: #ffff !important;
+  font-weight: bold !important;
+  opacity: 1 !important;
+}
+
+.modal-link-setting{
+  width: 760px !important;
+  min-width: 760px !important;
+  height: 580px !important;
+  min-height: 580px !important;
+}
+
+.modal-link-setting label {
+    cursor: pointer;
+    /* Style as you please, it will become the visible UI component. */
+ }
+
+ .modal-link-setting .label-select-file{
+    background-color: #f8f8f8 !important;
+    padding: 4px 14px;
+    border: .5px solid #d4d2d2;
+    border-radius: 4px;
+    max-height: 34.22px;
+ } 
+ .modal-link-setting .label-select-file:hover{
+  background-color: #d1d1d1 !important;
+}
+.modal-link-setting .file-name-message{
+  min-height: 48px;
+}
+ 
+ .link-file-list .list-group-item{
+    border-top: none;
+    border-left: none;
+    border-right: none;
+   
+ }
+ .modal-link-setting .link-file-list .list-group{
+    width: 98%;
+    max-height: 350px;
+    overflow-y: auto;
+ }
+ .modal-link-setting .w-90{
+    width: 86%;
+ }
+ .modal-link-setting  .link-file-list,.search-option  {
+    position: relative;
+    border: 1px solid rgb(92, 91, 91);
+    padding: 10px;
+  }
+  .modal-link-setting  .link-file-list  {
+  height: 400px;
+  }
+  
+ .modal-link-setting  .link-file-list::before {
+    content: 'File list';
+    position: absolute;
+    top: -10px;
+    padding: 0 10px;
+    background: #fff;
+  }
+ .modal-link-setting  .search-option::before {
+    content: 'Link options';
+    position: absolute;
+    top: -10px;
+    padding: 0 10px;
+    background: #fff;
+  }
+
+ .modal-link-setting  .group-select-one-file:first-child{
+    margin-top: 30px;
+  }
+ .modal-link-setting  .group-select-one-file{
+    margin-top: 10px;
+    width: 90%;
+    margin-left: 5%;
+  }
+ .modal-link-setting  .search-option-label{
+    margin-left: 30px;
+  }
+  .modal-link-setting  .btn-close{
+    background-color: #f05454;
+    color: #ffff !important;
+    font-weight: bold !important;
+    opacity: 1 !important;
+  }
+
 
   

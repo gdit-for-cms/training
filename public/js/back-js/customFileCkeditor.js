@@ -100,6 +100,22 @@ $(document).ready(() => {
     // Element
     const attributes = ['A', 'P', 'STRONG', 'I', 'SPAN', 'UL', 'LI', 'OL', 'H2', 'H3', 'H4']
 
+    //Modal anchor name
+    const modal_anchor_name = document.getElementById('anchor-name')
+    const btn_close_anchor_name = document.querySelector('.btn-close-anchor-name')
+
+    // Form anchor name
+    const form_anchor_name = $('#anchor-name-form')
+
+    // Input anchor name
+    const input_anchor_name = document.getElementById('input_anchor_name')
+    const select_anchor_name = document.getElementById('select_anchor_name')
+    const button_open_anchor = document.getElementById("open_anchor")
+    var list_name_anchor = []
+
+    //Btn anchor
+    button_anchor()
+
     // Show/close modal insert link
     btn_close_modal_link_setting()
 
@@ -138,6 +154,13 @@ $(document).ready(() => {
 
     // Total pages
     get_total_pages()
+
+    //Close modal anchor name
+    btn_close_modal_anchor_name()
+
+    // Submit form create name
+    create_anchor_name()
+
 
     function find_parent_anchor(node) {
         if (!node) {
@@ -208,10 +231,46 @@ $(document).ready(() => {
             var element = e.target.nodeName
             check = true
             take_high_light(element)
+            
+            target_element = e.target
+    
+            if(attributes.includes(target_element.nodeName) && target_element.nodeName != 'P'){
+                var anchor_node = find_parent_anchor(target_element)
+
+                if (anchor_node) {
+                    var anchor_html = "'" + anchor_node.outerHTML + "'"
+                    
+                    var temp_element_tmp = document.createElement('div')
+                    temp_element_tmp.innerHTML = anchor_html
+
+                    // Take tag <a>
+                    anchor_element = temp_element_tmp.querySelector('a')
+                    
+                    if (anchor_element) {
+                        // Take attributes
+                        target_element_tmp = target_element
+
+                        add_event_modal_link_setting()
+                    } else {
+                        target_element_tmp = null
+                        check = false
+                    }
+                }
+            } else {
+                anchor_element = null
+            }
         } else {
             check = false
         }
     })
+
+    if (btn_pick_link[5]) {
+        btn_pick_link[5].addEventListener('click', (e) => {
+            var element = e.target.nodeName
+            take_high_light(element)
+            modal_anchor_name.style.display = 'block'
+        })
+    }
 
     // When clicking the function button insert link
     if (btn_pick_link[3]) {
@@ -251,6 +310,9 @@ $(document).ready(() => {
     button_open_file.addEventListener("click", function() {
         open_file()
     });
+    button_open_anchor.addEventListener("click", function() {
+        open_anchor()
+    });
 
     // When clicking the remove button in insert link/email/file
     btn_remove_url.addEventListener('click', ()=>{
@@ -266,6 +328,13 @@ $(document).ready(() => {
     btn_list_file_tab.addEventListener('click', function () {
         switch_to_list_file_tab()
     })
+
+    function button_anchor() {
+        var btn_anchor = btn_pick_link[5]
+        const svg_element = btn_anchor.querySelector('svg');
+        const new_svg_code = '<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M349.565 98.783C295.978 98.783 251.721 64 184.348 64c-24.955 0-47.309 4.384-68.045 12.013a55.947 55.947 0 0 0 3.586-23.562C118.117 24.015 94.806 1.206 66.338.048 34.345-1.254 8 24.296 8 56c0 19.026 9.497 35.825 24 45.945V488c0 13.255 10.745 24 24 24h16c13.255 0 24-10.745 24-24v-94.4c28.311-12.064 63.582-22.122 114.435-22.122 53.588 0 97.844 34.783 165.217 34.783 48.169 0 86.667-16.294 122.505-40.858C506.84 359.452 512 349.571 512 339.045v-243.1c0-23.393-24.269-38.87-45.485-29.016-34.338 15.948-76.454 31.854-116.95 31.854z"/></svg>'
+        svg_element.outerHTML = new_svg_code;
+    }
     
     function take_high_light(element) {
         var selection = window.getSelection();
@@ -376,6 +445,12 @@ $(document).ready(() => {
         })
     }
 
+    function btn_close_modal_anchor_name() {
+        btn_close_anchor_name.addEventListener('click',()=>{
+            modal_anchor_name.style.display = 'none';
+        })
+    }
+
     function index_link() {
         //Delete all tabs except the first one
         tab_contents.forEach((tab_content) => {
@@ -451,7 +526,6 @@ $(document).ready(() => {
                 var new_tab = new_tab_file.checked;
 
                 var content = make_content_insert(input_file_value, new_tab, 1)
-                console.log(content);
                 change_content(content)
                 btn_close_link_setting.click()
 
@@ -462,6 +536,14 @@ $(document).ready(() => {
             }
         }
     }
+    function open_anchor() {
+        const input_anchor_value =  '#' + select_anchor_name.value;
+
+        var content = make_content_insert(input_anchor_value, false, 0)
+        change_content(content)
+        btn_close_anchor_name.click()
+
+    }
 
     function make_content_insert(input, new_tab = false, num) {
         if(temp_element){
@@ -469,9 +551,6 @@ $(document).ready(() => {
             var i_element = temp_element.querySelector('i')
             var strong_element = temp_element.querySelector('strong')
         }
-        console.log(span_element)
-        console.log(i_element)
-        console.log(strong_element)
 
         var content = `<a href="${input}" style="text-decoration: underline; color: rgb(54 103 198);"`
         
@@ -547,6 +626,74 @@ $(document).ready(() => {
         } else {
             alert("Couldn't find the file to delete!")
         }
+    }
+
+    function create_anchor_name() {
+        form_anchor_name.on('submit',(e)=>{
+            e.preventDefault()
+            var action_url = form_anchor_name.attr('action')
+            var form_data = new FormData(form_anchor_name[0])
+            $.ajax({
+                type: "POST",
+                url: action_url,
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    if (data['success']) {
+                        modal_anchor_name.style.display = 'none';
+
+                        var content = make_content_anchor_name(input_anchor_name.value)
+                        change_content(content)
+
+                        input_anchor_name.value = null
+                    } else {
+                        modal_notice_file.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>${data['message']}</h5>`)
+                        modal_notice_file.css('display', "block");
+                    }
+            },
+            cache: false,
+            })
+            .fail(function() {
+                modal_notice_file.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>Something is wrong, please try again!</h5>`)
+                modal_notice_file.css('display', "block");
+            });
+        })
+    }
+
+    function make_content_anchor_name(input) {
+        if(temp_element){
+            var span_element = temp_element.querySelector('span')
+            var i_element = temp_element.querySelector('i')
+            var strong_element = temp_element.querySelector('strong')
+        }
+
+        var content = `<a id="${input}"`
+        content += `>`
+
+        if(span_element){
+            var attr_class = span_element.getAttribute('class')
+            content += `<span class="${attr_class}">`
+        }
+        if(i_element){
+            content += `<i>`
+        }
+        if(strong_element){
+            content += `<strong>`
+        }
+        content += `${selected_text}`
+        if(strong_element){
+            content += `</strong>`
+        }
+        if(i_element){
+            content += `</i>`
+        }
+        if(span_element){
+            content += `</span>`
+        }
+        content += `</a>`
+
+        return content
     }
 
     function make_content_remove() {
