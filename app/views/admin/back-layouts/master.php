@@ -11,6 +11,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.css">
     <link href="/css/back-css/style.css" rel="stylesheet">
+    <link href="/css/back-css/style_link.css" rel="stylesheet">
     <script src="/js/front-js/jquery.min.js"></script>
 </head>
 

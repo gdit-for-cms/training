@@ -2,6 +2,7 @@
 
 namespace App\Controllers\Admin;
 
+use App\Models\Anchor;
 use App\Models\Image;
 use App\Models\Link;
 use Core\Http\Request;
@@ -25,6 +26,7 @@ class RuleController extends AppController
     public object $obj_type_rule;
     public object $obj_image;
     public object $obj_link;
+    public object $obj_anchor;
     public array $data_ary;
 
     public function __construct()

@@ -26,6 +26,7 @@ $(document).ready(() => {
     const radio_btn_link = document.getElementById("tab1")
     const radio_btn_mail = document.getElementById("tab2")
     const radio_btn_file = document.getElementById("tab3")
+    const radio_btn_anchor = document.getElementById("tab4")
     
     // Radio buttons are declared a common variable
     const radio_buttons = document.querySelectorAll('input[type="radio"]')
@@ -105,7 +106,8 @@ $(document).ready(() => {
     const btn_close_anchor_name = document.querySelector('.btn-close-anchor-name')
 
     // Form anchor name
-    const form_anchor_name = $('#anchor-name-form')
+    var list_name_anchor = []
+    const btn_add_anchor_name = document.getElementById('btn_add_anchor_name')
 
     // Input anchor name
     const input_anchor_name = document.getElementById('input_anchor_name')
@@ -159,7 +161,7 @@ $(document).ready(() => {
     btn_close_modal_anchor_name()
 
     // Submit form create name
-    create_anchor_name()
+    // create_anchor_name()
 
 
     function find_parent_anchor(node) {
@@ -183,16 +185,15 @@ $(document).ready(() => {
             //Get the text of the highlighted part
             var element = e.target.nodeName
             check = true
-            take_high_light(element)
+            take_high_light(element, e)
         } else {
             check = false
+            selected_text = ''
         }
 
         target_element = e.target
-    
-        if(attributes.includes(target_element.nodeName) && target_element.nodeName != 'P'){
+        if(attributes.includes(target_element.nodeName)){
             var anchor_node = find_parent_anchor(target_element)
-
             if (anchor_node) {
                 var anchor_html = "'" + anchor_node.outerHTML + "'"
                 
@@ -217,7 +218,7 @@ $(document).ready(() => {
                     target_element_tmp = null
                     check = false
                 }
-            }
+            }  
         } else {
             anchor_element = null
         }
@@ -245,8 +246,16 @@ $(document).ready(() => {
 
                     // Take tag <a>
                     anchor_element = temp_element_tmp.querySelector('a')
-                    
-                    if (anchor_element) {
+                    var id = anchor_element.getAttribute('id') ? anchor_element.getAttribute('id') : null
+                    var href = anchor_element.getAttribute('href') ? anchor_element.getAttribute('href') : null
+                    if(id){
+                        var element = e.target.nodeName
+                        take_high_light(element)
+                        highlight_card_a()
+                        modal_anchor_name.style.display = 'block'
+                        input_anchor_name.value = id
+                        selected_text = anchor_element.textContent
+                    }else if (href) {
                         // Take attributes
                         target_element_tmp = target_element
 
@@ -264,13 +273,100 @@ $(document).ready(() => {
         }
     })
 
+    // 
     if (btn_pick_link[5]) {
         btn_pick_link[5].addEventListener('click', (e) => {
-            var element = e.target.nodeName
-            take_high_light(element)
-            modal_anchor_name.style.display = 'block'
+            if(window.getSelection()){
+                var selection = window.getSelection()
+                if (selection.toString()) {
+                    var selectionRange = selection.getRangeAt(0)
+                    var selectedContent = selectionRange.cloneContents()
+                    var selectedElements = selectedContent.querySelectorAll('*')
+                    if(selectedElements.length != 0){
+                        // Iterate through selected content
+                        // for (var i = 0; i < selectedElements.length; i++) {
+                        //     var selectedElement = selectedElements[i]
+                        //     console.log("Selected element:", selectedElement);
+                        // }
+                        console.log(selectedElements[0].querySelector('a'));
+
+                        var anchor_html = "'" + anchor_node.outerHTML + "'"
+                
+                        var temp_element_tmp = document.createElement('div')
+                        temp_element_tmp.innerHTML = anchor_html
+
+                        // Take tag <a>
+                        anchor_element = temp_element_tmp.querySelector('a')
+                        
+                        if (anchor_element) {
+                            // Take attributes
+                            target_element_tmp = target_element
+
+                            var href = anchor_element.getAttribute('href')
+
+                            if(href) {
+                                selected_text = anchor_element.textContent
+                                check = true
+                                temp_element = temp_element_tmp
+                            }
+                        } else {
+                            target_element_tmp = null
+                            check = false
+                        }
+                    } else {
+                        var element = e.target.nodeName
+                        take_high_light(element)
+                        input_anchor_name.value = null
+                        modal_anchor_name.style.display = 'block'
+                    }
+                } else if (anchor_element && anchor_element.nodeName == "A") {
+                    var id = anchor_element.getAttribute('id') 
+                    if(id){
+                        var element = e.target.nodeName
+                        take_high_light(element)
+                        highlight_card_a()
+                        modal_anchor_name.style.display = 'block'
+                        input_anchor_name.value = id
+                        selected_text = anchor_element.textContent
+                    } else {
+                        alert('You must highlight the element you want to insert link to use this function!')
+                    }
+                } else {
+                    alert('You must highlight the element you want to insert link to use this function!')
+                }
+            } else {
+                alert('You must highlight the element you want to insert link to use this function!')
+            }
         })
     }
+
+    btn_add_anchor_name.addEventListener('click', (e) => {
+        var anchor_name = input_anchor_name.value
+        if(anchor_name == '' | anchor_name == null) {
+            alert('Anchor name cannot be empty!')
+        } else if(!validate_anchor_name(anchor_name)){
+            alert('Achor name cannot use Vietnamese, spaces and special characters!')
+        } else if(list_name_anchor.includes(anchor_name)) {
+            alert('Anchor name already exists!')
+        } else {
+            // Add anchor names to the list
+            list_name_anchor.push(anchor_name)
+
+            modal_anchor_name.style.display = 'none';
+
+            // Add id in content
+            var content = make_content_anchor_name(anchor_name)
+            change_content(content)
+
+            // Add option name to select
+            var opt = document.createElement('option')
+            opt.value = anchor_name
+            opt.innerHTML = anchor_name
+            select_anchor_name.appendChild(opt)
+
+            input_anchor_name.value = null
+        }
+    })
 
     // When clicking the function button insert link
     if (btn_pick_link[3]) {
@@ -329,6 +425,13 @@ $(document).ready(() => {
         switch_to_list_file_tab()
     })
 
+    function validate_anchor_name(name) {
+        var pattern = /^[a-zA-ZÀ-ÿ][-_a-zA-ZÀ-ÿ ]*[a-zA-ZÀ-ÿ]$/
+
+        console.log(pattern.test(name));
+        return pattern.test(name);
+    }
+
     function button_anchor() {
         var btn_anchor = btn_pick_link[5]
         const svg_element = btn_anchor.querySelector('svg');
@@ -336,7 +439,7 @@ $(document).ready(() => {
         svg_element.outerHTML = new_svg_code;
     }
     
-    function take_high_light(element) {
+    function take_high_light(element, e) {
         var selection = window.getSelection();
         var location = selection.getRangeAt(0);
         if (location.endOffset - location.startOffset != 0) {
@@ -378,6 +481,7 @@ $(document).ready(() => {
                 }
                 input_mail.value = null
                 input_file.value = null
+                select_anchor_name.value = ''
                 new_tab_file.checked = false
 
                 name = 'link'
@@ -393,6 +497,7 @@ $(document).ready(() => {
                 input_mail.value = href.slice(7, count_link)
                 input_url.value = null
                 input_file.value = null
+                select_anchor_name.value = ''
                 new_tab.checked = false
                 new_tab_file.checked = false
             } else if (href.slice(0, 1) == '/'){
@@ -406,9 +511,25 @@ $(document).ready(() => {
                 input_file.value = href
                 input_url.value = null
                 input_mail.value = null
+                select_anchor_name.value = ''
                 new_tab.checked = false
 
                 name = 'file'
+            } else if(href.slice(0, 1) == '#'){
+                modal_link_settings.style.display = 'block'
+
+                highlight_card_a()
+                anchor_link()
+
+                selected_text = anchor_element.textContent
+
+                select_anchor_name.value = href.slice(1, count_link)
+
+                input_url.value = null
+                input_mail.value = null
+                input_file.value = null
+                new_tab.checked = false
+                new_tab_file.checked = false
             }
 
             if(target) {
@@ -537,12 +658,15 @@ $(document).ready(() => {
         }
     }
     function open_anchor() {
-        const input_anchor_value =  '#' + select_anchor_name.value;
+        if(list_name_anchor.includes(select_anchor_name.value)){
+            const input_anchor_value =  '#' + select_anchor_name.value;
 
-        var content = make_content_insert(input_anchor_value, false, 0)
-        change_content(content)
-        btn_close_anchor_name.click()
-
+            var content = make_content_insert(input_anchor_value, false, 0)
+            change_content(content)
+            btn_close_link_setting.click()
+        } else {
+            alert('Anchor name does not exist!');
+        }
     }
 
     function make_content_insert(input, new_tab = false, num) {
@@ -628,38 +752,38 @@ $(document).ready(() => {
         }
     }
 
-    function create_anchor_name() {
-        form_anchor_name.on('submit',(e)=>{
-            e.preventDefault()
-            var action_url = form_anchor_name.attr('action')
-            var form_data = new FormData(form_anchor_name[0])
-            $.ajax({
-                type: "POST",
-                url: action_url,
-                data: form_data,
-                contentType: false,
-                processData: false,
-                success: function(data) {
-                    if (data['success']) {
-                        modal_anchor_name.style.display = 'none';
+    // function create_anchor_name() {
+    //     form_anchor_name.on('submit',(e)=>{
+    //         e.preventDefault()
+    //         var action_url = form_anchor_name.attr('action')
+    //         var form_data = new FormData(form_anchor_name[0])
+    //         $.ajax({
+    //             type: "POST",
+    //             url: action_url,
+    //             data: form_data,
+    //             contentType: false,
+    //             processData: false,
+    //             success: function(data) {
+    //                 if (data['success']) {
+    //                     modal_anchor_name.style.display = 'none';
 
-                        var content = make_content_anchor_name(input_anchor_name.value)
-                        change_content(content)
+    //                     var content = make_content_anchor_name(input_anchor_name.value)
+    //                     change_content(content)
 
-                        input_anchor_name.value = null
-                    } else {
-                        modal_notice_file.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>${data['message']}</h5>`)
-                        modal_notice_file.css('display', "block");
-                    }
-            },
-            cache: false,
-            })
-            .fail(function() {
-                modal_notice_file.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>Something is wrong, please try again!</h5>`)
-                modal_notice_file.css('display', "block");
-            });
-        })
-    }
+    //                     input_anchor_name.value = null
+    //                 } else {
+    //                     modal_notice_file.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>${data['message']}</h5>`)
+    //                     modal_notice_file.css('display', "block");
+    //                 }
+    //         },
+    //         cache: false,
+    //         })
+    //         .fail(function() {
+    //             modal_notice_file.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>Something is wrong, please try again!</h5>`)
+    //             modal_notice_file.css('display', "block");
+    //         });
+    //     })
+    // }
 
     function make_content_anchor_name(input) {
         if(temp_element){
@@ -1349,6 +1473,18 @@ $(document).ready(() => {
                 tab_content.style.display = 'none';
             } else {
                 radio_btn_file.checked = true;
+                tab_content.style.display = 'block';
+            }
+        });
+    }
+
+    function anchor_link() {
+        //Remove all tabs except the 3rd tab
+        tab_contents.forEach((tab_content) => {
+            if (tab_content.id !== 'anchor') {
+                tab_content.style.display = 'none';
+            } else {
+                radio_btn_anchor.checked = true;
                 tab_content.style.display = 'block';
             }
         });
