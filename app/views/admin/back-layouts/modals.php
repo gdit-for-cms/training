@@ -19,7 +19,7 @@
                         </li>
                     </ul>
                     <div class="tab-content" id="myTabContent">
-                        <div class="tab-pane  show active" id="upload" role="tabpanel" aria-labelledby="btn-upload-tab">
+                        <div class="tab-pane show active" id="upload" role="tabpanel" aria-labelledby="btn-upload-tab">
                             <form action="/admin/image/store" name="upload-images-form" id="upload-images-form" enctype="multipart/form-data" method="post">
                                 <div class=" row group-select-one-file">
                                     <div class="row">
@@ -235,7 +235,7 @@
                                             <option value="10">10 pieces</option>
                                             <option value="15">15 pieces</option>
                                             <?php
-                                            if (!empty($numberAllImage)) {
+                                                if (!empty($numberAllImage)) {
                                             ?>
                                                 <option id="option-all-result" value="<?php echo $numberAllImage ?>">All (<?php echo $numberAllImage ?>)</option>
                                             <?php
@@ -446,10 +446,13 @@
                         </div>
                         <div class="col-7 p-3 ">
                             <h5>Note</h5>
-                            <textarea class="row p-3" id="rule-note"></textarea>
+                            <div class="row p-3" id="rule-notes">
+                            </div>
+                            <!-- <textarea class="row p-3" id="rule-note"></textarea> -->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+

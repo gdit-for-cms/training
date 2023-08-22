@@ -1,3 +1,5 @@
+// import Editor from "../../ckeditor5custom/src/ckeditor";
+
 document.addEventListener('DOMContentLoaded', function() {
     var inputElement = document.querySelector('#editor-edit-note') 
     if (inputElement) {
@@ -20,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
 $(document).ready(() => {
     //modal image setting
     const modalImageSettings = document.getElementById('image-settings')
@@ -137,6 +140,7 @@ $(document).ready(() => {
         });
     })
 
+
     function addEventTabListImage() {
         btnDeleteImages.forEach((btn) => {
             btn.addEventListener("click", () => {
@@ -184,6 +188,7 @@ $(document).ready(() => {
         })
        
     }
+
 
     btnSearchImg.addEventListener('click',(e)=>{
         e.preventDefault()
@@ -233,6 +238,55 @@ $(document).ready(() => {
             processData: false
        })
     })
+
+    function addEventTabListFile() {
+        btnDeleteImages.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                let deleteID = btn.getAttribute('data-id');
+                let url = `/admin/image/delete?id=${deleteID}`
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: url,
+                            success: function () {
+                                btnSearchImg.click()
+                            }
+                        });
+                    }
+                })
+            })
+        })
+        btnOpenPreviews.forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault()
+                imageSrc = '/' + btn.getAttribute('data-path')
+                window.open(imageSrc, '_blank');
+            })
+        })
+        btnInsertImages.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                formatImage.src = '/' + btn.getAttribute('data-path')
+                imgAlt.value = btn.getAttribute('data-img-name')
+                switchToFormatTab()
+                realWidth = formatImage.naturalWidth;
+                realHeight = formatImage.naturalHeight;
+                imgWidth.value = realWidth
+                imgHeight.value = realHeight
+                btnSettingImage.setAttribute('data-path', '/' + btn.getAttribute('data-path'))
+                imgAltValue = imgAlt.value
+            })
+        })
+       
+    }
+    // searchFileForm.on('submit',(e)=>{
     
     selectLimitImage.addEventListener('change',()=>{
         btnSearchImg.click()
@@ -370,6 +424,7 @@ $(document).ready(() => {
         updateDomElements()
     }
 
+
     function setListImage(images){
         var htmls = ""
         if (images.length>0) {
@@ -406,11 +461,12 @@ $(document).ready(() => {
         </div>
         <div class="col-2">
             <div class="d-flex justify-content-end mt-4 ">
-                <button class="btn-basic mt-5 btn-insert-image" data-path="${image['path']}" data-img-name="${image['name']}">Insert Image</button>
+                <button class="btn-basic mt-5 btn-insert-image" data-path="${image['path']}" data-img-name="${image['name']}">Insert File</button>
             </div>
         </div>
     </li>`
     }
+
 
     function switchToListTab() {
         btnListImageTab.click()
@@ -430,20 +486,28 @@ $(document).ready(() => {
         addEventTabListImage()
     }
 
+    // function updatedDomElements() {
+    //     btnOpenPreviews = document.querySelectorAll('.open-preview')
+    //     btnInsertImages = document.querySelectorAll('.insert-file')
+    //     btnDeleteImages = document.querySelectorAll('.delete-file')
+    // }
+
     function addEventModalImageSetting(){
-       const btnPickImage = $('.ck-file-dialog-button')[0]
-       if (btnPickImage) {
-        btnPickImage.addEventListener('click', (e) => {
-            e.preventDefault()
-            modalImageSettings.style.display = 'block'
-            switchToListTab() 
+        const btnPickImage = $('.ck-file-dialog-button')[0]
+        if (btnPickImage) {
+            btnPickImage.addEventListener('click', (e) => {
+                e.preventDefault()
+                modalImageSettings.style.display = 'block'
+                switchToListTab() 
+            })
+        }
+        btnCloseImageSetting.addEventListener('click',()=>{
+            modalImageSettings.style.display = 'none'
         })
-       }
-    btnCloseImageSetting.addEventListener('click',()=>{
-        modalImageSettings.style.display = 'none'
-    })
    
     }
+
+
     function removeSqlInJection(string) {
         sqlKeyword = ['SELECT', 'UNION', 'DROP', 'DELETE', 'WHERE', 'FROM', 'SET', 'ALTER', 'INSERT', 'UPDATE', 'ADD', 'OR', 'AND', 'CREATE', 'JOIN']
         string = string.replace(/[^A-Za-z0-9\s\u00C0-\u1EF9]/g, '');

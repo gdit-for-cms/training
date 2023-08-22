@@ -28,4 +28,29 @@ trait ResponseTrait
         $res->setStatus(400);
         return $res->send();
     }
+
+    public function responseFileQuery($status, $message, $result = [])
+    {
+        $res = [
+            "success" => $status,
+            "message" => $message,
+            "result" => $result,
+        ];
+        header('Content-Type: application/json');
+        echo json_encode($res);
+        exit();
+    }
+
+    public function responseFileObj($status, $message, $result = [], $object)
+    {
+        $res = [
+            "success" => $status,
+            "message" => $message,
+            "result" => $result,
+            "object" => $object,
+        ];
+        header('Content-Type: application/json');
+        echo json_encode($res);
+        exit();
+    }
 }
