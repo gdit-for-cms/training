@@ -217,6 +217,7 @@
     const deleteSearchBtn = document.querySelector('#delete_search')
     const btnShowRules = document.querySelectorAll('.btn-show-rule')
     const viewRuleDetailModal = document.getElementById('viewRuleDetail')
+    const viewRuleNotes = document.getElementById('rule-notes')
     const ruleCategory = document.getElementById('rule-category')
     const ruleContent = document.getElementById('rule-content')
     const ruleDetail = document.getElementById('rule-detail')
@@ -460,7 +461,8 @@
 
                     detailElement.textContent = result['detail']
                     ruleDetail.appendChild(detailElement)
-                    editorViewNoteInstance.setData(result['note'])
+
+                    viewRuleNotes.innerHTML = result['note']
                 },
                 cache: false,
                 contentType: false,

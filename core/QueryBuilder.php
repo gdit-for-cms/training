@@ -81,6 +81,18 @@ Trait QueryBuilder
         $this->where .= "$this->operator $column LIKE '%$value%'";
         return $this;
     }
+
+    public function whereLikeWithOr($column, $value)
+    {
+        if(empty($this->where)){
+            $this->operator = ' WHERE ';
+        }else {
+            $this->operator = ' OR ';
+        }
+        $value = addslashes($value);
+        $this->where .= "$this->operator $column LIKE '%$value%'";
+        return $this;
+    }
     /**
      * Set the columns to be selected.
      *
