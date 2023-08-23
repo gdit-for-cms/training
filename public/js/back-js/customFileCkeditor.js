@@ -415,7 +415,7 @@ $(document).ready(() => {
         open_file()
     })
     button_open_anchor.addEventListener("click", function() {
-        open_anchor()
+        open_anchor() 
     })
 
     // When clicking the remove button in insert link/email/file
