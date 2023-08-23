@@ -134,11 +134,6 @@
                             <div class="col-12 mt-2">
                                 <select class="form-select" id="select_anchor_name">
                                     <option value="">Select anchor name</option>
-                                    <?php if (isset($list_anchor)) {?>
-                                        <?php foreach($list_anchor as $anchor) {?>
-                                            <option value="<?php echo $anchor['name'] ?>"><?php echo $anchor['name'] ?></option>
-                                        <?php }?>
-                                    <?php }?>
                                 </select>
                             </div>
                         </div>
@@ -548,19 +543,17 @@
                     <button type="button" class="btn-close btn-close-anchor-name" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/admin/link/anchor" method="post" id="create-anchor-form">
-                        <div class="row justify-content-around align-items-center">
-                            <label for="">Enter anchor name</label>
-                            <div class="col-12 mt-2">
-                                <input class="form-control" type="text" id="input_anchor_name" name="input_anchor_name" placeholder="Anchor name...">
-                            </div>
+                    <div class="row justify-content-around align-items-center">
+                        <label for="">Enter anchor name</label>
+                        <div class="col-12 mt-2">
+                            <input class="form-control" type="text" id="input_anchor_name" name="input_anchor_name" placeholder="Anchor name...">
                         </div>
-                        <div class="row justify-content-around align-items-center mt-4">
-                            <div class="col-12 text-end">
-                                <button type="submit" id="btn_add_anchor_name" class="btn btn-primary">Accept</button>
-                            </div>
+                    </div>
+                    <div class="row justify-content-around align-items-center mt-4">
+                        <div class="col-12 text-end">
+                            <button id="btn_add_anchor_name" class="btn btn-primary">Accept</button>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>

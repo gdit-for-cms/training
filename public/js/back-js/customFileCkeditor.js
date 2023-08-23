@@ -80,7 +80,6 @@ $(document).ready(() => {
     const btn_remove_url = document.getElementById('remove_url')
     const btn_remove_mail = document.getElementById('remove_mail')
     const btn_remove_file = document.getElementById('remove_file')
-    const btn_remove_anchor = document.getElementById('remove_anchor')
 
     // File extension
     const allowed_extensions = ['.txt', '.pdf', '.jpg', '.png', '.xlsx', '.docx', '.pptx']
@@ -114,7 +113,6 @@ $(document).ready(() => {
     const input_anchor_name = document.getElementById('input_anchor_name')
     const select_anchor_name = document.getElementById('select_anchor_name')
     const button_open_anchor = document.getElementById("open_anchor")
-    const create_anchor_form = $('#create-anchor-form')
     var list_name_anchor = []
 
     //Btn anchor
@@ -190,6 +188,7 @@ $(document).ready(() => {
             take_high_light(element, e)
         } else {
             check = false
+            selected_text = ''
         }
 
         target_element = e.target
@@ -284,17 +283,36 @@ $(document).ready(() => {
                     var selectedContent = selectionRange.cloneContents()
                     var selectedElements = selectedContent.querySelectorAll('*')
                     if(selectedElements.length != 0){
-                        var anchor_html = "'" + selectedElements[0].outerHTML + "'"
+                        // Iterate through selected content
+                        // for (var i = 0; i < selectedElements.length; i++) {
+                        //     var selectedElement = selectedElements[i]
+                        //     console.log("Selected element:", selectedElement);
+                        // }
+                        console.log(selectedElements[0].querySelector('a'));
+
+                        var anchor_html = "'" + anchor_node.outerHTML + "'"
                 
                         var temp_element_tmp = document.createElement('div')
                         temp_element_tmp.innerHTML = anchor_html
-                        temp_element = temp_element_tmp
 
-                        var element = e.target.nodeName
-                        take_high_light(element)
+                        // Take tag <a>
+                        anchor_element = temp_element_tmp.querySelector('a')
+                        
+                        if (anchor_element) {
+                            // Take attributes
+                            target_element_tmp = target_element
 
-                        input_anchor_name.value = null
-                        modal_anchor_name.style.display = 'block'
+                            var href = anchor_element.getAttribute('href')
+
+                            if(href) {
+                                selected_text = anchor_element.textContent
+                                check = true
+                                temp_element = temp_element_tmp
+                            }
+                        } else {
+                            target_element_tmp = null
+                            check = false
+                        }
                     } else {
                         var element = e.target.nodeName
                         take_high_light(element)
@@ -322,44 +340,31 @@ $(document).ready(() => {
         })
     }
 
-    // btn_add_anchor_name.addEventListener('click', (e) => {
-    create_anchor_form.on('submit',(e)=>{
-        e.preventDefault()
+    btn_add_anchor_name.addEventListener('click', (e) => {
         var anchor_name = input_anchor_name.value
         if(anchor_name == '' | anchor_name == null) {
             alert('Anchor name cannot be empty!')
         } else if(!validate_anchor_name(anchor_name)){
             alert('Achor name cannot use Vietnamese, spaces and special characters!')
+        } else if(list_name_anchor.includes(anchor_name)) {
+            alert('Anchor name already exists!')
         } else {
-            var action_url = create_anchor_form.attr('action')
-            var form_data = new FormData(create_anchor_form[0])
-            $.ajax({
-                type: "POST",
-                url: action_url,
-                data: form_data,
-                contentType: false,
-                processData: false,
-                success: function(data) {
-                    if (data['success']) {
-                    modal_anchor_name.style.display = 'none';
+            // Add anchor names to the list
+            list_name_anchor.push(anchor_name)
 
-                    // Add id in content
-                    var content = make_content_anchor_name(anchor_name)
-                    change_content(content)
+            modal_anchor_name.style.display = 'none';
 
-                    // Add option name to select
-                    var opt = document.createElement('option')
-                    opt.value = anchor_name
-                    opt.innerHTML = anchor_name
-                    select_anchor_name.appendChild(opt)
+            // Add id in content
+            var content = make_content_anchor_name(anchor_name)
+            change_content(content)
 
-                    input_anchor_name.value = null
-                    } else {
-                        alert('Anchor name already exist!')
-                    }
-                },
-                cache: false,
-            });
+            // Add option name to select
+            var opt = document.createElement('option')
+            opt.value = anchor_name
+            opt.innerHTML = anchor_name
+            select_anchor_name.appendChild(opt)
+
+            input_anchor_name.value = null
         }
     })
 
@@ -372,21 +377,8 @@ $(document).ready(() => {
                     // Open modal when editing link
                     add_event_modal_link_setting()
                 } else {
-                    var selection = window.getSelection()
-                    var selectionRange = selection.getRangeAt(0)
-                    var selectedContent = selectionRange.cloneContents()
-                    var selectedElements = selectedContent.querySelectorAll('*')
-                    if(selectedElements.length != 0){
-                        var anchor_html = "'" + selectedElements[0].outerHTML + "'"
-                    
-                        var temp_element_tmp = document.createElement('div')
-                        temp_element_tmp.innerHTML = anchor_html
-                        temp_element = temp_element_tmp
-                        // Open modal when inserting link
-                        add_event_modal_link()
-                    } else {
-                        add_event_modal_link()
-                    }
+                    // Open modal when inserting link
+                    add_event_modal_link()
                 }
             } else {
                 alert('You must highlight the element you want to insert link to use this function!')
@@ -407,16 +399,16 @@ $(document).ready(() => {
     // When clicking the open button in insert link/email/file
     button_open_url.addEventListener("click", function() {
         open_link()
-    })
+    });
     button_open_mail.addEventListener("click", function() {
         open_mail()
-    })
+    });
     button_open_file.addEventListener("click", function() {
         open_file()
-    })
+    });
     button_open_anchor.addEventListener("click", function() {
         open_anchor()
-    })
+    });
 
     // When clicking the remove button in insert link/email/file
     btn_remove_url.addEventListener('click', ()=>{
@@ -428,18 +420,16 @@ $(document).ready(() => {
     btn_remove_file.addEventListener('click', ()=>{
         remove_file()
     })
-    btn_remove_anchor.addEventListener('click', ()=>{
-        remove_anchor()
-    })
 
     btn_list_file_tab.addEventListener('click', function () {
         switch_to_list_file_tab()
     })
 
     function validate_anchor_name(name) {
-        var pattern = /^[a-zA-ZÀ-ÿ][-_ a-zA-ZÀ-ÿ0-9]*[a-zA-ZÀ-ÿ0-9]$/
+        var pattern = /^[a-zA-ZÀ-ÿ][-_a-zA-ZÀ-ÿ ]*[a-zA-ZÀ-ÿ]$/
 
-        return pattern.test(name)
+        console.log(pattern.test(name));
+        return pattern.test(name);
     }
 
     function button_anchor() {
@@ -668,11 +658,15 @@ $(document).ready(() => {
         }
     }
     function open_anchor() {
-        const input_anchor_value =  '#' + select_anchor_name.value;
+        if(list_name_anchor.includes(select_anchor_name.value)){
+            const input_anchor_value =  '#' + select_anchor_name.value;
 
-        var content = make_content_insert(input_anchor_value, false, 0)
-        change_content(content)
-        btn_close_link_setting.click()
+            var content = make_content_insert(input_anchor_value, false, 0)
+            change_content(content)
+            btn_close_link_setting.click()
+        } else {
+            alert('Anchor name does not exist!');
+        }
     }
 
     function make_content_insert(input, new_tab = false, num) {
@@ -757,41 +751,48 @@ $(document).ready(() => {
             alert("Couldn't find the file to delete!")
         }
     }
-    function remove_anchor() {
-        if(target_element_tmp != null) {
-            var content = make_content_remove()
-            change_content(content)
 
-            select_anchor_name.value = ''
+    // function create_anchor_name() {
+    //     form_anchor_name.on('submit',(e)=>{
+    //         e.preventDefault()
+    //         var action_url = form_anchor_name.attr('action')
+    //         var form_data = new FormData(form_anchor_name[0])
+    //         $.ajax({
+    //             type: "POST",
+    //             url: action_url,
+    //             data: form_data,
+    //             contentType: false,
+    //             processData: false,
+    //             success: function(data) {
+    //                 if (data['success']) {
+    //                     modal_anchor_name.style.display = 'none';
 
-            modal_link_settings.style.display = 'none';
-            target_element_tmp = null;
-        } else {
-            alert("Couldn't find the file to delete!")
-        }
-    }
+    //                     var content = make_content_anchor_name(input_anchor_name.value)
+    //                     change_content(content)
+
+    //                     input_anchor_name.value = null
+    //                 } else {
+    //                     modal_notice_file.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>${data['message']}</h5>`)
+    //                     modal_notice_file.css('display', "block");
+    //                 }
+    //         },
+    //         cache: false,
+    //         })
+    //         .fail(function() {
+    //             modal_notice_file.find('#modal-notice-content-file').html(`<h5 class='text-center text-danger'>Something is wrong, please try again!</h5>`)
+    //             modal_notice_file.css('display', "block");
+    //         });
+    //     })
+    // }
 
     function make_content_anchor_name(input) {
         if(temp_element){
-            var a_element = temp_element.querySelector('a')
             var span_element = temp_element.querySelector('span')
             var i_element = temp_element.querySelector('i')
             var strong_element = temp_element.querySelector('strong')
         }
 
         var content = `<a id="${input}"`
-
-        if (a_element) {
-            if(attr_href = a_element.getAttribute('href')) {
-                content += ` class="ck-link_selected" style="color:rgb(54 103 198);text-decoration:underline;" href="${attr_href}"`
-            }
-            if(a_element.getAttribute('target')) {
-                content += ` target="_blank"`
-            }
-            if(a_element.getAttribute('dowload')) {
-                content += ` dowload`
-            }
-        }
         content += `>`
 
         if(span_element){
