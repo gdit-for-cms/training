@@ -2,6 +2,7 @@
 
 namespace App\Controllers\Admin;
 
+use App\Models\Anchor;
 use App\Models\Link;
 use Core\Http\Request;
 use Core\Http\ResponseTrait;
@@ -13,12 +14,14 @@ class LinkController extends AppController
     use Config;
 
     public object $obj_file;
+    public object $obj_anchor;
 
     public array $data_ary;
 
     public function __construct()
     {
         $this->obj_file = new Link;
+        $this->obj_anchor = new Anchor;
     }
 
     // Upload the file to the server and send the uploaded file to js
@@ -239,8 +242,26 @@ class LinkController extends AppController
 
         if(($count % 5 != 0)) {
             $total_page = (int)($count / 5) + 1;
-
         }
         return $this->responseFileQuery(true, '', $total_page);
+    }
+
+    public function anchorAction(Request $request)
+    {
+        $post = $request->getPost()->all();
+        $check = $this->obj_anchor->getBy('name', '=', $post['input_anchor_name']);
+        if($check){
+            $status = false;
+            $message = 'Anchor name already exist!';
+        } else {
+            $anchor_data = [
+                'name' => $post['input_anchor_name'],
+            ];
+            $this->obj_anchor->create($anchor_data);
+            $status = true;
+            $message = 'Create anchor name successfully!';
+        }
+
+        return $this->responseFileQuery($status, $message);
     }
 }

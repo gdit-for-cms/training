@@ -35,6 +35,7 @@ class RuleController extends AppController
         $this->obj_type_rule = new TypeRule;
         $this->obj_image = new Image;
         $this->obj_link = new Link;
+        $this->obj_anchor = new Anchor;
     }
 
     public function indexAction(Request $request)
@@ -74,6 +75,8 @@ class RuleController extends AppController
 
         $getImageResults = $this->obj_image->getAllRelation(['update-date-order' => 'desc', 'thumbnail' => 'yes'], 5);
 
+        $list_anchor = $this->obj_anchor->getAll();
+
         $this->data_ary['library_images'] = $getImageResults['images'];
         $this->data_ary['numberAllImage'] = $getImageResults['numbers_of_result'];
         $this->data_ary['all_categories'] = $all_categories;
@@ -83,6 +86,8 @@ class RuleController extends AppController
         $this->data_ary['library_file'] = $getFileResults['file'];
         $this->data_ary['numberAllFile'] = $getFileResults['numbers_of_result'];
         $this->data_ary['qtyPageOfFIle'] = $qtyPageOfFIle;
+
+        $this->data_ary['list_anchor'] = $list_anchor;
 
         $this->data_ary['content'] = "rule/edit";
     }

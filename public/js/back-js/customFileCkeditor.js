@@ -114,6 +114,7 @@ $(document).ready(() => {
     const input_anchor_name = document.getElementById('input_anchor_name')
     const select_anchor_name = document.getElementById('select_anchor_name')
     const button_open_anchor = document.getElementById("open_anchor")
+    const create_anchor_form = $('#create-anchor-form')
     var list_name_anchor = []
 
     //Btn anchor
@@ -321,31 +322,44 @@ $(document).ready(() => {
         })
     }
 
-    btn_add_anchor_name.addEventListener('click', (e) => {
+    // btn_add_anchor_name.addEventListener('click', (e) => {
+    create_anchor_form.on('submit',(e)=>{
+        e.preventDefault()
         var anchor_name = input_anchor_name.value
         if(anchor_name == '' | anchor_name == null) {
             alert('Anchor name cannot be empty!')
         } else if(!validate_anchor_name(anchor_name)){
             alert('Achor name cannot use Vietnamese, spaces and special characters!')
-        } else if(list_name_anchor.includes(anchor_name)) {
-            alert('Anchor name already exists!')
         } else {
-            // Add anchor names to the list
-            list_name_anchor.push(anchor_name)
+            var action_url = create_anchor_form.attr('action')
+            var form_data = new FormData(create_anchor_form[0])
+            $.ajax({
+                type: "POST",
+                url: action_url,
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    if (data['success']) {
+                    modal_anchor_name.style.display = 'none';
 
-            modal_anchor_name.style.display = 'none';
+                    // Add id in content
+                    var content = make_content_anchor_name(anchor_name)
+                    change_content(content)
 
-            // Add id in content
-            var content = make_content_anchor_name(anchor_name)
-            change_content(content)
+                    // Add option name to select
+                    var opt = document.createElement('option')
+                    opt.value = anchor_name
+                    opt.innerHTML = anchor_name
+                    select_anchor_name.appendChild(opt)
 
-            // Add option name to select
-            var opt = document.createElement('option')
-            opt.value = anchor_name
-            opt.innerHTML = anchor_name
-            select_anchor_name.appendChild(opt)
-
-            input_anchor_name.value = null
+                    input_anchor_name.value = null
+                    } else {
+                        alert('Anchor name already exist!')
+                    }
+                },
+                cache: false,
+            });
         }
     })
 
@@ -425,7 +439,7 @@ $(document).ready(() => {
     function validate_anchor_name(name) {
         var pattern = /^[a-zA-ZÀ-ÿ][-_ a-zA-ZÀ-ÿ0-9]*[a-zA-ZÀ-ÿ0-9]$/
 
-        return pattern.test(name);
+        return pattern.test(name)
     }
 
     function button_anchor() {
@@ -654,15 +668,11 @@ $(document).ready(() => {
         }
     }
     function open_anchor() {
-        if(list_name_anchor.includes(select_anchor_name.value)){
-            const input_anchor_value =  '#' + select_anchor_name.value;
+        const input_anchor_value =  '#' + select_anchor_name.value;
 
-            var content = make_content_insert(input_anchor_value, false, 0)
-            change_content(content)
-            btn_close_link_setting.click()
-        } else {
-            alert('Anchor name does not exist!');
-        }
+        var content = make_content_insert(input_anchor_value, false, 0)
+        change_content(content)
+        btn_close_link_setting.click()
     }
 
     function make_content_insert(input, new_tab = false, num) {
