@@ -10,8 +10,8 @@
 
     const form_exam = document.getElementById('form_exam')
 
-    //////////////////////////////////////////////////////    
-
+    //////////////////////////////////////////////////////
+    
     document.addEventListener('DOMContentLoaded', function() {
         user_email = localStorage.getItem('user_email')
         user_name = localStorage.getItem('user_name')
@@ -46,6 +46,18 @@
                     var value = radio_button.getAttribute('id');
                     exam_results[name] = value.slice(value.length - 1, value.length);
                 }
+            });
+
+            // Gửi yêu cầu AJAX đến máy chủ trung gian
+            fetch('/send-email', {
+                method: 'POST'
+            })
+            .then(response => response.text())
+            .then(result => {
+                console.log(result); // Hiển thị kết quả từ máy chủ
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
         })
     }
