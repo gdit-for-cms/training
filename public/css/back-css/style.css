@@ -722,4 +722,20 @@ a {
   vertical-align: text-bottom;
 }
 
+.input-with-button {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
 
+.remove-button {
+  margin-left: 10px;
+}
+
+.input-answer {
+  width: 500px;
+}
+
+.input-add-answer {
+  margin-left: 200px;
+}
