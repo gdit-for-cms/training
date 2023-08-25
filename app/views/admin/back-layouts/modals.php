@@ -235,7 +235,7 @@
                                             <option value="10">10 pieces</option>
                                             <option value="15">15 pieces</option>
                                             <?php
-                                                if (!empty($numberAllImage)) {
+                                            if (!empty($numberAllImage)) {
                                             ?>
                                                 <option id="option-all-result" value="<?php echo $numberAllImage ?>">All (<?php echo $numberAllImage ?>)</option>
                                             <?php
@@ -456,3 +456,64 @@
         </div>
     </div>
 
+    <!-- Modal show exam priview -->
+    <div class="modal  fade" id="viewExamPriview" tabindex="-1" aria-labelledby="viewRuleDetailLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewRuleDetailLabel">Coding rule detail</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-2">
+                    <div class="row">
+                        <div class="col-5 p-3">
+                            <div class="row p-3" id="rule-content">
+                                <h5>Content</h5>
+                            </div>
+                        </div>
+                        <div class="col-7 p-3 ">
+                            <h5>Note</h5>
+                            <div class="row p-3" id="rule-notes">
+                            </div>
+                            <!-- <textarea class="row p-3" id="rule-note"></textarea> -->
+                            <button type="submit" class="btn btn-primary text-white  mr-2">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal add question to exam -->
+    <div class="modal  fade" id="viewAddQuestionToExam" tabindex="-1" aria-labelledby="viewRuleDetailLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewRuleDetailLabel">Coding rule detail</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-2">
+                    <div class="row">
+                        <div class="col-5 p-3">
+                            <div class="row p-3" id="rule-category">
+                                <h5>asas</h5>
+                            </div>
+                            <div class="row p-3" id="rule-content">
+                                <h5>Content</h5>
+                            </div>
+                            <div class="row p-3" id="rule-detail">
+                                <h5>Detail</h5>
+                            </div>
+                        </div>
+                        <div class="col-7 p-3 ">
+                            <h5>Note</h5>
+                            <div class="row p-3" id="rule-notes">
+                            </div>
+                            <!-- <textarea class="row p-3" id="rule-note"></textarea> -->
+                            <button type="submit" class="btn btn-primary text-white  mr-2">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -366,5 +366,28 @@ Trait QueryBuilder
 
         return !!$result;
     }
+    
+    /**
+     * Execute the query and get the last result.
+     *
+     * @param  array|string  $column
+     * @return object|static|null
+     */
+    public function last($column = '*')
+    {
+        $db = static::getDB();
+        $this->selectColumn = $column;
+        $this->orderBy = 'ORDER BY id DESC'; // Sắp xếp theo cột id theo thứ tự giảm dần
+        $sqlQuery = "SELECT " . $this->selectColumn . " FROM " . $this->_table . " " . $this->where . " " . $this->orderBy . " " . $this->limit;
+        $result = $db->query($sqlQuery);
+
+        // Reset field
+        $this->resetQuery();
+
+        if ($result) {
+            return $result->fetch(PDO::FETCH_ASSOC);
+        }
+        return false;
+    }
 }
 
