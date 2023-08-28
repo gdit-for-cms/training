@@ -8,12 +8,11 @@ foreach ($examsWithQuestions as $row) {
         $exams[$examId] = [
             'exam_id' => $row['exam_id'],
             'exam_title' => $row['exam_title'],
-            'exam_description' => $row['exam_description'],
             'questions' => []
         ];
     }
 
-    // Nếu câu hỏi có ID, thêm vào danh sách câu hỏi của bài thi
+    // Nếu có câu hỏi, thêm vào danh sách câu hỏi của bài thi
     if ($row['question_id']) {
         $exams[$examId]['questions'][] = [
             'question_id' => $row['question_id'],
@@ -53,7 +52,7 @@ foreach ($examsWithQuestions as $row) {
                     <div class="table_position collapse" id="collapseseven" aria-labelledby="headingOne" data-parent="#accordion2">
                         <div class="d-flex justify-content-end mt-2 mr-6">
                             <!-- <button data-id="<?php echo $exam['exam_id'] ?>" class="btn btn-primary btn-show-rule text-white mr-2">Exam Priview</button> -->
-                            <button data-id="<?php echo $exam['exam_id']; ?>" type="button" class="btn btn-primary btn-show-priview-exam text-white  mr-2">View</button>
+                            <button data-id="<?php echo $exam['exam_id']; ?>" type="button" class="btn btn-primary btn-show-priview-exam text-white  mr-2">Priview</button>
                             <a href='/admin/exam/edit?id=<?= $exam['exam_id'] ?>' class="edit-btn btn btn-info text-white mr-2">Edit</a>
                             <button type="button" data-id="<?= $exam['exam_id'] ?>" class="btn btn-danger delete-btn text-white">Delete</button>
                         </div>
@@ -102,28 +101,33 @@ foreach ($examsWithQuestions as $row) {
                                                 <?php
                                                 // if(count($exam ))
                                                 $stt = 1;
+                                                $check_question = array();
                                                 foreach ($exam['questions'] as $question) {
+                                                    if (!in_array($question['question_id'], $check_question)) {
                                                 ?>
-                                                    <tr>
-                                                        <td><?php echo $stt++; ?></td>
-                                                        <td>
-                                                            <?php echo $question['question_title']; ?>
-                                                        </td>
-                                                        <td>
-                                                            <?php echo $question['question_content']; ?>
+                                                        <tr>
+                                                            <td><?php echo $stt++; ?></td>
+                                                            <td>
+                                                                <?php echo $question['question_title']; ?>
+                                                            </td>
+                                                            <td>
+                                                                <?php echo $question['question_content']; ?>
 
-                                                        </td>
-                                                        <td>
-                                                            <button type="button" data-id="<?= $exam['exam_id'] ?>" class="btn btn-danger delete-btn text-white">Delete</button>
-                                                        </td>
-                                                    </tr>
+                                                            </td>
+                                                            <td>
+                                                                <button type="button" data-id="<?= $exam['exam_id'] ?>" class="btn btn-danger delete-btn text-white">Delete</button>
+                                                            </td>
+                                                        </tr>
                                                 <?php
+                                                        array_push($check_question, $question['question_id']);
+                                                    }
                                                 }
                                                 ?>
                                             </tbody>
                                         </table>
                                         <!-- <button type="button" class="btn btn-info m-2">Thêm</button> -->
-                                        <button data-id="<?php echo $exam['exam_id']; ?>" type="button" class="btn btn-primary btn-show-add-question text-white  mr-2">Add</button>
+                                        <!-- <button data-id="<?php echo $exam['exam_id']; ?>" type="button" class="btn btn-primary btn-show-add-question text-white  mr-2">Show detail</button> -->
+                                        <a href="/admin/exam/examDetail?exam_id=<?php echo $exam['exam_id'] ?>" class="btn btn-info m-2">View detail</a>
 
                                         <div class="flex justify-center items-center">
                                             <nav aria-label="Page navigation example">
@@ -258,7 +262,7 @@ foreach ($examsWithQuestions as $row) {
 
                     descriptionElement.textContent = result['description']
                     examDesciption.appendChild(descriptionElement)
-                
+
                 },
                 cache: false,
                 contentType: false,

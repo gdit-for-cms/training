@@ -39,7 +39,7 @@ class QuestionController extends  AppController
     {
         $this->data_ary['questions'] = $this->obj_model->getAll();
         $this->data_ary['answers'] = $this->obj_model_answer::getAll();
-        
+
         $this->data_ary['content'] = 'question/index';
     }
 
@@ -109,6 +109,27 @@ class QuestionController extends  AppController
                 // $this->obj_model->rollback();
                 return $this->errorResponse($th->getMessage());
             };
+        }
+    }
+
+    public function responseShowRule($status, $result = [])
+    {
+        $res = [
+            "success" => $status,
+            "result" => $result
+        ];
+        header('Content-Type: application/json');
+        echo json_encode($res);
+        exit();
+    }
+    public function showAction(Request $request)
+    {
+        $rule_id = $request->getGet()->get('id');
+        $rule = $this->obj_model->getById($rule_id);
+        if ($rule) {
+            return $this->responseShowRule(true, $rule);
+        } else {
+            return $this->responseShowRule(false);
         }
     }
 }

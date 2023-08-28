@@ -82,4 +82,25 @@ class AnswerController extends  AppController
             };
         }
     }
+    public function responseShowRule($status, $result = [])
+    {
+        $res = [
+            "success" => $status,
+            "result" => $result
+        ];
+        header('Content-Type: application/json');
+        echo json_encode($res);
+        exit();
+    }
+    public function showAction(Request $request)
+    {
+        $question_id = $request->getGet()->get('question_id');
+
+        $rule = $this->obj_model->getBy('question_id', '=', $question_id, '*');
+        if ($rule) {
+            return $this->responseShowRule(true, $rule);
+        } else {
+            return $this->responseShowRule(false);
+        }
+    }
 }

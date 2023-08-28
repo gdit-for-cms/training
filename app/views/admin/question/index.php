@@ -36,34 +36,25 @@
                     <td><?= $question['title'] ?></td>
                     <td>
                       <?= $question['content'] ?>
-                      Options:<br>
-                      <!-- <span> A) George Washington</span><br>
-                      <span style="background-color: yellow;"> B) Thomas Jefferson</span><br>
-                      <span> C) Abraham Lincoln</span><br>
-                      <span> D) Benjamin Franklin</span><br> -->
+
+                    </td>
+                    <td>
+                      <!-- Options:<br> -->
                       <?php
+                      $stt = 1;
                       foreach ($answers as $answer) {
                         if ($question['id'] == $answer['question_id']) {
                           if ($answer['is_correct'] == 1) {
                             $answer_correct[] = $answer['content'];
                       ?>
-                            <span style="background-color: yellow;"><?php echo $answer['content'] ?></span><br>
+                            <span style="background-color: yellow;"><?php echo $stt++ . " ) " . $answer['content'] ?></span><br>
                           <?php
                           } else {
                           ?>
-                            <span><?php echo $answer['content'] ?></span><br>
+                            <span><?php echo $stt++ . " ) " . $answer['content'] ?></span><br>
                       <?php
                           }
                         }
-                      }
-                      ?>
-                    </td>
-                    <td>
-                      <?php
-                      foreach ($answer_correct as $correct) {
-                      ?>
-                        <span><?php echo $correct ?></span><br><br>
-                      <?php
                       }
                       ?>
                     </td>

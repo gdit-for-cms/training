@@ -52,25 +52,6 @@ class ExamController extends AppController
         $this->data_ary['content'] = 'exam/index';
     }
 
-    public function insertAction(Request $request)
-    {
-        $exams = $this->obj_model->getAll();
-        // if($ex)
-        $exam_title = $request->getPost()->get('title');
-        $exam_description = $request->getPost()->get('description');
-        // $check_exam = false;
-        foreach ($exams as $exam) {
-            $check_exam = strcasecmp($exam['title'], $exam_title);
-            if ($check_exam == 0) {
-                return false;
-            }
-        }
-
-        $this->obj_model->insert([
-            'title' => $exam_title,
-            'description' => $exam_description
-        ]);
-    }
     public function newAction()
     {
         $this->data_ary['content'] = 'exam/new';
@@ -106,6 +87,34 @@ class ExamController extends AppController
         //get exam dua vao exam_id
         $exam =  $this->obj_model->getById($exam_id);
 
+
+        // $all_categories = $this->obj_rule->getAllCategories($type_rule_id);
+
+        // $get_results_per_page =  $request->getGet()->get('results_per_pages');
+        // $results_per_page =  $get_results_per_page ? $get_results_per_page : '5';
+        // $options_select_ary = [5, 10, 15];z
+        // $get_ary = $request->getGet()->all();
+        // array_shift($get_ary);
+        // $results_ary = $this->obj_rule->getAllRelation($get_ary, $results_per_page);
+
+        // $numbers_of_result = $results_ary['numbers_of_result'];
+        // $numbers_of_pages = ceil($numbers_of_result / $results_per_page);
+        // $current_page = (int) $request->getGet()->get('page');
+        // $previous_order = ($current_page - 1) * $results_per_page;
+        // $max_pagination_item = 4;
+
+
+        // $this->data_ary['previous_order'] = $previous_order;
+        // $this->data_ary['current_page'] = $current_page;
+        // $this->data_ary['results_per_page'] = $results_per_page;
+        // $this->data_ary['numbers_of_pages'] = $numbers_of_pages;
+        // $this->data_ary['numbers_of_result'] = $numbers_of_result;
+        // $this->data_ary['options_select_ary'] = $options_select_ary;
+        // $this->data_ary['max_pagination_item'] = $max_pagination_item;
+        // $this->data_ary['rules_in_one_page_ary'] = $results_ary['results'];
+        // $this->data_ary['all_categories'] = $all_categories;
+
+
         //lay ra cac exa,_question dua vao exam_id
         $exam_questions = $this->obj_model_exam_question->getBy('exam_id', '=', $exam_id, '*');
 
@@ -135,56 +144,17 @@ class ExamController extends AppController
 
     public function createAction(Request $request)
     {
-
-        //dựa vào method get lay exam_id
-        $exam_id = $request->getGet()->get('exam_id');
-
-        //get exam dua vao exam_id
-        $exam =  $this->obj_model->getById($exam_id);
-
-        $questions = $this->obj_model_question->getAll();
-        $answers = $this->obj_modal_answer->getAll();
-
-        // $exam_question = $this->obj_model_exam_question->getBy('')
-        $exam_questions = $this->obj_model_exam_question->getBy('exam_id', '=', $exam_id, '*');
-
-        // Lấy danh sách các question_id đã tồn tại trong exam_questions
-        $existing_question_ids = array_column($exam_questions, 'question_id');
-
-        // Loại bỏ các câu hỏi đã tồn tại trong mảng exam_questions khỏi mảng questions
-        $questions = array_filter($questions, function ($question) use ($existing_question_ids) {
-            return !in_array($question['id'], $existing_question_ids);
-        });
-
-        // Chuyển mảng kết quả về dạng danh sách các câu hỏi
-        $questions = array_values($questions);
-
-        $this->data_ary['questions'] = $questions;
-        $this->data_ary['answers'] = $answers;
-        $this->data_ary['exam'] = $exam;
-
-        $this->data_ary['content'] = "exam/create";
+        // $type_rule_id = $request->getGet()->get('type_rule_id');
+        // $type_rule = $this->obj_type_rule->getById($type_rule_id);
+        // $all_categories = $this->obj_rule->getAllCategories($type_rule_id);
+        // $this->data_ary['all_categories'] = $all_categories;
+        // $this->data_ary['type_rule'] = $type_rule;
+        // $exam_id 
+        $this->data_ary['content'] = "exam/new_question";
     }
 
-    public function storeAction(Request $request)
-    {
-        $exam_id = $request->getGet()->get('exam_id');
-        $exam =  $this->obj_model->getById($exam_id);
+    public function new_question(Request $request){
+        $this->data_ary['content'] = "exam/new";
 
-        $question_answers = $request->getPost();
-        $question_id = $question_answers->get('question_id');
-        $answer_ids = $question_answers->get('selected_answers');
-
-
-        // Lấy danh sách answer_id hiện có trong cơ sở dữ liệu
-
-        foreach ($answer_ids as $answer_id) {
-            // Thêm mới answer có answer_id vào cơ sở dữ liệu
-            $this->obj_model_exam_question->insert([
-                'exam_id' => $exam_id,
-                'answer_id' => $answer_id,
-                'question_id' => $question_id
-            ]);
-        }
     }
 }

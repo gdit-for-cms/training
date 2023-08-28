@@ -17,12 +17,6 @@ class Exam extends Model
 
     private $_table = 'exam';
 
-    /**
-     * Get all the users as an associative array
-     *
-     * @return array
-     */
-
     public static function getAll()
     {
         return (new self)->latest()->get();
@@ -33,7 +27,7 @@ class Exam extends Model
         return $this->where('id', "=", $id)->get('*')[0];
     }
 
-    public function getExamsWithQuestions($id='')
+    public function getExamsWithQuestions($id = '')
     {
         $db = static::getDB();
 
@@ -80,5 +74,50 @@ LEFT JOIN question AS q ON qe.question_id = q.id
         // var_dump($exams);
         // die();
         return $results_ary;
+    }
+    public function rules($change = '', $value = array())
+    {
+        $rules_ary = array(
+            'title' => array(
+                'required',
+                'name',
+                'filled',
+            ),
+            'desciption' => array(
+                'required',
+                'name',
+                'filled',
+            ),
+        );
+        switch ($change) {
+            case 'add':
+                return array_merge($rules_ary, $value);
+                break;
+            case 'remove_key':
+                foreach ($value as $each) {
+                    if (array_key_exists($each, $rules_ary)) {
+                        unset($rules_ary[$each]);
+                    }
+                }
+                return $rules_ary;
+                break;
+            case 'remove_value':
+                foreach ($value as $key => $value_key) {
+                    if (array_key_exists($key, $rules_ary)) {
+                        foreach ($value_key as $each) {
+                            $key_value = array_search($each, $rules_ary[$key]);
+                            unset($rules_ary[$key][$key_value]);
+                        }
+                    }
+                }
+                return $rules_ary;
+                break;
+            case 'replace':
+                return $value;
+                break;
+            default:
+                return $rules_ary;
+                break;
+        }
     }
 }

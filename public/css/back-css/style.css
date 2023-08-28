@@ -739,3 +739,7 @@ a {
 .input-add-answer {
   margin-left: 200px;
 }
+
+.table-bordered {
+  border: 1px solid #dee2e6;
+}
