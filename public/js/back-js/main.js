@@ -24,6 +24,9 @@ function checkName(objName) {
 function checkPathName() {
     var pathName = window.location.pathname
     const name = document.getElementById('name');
+    const title = document.getElementById('title');
+    const description = document.getElementById('description');
+    const ckeditor = document.getElementById('editor-edit-note');
     var content = ''
     if (pathName.includes('/admin/user')) {
         const email = document.getElementById('email');
@@ -60,7 +63,38 @@ function checkPathName() {
                             </span>
                         </div>
                     </div>`
-    } else {
+    } else if (pathName.includes('/admin/exam')) {
+        content = `
+                    <div class="d-flex justify-content-center align-items-center w-full">
+                        <div class="d-flex flex-col justify-content-center align-items-start">
+                            <span class="mb-2">
+                                <span class="font-bold">Title: </span>
+                                ${title.value}
+                            </span>
+                            <span class="mb-2">
+                                <span class="font-bold">Description: </span>
+                                ${description.value}
+                            </span>
+                          
+                        </div>
+                    </div>`
+    } else if (pathName.includes('/admin/question')) {
+        content = `
+                    <div class="d-flex justify-content-center align-items-center w-full">
+                        <div class="d-flex flex-col justify-content-center align-items-start">
+                            <span class="mb-2">
+                                <span class="font-bold">Title: </span>
+                                ${title.value}
+                            </span>
+                            <span class="mb-2">
+                                <span class="font-bold">Content: </span>
+                                ${ckeditor.value}
+                            </span>
+                          
+                        </div>
+                    </div>`
+    }
+    else {
         content = `
                     <div class="d-flex justify-content-center align-items-center w-full">
                         <div class="d-flex flex-col justify-content-center align-items-start">
@@ -237,7 +271,7 @@ function alertDelete() {
             }
         } else {
             Swal.fire({
-                title: 'Are you sure?',
+                title: 'Are you sure??',
                 text: "You won't be able to revert this!",
                 icon: 'warning',
                 showCancelButton: true,
@@ -249,6 +283,7 @@ function alertDelete() {
                     $.ajax({
                         url: `/admin/${pathName}/delete?id=${deleteID}`,
                         success: function () {
+                            alert("ád");
                             document.location.reload(true);
                         }
                     });
@@ -258,6 +293,31 @@ function alertDelete() {
     });
 }
 
+function alertDeleteQuestion() {
+    $('.btn-delete-question').click(function (e) {
+        let deleteID = $(this).data('id');
+        alert(deleteID)
+        // let pathName = window.location.pathname.split('/')[2]
+        // Swal.fire({
+        //     title: 'Are you sure?',
+        //     text: "You won't be able to revert this!",
+        //     icon: 'warning',
+        //     showCancelButton: true,
+        //     confirmButtonColor: '#d33',
+        //     cancelButtonColor: '#3085d6',
+        //     confirmButtonText: 'Yes, delete it!'
+        // }).then((result) => {
+        //     if (result.isConfirmed) {
+        //         $.ajax({
+        //             url: `/admin/${pathName}/delete?id=${deleteID}`,
+        //             success: function () {
+        //                 document.location.reload(true);
+        //             }
+        //         });
+        //     }
+        // })
+    });
+}
 function convertTableToArray(arg) {
     var myTableArray = [];
     $(`table#${arg} tr`).each(function () {
@@ -481,8 +541,12 @@ $(document).ready(function () {
     submitForm('#form_update_user');
     submitForm('#form_new_room');
     submitForm('#form_update_room');
+    submitForm('#form_new_exam');
+    submitForm('#form_new_question');
+    submitForm('#form_update_question');
+
     // submitForm('#form_upload_avatar');
-    
+
     //Ngo Duy Hung
     alertDeleteListRule();
     alertDeleteRule();
@@ -678,11 +742,11 @@ $(document).ready(function () {
     //         }
     //     })
     // });
-   
 
-   
+
+
 });
- //Ngo Duy Hung
+//Ngo Duy Hung
 function alertDeleteListRule() {
     $('.btn-delete-list-rule').click(function (e) {
         let deleteID = $(this).data('id');

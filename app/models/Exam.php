@@ -42,37 +42,6 @@ LEFT JOIN question AS q ON qe.question_id = q.id
         $db = static::getDB();
         $stmt = $db->query($query);
         $results_ary = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        // echo "<pre>";
-        // var_dump($results_ary);
-        // die();
-        // Tạo một mảng để gom nhóm các câu hỏi theo bài thi
-        // $exams = [];
-        // foreach ($results_ary as $row) {
-        //     $examId = $row['exam_id'];
-
-        //     // Nếu chưa tồn tại bài thi trong mảng $exams, thêm mới
-        //     if (!isset($exams[$examId])) {
-        //         $exams[$examId] = [
-        //             'exam_id' => $row['exam_id'],
-        //             'exam_title' => $row['exam_title'],
-        //             'exam_description' => $row['exam_description'],
-        //             'questions' => []
-        //         ];
-        //     }
-
-        //     // Nếu câu hỏi có ID, thêm vào danh sách câu hỏi của bài thi
-        //     if ($row['question_id']) {
-        //         $exams[$examId]['questions'][] = [
-        //             'question_id' => $row['question_id'],
-        //             'question_content' => $row['question_content']
-        //         ];
-        //     }
-        // }
-
-        // Kết quả sẽ là mảng $exams, trong đó mỗi phần tử là thông tin một bài thi kèm danh sách câu hỏi
-        // echo "<pre>";
-        // var_dump($exams);
-        // die();
         return $results_ary;
     }
     public function rules($change = '', $value = array())
@@ -83,7 +52,7 @@ LEFT JOIN question AS q ON qe.question_id = q.id
                 'name',
                 'filled',
             ),
-            'desciption' => array(
+            'description' => array(
                 'required',
                 'name',
                 'filled',

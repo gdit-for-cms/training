@@ -4,8 +4,6 @@ namespace App\Controllers\Admin;
 
 
 use App\Controllers\Admin\AppController;
-use Core\Controller;
-use Core\View;
 use Core\Http\Request;
 use App\models\Answer;
 use App\Requests\AppRequest;
@@ -26,11 +24,6 @@ class AnswerController extends  AppController
         $this->obj_model = new Answer;
     }
 
-    protected function after()
-    {
-        // View::render('admin/back-layouts/master.php', $this->data_ary);
-    }
-
     public function indexAction()
     {
         $this->data_ary['questions'] = $this->obj_model->getAll();
@@ -40,13 +33,6 @@ class AnswerController extends  AppController
 
     public function newAction()
     {
-        // $array = array_diff(scandir('../app/controllers/User'), array('..', '.'));
-        // $result = array();
-        // foreach ($array as $filename) {
-        //     array_push($result, strtolower((preg_split('/(?=[A-Z])/', $filename)[1])));
-        // }
-        // $this->data_ary['pages'] = $result;
-
         $this->data_ary['content'] = 'question/new';
     }
 

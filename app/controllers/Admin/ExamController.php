@@ -37,54 +37,38 @@ class ExamController extends AppController
         $this->obj_modal_answer = new Answer;
     }
 
-
-    protected function after()
-    {
-        View::render('admin/back-layouts/master.php', $this->data_ary);
-    }
-
     public function indexAction()
     {
-        // $this->data_ary['exams'] = $this->obj_model->getAll();
-        // $this->data_ary['questions'] = $this->obj_model_question->getAll();
-
         $this->data_ary['examsWithQuestions'] = $this->obj_model->getExamsWithQuestions();
         $this->data_ary['content'] = 'exam/index';
     }
 
-    public function insertAction(Request $request)
+    public function insert(Request $request)
     {
         $exams = $this->obj_model->getAll();
-        // if($ex)
         $exam_title = $request->getPost()->get('title');
         $exam_description = $request->getPost()->get('description');
-        // $check_exam = false;
         foreach ($exams as $exam) {
             $check_exam = strcasecmp($exam['title'], $exam_title);
             if ($check_exam == 0) {
-                return false;
+                return $this->errorResponse('Exam has been exist');
             }
         }
+        try {
+            $this->obj_model->insert([
+                'title' => $exam_title,
+                'description' => $exam_description
+            ]);
 
-        $this->obj_model->insert([
-            'title' => $exam_title,
-            'description' => $exam_description
-        ]);
+            return $this->successResponse();
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        };
     }
+
     public function newAction()
     {
         $this->data_ary['content'] = 'exam/new';
-    }
-
-    public function responseShowRule($status, $result = [])
-    {
-        $res = [
-            "success" => $status,
-            "result" => $result
-        ];
-        header('Content-Type: application/json');
-        echo json_encode($res);
-        exit();
     }
 
     public function showAction(Request $request)
@@ -175,9 +159,7 @@ class ExamController extends AppController
         $question_id = $question_answers->get('question_id');
         $answer_ids = $question_answers->get('selected_answers');
 
-
         // Lấy danh sách answer_id hiện có trong cơ sở dữ liệu
-
         foreach ($answer_ids as $answer_id) {
             // Thêm mới answer có answer_id vào cơ sở dữ liệu
             $this->obj_model_exam_question->insert([

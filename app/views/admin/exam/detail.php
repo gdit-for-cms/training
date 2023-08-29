@@ -17,6 +17,8 @@
                             if ($cur_user['role_id'] != 3) {
                             ?>
                                 <a href="/admin/exam/create?exam_id=<?php echo $exam['id'] ?>"><button type=" button" class="btn btn-success float-end">Add Question</button></a>
+                                <button data-id="<?php echo $exam['id']; ?>" type="button" class="btn btn-primary btn-show-priview-exam text-white  mr-2">Priview</button>
+
                                 <div>
                                     <form action="/admin/exam/export" class="" method="post">
                                         <input type="hidden" name="exam_id" value="<?php echo $exam['id'] ?>">
@@ -172,6 +174,34 @@
     </div>
 </div>
 <script>
+    const btnShowAddQuestion = document.querySelectorAll('.btn-show-priview-exam')
+    btnShowAddQuestion.forEach((btn) => {
+        btn.setAttribute('data-bs-toggle', 'modal')
+        btn.setAttribute('data-bs-target', '#viewExamPriview')
+        btn.addEventListener('click', (e) => {
+
+            ruleId = btn.dataset.id
+            $.ajax({
+                type: "GET",
+                // url: `/admin/rule/show?id=6085`,
+                url: `/admin/exam/show?id=2`,
+
+                success: function(data) {
+                    result = data['result']
+
+                    descriptionElement.textContent = result['description']
+                    examDesciption.appendChild(descriptionElement)
+
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            }).fail(function() {
+                e.preventDefault()
+            });
+        })
+    })
+
     const paginationEles = document.querySelectorAll('.page-item')
     const paginationChilds = document.querySelector('.pagination').children
     const hideElements = document.querySelector('.pagination').querySelectorAll('.hide-element')

@@ -3,44 +3,77 @@
         <div class="white_card_header">
             <div class="box_header m-0">
                 <div class="main-title">
-                    <h3 class="m-0">New questions</h3>
+                    <h3 class="m-0">Edit questions</h3>
                 </div>
             </div>
         </div>
         <div class="white_card_body">
             <div class="card-body">
-                <form id="form_new_question" class="" action="create" method="POST">
+                <form id="form_update_question" class="" action="update" method="POST">
+                    <input id="id" name="id" value="<?= $question['id'] ?>" type="hidden" class="form-control">
                     <div class="mb-3">
                         <label class="form-label" for="title">Title*</label>
-                        <input class="form-control" rows="3" name="title" id="title" placeholder="Title..." />
+                        <input class="form-control" value="<?php echo $question['title']; ?>" rows="3" name="title" id="title" placeholder="Title..." />
                     </div>
                     <div class="mb-3">
                         <label for="content" class="form-label">Content*</label>
-                        <textarea id="editor-edit-note" class="form-control h-120px" name="content" rows="3"><?php  ?></textarea>
+                        <textarea id="editor-edit-note" class="form-control h-120px" name="content" rows="3"><?php  ?>
+                            <?php echo $question['content']; ?>
+                        </textarea>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="answer">Answer*</label>
                         <div id="answerContainer">
                             <!-- Ô input mặc định -->
-                            <div class="form-check">
-                                <input class="form-check-input" name="is_correct[]" type="checkbox" value="0" onchange="updateCheckboxValue(this)">
-                                <div class="input-with-button">
-                                    <input type="text" class="form-control input-answer" name="answer[]" value="" placeholder="Answer...">
-                                    <button type="button" class="remove-button btn btn-danger delete-btn text-white" onclick="removeAnswer(this)">Xóa</button>
+                            <?php
+                            foreach ($answers as $answer) {
+                            ?>
+                                <div class="form-check">
+                                    <input class="form-check-input" name="is_correct[]" type="checkbox" <?php if ($answer['is_correct'] == 1) {
+                                                                                                            echo "checked";
+                                                                                                        } ?> value="<?php echo $answer['is_correct'] ?>" onchange="updateCheckboxValue(this)">
+                                    <div class="input-with-button">
+                                        <input type="text" class="form-control input-answer" name="answer[]" value="<?php echo $answer['content'] ?>" placeholder="Answer...">
+                                        <button type="button" class="remove-button btn btn-danger delete-btn text-white" onclick="removeAnswer(this)">Xóa</button>
+                                    </div>
                                 </div>
-                            </div>
+                            <?php
+                            }
+                            ?>
+
                         </div>
                         <div class="input-add-answer">
                             <button type="button" class="btn btn-info m-2" onclick="addAnswer()">Thêm</button>
                         </div>
                     </div>
-                    <button id="submit" type="submit" class="btn btn-primary">Create</button>
+                    <button id="submit" type="submit" class="btn btn-primary">Edit</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+<div class="box-lightbox">
+    <div class="col-lg-4">
+        <div class="white_card card_height_100 mb_30">
+            <div class="white_card_header">
+                <div class="box_header m-0">
+                    <div class="main-title total_modal">
+                        <h2 class="m-0">Confirm Information</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="white_card_body">
+                <div class="card-body">
 
+                    <div class="model-footer">
+                        <button type="button" class="btn btn-secondary js-lightbox-close">Close</button>
+                        <button class="btn btn-primary" id="submit_confirm_btn">Change</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     // chức năng thêm xóa câu hỏi 

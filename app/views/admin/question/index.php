@@ -60,8 +60,8 @@
                     </td>
 
                     <td class="flex items-center justify-start">
-                      <a href='/admin/user/edit?id=<?= $question['id'] ?>' class="edit_btn mr-2"><button type="button" class="btn btn-info text-white">Edit</button></a>
-                      <button type="button" data-id="<?= $question['id'] ?>" class="btn btn-danger delete-btn text-white">Delete</button>
+                      <a href='/admin/question/edit?id=<?= $question['id'] ?>' class="edit_btn mr-2"><button type="button" class="btn btn-info text-white">Edit</button></a>
+                      <button type="button" data-id="<?= $question['id'] ?>" class="btn btn-danger delete-btn text-white btn-delete-question">Delete</button>
                     </td>
                   </tr>
                 <?php } ?>
@@ -82,6 +82,7 @@
     </div>
   </div>
 </div>
-<script>
 
+<script>
+  // const deleteBtn = document.querySelectorAll('.btn-delete-question')
 </script>
