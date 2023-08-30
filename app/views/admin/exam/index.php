@@ -87,7 +87,7 @@ foreach ($examsWithQuestions as $row) {
                                         </button>
                                     </div>
                                     <div class="table_member_body table-responsive m-b-30 flex flex-col items-center justify-center">
-                                        <table id="<?= $exam['exam_id'] ?>" class="table table-striped" style="width: 90% !important">
+                                        <table id="<?= $exam['exam_id'] ?>" class="table table-striped">
                                             <thead>
                                                 <tr>
                                                     <th scope="col">#</th>

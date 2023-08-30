@@ -169,4 +169,45 @@ class ExamController extends AppController
             ]);
         }
     }
+    public function priviewAction(Request $request)
+    {
+        //dựa vào method get lay exam_id
+        $exam_id = $request->getGet()->get('exam_id');
+
+        //get exam dua vao exam_id
+        $exam =  $this->obj_model->getById($exam_id);
+
+        //lay ra cac exam_question dua vao exam_id
+        $exam_questions = $this->obj_model_exam_question->getBy('exam_id', '=', $exam_id, '*');
+
+        $question_answers = array();
+
+        foreach ($exam_questions as $exam_question) {
+
+            $question_id = $exam_question['question_id'];
+
+            if (!isset($question_answers[$question_id])) {
+                $question_answers[$question_id] = array(
+                    'question' => $this->obj_model_question->getById($question_id),
+                    'answers' => array()
+                );
+            }
+
+            $answer_id = $exam_question['answer_id'];
+            $answer_info = $this->obj_modal_answer->getById($answer_id);
+
+            // Thêm thông tin câu trả lời vào mảng answers
+            $question_answers[$question_id]['answers'][] = $answer_info;
+        }
+        $this->data_ary['question_answers'] = $question_answers;
+        $this->data_ary['exam'] = $exam;
+        $this->data_ary['content'] = "exam/preview";
+    }
+
+    public function exportAction(Request $request)
+    {
+        $this->data_ary['content'] = "exam/export";
+
+        // $this->data_ary['content'] = "exam/export_file";
+    }
 }

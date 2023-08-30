@@ -16,9 +16,8 @@
                             <?php
                             if ($cur_user['role_id'] != 3) {
                             ?>
-                                <a href="/admin/exam/create?exam_id=<?php echo $exam['id'] ?>"><button type=" button" class="btn btn-success float-end">Add Question</button></a>
-                                <button data-id="<?php echo $exam['id']; ?>" type="button" class="btn btn-primary btn-show-priview-exam text-white  mr-2">Priview</button>
-
+                                <a href="/admin/exam/create?exam_id=<?php echo $exam['id']; ?>"><button type=" button" class="btn btn-success float-end">Add Question</button></a>
+                                <a href="/admin/exam/priview?exam_id=<?php echo $exam['id']; ?>"><button data-id="<?php echo $exam['id']; ?>" type="button" class="btn btn-primary btn-show-priview-exam text-white  mr-2">Priview</button></a>
                                 <div>
                                     <form action="/admin/exam/export" class="" method="post">
                                         <input type="hidden" name="exam_id" value="<?php echo $exam['id'] ?>">

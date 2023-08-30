@@ -73,7 +73,7 @@ class QuestionController extends  AppController
         $is_corrects = $result_vali_ary['is_correct'];
         $question_check_ary = $this->obj_model->getBy('content', '=', $content);
         $num_rows = count($question_check_ary);
-        return $this->errorResponse($is_corrects);
+        // return $this->errorResponse($is_corrects);
         if ($num_rows == 1) {
             return $this->errorResponse('Question has been exist');
         } else {
