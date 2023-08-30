@@ -49,7 +49,7 @@
             <img class="me-3" src="https://media.licdn.com/dms/image/C560BAQFqUuRAIwl4wg/company-logo_200_200/0/1590046309117?e=2147483647&v=beta&t=C2Rga75MUGjLdkTZ5ZkcdKibHqNO0TI86HSpBY2QaFA" alt="" width="48" height="48">
             <div class="lh-1">
                 <h1 class="h6 mb-0 text-white lh-1">Global Design Information Technology</h1>
-                <small>Title ở đây nghenn...</small>
+                <small>Title here...</small>
             </div>
         </div>
         <form id="form_exam">

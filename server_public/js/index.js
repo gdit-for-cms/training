@@ -4,7 +4,6 @@ var exam_results = {}
 const answers = {}
 var key = 1
 var count = 0
-var file_html = ''
 
 const input_email = document.getElementById('email')
 const input_name = document.getElementById('name')
@@ -21,16 +20,6 @@ const result = document.getElementById('result')
 document.addEventListener('DOMContentLoaded', function () {
     user_email = localStorage.getItem('user_email')
     user_name = localStorage.getItem('user_name')
-    var current_url = window.location.href
-    if(current_url.slice(current_url.length - 4, current_url.length) == 'html' && current_url.slice(24, current_url.length) != '/view/login.html'){
-        localStorage.setItem('current_url', current_url)
-
-        if(!user_email && !user_name) {
-            window.location.href = '/view/login.html'
-        }
-    }
-
-    
     setTimeout(get_answer, 1000);
 
 })
@@ -47,13 +36,7 @@ if (btn_login) {
             localStorage.setItem('user_email', value_email)
             localStorage.setItem('user_name', value_name)
 
-            var url = localStorage.getItem('current_url')
-            if(url){
-                file_html = url.slice(24, url.length)
-                window.location.href = file_html
-            } else {
-                alert('Please click on the correct link!')
-            }
+            window.location.href = '/exam/exam.php'
         }
     })
 }
@@ -73,7 +56,7 @@ if (btn_submit) {
         // sendEmail()
         to_examine()
 
-        window.location.href = '/view/thanks.html'
+        window.location.href = '/thanks.html'
     })
 }
 
@@ -89,28 +72,48 @@ function is_valid_email(email) {
     return email_pattern.test(email)
 }
 
-function get_answer() {
-    // var url = localStorage.getItem('current_url')
-    // if(url){
-    //     var file_csv = url.slice(24, url.length - 4)
-    //     const csvFilePath = file_csv + 'csv';
+get_exam()
+function get_exam() {
+    var xhr = new XMLHttpRequest();
     
-    //     Papa.parse(csvFilePath, {
-    //         download: true,
-    //         header: false,
-    //         dynamicTyping: true,
-    //         complete: function (results) {
-    //             count = results.data.length
-    //             results.data.forEach(row => {
-    //                 const questionNumber = key
-    //                 const answer = row[0].slice(row[0].length * 1 - 1, row[0].length)
-    //                 answers[questionNumber] = answer
-    //                 key++
-    //             });
-    //         }
-    //     })
-    // }
-    window.location.href = '/cgi/'
+    xhr.open('GET', '/', true);
+
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            var fileNames = JSON.parse(xhr.responseText);
+            var randomIndex = Math.floor(Math.random() * fileNames.length);
+            var randomFileName = fileNames[randomIndex];
+            console.log('File ngẫu nhiên được chọn:', randomFileName);
+        } else {
+            console.error('Lỗi khi tải danh sách tệp:', xhr.status);
+        }
+    };
+
+    xhr.onerror = function () {
+        console.error('Có lỗi trong quá trình gửi yêu cầu.');
+    };
+
+    xhr.send();
+}
+
+function get_answer() {
+    const csvFilePath = 'results.csv';
+
+    Papa.parse(csvFilePath, {
+        download: true,
+        header: false,
+        dynamicTyping: true,
+        complete: function (results) {
+            count = results.data.length
+            results.data.forEach(row => {
+                const questionNumber = key
+                const answer = row[0].slice(row[0].length * 1 - 1, row[0].length)
+                answers[questionNumber] = answer
+                key++
+            });
+        }
+
+    })
 }
 
 function to_examine() {
@@ -119,10 +122,10 @@ function to_examine() {
         if (exam_results[index]) {
             if (answers[index] == exam_results[index]) {
                 ++score
+                localStorage.setItem('score', score)
             }
         }
     }
-    localStorage.setItem('score', score)
 }
 
 function sendEmail() {
