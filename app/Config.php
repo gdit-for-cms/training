@@ -39,4 +39,9 @@ class Config
      * @var boolean
      */
     const SHOW_ERRORS = true;
+
+    // config server by FTP upload html exam file and answer file csv
+    const FTP_SERVER = '192.168.1.209';
+    const FTP_USERNAME = 'gdit_ftp';
+    const FTP_PASSWORD = 'gdit6385';
 }

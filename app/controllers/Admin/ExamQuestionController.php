@@ -10,10 +10,12 @@ use Core\Http\Request;
 use Core\Http\ResponseTrait;
 use App\Models\ExamQuestion;
 use App\Models\Answer;
+use Core\Http\Config;
 
 class ExamController extends AppController
 {
     use ResponseTrait;
+    use Config;
 
     public $title = 'Exam';
 
