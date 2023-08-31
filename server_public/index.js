@@ -30,9 +30,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    
-    setTimeout(get_answer, 1000);
-
 })
 
 if (btn_login) {
@@ -70,10 +67,37 @@ if (btn_submit) {
                 exam_results[name] = value.slice(value.length - 1, value.length)
             }
         })
-        // sendEmail()
-        to_examine()
+        
+        // get_answer()
 
-        window.location.href = '/view/thanks.html'
+        var url = localStorage.getItem('current_url')
+        var csv_file_path = ''
+        if(url){
+            var file_csv = url.slice(24, url.length - 4)
+            csv_file_path = file_csv + 'csv';
+        }
+
+        var dataToSend = {
+            email       : user_email,
+            name        : user_name,
+            file_csv    : csv_file_path,
+            exam_results: JSON.stringify(exam_results)  // Chuyển đối tượng thành chuỗi JSON
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "/cgi/handle.cgi",
+            data: dataToSend,
+            success: function(response) {
+                console.log("Response from CGI:", response);
+            }
+        });
+
+        // setTimeout(get_answer, 5000);
+        // sendEmail()
+        // to_examine()
+
+        // window.location.href = '/view/thanks.html'
     })
 }
 
@@ -110,7 +134,17 @@ function get_answer() {
     //         }
     //     })
     // }
-    window.location.href = '/cgi/'
+
+    // $.ajax({
+    //     type: "POST",
+    //     url: "/htdocs/training2/training/cgi/handle.cgi",
+    //     data: { key1: "123", key2: "123" }, // Thay thế key1, value1 bằng dữ liệu bạn muốn truyền
+    //     success: function(response) {
+    //         console.log("Response from CGI:", response);
+    //     }
+    // });
+
+    // window.location.href = '/cgi/handle.cgi'
 }
 
 function to_examine() {
