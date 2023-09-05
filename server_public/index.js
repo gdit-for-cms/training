@@ -90,14 +90,10 @@ if (btn_submit) {
             data: dataToSend,
             success: function(response) {
                 console.log("Response from CGI:", response);
+                window.location.href = '/view/thanks.html'
             }
         });
 
-        // setTimeout(get_answer, 5000);
-        // sendEmail()
-        // to_examine()
-
-        // window.location.href = '/view/thanks.html'
     })
 }
 
@@ -134,17 +130,6 @@ function get_answer() {
     //         }
     //     })
     // }
-
-    // $.ajax({
-    //     type: "POST",
-    //     url: "/htdocs/training2/training/cgi/handle.cgi",
-    //     data: { key1: "123", key2: "123" }, // Thay thế key1, value1 bằng dữ liệu bạn muốn truyền
-    //     success: function(response) {
-    //         console.log("Response from CGI:", response);
-    //     }
-    // });
-
-    // window.location.href = '/cgi/handle.cgi'
 }
 
 function to_examine() {
