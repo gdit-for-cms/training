@@ -49,7 +49,7 @@ foreach ($examsWithQuestions as $row) {
                     <div class="table_position collapse" id="collapseseven" aria-labelledby="headingOne" data-parent="#accordion2">
                         <div class="d-flex justify-content-end mt-2 mr-6">
                             <a href='/admin/exam/edit?id=<?= $exam['exam_id'] ?>' class="edit-btn btn btn-info text-white mr-2">Edit</a>
-                            <button type="button" data-id="<?= $exam['exam_id'] ?>" class="btn btn-danger delete-btn text-white">Delete</button>
+                            <button type="button" data-id="<?= $exam['exam_id'] ?>" class="btn btn-danger btn-delete-question text-white">Delete</button>
                         </div>
                         <div class="card-body row justify-content-center" style="padding-top: 25px;">
                             <div class="col-lg-3">
@@ -107,7 +107,7 @@ foreach ($examsWithQuestions as $row) {
                                                                 <?php echo $question['question_content']; ?>
                                                             </td>
                                                             <td>
-                                                                <button type="button" data-id="<?= $exam['exam_id'] ?>" class="btn btn-danger delete-btn text-white">Delete</button>
+                                                                <button type="button" data-id="<?= $question['question_id'] ?>" class="btn btn-danger btn-delete-exam-detail text-white">Delete</button>
                                                             </td>
                                                         </tr>
                                                 <?php

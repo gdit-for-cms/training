@@ -98,8 +98,8 @@
                                             ?>
                                                 <td>
                                                     <div class="d-flex ">
-                                                        <a href=" /admin/exam/edit?id=<?php echo $question_answer['question']['id']; ?>" class="btn btn-primary text-white mx-1 ">Edit</a>
-                                                        <button data-id="<?php echo $question_answer['question']['id']; ?>" type="button" class="btn btn-danger btn-delete-rule text-white ">Delete</button>
+                                                        <a href=" /admin/exam/detail-edit?id=<?php echo $question_answer['question']['id']; ?>" class="btn btn-primary text-white mx-1 ">Edit</a>
+                                                        <button data-id="<?php echo $question_answer['question']['id']; ?>" type="button" class="btn btn-danger btn-delete-exam-detail text-white ">Delete</button>
                                                     </div>
                                                 </td>
                                             <?php

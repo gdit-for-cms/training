@@ -219,6 +219,7 @@ function submitForm(formId) {
 function alertDelete() {
     $('.delete-btn').click(function (e) {
         let deleteID = $(this).data('id');
+        alert(deleteID);
         let pathName = window.location.pathname.split('/')[2]
         if (!(window.location.pathname).includes('/admin/user')) {
             if ($(this).parents('.card')[0].querySelector('.table_member_body').childNodes.length == 1) {
@@ -323,30 +324,53 @@ function alertDelete() {
         }
     });
 }
-
+function alertDeleteExamDetail(){
+    $('.btn-delete-exam-detail').click(function (e) {
+        let deleteID = $(this).data('id');
+        let pathName = window.location.pathname.split('/')[2]
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/admin/${pathName}/detail-delete?id=${deleteID}`,
+                    success: function () {
+                        document.location.reload(true);
+                    }
+                });
+            }
+        })
+    });
+}
 function alertDeleteQuestion() {
     $('.btn-delete-question').click(function (e) {
         let deleteID = $(this).data('id');
-        alert(deleteID)
-        // let pathName = window.location.pathname.split('/')[2]
-        // Swal.fire({
-        //     title: 'Are you sure?',
-        //     text: "You won't be able to revert this!",
-        //     icon: 'warning',
-        //     showCancelButton: true,
-        //     confirmButtonColor: '#d33',
-        //     cancelButtonColor: '#3085d6',
-        //     confirmButtonText: 'Yes, delete it!'
-        // }).then((result) => {
-        //     if (result.isConfirmed) {
-        //         $.ajax({
-        //             url: `/admin/${pathName}/delete?id=${deleteID}`,
-        //             success: function () {
-        //                 document.location.reload(true);
-        //             }
-        //         });
-        //     }
-        // })
+        let pathName = window.location.pathname.split('/')[2]
+        alert(pathName)
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/admin/${pathName}/delete?id=${deleteID}`,
+                    success: function () {
+                        document.location.reload(true);
+                    }
+                });
+            }
+        })
     });
 }
 function convertTableToArray(arg) {
@@ -580,7 +604,8 @@ $(document).ready(function () {
 
     // submitForm('#form_upload_avatar');
     alertUploadFileExam()
-
+    alertDeleteQuestion()
+    alertDeleteExamDetail()
     //show answer
     loadAnswers()
     //Ngo Duy Hung

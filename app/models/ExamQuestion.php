@@ -29,4 +29,9 @@ class ExamQuestion extends Model
     {
         return $this->where($column, $operator, $value)->get($select_column);
     }
+
+    public function destroyBy($condition)
+    {
+        return $this->destroy($condition);
+    }
 }

@@ -64,7 +64,7 @@
                     <td>
                       <div class="d-flex ">
                         <a href='/admin/question/edit?id=<?= $question['id'] ?>' class="edit_btn mr-2"><button type="button" class="btn btn-info text-white">Edit</button></a>
-                        <button type="button" data-id="<?= $question['id'] ?>" class="btn btn-danger btn-delete-rule  text-white ">Delete</button>
+                        <button type="button" data-id="<?= $question['id'] ?>" class="btn btn-danger btn-delete-question text-white">Delete</button>
                       </div>
                     </td>
                   </tr>

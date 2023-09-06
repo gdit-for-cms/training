@@ -120,4 +120,5 @@ class ExamQuestionController extends AppController
     {
         $this->data_ary['content'] = "exam/new";
     }
+    
 }

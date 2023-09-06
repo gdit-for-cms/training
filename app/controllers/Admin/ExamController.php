@@ -90,7 +90,7 @@ class ExamController extends AppController
         //get exam dua vao exam_id
         $exam =  $this->obj_model->getById($exam_id);
 
-        //lay ra cac exa,_question dua vao exam_id
+        //lay ra cac exam_question dua vao exam_id
         $exam_questions = $this->obj_model_exam_question->getBy('exam_id', '=', $exam_id, '*');
 
         $question_answers = array();
@@ -278,8 +278,6 @@ class ExamController extends AppController
     public function update(Request $request)
     {
         $post_ary = $request->getPost()->all();
-
-
         try {
             $id = $post_ary['id'];
             $title = $post_ary['title'];
@@ -297,5 +295,20 @@ class ExamController extends AppController
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         };
+    }
+
+    public function deleteAction(Request $request)
+    {
+        $exam_id = $request->getGet()->get('id');
+        $this->obj_model->destroyBy("id = $exam_id");
+    }
+    public function detailDeleteAction(Request $request)
+    {
+        $exam_id = $request->getGet()->get('id');
+        $this->obj_model_exam_question->destroyBy("question_id = $exam_id");
+    }
+
+    public function detailEditAction(Request $request){
+        
     }
 }
