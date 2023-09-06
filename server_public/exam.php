@@ -37,10 +37,11 @@
 
     <nav class="navbar navbar-expand-lg fixed-top navbar-white bg-white" aria-label="Main navigation">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Internship</a>
-            <button class="navbar-toggler p-0 border-0" type="button" id="navbarSideCollapse" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <a class="navbar-brand">Internship</a>
+            <div class="d-flex align-items-center p-3 my-3 text-white bg-primary rounded shadow-sm">
+                <div id="countdown" class="lh-1">
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -108,10 +109,25 @@
                 </div>
             </div>
         </form>
+
+        <div class="modal modal-lg" id="accept_submit" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="anchor-nameLabel" aria-hidden="true" style="margin-left: 550px; margin-top: 300px;">
+            <div class="modal-dialog">
+                <div class="modal-content modal-accept-submit">
+                    <div class="modal-header bg-primary">
+                        <h5 class="modal-title text-white">Warning</h5>
+                        <button type="button" class="btn-close" id="btn_close_accept_submit"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <h4>Are you sure to submit?</h4>
+                        <button id="btn_accept_submit" class="btn btn-danger mt-1">Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <script src="/index.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
 
 </html>

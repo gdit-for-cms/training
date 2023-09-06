@@ -1,3 +1,22 @@
+.modal-accept-submit{
+  width: 500px !important;
+  min-width: 500px !important;
+  height: 170px !important;
+  min-height: 170px !important;
+}
+
+.modal-accept-submit label {
+  cursor: pointer;
+  /* Style as you please, it will become the visible UI component. */
+}
+.modal-accept-submit  .btn-close{
+  background-color: #f05454;
+  color: #ffff !important;
+  font-weight: bold !important;
+  opacity: 1 !important;
+}
+
+
 html,
 body {
   overflow-x: hidden; /* Prevent scroll on narrow devices */
@@ -65,3 +84,4 @@ body {
 .text-white-50 { color: rgba(255, 255, 255, .5); }
 
 .bg-purple { background-color: #6f42c1; }
+
