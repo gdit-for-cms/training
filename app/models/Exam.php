@@ -27,6 +27,11 @@ class Exam extends Model
         return $this->where('id', "=", $id)->get('*')[0];
     }
 
+    public function updateOne($data, $condition)
+    {
+        return $this->update($data, $condition);
+    }
+
     public function getExamsWithQuestions($id = '')
     {
         $db = static::getDB();

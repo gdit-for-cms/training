@@ -2,7 +2,6 @@
 
 namespace App\Controllers\Admin;
 
-
 use App\Controllers\Admin\AppController;
 use Core\Http\Request;
 use App\models\Answer;

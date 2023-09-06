@@ -15,7 +15,7 @@
               <button id="search_btn" type="button" disabled class="btn btn-primary">search</button>
               <button id="delete_search" type="button" class="btn btn-danger text-white ml-2">X</button>
             </div>
-            <table class="table">
+            <table class="table table-striped table-bordered table-responsive">
               <thead>
                 <tr>
                   <th scope="col">#</th>
@@ -40,28 +40,32 @@
                     </td>
                     <td>
                       <!-- Options:<br> -->
-                      <?php
-                      $stt = 1;
-                      foreach ($answers as $answer) {
-                        if ($question['id'] == $answer['question_id']) {
-                          if ($answer['is_correct'] == 1) {
-                            $answer_correct[] = $answer['content'];
-                      ?>
-                            <span style="background-color: yellow;"><?php echo $stt++ . " ) " . $answer['content'] ?></span><br>
-                          <?php
-                          } else {
-                          ?>
-                            <span><?php echo $stt++ . " ) " . $answer['content'] ?></span><br>
-                      <?php
+                      <div class="overflow-auto" style="width: 400px;height: 120px; max-height: 100%;">
+                        <?php
+                        $stt = 1;
+                        foreach ($answers as $answer) {
+                          if ($question['id'] == $answer['question_id']) {
+                            if ($answer['is_correct'] == 1) {
+                              $answer_correct[] = $answer['content'];
+                        ?>
+                              <span style="background-color: yellow;"><?php echo $stt++ . " ) " . $answer['content'] ?></span><br>
+                            <?php
+                            } else {
+                            ?>
+                              <span><?php echo $stt++ . " ) " . $answer['content'] ?></span><br>
+                        <?php
+                            }
                           }
                         }
-                      }
-                      ?>
+                        ?>
+                      </div>
                     </td>
 
-                    <td class="flex items-center justify-start">
-                      <a href='/admin/question/edit?id=<?= $question['id'] ?>' class="edit_btn mr-2"><button type="button" class="btn btn-info text-white">Edit</button></a>
-                      <button type="button" data-id="<?= $question['id'] ?>" class="btn btn-danger delete-btn text-white btn-delete-question">Delete</button>
+                    <td>
+                      <div class="d-flex ">
+                        <a href='/admin/question/edit?id=<?= $question['id'] ?>' class="edit_btn mr-2"><button type="button" class="btn btn-info text-white">Edit</button></a>
+                        <button type="button" data-id="<?= $question['id'] ?>" class="btn btn-danger btn-delete-rule  text-white ">Delete</button>
+                      </div>
                     </td>
                   </tr>
                 <?php } ?>

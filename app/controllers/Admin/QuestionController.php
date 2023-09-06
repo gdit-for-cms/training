@@ -2,13 +2,13 @@
 
 namespace App\Controllers\Admin;
 
-
 use App\Controllers\Admin\AppController;
 use Core\Http\Request;
 use App\models\Question;
 use App\models\Answer;
 use App\Requests\AppRequest;
 use Core\Http\ResponseTrait;
+use PDO;
 
 class QuestionController extends  AppController
 {
@@ -55,30 +55,26 @@ class QuestionController extends  AppController
         $title = $result_vali_ary['title'];
         $answers =  $result_vali_ary['answer'];
 
-
         foreach ($answers as $answer) {
             if (strlen(trim($answer)) == 0) {
-                return $this->errorResponse("Bạn cần nhập vào câu trả lời.");
+                return $this->errorResponse("You need to enter the answer.");
             }
         }
         $answer_comp = count(array_unique($answers));
         if (count($answers) > $answer_comp) {
-            return $this->errorResponse("Các câu trả lời không được trùng lặp.");
+            return $this->errorResponse("Answers cannot be duplicated.");
         }
 
         if (!isset($result_vali_ary['is_correct'])) {
-            return $this->errorResponse("Bạn cần chọn ít nhất một câu trả lời đúng");
+            return $this->errorResponse("You need to choose at least one correct answer.");
         }
 
         $is_corrects = $result_vali_ary['is_correct'];
         $question_check_ary = $this->obj_model->getBy('content', '=', $content);
         $num_rows = count($question_check_ary);
-        // return $this->errorResponse($is_corrects);
         if ($num_rows == 1) {
             return $this->errorResponse('Question has been exist');
         } else {
-            // Bắt đầu transaction
-            // $this->obj_model::beginTransaction();
 
             try {
                 $questionId = $this->obj_model->create(
@@ -101,13 +97,9 @@ class QuestionController extends  AppController
                         ]
                     );
                 }
-                // Commit transaction
-                // $this->obj_model::commit();
 
                 return $this->successResponse();
             } catch (\Throwable $th) {
-                // Rollback transaction nếu có lỗi
-                // $this->obj_model::rollback();
                 return $this->errorResponse($th->getMessage());
             };
         }
@@ -120,6 +112,12 @@ class QuestionController extends  AppController
         $this->data_ary['answers'] = $this->obj_model_answer->getBy('question_id', '=', $id);
 
         $this->data_ary['content'] = 'question/edit';
+    }
+
+    public function deleteAction(Request $request)
+    {
+        $question_id = $request->getGet()->get('id');
+        $this->obj_model->destroyBy("id = $question_id");
     }
 
     public function update(Request $request)
@@ -140,16 +138,16 @@ class QuestionController extends  AppController
 
         foreach ($answers as $answer) {
             if (strlen(trim($answer)) == 0) {
-                return $this->errorResponse("Bạn cần nhập vào câu trả lời.");
+                return $this->errorResponse("You need to enter the answer.");
             }
         }
         $answer_comp = count(array_unique($answers));
         if (count($answers) > $answer_comp) {
-            return $this->errorResponse("Các câu trả lời không được trùng lặp.");
+            return $this->errorResponse("Answers cannot be duplicated.");
         }
 
         if (!isset($result_vali_ary['is_correct'])) {
-            return $this->errorResponse("Bạn cần chọn ít nhất một câu trả lời đúng");
+            return $this->errorResponse("You need to choose at least one correct answer");
         }
 
         $is_corrects = $result_vali_ary['is_correct'];
@@ -159,8 +157,6 @@ class QuestionController extends  AppController
         if ($num_rows == 1) {
             return $this->errorResponse('Question has been exist');
         } else {
-            // Bắt đầu transaction
-            // $this->obj_model::beginTransaction();
 
             try {
                 $questionId = $this->obj_model->create(
@@ -183,13 +179,9 @@ class QuestionController extends  AppController
                         ]
                     );
                 }
-                // Commit transaction
-                // $this->obj_model::commit();
-
                 return $this->successResponse();
             } catch (\Throwable $th) {
-                // Rollback transaction nếu có lỗi
-                // $this->obj_model::rollback();
+              
                 return $this->errorResponse($th->getMessage());
             };
         }

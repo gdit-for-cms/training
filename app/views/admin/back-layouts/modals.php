@@ -456,8 +456,8 @@
         </div>
     </div>
 
-    <!-- Modal show exam priview -->
-    <div class="modal  fade" id="viewExamPriview" tabindex="-1" aria-labelledby="viewRuleDetailLabel" aria-hidden="true">
+    <!-- Modal show exam preview -->
+    <div class="modal  fade" id="viewExamPreview" tabindex="-1" aria-labelledby="viewRuleDetailLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">

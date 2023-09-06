@@ -40,8 +40,11 @@ class Config
      */
     const SHOW_ERRORS = true;
 
-    // config server by FTP upload html exam file and answer file csv
-    const FTP_SERVER = '192.168.1.209';
+    // config server by FTP upload file
+    const YOUR_SERVER_DIRECTORY = '/htdocs/BT1/training/public/';
+    const FTP_SERVER = '192.168.1.208';
     const FTP_USERNAME = 'gdit_ftp';
     const FTP_PASSWORD = 'gdit6385';
+    const FTP_PUBLIC_DIRECTORY_HTML = '/htdocs/training2/training/server_public/';
+    const FTP_PUBLIC_DIRECTORY_CSV = '/htdocs/training2/training/cgi/csv/';
 }

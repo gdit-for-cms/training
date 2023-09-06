@@ -4,7 +4,6 @@ namespace App\Controllers\Admin;
 
 
 use App\Controllers\Admin\AppController;
-use Core\View;
 use App\Requests\AppRequest;
 use App\models\Exam;
 use App\Models\Question;
@@ -12,6 +11,7 @@ use Core\Http\Request;
 use Core\Http\ResponseTrait;
 use App\Models\ExamQuestion;
 use App\Models\Answer;
+use App\Config;
 
 class ExamController extends AppController
 {
@@ -150,12 +150,25 @@ class ExamController extends AppController
         $this->data_ary['content'] = "exam/create";
     }
 
-    public function storeAction(Request $request)
+    public function store(Request $request)
     {
         $exam_id = $request->getGet()->get('exam_id');
-        $exam =  $this->obj_model->getById($exam_id);
-
         $question_answers = $request->getPost();
+        // echo "<pre>";
+        // var_dump($request->getPost());
+        // die();
+        // if (null !== $question_answers->get('question_id')  && null !== $question_answers->get('selected_answers')) {
+        //     echo "aa";
+        //     echo "<pre>";
+        //     var_dump($request->getPost());
+        //     die();
+        // }
+        // echo "<pre>";
+        // var_dump($request->getPost());
+
+        // die();
+
+
         $question_id = $question_answers->get('question_id');
         $answer_ids = $question_answers->get('selected_answers');
 
@@ -168,8 +181,9 @@ class ExamController extends AppController
                 'question_id' => $question_id
             ]);
         }
+        return $this->successResponse();
     }
-    public function priviewAction(Request $request)
+    public function previewAction(Request $request)
     {
         //dựa vào method get lay exam_id
         $exam_id = $request->getGet()->get('exam_id');
@@ -209,5 +223,79 @@ class ExamController extends AppController
         $this->data_ary['content'] = "exam/export";
 
         // $this->data_ary['content'] = "exam/export_file";
+    }
+
+    public function uploadAction(Request $request)
+    {
+        $ftp_server = Config::FTP_SERVER;
+        $ftp_username = Config::FTP_USERNAME;
+        $ftp_password = Config::FTP_PASSWORD;
+        $html_directory =  Config::FTP_PUBLIC_DIRECTORY_HTML;
+        $csv_directory = Config::FTP_PUBLIC_DIRECTORY_CSV;
+        $your_server_directory = Config::YOUR_SERVER_DIRECTORY;
+
+        $ftp_connection = ftp_connect($ftp_server);
+        $login = ftp_login($ftp_connection, $ftp_username, $ftp_password);
+
+        $html_content = $request->getPost()->get('html_content');
+        $csv_content = $request->getPost()->get('csv_content');
+
+        $file_name = 'exam232';
+        $full_new_directory = $your_server_directory . $file_name;
+        $your_server_directory_html = $full_new_directory . '.html';
+        $your_server_directory_csv = $full_new_directory . '.csv';
+
+        if ($ftp_connection && $login) {
+            // upload file lên server của mình
+            $check_put_html = file_put_contents($your_server_directory_html, $html_content);
+            $check_put_csv = file_put_contents($your_server_directory_csv, $csv_content);
+
+            if ($check_put_html !== false && $check_put_csv !== false) {
+                //upload file từ server của mình lên server cần lưu trữ file
+                $upload_html = ftp_put($ftp_connection, $html_directory . basename($your_server_directory_html), $your_server_directory_html, FTP_BINARY);
+                $upload_csv = ftp_put($ftp_connection, $csv_directory . basename($your_server_directory_csv), $your_server_directory_csv, FTP_BINARY);
+
+                unlink($your_server_directory_html);
+                unlink($your_server_directory_csv);
+                if (!$upload_html && !$upload_csv) {
+                    die("cann't upload");
+                }
+            } else {
+                echo "Ghi thất bại.";
+            }
+            ftp_close($ftp_connection);
+        }
+    }
+
+    public function editAction(Request $request)
+    {
+        $exam_id = $request->getGet()->get('id');
+        $exam = $this->obj_model->getById($exam_id);
+        $this->data_ary['exam'] = $exam;
+        $this->data_ary['content'] = "exam/edit";
+    }
+
+    public function update(Request $request)
+    {
+        $post_ary = $request->getPost()->all();
+
+
+        try {
+            $id = $post_ary['id'];
+            $title = $post_ary['title'];
+            $description = $post_ary['description'];
+
+            $this->obj_model->updateOne(
+                [
+                    'title' => $title,
+                    'description' => $description,
+                ],
+                "id = $id"
+            );
+
+            return $this->successResponse();
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        };
     }
 }

@@ -22,9 +22,6 @@ foreach ($examsWithQuestions as $row) {
     }
 }
 
-// echo "<pre>";
-// var_dump($exams);
-// die();
 ?>
 <div class="card_box box_shadow position-relative mb_30">
     <div class="white_box_tittle ">
@@ -51,8 +48,6 @@ foreach ($examsWithQuestions as $row) {
                     </div>
                     <div class="table_position collapse" id="collapseseven" aria-labelledby="headingOne" data-parent="#accordion2">
                         <div class="d-flex justify-content-end mt-2 mr-6">
-                            <!-- <button data-id="<?php echo $exam['exam_id'] ?>" class="btn btn-primary btn-show-rule text-white mr-2">Exam Priview</button> -->
-                            <button data-id="<?php echo $exam['exam_id']; ?>" type="button" class="btn btn-primary btn-show-priview-exam text-white  mr-2">Priview</button>
                             <a href='/admin/exam/edit?id=<?= $exam['exam_id'] ?>' class="edit-btn btn btn-info text-white mr-2">Edit</a>
                             <button type="button" data-id="<?= $exam['exam_id'] ?>" class="btn btn-danger delete-btn text-white">Delete</button>
                         </div>
@@ -97,9 +92,7 @@ foreach ($examsWithQuestions as $row) {
                                                 </tr>
                                             </thead>
                                             <tbody class="body_table_main">
-
                                                 <?php
-                                                // if(count($exam ))
                                                 $stt = 1;
                                                 $check_question = array();
                                                 foreach ($exam['questions'] as $question) {
@@ -112,7 +105,6 @@ foreach ($examsWithQuestions as $row) {
                                                             </td>
                                                             <td>
                                                                 <?php echo $question['question_content']; ?>
-
                                                             </td>
                                                             <td>
                                                                 <button type="button" data-id="<?= $exam['exam_id'] ?>" class="btn btn-danger delete-btn text-white">Delete</button>
@@ -125,8 +117,6 @@ foreach ($examsWithQuestions as $row) {
                                                 ?>
                                             </tbody>
                                         </table>
-                                        <!-- <button type="button" class="btn btn-info m-2">Thêm</button> -->
-                                        <!-- <button data-id="<?php echo $exam['exam_id']; ?>" type="button" class="btn btn-primary btn-show-add-question text-white  mr-2">Show detail</button> -->
                                         <a href="/admin/exam/examDetail?exam_id=<?php echo $exam['exam_id'] ?>" class="btn btn-info m-2">View detail</a>
 
                                         <div class="flex justify-center items-center">
@@ -148,62 +138,25 @@ foreach ($examsWithQuestions as $row) {
         </div>
     </div>
 </div>
-<!-- <div class="box-lightbox">
-    <div class="col-lg-6">
-        <div class="white_card card_height_100 mb_30">
-            <div class="white_card_header">
-                <div class="box_header m-0">
-                    <div class="main-title total_modal">
-                        <h2 class="m-0">Add new topic</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="white_card_body">
-                <div class="card-body">
-                    <table class="table" id="table_change">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Option</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table_change_body">
-
-                        </tbody>
-                    </table>
-                    <div class="model-footer">
-                        <button type="button" class="btn btn-secondary js-lightbox-close">Close</button>
-                        <button class="btn btn-primary" id="change_member_btn">Change</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
 <script>
     const cartHeaderEles = document.querySelectorAll('.card-header')
     const editBtn = document.querySelectorAll('.edit-btn')
     const deleteBtn = document.querySelectorAll('.delete-btn')
 
-    const btnShowRules = document.querySelectorAll('.btn-show-rule')
 
-    const btnShowPriviewExam = document.querySelectorAll('.btn-show-add-question')
-    const btnShowAddQuestion = document.querySelectorAll('.btn-show-priview-exam')
+    const btnShowPreviewExam = document.querySelectorAll('.btn-show-add-question')
+    const btnShowAddQuestion = document.querySelectorAll('.btn-show-preview-exam')
 
-    const examDesciption = document.getElementById('rule-content')
 
     const descriptionElement = document.createElement('div')
 
 
 
 
-    // const bodyTableEles = document.querySelectorAll('.body_table_main')
 
     function start() {
         showTable()
         preventDefault()
-        // hiddenTable()
     }
 
     start()
@@ -234,21 +187,9 @@ foreach ($examsWithQuestions as $row) {
         })
     };
 
-    // function hiddenTable() {
-    //     Array.prototype.slice.call(bodyTableEles).forEach(ele => {
-    //         if (ele.childNodes.length == 1) {
-    //             ele.parentNode.classList.add('hidden')
-    //             ele.parentNode.parentNode.innerHTML = '<div class="box_body"><p class="f-w-400 ">No memeber</p></div>'
-    //         }
-    //     })
-    // }
-
-
-
-
     btnShowAddQuestion.forEach((btn) => {
         btn.setAttribute('data-bs-toggle', 'modal')
-        btn.setAttribute('data-bs-target', '#viewExamPriview')
+        btn.setAttribute('data-bs-target', '#viewExamPreview')
         btn.addEventListener('click', (e) => {
 
             ruleId = btn.dataset.id

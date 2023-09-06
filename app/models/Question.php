@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Core\Model;
 use Core\QueryBuilder;
+use PDO;
 
 /**
  * Example user model
@@ -57,7 +58,7 @@ class Question extends Model
         return (new self)->last();
     }
 
-    public static function rules($change = '', $value = [])
+    public static function  rules($change = '', $value = [])
     {
         $rules_ary = array(
             'title' => array(
@@ -91,5 +92,9 @@ class Question extends Model
                 return $rules_ary;
                 break;
         }
+    }
+    public function destroyBy($condition)
+    {
+        return $this->destroy($condition);
     }
 }
