@@ -54,6 +54,8 @@ if (btn_login) {
             alert('You must enter all the information!')
         } else if (!is_valid_email(value_email)) {
             alert('Incorrect email format!')
+        } else if (!is_valid_name(value_name)){
+            alert('Name must not have accents!')
         } else {
             localStorage.setItem('user_email', value_email)
             localStorage.setItem('user_name', value_name)
@@ -89,8 +91,10 @@ if (btn_close_accept_submit) {
 if (btn_accept_submit) {
     btn_accept_submit.addEventListener('click', function (e) {
         e.preventDefault()
-
+        btn_accept_submit.disabled = true
+        btn_close_accept_submit.disabled = true
         after_submit()
+
     })
 }
 
@@ -124,22 +128,20 @@ function after_submit() {
         csv_file_path = file_csv + 'csv';
     }
 
-    var dataToSend = {
+    var data_to_send = {
         email: user_email,
         name: user_name,
         file_csv: csv_file_path,
         exam_results: JSON.stringify(exam_results)  // Chuyển đối tượng thành chuỗi JSON
-    };
+    }
 
     // Switch to the handle folder to process the scoring and email the results.
     $.ajax({
         type: "POST",
         url: "/cgi/handle.cgi",
-        data: dataToSend,
+        data: data_to_send,
         success: function (response) {
-            console.log("Response from CGI:", response);
-            // Switch to the thanks page
-            // window.location.href = '/view/thanks.html'
+            window.location.href = '/view/thanks.html'
         }
     });
 }
@@ -148,6 +150,11 @@ function after_submit() {
 function is_valid_email(email) {
     const email_pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     return email_pattern.test(email)
+}
+
+function is_valid_name(name) {
+    var regex = /^[a-zA-Z0-9\s]+$/;
+    return regex.test(name);
 }
 
 // Handle countdown time
@@ -178,102 +185,4 @@ function updateCountdown() {
 }
 
 //////////////////////////////////////////////////////////////////////////
-
-if (result) {
-    score_last = localStorage.getItem('score')
-    score_last += '/10'
-    result.innerHTML += score_last
-}
-
-function get_answer() {
-    // var url = localStorage.getItem('current_url')
-    // if(url){
-    //     var file_csv = url.slice(24, url.length - 4)
-    //     const csvFilePath = file_csv + 'csv';
-
-    //     Papa.parse(csvFilePath, {
-    //         download: true,
-    //         header: false,
-    //         dynamicTyping: true,
-    //         complete: function (results) {
-    //             count = results.data.length
-    //             results.data.forEach(row => {
-    //                 const questionNumber = key
-    //                 const answer = row[0].slice(row[0].length * 1 - 1, row[0].length)
-    //                 answers[questionNumber] = answer
-    //                 key++
-    //             });
-    //         }
-    //     })
-    // }
-}
-
-function to_examine() {
-    var score = 0
-    for (var index = 1; index <= count; index++) {
-        if (exam_results[index]) {
-            if (answers[index] == exam_results[index]) {
-                ++score
-            }
-        }
-    }
-    localStorage.setItem('score', score)
-}
-
-function sendEmail() {
-    const apiKey = '10D7502867BBCCBCFCCCCCA5516D1ED84513BFB9A9EBD9AB4090FB4A366D82548B0211C6FE27A3907B213ABCBCF11EBA';
-
-    const emailData = {
-        from: 'hoangcongtruong10102001@gmail.com',
-        to: 'hoangcongtruong10102001@gmail.com',
-        subject: 'Hello',
-        body: 'This is the email body.'
-    };
-
-    fetch('https://api.elasticemail.com/v2/email/send', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Access-Control-Allow-Origin': '*',
-            'Origin': '*'
-        },
-        body: new URLSearchParams({
-            apikey: apiKey,
-            from: emailData.from,
-            to: emailData.to,
-            subject: emailData.subject,
-            bodyText: emailData.body
-        })
-    })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-
-    // const { default: mailslurp } = require("mailslurp-client");
-
-    // const apiKey = '80544e9341fc6ba9e2d37e19d7df20544510f671c1037e45a2e2c64130422add';
-    // const mailslurp = new mailslurp({ apiKey });
-
-    // async function sendEmail() {
-    //     // const inbox = await mailslurp.createInbox();
-
-    //     const emailData = {
-    //         to: 'hoangcongtruong10102001@gmail.com',
-    //         subject: 'Hello',
-    //         body: 'This is the email content.'
-    //     };
-
-    //     const sentEmail = await mailslurp.sendEmail({ emailData });
-
-    //     console.log('Email sent:', sentEmail);
-    // }
-
-    // sendEmail().catch(error => {
-    //     console.error('Error sending email:', error);
-    // });
-}
 
