@@ -219,7 +219,6 @@ function submitForm(formId) {
 function alertDelete() {
     $('.delete-btn').click(function (e) {
         let deleteID = $(this).data('id');
-        alert(deleteID);
         let pathName = window.location.pathname.split('/')[2]
         if (!(window.location.pathname).includes('/admin/user')) {
             if ($(this).parents('.card')[0].querySelector('.table_member_body').childNodes.length == 1) {
@@ -315,7 +314,6 @@ function alertDelete() {
                     $.ajax({
                         url: `/admin/${pathName}/delete?id=${deleteID}`,
                         success: function () {
-                            alert("ád");
                             document.location.reload(true);
                         }
                     });
@@ -324,7 +322,7 @@ function alertDelete() {
         }
     });
 }
-function alertDeleteExamDetail(){
+function alertDeleteExamDetail() {
     $('.btn-delete-exam-detail').click(function (e) {
         let deleteID = $(this).data('id');
         let pathName = window.location.pathname.split('/')[2]
@@ -352,7 +350,6 @@ function alertDeleteQuestion() {
     $('.btn-delete-question').click(function (e) {
         let deleteID = $(this).data('id');
         let pathName = window.location.pathname.split('/')[2]
-        alert(pathName)
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -749,63 +746,6 @@ $(document).ready(function () {
     $('#add-topic-name').change(function () {
         checkName('topic');
     });
-
-    // $('.add-form').submit(function (e) {
-    //     e.preventDefault();
-    //     var form = $(this);
-    //     var actionUrl = form.attr('action');
-    //     $.ajax({
-    //         type: "POST",
-    //         url: actionUrl,
-    //         data: form.serialize(),
-    //         dataType: 'json',
-    //         success: function (response) {
-    //             console.log(response);
-    //             Swal.fire({
-    //                 icon: 'success',
-    //                 title: "Successfully",
-    //                 showConfirmButton: false,
-    //                 timer: 1500
-    //             });
-    //             setTimeout(() => {
-    //                 document.location.reload(true);
-    //             }, "1600");
-    //         },
-    //         error: function (response) {
-    //             console.log(response.message);
-    //             Swal.fire({
-    //                 icon: 'error',
-    //                 title: 'Oops...',
-    //                 text: response.responseJSON.message,
-    //             });
-    //         }
-    //     });
-    // });
-
-    // $('.delete-btn').click(function (e) {
-    //     let deleteID = $(this).data('id');
-    //     Swal.fire({
-    //         title: 'Are you sure?',
-    //         text: "You won't be able to revert this!",
-    //         icon: 'warning',
-    //         showCancelButton: true,
-    //         confirmButtonColor: '#d33',
-    //         cancelButtonColor: '#3085d6',
-    //         confirmButtonText: 'Yes, delete it!'
-    //     }).then((result) => {
-    //         if (result.isConfirmed) {
-    //             $.ajax({
-    //                 url: "/topic/delete?id=" + deleteID,
-    //                 success: function () {
-    //                     document.location.reload(true);
-    //                 }
-    //             });
-    //         }
-    //     })
-    // });
-
-
-
 });
 //Ngo Duy Hung
 function alertDeleteListRule() {
@@ -863,12 +803,9 @@ function alertDeleteRule() {
 
 function alertUploadFileExam() {
     $('.btn-upload-file-ftp').click(function (e) {
-        // alert("asd");
         let uploadFileID = $(this).data('id');
         let pathName = window.location.pathname.split('/')[2];
-        // alert(uploadFileID)
         var content = document.getElementById('content_exam');
-        // console.log(content)
         var csv_content = document.getElementById('csv_answer');
         if (csv_content) {
             csv_content = csv_content.innerHTML;
@@ -962,7 +899,6 @@ function alertUploadFileExam() {
 function loadAnswers() {
     var questionId = document.getElementById("questionSelect").value;
 
-    // alert(questionId);
     $.ajax({
         type: "GET",
         url: `/admin/answer/show?question_id=${questionId}`,
@@ -1020,10 +956,8 @@ function loadAnswers() {
 
                 if (isCorrect == 1) {
                     isCorrectCell.textContent = true;
-
                 } else {
                     isCorrectCell.textContent = false;
-
                 }
                 row.appendChild(isCorrectCell);
 

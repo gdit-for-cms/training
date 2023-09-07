@@ -8,7 +8,6 @@ use App\models\Question;
 use App\models\Answer;
 use App\Requests\AppRequest;
 use Core\Http\ResponseTrait;
-use PDO;
 
 class QuestionController extends  AppController
 {
@@ -22,10 +21,13 @@ class QuestionController extends  AppController
 
     public object $obj_model_answer;
 
+    public object $app_request;
+
     public function __construct()
     {
         $this->obj_model = new Question;
         $this->obj_model_answer = new Answer;
+        $this->app_request = new AppRequest;
     }
 
     public function indexAction(Request $request)
@@ -42,9 +44,7 @@ class QuestionController extends  AppController
 
     public function create(Request $request)
     {
-
-        $app_request = new AppRequest;
-        $result_vali_ary = $app_request->validate($this->obj_model->rules(), $request, 'post');
+        $result_vali_ary = $this->app_request->validate($this->obj_model->rules(), $request, 'post');
 
         if (in_array('error', $result_vali_ary)) {
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
@@ -68,11 +68,11 @@ class QuestionController extends  AppController
         if (!isset($result_vali_ary['is_correct'])) {
             return $this->errorResponse("You need to choose at least one correct answer.");
         }
-
         $is_corrects = $result_vali_ary['is_correct'];
+
         $question_check_ary = $this->obj_model->getBy('content', '=', $content);
         $num_rows = count($question_check_ary);
-        if ($num_rows == 1) {
+        if ($num_rows > 0) {
             return $this->errorResponse('Question has been exist');
         } else {
 
@@ -83,9 +83,7 @@ class QuestionController extends  AppController
                         'content' => $content,
                     ]
                 );
-
                 $questionId = $this->obj_model->getLatest();
-
                 // Insert các answer dựa vào questionId và vị trí đúng
                 foreach ($answers as $index => $answerContent) {
                     $isCorrect = in_array($index, $is_corrects) ? 1 : 0;
@@ -123,8 +121,7 @@ class QuestionController extends  AppController
     public function update(Request $request)
     {
 
-        $app_request = new AppRequest;
-        $result_vali_ary = $app_request->validate($this->obj_model->rules(), $request, 'post');
+        $result_vali_ary = $this->app_request->validate($this->obj_model->rules(), $request, 'post');
 
         if (in_array('error', $result_vali_ary)) {
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
@@ -154,26 +151,27 @@ class QuestionController extends  AppController
         $question_check_ary = $this->obj_model->getBy('content', '=', $content);
         $num_rows = count($question_check_ary);
 
-        if ($num_rows == 1) {
+        if ($num_rows > 1) {
             return $this->errorResponse('Question has been exist');
         } else {
+            $question_id = $request->getPost()->get('id');
 
             try {
-                $questionId = $this->obj_model->create(
+                $this->obj_model->updateOne(
                     [
                         'title' => $title,
                         'content' => $content,
-                    ]
+                    ],
+                    "id = $question_id"
                 );
 
-                $questionId = $this->obj_model->getLatest();
-
+                $this->obj_model_answer->destroyBy("question_id = $question_id");
                 // Insert các answer dựa vào questionId và vị trí đúng
                 foreach ($answers as $index => $answerContent) {
                     $isCorrect = in_array($index, $is_corrects) ? 1 : 0;
                     $this->obj_model_answer->create(
                         [
-                            'question_id' => $questionId['id'],
+                            'question_id' => $question_id,
                             'content' => $answerContent,
                             'is_correct' => $isCorrect,
                         ]
@@ -181,7 +179,7 @@ class QuestionController extends  AppController
                 }
                 return $this->successResponse();
             } catch (\Throwable $th) {
-              
+
                 return $this->errorResponse($th->getMessage());
             };
         }

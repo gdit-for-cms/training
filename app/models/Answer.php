@@ -28,16 +28,6 @@ class Answer extends Model
         return (new self)->latest()->get();
     }
 
-    public function getByIdQuestion($id)
-    {
-        $db = static::getDB();
-        $query = 'SELECT * FROM answer WHERE question_id = ' . $id . ' ORDER BY id DESC';
-        $stmt = $db->query($query);
-        $results_ary = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $results_ary;
-    }
-    
-
     public function getBy($column, $operator, $value)
     {
         return $this->where($column, $operator, $value)->get();
@@ -59,6 +49,11 @@ class Answer extends Model
     }
 
     public function destroyOne($condition)
+    {
+        return $this->destroy($condition);
+    }
+
+    public function destroyBy($condition)
     {
         return $this->destroy($condition);
     }

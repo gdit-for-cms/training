@@ -98,7 +98,7 @@
                                             ?>
                                                 <td>
                                                     <div class="d-flex ">
-                                                        <a href=" /admin/exam/detail-edit?id=<?php echo $question_answer['question']['id']; ?>" class="btn btn-primary text-white mx-1 ">Edit</a>
+                                                        <a href=" /admin/exam/detail-edit?question_id=<?php echo $question_answer['question']['id']; ?>&exam_id=<?php echo $exam['id']; ?>" class="btn btn-primary text-white mx-1 ">Edit</a>
                                                         <button data-id="<?php echo $question_answer['question']['id']; ?>" type="button" class="btn btn-danger btn-delete-exam-detail text-white ">Delete</button>
                                                     </div>
                                                 </td>

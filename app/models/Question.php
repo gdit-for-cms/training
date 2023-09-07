@@ -48,11 +48,6 @@ class Question extends Model
         return $this->update($data, $condition);
     }
 
-    public function destroyOne($condition)
-    {
-        return $this->destroy($condition);
-    }
-
     public function getLatest()
     {
         return (new self)->last();
@@ -64,12 +59,10 @@ class Question extends Model
             'title' => array(
                 'required',
                 'filled',
-                // 'title'
             ),
             'content' => array(
                 'required',
                 'filled',
-                // 'content',
             ),
         );
 

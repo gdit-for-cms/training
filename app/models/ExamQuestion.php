@@ -24,7 +24,7 @@ class ExamQuestion extends Model
     {
         return (new self)->latest()->get();
     }
-    
+
     public function getBy($column, $operator, $value, $select_column = '*')
     {
         return $this->where($column, $operator, $value)->get($select_column);
@@ -33,5 +33,12 @@ class ExamQuestion extends Model
     public function destroyBy($condition)
     {
         return $this->destroy($condition);
+    }
+
+    public function getExamQuestionByIds($examId, $questionIds, $selectColumn = '*')
+    {
+        return $this->where('exam_id', '=', $examId)
+            ->where('question_id', '=', $questionIds)
+            ->get($selectColumn);
     }
 }

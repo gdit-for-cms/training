@@ -43,6 +43,11 @@ class ExamController extends AppController
         $this->data_ary['content'] = 'exam/index';
     }
 
+    public function newAction()
+    {
+        $this->data_ary['content'] = 'exam/new';
+    }
+
     public function insert(Request $request)
     {
         $exams = $this->obj_model->getAll();
@@ -66,31 +71,10 @@ class ExamController extends AppController
         };
     }
 
-    public function newAction()
-    {
-        $this->data_ary['content'] = 'exam/new';
-    }
-
-    public function showAction(Request $request)
-    {
-        $exam_id = $request->getGet()->get('id');
-        $exam = $this->obj_model->getById($exam_id);
-        if ($exam) {
-            return $this->responseShowRule(true, $exam);
-        } else {
-            return $this->responseShowRule(false);
-        }
-    }
-
     public function examDetailAction(Request $request)
     {
-        //dựa vào method get lay exam_id
         $exam_id = $request->getGet()->get('exam_id');
-
-        //get exam dua vao exam_id
         $exam =  $this->obj_model->getById($exam_id);
-
-        //lay ra cac exam_question dua vao exam_id
         $exam_questions = $this->obj_model_exam_question->getBy('exam_id', '=', $exam_id, '*');
 
         $question_answers = array();
@@ -117,30 +101,25 @@ class ExamController extends AppController
         $this->data_ary['content'] = "exam/detail";
     }
 
+    // add question to the exam
     public function createAction(Request $request)
     {
-
-        //dựa vào method get lay exam_id
         $exam_id = $request->getGet()->get('exam_id');
 
-        //get exam dua vao exam_id
         $exam =  $this->obj_model->getById($exam_id);
-
         $questions = $this->obj_model_question->getAll();
         $answers = $this->obj_modal_answer->getAll();
-
-        // $exam_question = $this->obj_model_exam_question->getBy('')
         $exam_questions = $this->obj_model_exam_question->getBy('exam_id', '=', $exam_id, '*');
 
-        // Lấy danh sách các question_id đã tồn tại trong exam_questions
+        // Get the list of question_ids that already exist in exam_questions
         $existing_question_ids = array_column($exam_questions, 'question_id');
 
-        // Loại bỏ các câu hỏi đã tồn tại trong mảng exam_questions khỏi mảng questions
+        //Remove questions that already exist in the exam questions array from the questions array
         $questions = array_filter($questions, function ($question) use ($existing_question_ids) {
             return !in_array($question['id'], $existing_question_ids);
         });
 
-        // Chuyển mảng kết quả về dạng danh sách các câu hỏi
+        // Convert the result array to a list of questions
         $questions = array_values($questions);
 
         $this->data_ary['questions'] = $questions;
@@ -154,21 +133,6 @@ class ExamController extends AppController
     {
         $exam_id = $request->getGet()->get('exam_id');
         $question_answers = $request->getPost();
-        // echo "<pre>";
-        // var_dump($request->getPost());
-        // die();
-        // if (null !== $question_answers->get('question_id')  && null !== $question_answers->get('selected_answers')) {
-        //     echo "aa";
-        //     echo "<pre>";
-        //     var_dump($request->getPost());
-        //     die();
-        // }
-        // echo "<pre>";
-        // var_dump($request->getPost());
-
-        // die();
-
-
         $question_id = $question_answers->get('question_id');
         $answer_ids = $question_answers->get('selected_answers');
 
@@ -183,21 +147,17 @@ class ExamController extends AppController
         }
         return $this->successResponse();
     }
+
+    //show preview exam
     public function previewAction(Request $request)
     {
-        //dựa vào method get lay exam_id
         $exam_id = $request->getGet()->get('exam_id');
-
-        //get exam dua vao exam_id
         $exam =  $this->obj_model->getById($exam_id);
-
-        //lay ra cac exam_question dua vao exam_id
         $exam_questions = $this->obj_model_exam_question->getBy('exam_id', '=', $exam_id, '*');
 
         $question_answers = array();
 
         foreach ($exam_questions as $exam_question) {
-
             $question_id = $exam_question['question_id'];
 
             if (!isset($question_answers[$question_id])) {
@@ -221,8 +181,6 @@ class ExamController extends AppController
     public function exportAction(Request $request)
     {
         $this->data_ary['content'] = "exam/export";
-
-        // $this->data_ary['content'] = "exam/export_file";
     }
 
     public function uploadAction(Request $request)
@@ -246,22 +204,22 @@ class ExamController extends AppController
         $your_server_directory_csv = $full_new_directory . '.csv';
 
         if ($ftp_connection && $login) {
-            // upload file lên server của mình
+            // upload files to my server
             $check_put_html = file_put_contents($your_server_directory_html, $html_content);
             $check_put_csv = file_put_contents($your_server_directory_csv, $csv_content);
 
             if ($check_put_html !== false && $check_put_csv !== false) {
-                //upload file từ server của mình lên server cần lưu trữ file
+                //upload files from your server to the server that needs to store the files
                 $upload_html = ftp_put($ftp_connection, $html_directory . basename($your_server_directory_html), $your_server_directory_html, FTP_BINARY);
                 $upload_csv = ftp_put($ftp_connection, $csv_directory . basename($your_server_directory_csv), $your_server_directory_csv, FTP_BINARY);
 
                 unlink($your_server_directory_html);
                 unlink($your_server_directory_csv);
                 if (!$upload_html && !$upload_csv) {
-                    die("cann't upload");
+                    die("Cann't upload");
                 }
             } else {
-                echo "Ghi thất bại.";
+                echo "failed.";
             }
             ftp_close($ftp_connection);
         }
@@ -302,13 +260,25 @@ class ExamController extends AppController
         $exam_id = $request->getGet()->get('id');
         $this->obj_model->destroyBy("id = $exam_id");
     }
+
     public function detailDeleteAction(Request $request)
     {
         $exam_id = $request->getGet()->get('id');
         $this->obj_model_exam_question->destroyBy("question_id = $exam_id");
     }
 
-    public function detailEditAction(Request $request){
-        
+    public function detailEditAction(Request $request)
+    {
+        $question_id = $request->getGet()->get('question_id');
+        $exam_id =  $request->getGet()->get('exam_id');
+
+        $exam_questions = $this->obj_model_exam_question->getExamQuestionByIds($exam_id, $question_id, '*');
+        $question = $this->obj_model_question->getById($question_id);
+        $answers = $this->obj_modal_answer->getBy('question_id', '=', $question_id, '*');
+
+        $this->data_ary['exam_questions'] = $exam_questions;
+        $this->data_ary['question'] = $question;
+        $this->data_ary['answers'] = $answers;
+        $this->data_ary['content'] = "exam/detail_edit";
     }
 }

@@ -43,13 +43,11 @@ class Exam extends Model
 
         // Thực hiện câu truy vấn để lấy thông tin bài thi và câu hỏi liên quan
         $query = "SELECT e.id AS exam_id, e.title AS exam_title, e.description AS exam_description,
-       q.id AS question_id, q.content AS question_content, q.title as question_title
-FROM exam AS e
-LEFT JOIN exam_questions AS qe ON e.id = qe.exam_id
-LEFT JOIN question AS q ON qe.question_id = q.id
-";
+                    q.id AS question_id, q.content AS question_content, q.title as question_title
+                  FROM exam AS e
+                  LEFT JOIN exam_questions AS qe ON e.id = qe.exam_id
+                  LEFT JOIN question AS q ON qe.question_id = q.id";
 
-        $db = static::getDB();
         $stmt = $db->query($query);
         $results_ary = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $results_ary;
