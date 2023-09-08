@@ -1,6 +1,7 @@
 var user_email = ''
 var user_name = ''
 var exam_results = {}
+var list_numbers = []
 const answers = {}
 var key = 1
 var count = 0
@@ -18,9 +19,16 @@ const result = document.getElementById('result')
 
 const modal_accept_submit = document.getElementById('accept_submit')
 const btn_accept_submit = document.getElementById('btn_accept_submit')
+const btn_yes = document.getElementById('btn_yes')
+const btn_accept_change = document.getElementById('btn_accept_change')
 const btn_close_accept_submit = document.getElementById('btn_close_accept_submit')
+const message = document.getElementById('message')
 
 const countdown_element = document.getElementById('countdown')
+
+const view_time = document.getElementById('view_time')
+
+var radioButtons = document.querySelectorAll('input[type="radio"]:checked')
 
 // Get minutes and seconds stored locally
 let stored_minutes = localStorage.getItem('countdown_minutes');
@@ -49,24 +57,30 @@ document.addEventListener('DOMContentLoaded', function () {
 if (btn_login) {
     btn_login.addEventListener('click', function (e) {
         var value_email = input_email.value
-        var value_name = input_name.value
+        var value_name = remove_diacritics(input_name.value)
         if (value_email == '' || value_name == '' || value_email == null || value_name == null) {
             alert('You must enter all the information!')
         } else if (!is_valid_email(value_email)) {
             alert('Incorrect email format!')
-        } else if (!is_valid_name(value_name)){
-            alert('Name must not have accents!')
+        } else if (value_email.length > 50 || value_name.length > 25) {
+            alert('Name or email is too long!')
         } else {
             localStorage.setItem('user_email', value_email)
             localStorage.setItem('user_name', value_name)
 
-            var url = localStorage.getItem('current_url')
-            if (url) {
-                file_html = url.slice(24, url.length)
-                window.location.href = file_html
-            } else {
-                alert('Please click on the correct link!')
-            }
+            modal_accept_submit.style.display = 'block'
+        }
+    })
+}
+
+if (btn_yes) {
+    btn_yes.addEventListener('click', function (e) {
+        var url = localStorage.getItem('current_url')
+        if (url) {
+            file_html = url.slice(24, url.length)
+            window.location.href = file_html
+        } else {
+            alert('Please click on the correct link!')
         }
     })
 }
@@ -75,7 +89,9 @@ if (btn_login) {
 if (btn_submit) {
     btn_submit.addEventListener('click', function (e) {
         e.preventDefault()
+        message.innerHTML = 'Are you sure to submit?'
         modal_accept_submit.style.display = 'block'
+        btn_accept_submit.removeAttribute("hidden")
     })
 }
 
@@ -102,6 +118,15 @@ if (btn_accept_submit) {
 if (countdown_element) {
     updateCountdown()
     var countdownInterval = setInterval(updateCountdown, 1000)
+}
+
+// Convert accented words to unaccented
+function remove_diacritics(str) {
+    return str
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd')
+        .replace(/Đ/g, 'D');
 }
 
 // Handling after clicking the submit confirmation button
@@ -181,6 +206,16 @@ function updateCountdown() {
         
         localStorage.setItem('countdown_minutes', minutes.toString());
         localStorage.setItem('countdown_seconds', seconds.toString());
+    }
+
+    if (minutes == 8 && seconds == 59) {
+        modal_accept_submit.style.display = 'block'
+        message.innerHTML = 'Your test time is only 2 minutes!'
+        btn_accept_submit.setAttribute("hidden", true)
+    }
+    if (minutes <= 8) {
+        view_time.classList.remove("bg-primary")
+        view_time.classList.add("bg-danger")
     }
 }
 

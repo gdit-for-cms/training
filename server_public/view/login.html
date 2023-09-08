@@ -50,6 +50,21 @@
         <button class="w-100 btn btn-lg btn-primary mt-3" id="btn_login">Sign in</button>
         <p class="mt-5 mb-3 text-muted">&copy; 2023</p>
     </main>
+    
+    <div class="modal modal-lg" id="accept_submit" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="anchor-nameLabel" aria-hidden="true" style="margin-left: 550px; margin-top: 300px;">
+        <div class="modal-dialog">
+            <div class="modal-content modal-accept-submit">
+                <div class="modal-header bg-primary">
+                    <h5 class="modal-title text-white">Notification</h5>
+                    <button type="button" class="btn-close" id="btn_close_accept_submit"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <h5>After you select "Yes", you will begin the test and we will calculate the time. Your test time is 10 minutes. Are you ready?</h5>
+                    <button id="btn_yes" class="btn btn-danger mt-1">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="/index.js"></script>
     <!-- <script src="/cgi/handle.cgi"></script> -->
