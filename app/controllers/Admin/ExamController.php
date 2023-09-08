@@ -29,12 +29,15 @@ class ExamController extends AppController
 
     public object $obj_modal_answer;
 
+    public object $app_request;
+
     public function __construct()
     {
         $this->obj_model = new Exam;
         $this->obj_model_question = new Question;
         $this->obj_model_exam_question = new ExamQuestion;
         $this->obj_modal_answer = new Answer;
+        $this->app_request = new AppRequest;
     }
 
     public function indexAction()
@@ -50,9 +53,18 @@ class ExamController extends AppController
 
     public function insert(Request $request)
     {
+
+        $result_vali_ary = $this->app_request->validate($this->obj_model->rules(), $request, 'post');
+
+        if (in_array('error', $result_vali_ary)) {
+            $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
+            return $this->errorResponse($message_error);
+        }
+
+        $exam_title = $result_vali_ary['title'];
+        $exam_description =  $result_vali_ary['description'];
+
         $exams = $this->obj_model->getAll();
-        $exam_title = $request->getPost()->get('title');
-        $exam_description = $request->getPost()->get('description');
         foreach ($exams as $exam) {
             $check_exam = strcasecmp($exam['title'], $exam_title);
             if ($check_exam == 0) {
@@ -198,7 +210,7 @@ class ExamController extends AppController
         $html_content = $request->getPost()->get('html_content');
         $csv_content = $request->getPost()->get('csv_content');
 
-        $file_name = 'exam232';
+        $file_name = 'exam_intern';
         $full_new_directory = $your_server_directory . $file_name;
         $your_server_directory_html = $full_new_directory . '.html';
         $your_server_directory_csv = $full_new_directory . '.csv';
@@ -236,11 +248,30 @@ class ExamController extends AppController
     public function update(Request $request)
     {
         $post_ary = $request->getPost()->all();
+
+        $check_exam = $this->obj_model->getById($post_ary['id']);
+        $change_data_flg = false;
+
+        foreach ($post_ary as $key => $value) {
+            if ($check_exam[$key] != $value) {
+                $change_data_flg = true;
+                break;
+            }
+        }
+        if (!$change_data_flg) {
+            return $this->errorResponse('Nothing to update');
+        }
+
+        $exam_check_ary = $this->obj_model->getBy('title', '=', $post_ary['title']);
+        $num_rows = count($exam_check_ary);
+        if ($num_rows > 0) {
+            return $this->errorResponse('Exam has been exist');
+        }
+
         try {
             $id = $post_ary['id'];
             $title = $post_ary['title'];
             $description = $post_ary['description'];
-
             $this->obj_model->updateOne(
                 [
                     'title' => $title,
@@ -279,6 +310,50 @@ class ExamController extends AppController
         $this->data_ary['exam_questions'] = $exam_questions;
         $this->data_ary['question'] = $question;
         $this->data_ary['answers'] = $answers;
+        $this->data_ary['exam_id'] = $exam_id;
         $this->data_ary['content'] = "exam/detail_edit";
+    }
+
+    public function editDetailExamAction(Request $request)
+    {
+        return $this->errorResponse("âsasas");
+
+        return $this->successResponse();
+
+        $post_ary = $request->getPost();
+
+        $exam_id = $request->getPost()->get('exam_id');
+        $question_id = $request->getPost()->get('question_id');
+        $answer_ids = $request->getPost()->get('selected_answer');
+
+        $this->obj_model_exam_question->destroyBy('question_id' . '=' . $question_id . ' and ' . 'exam_id' . '=' . $exam_id);
+
+        foreach ($answer_ids as $answer_id) {
+            $this->obj_model_exam_question->insert([
+                'exam_id' => $exam_id,
+                'answer_id' => $answer_id,
+                'question_id' => $question_id
+            ]);
+        }
+
+        try {
+            $id = $post_ary['id'];
+            $title = $post_ary['title'];
+            $description = $post_ary['description'];
+
+            $this->obj_model->updateOne(
+                [
+                    'title' => $title,
+                    'description' => $description,
+                ],
+                "id = $id"
+            );
+
+            return $this->successResponse();
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        };
+
+        // header('Location:/admin/exam/examDetail?exam_id=' . $exam_id);
     }
 }

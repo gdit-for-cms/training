@@ -37,6 +37,11 @@ class Exam extends Model
         return $this->update($data, $condition);
     }
 
+    public function getBy($column, $operator, $value)
+    {
+        return $this->where($column, $operator, $value)->get();
+    }
+
     public function getExamsWithQuestions($id = '')
     {
         $db = static::getDB();
@@ -60,11 +65,7 @@ class Exam extends Model
                 'name',
                 'filled',
             ),
-            'description' => array(
-                'required',
-                'name',
-                'filled',
-            ),
+            'description' => array(),
         );
         switch ($change) {
             case 'add':

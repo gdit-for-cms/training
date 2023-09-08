@@ -19,7 +19,7 @@
                         <label class="form-label" for="title">description</label>
                         <input class="form-control" rows="3" name="description" value="<?php echo $exam['description'] ?>" id="description" placeholder="Description..." />
                     </div>
-                    <button id="submit" type="submit" class="btn btn-primary">Creatse</button>
+                    <button id="submit" type="submit" class="btn btn-primary">Save</button>
                 </form>
             </div>
         </div>

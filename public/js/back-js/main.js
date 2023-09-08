@@ -110,6 +110,19 @@ function checkPathName() {
                         </div>
                     </div>`
     }
+    // else if (pathName.includes('/admin/exam/detail-edit-exam"')) {
+    //     const selectElement = document.getElementById('questionSelect');
+    //     var selectedOption = selectElement.options[selectElement.selectedIndex];
+
+    //     content = `
+    //                 <div class="d-flex justify-content-center align-items-center w-full">
+    //                     <div class="d-flex flex-col justify-content-center align-items-start">
+    //                         <span class="mb-2">
+
+    //                         </span>
+    //                     </div>
+    //                 </div>`
+    // }
     else if (pathName.includes('/admin/exam/create')) {
         const selectElement = document.getElementById('questionSelect');
         var selectedOption = selectElement.options[selectElement.selectedIndex];
@@ -599,10 +612,14 @@ $(document).ready(function () {
     submitForm('#form_create_exam');
     submitForm('#form_edit_exam');
 
+
+    // submitForm('#btn-edit-detail-exam');
+
     // submitForm('#form_upload_avatar');
     alertUploadFileExam()
     alertDeleteQuestion()
     alertDeleteExamDetail()
+    // alertEditDetailExam('edit-detail-exam')
     //show answer
     loadAnswers()
     //Ngo Duy Hung
@@ -877,15 +894,15 @@ function alertUploadFileExam() {
                     },
                     success: function (response) {
                         console.log(response);
-                        if (response === "success") {
-                            alert("Publish successful");
-                        } else {
-                            alert("Publish failed");
-                        }
+                        // if (response === "success") {
+                        //     alert("Publish successful");
+                        // } else {
+                        //     alert("Publish failed");
+                        // }
                     },
                     error: function (E) {
-                        // console.log(E)
-                        alert("An error occurred");
+                        console.log(E)
+                        // alert("An error occurred");
                     }
                     // success: function () {
                     //     document.location.reload(true);
@@ -973,4 +990,89 @@ function loadAnswers() {
     }).fail(function (jqXHR, textStatus, errorThrown) {
         console.error("AJAX request failed:", textStatus, errorThrown);
     });
+}
+
+function alertEditDetailExam1() {
+    $('.btn-edit-detail-exam').click(function (e) {
+        let exam_id = $(this).data('id');
+        let selected_answers = document.getElementsByName('selected_answer[]');
+        let question_id = document.getElementById('quesion_id').value;
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Edit detail exam?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: `/admin/exam/edit-detail-exam`,
+                    data: {
+                        exam_id: exam_id,
+                        selected_answers: selected_answers,
+                        question_id: question_id
+                    },
+                    success: function (response) {
+                        console.log(response);
+                    },
+                    error: function (E) {
+                        console.log(E)
+                    }
+                });
+            }
+        })
+    })
+}
+function alertEditDetailExam(formId) {
+    $(formId).submit(function (e) {
+        var content = `<div class="d-flex justify-content-center align-items-center w-full">
+        <div class="d-flex flex-col justify-content-center align-items-start">
+            <span class="mb-2">
+                
+            </span>
+        </div>
+    </div>`
+        e.preventDefault()
+        Swal.fire({
+            title: 'Are you sure?',
+            html: content,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var form = $(this);
+                var actionUrl = form.attr('action');
+                $.ajax({
+                    type: "POST",
+                    url: actionUrl,
+                    data: form.serialize(),
+                    dataType: 'json',
+                    success: function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: "Successfully",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        setTimeout(() => {
+                            document.location.reload(true);
+                        }, "1600");
+                    },
+                    error: function (response) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: response.responseJSON.message,
+                        });
+                    }
+                });
+            }
+        })
+    })
 }

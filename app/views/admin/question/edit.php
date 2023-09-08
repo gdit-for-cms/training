@@ -31,10 +31,10 @@
                                 <div class="form-check">
                                     <input class="form-check-input" name="is_correct[]" type="checkbox" <?php if ($answer['is_correct'] == 1) {
                                                                                                             echo "checked";
-                                                                                                        } ?> value="<?php echo $answer['is_correct'] ?>" onchange="updateCheckboxValue(this)">
+                                                              } ?> value="<?php echo $answer['is_correct'] ?>" onchange="updateCheckboxValue(this)">
                                     <div class="input-with-button">
                                         <input type="text" class="form-control input-answer" name="answer[]" value="<?php echo $answer['content'] ?>" placeholder="Answer...">
-                                        <button type="button" class="remove-button btn btn-danger delete-btn text-white" onclick="removeAnswer(this)">Xóa</button>
+                                        <button type="button" class="remove-button btn btn-danger delete-btn text-white" onclick="removeAnswer(this)">Delete</button>
                                     </div>
                                 </div>
                             <?php
@@ -43,7 +43,7 @@
 
                         </div>
                         <div class="input-add-answer">
-                            <button type="button" class="btn btn-info m-2" onclick="addAnswer()">Thêm</button>
+                            <button type="button" class="btn btn-info m-2" onclick="addAnswer()">Add</button>
                         </div>
                     </div>
                     <button id="submit" type="submit" class="btn btn-primary">Edit</button>
@@ -52,28 +52,7 @@
         </div>
     </div>
 </div>
-<div class="box-lightbox">
-    <div class="col-lg-4">
-        <div class="white_card card_height_100 mb_30">
-            <div class="white_card_header">
-                <div class="box_header m-0">
-                    <div class="main-title total_modal">
-                        <h2 class="m-0">Confirm Information</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="white_card_body">
-                <div class="card-body">
 
-                    <div class="model-footer">
-                        <button type="button" class="btn btn-secondary js-lightbox-close">Close</button>
-                        <button class="btn btn-primary" id="submit_confirm_btn">Change</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script>
     // chức năng thêm xóa câu hỏi 
@@ -110,7 +89,7 @@
 
         var removeButton = document.createElement("button");
         removeButton.type = "button";
-        removeButton.textContent = "Xóa";
+        removeButton.textContent = "Delete";
         removeButton.classList.add("remove-button", "btn", "btn-danger", "delete-btn", "text-white");
         removeButton.onclick = function() {
             removeAnswer(this);

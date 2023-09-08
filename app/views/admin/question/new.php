@@ -26,7 +26,7 @@
                                 <input class="form-check-input" name="is_correct[]" type="checkbox" value="0" onchange="updateCheckboxValue(this)">
                                 <div class="input-with-button">
                                     <input type="text" class="form-control input-answer" name="answer[]" value="" placeholder="Answer...">
-                                    <button type="button" class="remove-button btn btn-danger delete-btn text-white" onclick="removeAnswer(this)">Xóa</button>
+                                    <button type="button" class="remove-button btn btn-danger delete-btn text-white" onclick="removeAnswer(this)">Delete</button>
                                 </div>
                             </div>
                         </div>
@@ -46,7 +46,7 @@
     // chức năng thêm xóa câu hỏi 
 
     // Biến tạm để lưu giá trị của ô input hiện tại
-    var currentAnswerIndex = 0;
+    var currentAnswerIndex = 1;
     // Mảng lưu vị trí các checkbox đã chọn
     var selectedPositions = [];
 
@@ -77,7 +77,7 @@
 
         var removeButton = document.createElement("button");
         removeButton.type = "button";
-        removeButton.textContent = "Xóa";
+        removeButton.textContent = "Delete";
         removeButton.classList.add("remove-button", "btn", "btn-danger", "delete-btn", "text-white");
         removeButton.onclick = function() {
             removeAnswer(this);

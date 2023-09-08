@@ -52,10 +52,10 @@
                             <tbody class="table-rule-body">
                                 <?php
                                 if (!empty($question_answers)) {
-
+                                    $st = 1;
                                     foreach ($question_answers as $question_answer) { ?>
                                         <tr>
-                                            <th scope="row">1</th>
+                                            <th scope="row"><?php echo $st++; ?></th>
 
                                             <td>
                                                 <div class="overflow-auto" style='width: 400px;height: 120px; max-height: 100%;'>
