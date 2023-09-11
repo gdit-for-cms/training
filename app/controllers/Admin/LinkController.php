@@ -32,6 +32,8 @@ class LinkController extends AppController
             $target_dir = "file/";
             if(!file_exists($target_dir)){
                 mkdir($target_dir, 0777, true);
+            } else {
+                chmod($target_dir, 0777);
             }
 
             // Get the file extension being uploaded
@@ -87,6 +89,8 @@ class LinkController extends AppController
             $target_dir = "file/";
             if(!file_exists($target_dir)){
                 mkdir($target_dir, 0777, true);
+            } else {
+                chmod($target_dir, 0777);
             }
 
             $target_file = $target_dir . basename($_FILES["upload-file"]["name"]);

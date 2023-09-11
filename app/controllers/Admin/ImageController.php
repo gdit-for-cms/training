@@ -63,8 +63,13 @@ class ImageController extends AppController
             }
             $data_upload = $add_item_result['data_upload'];
             $all_results = $add_item_result['all_results'];
-
             if (!empty($data_upload)) {
+                $target_dir = "images/library_images";
+                if(!file_exists($target_dir)){
+                    mkdir($target_dir, 0777, true);
+                } else {
+                    chmod($target_dir, 0777);
+                }
                 foreach ($data_upload as $key => $value) {
                     $extension = explode('.', $value['file']['name'])[1];
                     $file_name = rand(10, 1000000) . time() . '.' . $extension;
