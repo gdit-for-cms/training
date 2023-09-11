@@ -1,8 +1,3 @@
-<?php
-  echo "<pre>";
-  var_dump($questions);
-  die();
-?>
 <div class="container-fluid p-0 ">
   <div class="row">
     <div class="col-12">
@@ -33,34 +28,33 @@
               <tbody>
                 <?php $i = 1;
                 foreach ($questions as $question) {
-                  $answer_correct = array();
+                  $answers = explode(',', $question['answers']);
                 ?>
                   <tr class="user_items">
                     <th scope="row"><?= $i;
                                     $i++ ?></th>
-                    <td><?= $question['title'] ?></td>
+                    <td><?= $question['question_title'] ?></td>
                     <td>
-                      <?= $question['content'] ?>
-
+                      <?= $question['question_content'] ?>
                     </td>
                     <td>
-                      <!-- Options:<br> -->
                       <div class="overflow-auto" style="width: 400px;height: 120px; max-height: 100%;">
                         <?php
                         $stt = 1;
                         foreach ($answers as $answer) {
-                          if ($question['id'] == $answer['question_id']) {
-                            if ($answer['is_correct'] == 1) {
-                              $answer_correct[] = $answer['content'];
+                          $answer = explode(' - ', $answer);
+                          if ((int)$answer[1] == 1) {
                         ?>
-                              <span style="background-color: yellow;"><?php echo $stt++ . " ) " . $answer['content'] ?></span><br>
-                            <?php
-                            } else {
-                            ?>
-                              <span><?php echo $stt++ . " ) " . $answer['content'] ?></span><br>
-                        <?php
-                            }
+                            <span style="background-color: yellow;"><?php echo $stt++ . " ) " . $answer[0] ?></span><br>
+
+                          <?php
+                          } else {
+                          ?>
+                            <span><?php echo $stt++ . " ) " . $answer[0] ?></span><br>
+                          <?php
                           }
+                          ?>
+                        <?php
                         }
                         ?>
                       </div>
@@ -68,8 +62,8 @@
 
                     <td>
                       <div class="d-flex ">
-                        <a href='/admin/question/edit?id=<?= $question['id'] ?>' class="edit_btn mr-2"><button type="button" class="btn btn-info text-white">Edit</button></a>
-                        <button type="button" data-id="<?= $question['id'] ?>" class="btn btn-danger btn-delete-question text-white">Delete</button>
+                        <a href='/admin/question/edit?id=<?= $question['question_id'] ?>' class="edit_btn mr-2"><button type="button" class="btn btn-info text-white">Edit</button></a>
+                        <button type="button" data-id="<?= $question['question_id'] ?>" class="btn btn-danger btn-delete-question text-white">Delete</button>
                       </div>
                     </td>
                   </tr>
@@ -82,13 +76,24 @@
           <nav aria-label="Page navigation example">
             <ul class="pagination">
               <?php
-                // if()
+              $next = $page;
+              if ((int)$page > 1) {
               ?>
-              <li class="page-item cursor-pointer"><a href="/admin/question/index?page=<?php  ?>" class="page-link">Previous</a></li>
+                <li class="page-item cursor-pointer"><a href="/admin/question/index?page=<?php $page--;
+                                                                                          echo $page; ?>" class="page-link">Previous</a></li>
+              <?php
+              }
+              ?>
               <?php for ($i = 1; $i <= $numbers_of_page; $i++) { ?>
                 <li class="page-item cursor-pointer"><a href="/admin/question/index?page=<?php echo $i; ?>" class="page-link"><?= $i ?></a></li>
-              <?php } ?>
-              <li class="page-item cursor-pointer"><a href="/admin/question/index?page=<?php  ?>" class="page-link">Next</a></li>
+              <?php }
+              if ($next += 1 == $numbers_of_page) {
+              ?>
+                <li class="page-item cursor-pointer"><a href="/admin/question/index?page=<?php echo $next += 1; ?>" class="page-link">Next</a></li>
+
+              <?php
+              }
+              ?>
             </ul>
           </nav>
         </div>

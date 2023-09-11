@@ -36,13 +36,14 @@ class QuestionController extends  AppController
         $this->data_ary['answers'] = $this->obj_model_answer::getAll();
         $req_method_ary = $request->getGet()->all();
 
-        $results_per_page = 10;
+        $results_per_page = 1;
         $results_ary = $this->obj_model->getAllRelation($req_method_ary, $results_per_page);
 
         $this->data_ary['questions'] = $results_ary['results'];
         $numbers_of_result = $results_ary['numbers_of_page'];
         $numbers_of_page = ceil($numbers_of_result / $results_per_page);
         $this->data_ary['numbers_of_page'] = $numbers_of_page;
+        $this->data_ary['page'] = (float)$results_ary['page'];
 
         $this->data_ary['content'] = 'question/index';
     }

@@ -91,18 +91,14 @@ class Question extends Model
         return $this->destroy($condition);
     }
 
-    public function getAllRelation($req_method_ary, $results_per_page = 10)
+    public function getAllRelation($req_method_ary, $results_per_page = 5)
     {
         $db = static::getDB();
-        // $query = 'SELECT q.id, q.title, q.content,a.content, a.is_correct, a.question_id
-        // FROM question AS q
-        // JOIN answer as a ON q.id = a.question_id' .
-        //     ' ORDER BY q.id DESC';
-
         $query = 'SELECT
         question.id AS question_id,
+        question.title AS question_title,
         question.content AS question_content,
-        GROUP_CONCAT(answer.content) AS answers
+        GROUP_CONCAT(CONCAT(answer.content, " - ", answer.is_correct)) AS answers
     FROM
         question
     LEFT JOIN
@@ -110,7 +106,6 @@ class Question extends Model
     GROUP BY
         question.id
     ORDER BY question.id DESC';
-    //  LIMIT 0,5;';
 
         if (!isset($req_method_ary['page'])) {
             $req_method_ary['page'] = '1';
@@ -122,7 +117,7 @@ class Question extends Model
         $numbers_of_page = count($stmt_count->fetchAll(PDO::FETCH_ASSOC));
         $stmt = $db->query($query . " " . $limit_query);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results);
+        $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results, 'page'=>$req_method_ary['page']);
         return $results_ary;
     }
 }
