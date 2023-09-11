@@ -1,3 +1,8 @@
+<?php
+  echo "<pre>";
+  var_dump($questions);
+  die();
+?>
 <div class="container-fluid p-0 ">
   <div class="row">
     <div class="col-12">
@@ -76,9 +81,14 @@
         <div class="flex justify-center items-center">
           <nav aria-label="Page navigation example">
             <ul class="pagination">
-              <li class="page-item cursor-pointer"><a class="page-link">Previous</a></li>
-
-              <li class="page-item cursor-pointer"><a class="page-link">Next</a></li>
+              <?php
+                // if()
+              ?>
+              <li class="page-item cursor-pointer"><a href="/admin/question/index?page=<?php  ?>" class="page-link">Previous</a></li>
+              <?php for ($i = 1; $i <= $numbers_of_page; $i++) { ?>
+                <li class="page-item cursor-pointer"><a href="/admin/question/index?page=<?php echo $i; ?>" class="page-link"><?= $i ?></a></li>
+              <?php } ?>
+              <li class="page-item cursor-pointer"><a href="/admin/question/index?page=<?php  ?>" class="page-link">Next</a></li>
             </ul>
           </nav>
         </div>
@@ -88,5 +98,5 @@
 </div>
 
 <script>
-  // const deleteBtn = document.querySelectorAll('.btn-delete-question')
+
 </script>

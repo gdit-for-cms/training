@@ -9,8 +9,10 @@
         </div>
         <div class="white_card_body">
             <div class="card-body">
-                <form id="form-edit-detail-exam" class="" action="edit-detail-exam" method="POST">
+                <form id="form_edit_detail_exam" class="" action="edit-detail-exam" method="POST">
                     <input id="quesion_id" name="question_id" value="<?php echo  $question['id'] ?>" type="hidden" class="form-control">
+                    <input id="exam_id" name="exam_id" value="<?php echo  $exam_id; ?>" type="hidden" class="form-control">
+
                     <div class="col-md-4">
                         <label class="form-label font-weight-bold" for="position">Question*</label>
                         <?php echo $question['content']; ?>

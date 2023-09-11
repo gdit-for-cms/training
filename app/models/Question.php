@@ -90,4 +90,39 @@ class Question extends Model
     {
         return $this->destroy($condition);
     }
+
+    public function getAllRelation($req_method_ary, $results_per_page = 10)
+    {
+        $db = static::getDB();
+        // $query = 'SELECT q.id, q.title, q.content,a.content, a.is_correct, a.question_id
+        // FROM question AS q
+        // JOIN answer as a ON q.id = a.question_id' .
+        //     ' ORDER BY q.id DESC';
+
+        $query = 'SELECT
+        question.id AS question_id,
+        question.content AS question_content,
+        GROUP_CONCAT(answer.content) AS answers
+    FROM
+        question
+    LEFT JOIN
+        answer ON question.id = answer.question_id
+    GROUP BY
+        question.id
+    ORDER BY question.id DESC';
+    //  LIMIT 0,5;';
+
+        if (!isset($req_method_ary['page'])) {
+            $req_method_ary['page'] = '1';
+        }
+        $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
+        $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
+
+        $stmt_count = $db->query($query);
+        $numbers_of_page = count($stmt_count->fetchAll(PDO::FETCH_ASSOC));
+        $stmt = $db->query($query . " " . $limit_query);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results);
+        return $results_ary;
+    }
 }

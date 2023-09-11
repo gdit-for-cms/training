@@ -34,6 +34,16 @@ class QuestionController extends  AppController
     {
         $this->data_ary['questions'] = $this->obj_model->getAll();
         $this->data_ary['answers'] = $this->obj_model_answer::getAll();
+        $req_method_ary = $request->getGet()->all();
+
+        $results_per_page = 10;
+        $results_ary = $this->obj_model->getAllRelation($req_method_ary, $results_per_page);
+
+        $this->data_ary['questions'] = $results_ary['results'];
+        $numbers_of_result = $results_ary['numbers_of_page'];
+        $numbers_of_page = ceil($numbers_of_result / $results_per_page);
+        $this->data_ary['numbers_of_page'] = $numbers_of_page;
+
         $this->data_ary['content'] = 'question/index';
     }
 
@@ -108,7 +118,6 @@ class QuestionController extends  AppController
 
         $this->data_ary['question'] = $this->obj_model->getById($id, 'id, title, content');
         $this->data_ary['answers'] = $this->obj_model_answer->getBy('question_id', '=', $id);
-
         $this->data_ary['content'] = 'question/edit';
     }
 
@@ -131,6 +140,7 @@ class QuestionController extends  AppController
         $content = $result_vali_ary['content'];
         $title = $result_vali_ary['title'];
         $answers =  $result_vali_ary['answer'];
+        $question_id = $request->getPost()->get('id');
 
 
         foreach ($answers as $answer) {
@@ -151,10 +161,9 @@ class QuestionController extends  AppController
         $question_check_ary = $this->obj_model->getBy('content', '=', $content);
         $num_rows = count($question_check_ary);
 
-        if ($num_rows > 1) {
+        if ($num_rows > 0 && $question_check_ary[0]['id'] != $question_id) {
             return $this->errorResponse('Question has been exist');
         } else {
-            $question_id = $request->getPost()->get('id');
 
             try {
                 $this->obj_model->updateOne(

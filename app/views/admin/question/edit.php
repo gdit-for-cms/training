@@ -22,6 +22,8 @@
                         </textarea>
                     </div>
                     <div class="mb-3">
+                        <label class="form-label" for="correct">Correct*</label>
+                        <span>|</span>
                         <label class="form-label" for="answer">Answer*</label>
                         <div id="answerContainer">
                             <!-- Ô input mặc định -->
@@ -29,9 +31,9 @@
                             foreach ($answers as $answer) {
                             ?>
                                 <div class="form-check">
-                                    <input class="form-check-input" name="is_correct[]" type="checkbox" <?php if ($answer['is_correct'] == 1) {
-                                                                                                            echo "checked";
-                                                              } ?> value="<?php echo $answer['is_correct'] ?>" onchange="updateCheckboxValue(this)">
+                                    <input class="form-check-input" style="margin-right: 50px;" name="is_correct[]" type="checkbox" <?php if ($answer['is_correct'] == 1) {
+                                                                                                                                        echo "checked";
+                                                                                                                                    } ?> value="<?php echo $answer['is_correct'] ?>" onchange="updateCheckboxValue(this)">
                                     <div class="input-with-button">
                                         <input type="text" class="form-control input-answer" name="answer[]" value="<?php echo $answer['content'] ?>" placeholder="Answer...">
                                         <button type="button" class="remove-button btn btn-danger delete-btn text-white" onclick="removeAnswer(this)">Delete</button>
@@ -72,6 +74,7 @@
         answerCheckbox.classList.add("form-check-input");
         answerCheckbox.type = "checkbox";
         answerCheckbox.name = "is_correct[]";
+        answerCheckbox.style = "margin-right: 50px;";
         answerCheckbox.value = currentAnswerIndex; // Gán giá trị của ô input hiện tại
         answerCheckbox.addEventListener("change", function() {
             updateCheckboxValue(this);
@@ -138,6 +141,22 @@
         }
     }
     //end chức năng thêm xóa answer
+
+    function updateIsCorrectValues() {
+        var checkboxes = document.querySelectorAll('input[name="is_correct[]"]');
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].value = i; // Cập nhật lại giá trị cho các checkbox dựa trên vị trí của chúng
+        }
+    }
+
+    const form = document.querySelector('#form_update_question');
+    form.addEventListener('submit', function(event) {
+        // Ngăn chặn việc gửi form mặc định để thực hiện xử lý tùy chỉnh
+        event.preventDefault();
+
+        // Gọi hàm để cập nhật giá trị is_correct trước khi submit
+        updateIsCorrectValues();
+    })
 
     const submitBtn = document.querySelector('#submit')
     const titleInput = document.querySelector('#title')

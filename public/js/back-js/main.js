@@ -27,7 +27,7 @@ function checkPathName() {
     const title = document.getElementById('title');
     const description = document.getElementById('description');
     const ckeditor = document.getElementById('editor-edit-note');
-
+    const question = document.getElementById('quesion_id');
     var content = ''
     if (pathName.includes('/admin/user')) {
         const email = document.getElementById('email');
@@ -109,20 +109,22 @@ function checkPathName() {
                           
                         </div>
                     </div>`
+    } else if (pathName.includes('/admin/exam/detail-edit')) {
+        content = `
+                    <div class="d-flex justify-content-center align-items-center w-full">
+                        <div class="d-flex flex-col justify-content-center align-items-start">
+                            <span class="mb-2">
+                                <span class="font-bold">Quesion: </span>
+                               ${question.value}
+                            </span>
+                            <span class="mb-2">
+                                <span class="font-bold">Answer: </span>
+                              
+                            </span>
+                          
+                        </div>
+                    </div>`
     }
-    // else if (pathName.includes('/admin/exam/detail-edit-exam"')) {
-    //     const selectElement = document.getElementById('questionSelect');
-    //     var selectedOption = selectElement.options[selectElement.selectedIndex];
-
-    //     content = `
-    //                 <div class="d-flex justify-content-center align-items-center w-full">
-    //                     <div class="d-flex flex-col justify-content-center align-items-start">
-    //                         <span class="mb-2">
-
-    //                         </span>
-    //                     </div>
-    //                 </div>`
-    // }
     else if (pathName.includes('/admin/exam/create')) {
         const selectElement = document.getElementById('questionSelect');
         var selectedOption = selectElement.options[selectElement.selectedIndex];
@@ -611,6 +613,7 @@ $(document).ready(function () {
     submitForm('#form_update_question');
     submitForm('#form_create_exam');
     submitForm('#form_edit_exam');
+    submitForm('#form_edit_detail_exam');
 
 
     // submitForm('#btn-edit-detail-exam');
@@ -894,19 +897,10 @@ function alertUploadFileExam() {
                     },
                     success: function (response) {
                         console.log(response);
-                        // if (response === "success") {
-                        //     alert("Publish successful");
-                        // } else {
-                        //     alert("Publish failed");
-                        // }
                     },
                     error: function (E) {
                         console.log(E)
-                        // alert("An error occurred");
                     }
-                    // success: function () {
-                    //     document.location.reload(true);
-                    // }
                 });
             }
         })

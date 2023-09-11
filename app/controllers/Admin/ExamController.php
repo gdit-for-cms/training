@@ -210,7 +210,11 @@ class ExamController extends AppController
         $html_content = $request->getPost()->get('html_content');
         $csv_content = $request->getPost()->get('csv_content');
 
-        $file_name = 'exam_intern';
+        $exam_id = $request->getGet()->get('id');
+        $exam = $this->obj_model->getById($exam_id);
+       
+        
+        $file_name = $exam;
         $full_new_directory = $your_server_directory . $file_name;
         $your_server_directory_html = $full_new_directory . '.html';
         $your_server_directory_csv = $full_new_directory . '.csv';
@@ -264,14 +268,17 @@ class ExamController extends AppController
 
         $exam_check_ary = $this->obj_model->getBy('title', '=', $post_ary['title']);
         $num_rows = count($exam_check_ary);
-        if ($num_rows > 0) {
+
+        $id = $post_ary['id'];
+        $title = $post_ary['title'];
+        $description = $post_ary['description'];
+
+        if ($num_rows > 0 && $exam_check_ary[0]['id'] != $id) {
             return $this->errorResponse('Exam has been exist');
         }
 
         try {
-            $id = $post_ary['id'];
-            $title = $post_ary['title'];
-            $description = $post_ary['description'];
+
             $this->obj_model->updateOne(
                 [
                     'title' => $title,
@@ -316,15 +323,11 @@ class ExamController extends AppController
 
     public function editDetailExamAction(Request $request)
     {
-        return $this->errorResponse("âsasas");
-
-        return $this->successResponse();
 
         $post_ary = $request->getPost();
-
-        $exam_id = $request->getPost()->get('exam_id');
-        $question_id = $request->getPost()->get('question_id');
-        $answer_ids = $request->getPost()->get('selected_answer');
+        $exam_id =  $post_ary->get('exam_id');
+        $question_id =  $post_ary->get('question_id');
+        $answer_ids =  $post_ary->get('selected_answer');
 
         $this->obj_model_exam_question->destroyBy('question_id' . '=' . $question_id . ' and ' . 'exam_id' . '=' . $exam_id);
 

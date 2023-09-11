@@ -118,14 +118,13 @@
             }
         }
     }
-
-    function updateCheckboxValues() {
+    // Cập nhật giá trị is_correct trước khi gửi form
+    function updateIsCorrectValues() {
         var checkboxes = document.querySelectorAll('input[name="is_correct[]"]');
         for (var i = 0; i < checkboxes.length; i++) {
             checkboxes[i].value = i; // Cập nhật lại giá trị cho các checkbox dựa trên vị trí của chúng
         }
     }
-    //end chức năng thêm xóa answer
 
     const submitBtn = document.querySelector('#submit')
     const titleInput = document.querySelector('#title')
@@ -150,4 +149,12 @@
             validate()
         })
     }
+    const form = document.querySelector('#form_new_question');
+    form.addEventListener('submit', function(event) {
+        // Ngăn chặn việc gửi form mặc định để thực hiện xử lý tùy chỉnh
+        event.preventDefault();
+
+        // Gọi hàm để cập nhật giá trị is_correct trước khi submit
+        updateIsCorrectValues();
+    })
 </script>

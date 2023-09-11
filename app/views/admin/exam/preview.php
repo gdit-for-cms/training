@@ -9,7 +9,7 @@
 
     <nav class="navbar navbar-expand-lg fixed-top navbar-white bg-white" aria-label="Main navigation">
         <div class="container-fluid">
-            <div class="d-flex align-items-center p-3 text-white bg-primary rounded shadow-sm">
+            <div id="view_time" class="d-flex align-items-center p-3 text-white bg-primary rounded shadow-sm">
                 <div id="countdown" class="lh-1">
                 </div>
             </div>
@@ -73,7 +73,7 @@
                         <button type="button" class="btn-close" id="btn_close_accept_submit"></button>
                     </div>
                     <div class="modal-body text-center">
-                        <h4>Are you sure to submit?</h4>
+                        <h4 id="message">Are you sure to submit?</h4>
                         <button id="btn_accept_submit" class="btn btn-danger mt-1">Yes</button>
                     </div>
                 </div>
