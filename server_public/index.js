@@ -30,6 +30,9 @@ const view_time = document.getElementById('view_time')
 
 var radioButtons = document.querySelectorAll('input[type="radio"]:checked')
 
+const show_email = document.getElementById('show_email')
+const show_name = document.getElementById('show_name')
+
 // Get minutes and seconds stored locally
 let stored_minutes = localStorage.getItem('countdown_minutes');
 let stored_seconds = localStorage.getItem('countdown_seconds');
@@ -44,12 +47,17 @@ document.addEventListener('DOMContentLoaded', function () {
     user_email = localStorage.getItem('user_email')
     user_name = localStorage.getItem('user_name')
     var current_url = window.location.href
-    if (current_url.slice(current_url.length - 4, current_url.length) == 'html' && current_url.slice(24, current_url.length) != '/view/login.html') {
+    if (current_url.slice(current_url.length - 4, current_url.length) == 'html' && current_url.slice(24, current_url.length) != '/view/login.html' && current_url.slice(24, current_url.length) != '/view/thanks.html') {
         localStorage.setItem('current_url', current_url)
 
         if (!user_email && !user_name) {
             window.location.href = '/view/login.html'
         }
+    }
+
+    if (show_name && show_name) {
+        show_email.innerHTML = user_email
+        show_name.innerHTML = user_name
     }
 })
 
@@ -166,7 +174,13 @@ function after_submit() {
         url: "/cgi/handle.cgi",
         data: data_to_send,
         success: function (response) {
-            window.location.href = '/view/thanks.html'
+            if(response == 'false'){
+                window.location.href = '/view/error.html'
+            }else{
+                window.location.href = '/view/thanks.html'
+            }
+            localStorage.removeItem('user_email');
+            localStorage.removeItem('user_name');
         }
     });
 }
@@ -210,7 +224,8 @@ function updateCountdown() {
 
     if (minutes == 8 && seconds == 59) {
         modal_accept_submit.style.display = 'block'
-        message.innerHTML = 'Your test time is only 2 minutes!'
+        btn_close_accept_submit.removeAttribute("hidden")
+        message.innerHTML = 'Your test time is only ' + (minutes*1 + 1) + ' minutes!'
         btn_accept_submit.setAttribute("hidden", true)
     }
     if (minutes <= 8) {
