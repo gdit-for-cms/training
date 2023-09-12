@@ -1,7 +1,8 @@
 <div class="my-3 p-3 bg-body rounded shadow-sm">
     <div class="row">
         <div class="col-12 text-center">
-            <button id="createFilesButton" data-id="<?php echo $exam['id'] ?>" id="submit" class="btn btn-primary btn-upload-file-ftp">Export</button>
+            <a class="btn btn-danger" href="/admin/exam/examDetail?exam_id=<?php echo $exam['id'] ?>" class="page-link">Back</a>
+            <button id="createFilesButton" data-id="<?php echo $exam['id'] ?>" id="submit" class="btn btn-primary btn-upload-file-ftp">Upload</button>
         </div>
     </div>
 </div>
@@ -12,6 +13,12 @@
             <div id="view_time" class="d-flex align-items-center p-3 text-white bg-primary rounded shadow-sm">
                 <div id="countdown" class="lh-1">
                 </div>
+            </div>
+            <div class="d-flex align-items-center p-3 text-white bg-primary rounded shadow-sm">
+                <Strong class="me-1">Email: </Strong>
+                <div id="show_email" class="me-2"></div>
+                <Strong class="me-1">Name: </Strong>
+                <div id="show_name"></div>
             </div>
         </div>
     </nav>
@@ -65,16 +72,18 @@
                 </div>
             </div>
         </form>
-        <div class="modal modal-lg" id="accept_submit" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="anchor-nameLabel" aria-hidden="true" style="margin-left: 550px; margin-top: 300px;">
+        <div class="modal" id="accept_submit" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="anchor-nameLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content modal-accept-submit">
-                    <div class="modal-header bg-primary">
-                        <h5 class="modal-title text-white">Warning</h5>
+                    <div class="modal-header" style="margin-top: -18px;">
+                        <h5 class="modal-title">Warning</h5>
                         <button type="button" class="btn-close" id="btn_close_accept_submit"></button>
                     </div>
                     <div class="modal-body text-center">
-                        <h4 id="message">Are you sure to submit?</h4>
-                        <button id="btn_accept_submit" class="btn btn-danger mt-1">Yes</button>
+                        <h5 id="message">Are you sure to submit?</h5>
+                    </div>
+                    <div class="modal-footer" style="margin-bottom: -18px;">
+                        <button id="btn_accept_submit" class="btn btn-danger">Yes</button>
                     </div>
                 </div>
             </div>

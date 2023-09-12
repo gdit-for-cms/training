@@ -35,7 +35,9 @@
                                     $i++ ?></th>
                     <td><?= $question['question_title'] ?></td>
                     <td>
-                      <?= $question['question_content'] ?>
+                      <div class="overflow-auto" style="width: 400px;height: 120px; max-height: 100%;">
+                        <?= $question['question_content'] ?>
+                      </div>
                     </td>
                     <td>
                       <div class="overflow-auto" style="width: 400px;height: 120px; max-height: 100%;">
@@ -75,25 +77,30 @@
         <div class="flex justify-center items-center">
           <nav aria-label="Page navigation example">
             <ul class="pagination">
+              <li class="page-item cursor-pointer"><a href="/admin/question/index?page=1" class="page-link"><< </a>
+              </li>
+
               <?php
               $next = $page;
               if ((int)$page > 1) {
               ?>
-                <li class="page-item cursor-pointer"><a href="/admin/question/index?page=<?php $page--;
+                <li class=" page-item cursor-pointer"><a href="/admin/question/index?page=<?php $page--;
                                                                                           echo $page; ?>" class="page-link">Previous</a></li>
               <?php
               }
               ?>
               <?php for ($i = 1; $i <= $numbers_of_page; $i++) { ?>
-                <li class="page-item cursor-pointer"><a href="/admin/question/index?page=<?php echo $i; ?>" class="page-link"><?= $i ?></a></li>
+                <li class="page-item cursor-pointer"><a style="<?php if ($next == $i) { ?>background-color: rgb(197, 197, 197)<?php } ?>;" href="/admin/question/index?page=<?php echo $i; ?>" class="page-link"><?= $i ?></a></li>
               <?php }
-              if ($next += 1 == $numbers_of_page) {
+              if ($next != $numbers_of_page) {
               ?>
                 <li class="page-item cursor-pointer"><a href="/admin/question/index?page=<?php echo $next += 1; ?>" class="page-link">Next</a></li>
 
               <?php
               }
               ?>
+              <li class="page-item cursor-pointer"><a href="/admin/question/index?page=<?php echo $numbers_of_page < 1 ? 1 : $numbers_of_page; ?>" class="page-link">>></a></li>
+
             </ul>
           </nav>
         </div>

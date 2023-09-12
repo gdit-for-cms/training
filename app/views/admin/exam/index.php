@@ -1,5 +1,8 @@
 <?php
 $exams = [];
+// echo "<pre>";
+// var_dump($examsWithQuestions);
+// die();
 foreach ($examsWithQuestions as $row) {
     $examId = $row['exam_id'];
 
@@ -8,6 +11,8 @@ foreach ($examsWithQuestions as $row) {
         $exams[$examId] = [
             'exam_id' => $row['exam_id'],
             'exam_title' => $row['exam_title'],
+            'exam_description' => $row['exam_description'],
+            'exam_published' => (int)$row['exam_published'],
             'questions' => []
         ];
     }
@@ -38,18 +43,34 @@ foreach ($examsWithQuestions as $row) {
                 <div class="card" data-name="<?= $exam['exam_title'] ?>">
                     <div class="card-header parpel_bg cursor-pointer" id="headingseven" data-id="<?= $exam['exam_id'] ?>">
                         <h5 class="mb-0 flex items-center justify-between">
+
                             <button class="btn text_white collapsed" data-bs-toggle="collapse" data-bs-target="#collapseseven" aria-expanded="false">
                                 <div class="flex justify-center items-center">
                                     <span class="icon-show font-bold text-2xl mr-4">+</span>
                                     <?php echo $exam['exam_title']; ?>
+                                    <span style="padding-left: 30px;">
+
+                                    </span>
                                 </div>
                             </button>
+                            <!-- <a target="_new" href="<?php echo $directory['domain'] . $exam['exam_id'] . '.html'; ?>">Link exam : <?php echo $directory['domain'] . $exam['exam_id'] . '.html'; ?> </a> -->
+
                         </h5>
                     </div>
                     <div class="table_position collapse" id="collapseseven" aria-labelledby="headingOne" data-parent="#accordion2">
-                        <div class="d-flex justify-content-end mt-2 mr-6">
-                            <a href='/admin/exam/edit?id=<?= $exam['exam_id'] ?>' class="edit-btn btn btn-info text-white mr-2">Edit</a>
-                            <button type="button" data-id="<?= $exam['exam_id'] ?>" class="btn btn-danger btn-delete-question text-white">Delete</button>
+                        <div class="d-flex  mt-2 mr-6">
+                            <div class="col-lg-8 card-body">
+                                <?php if ($exam['exam_published'] == 1) { ?>
+                                    <a style="font-weight: bold;" class="" target="_new" href="<?php echo $directory['domain'] . $exam['exam_id'] . '.html'; ?>">Link Exam : <?php echo $directory['domain'] . $exam['exam_id'] . '.html'; ?> </a>
+                                    <button type="button" class=" edit-btn btn btn-info">Copy</button>
+                                <?php } ?>
+                            </div>
+                            <div class="col-lg-4 card-body">
+                                <button id="createFilesButton" data-id="" id="submit" class="btn btn-primary btn-upload-file-ftp mr-2">Upload</button>
+                                <a href="/admin/exam/examDetail?exam_id=<?php echo $exam['exam_id'] ?>" class="btn btn-success text-white mr-2">View detail</a>
+                                <a href='/admin/exam/edit?id=<?= $exam['exam_id'] ?>' class="edit-btn btn btn-info text-white mr-2">Edit</a>
+                                <button type="button" data-id="<?= $exam['exam_id'] ?>" class="btn btn-danger btn-delete-question text-white">Delete</button>
+                            </div>
                         </div>
                         <div class="card-body row justify-content-center" style="padding-top: 25px;">
                             <div class="col-lg-3">
@@ -104,7 +125,9 @@ foreach ($examsWithQuestions as $row) {
                                                                 <?php echo $question['question_title']; ?>
                                                             </td>
                                                             <td>
-                                                                <?php echo $question['question_content']; ?>
+                                                                <div class="overflow-auto" style='width: 400px;height: 120px; max-height: 100%;'>
+                                                                    <?php echo $question['question_content']; ?>
+                                                                </div>
                                                             </td>
                                                             <td>
                                                                 <button type="button" data-id="<?= $question['question_id'] ?>" class="btn btn-danger btn-delete-exam-detail text-white">Delete</button>
@@ -117,7 +140,6 @@ foreach ($examsWithQuestions as $row) {
                                                 ?>
                                             </tbody>
                                         </table>
-                                        <a href="/admin/exam/examDetail?exam_id=<?php echo $exam['exam_id'] ?>" class="btn btn-info m-2">View detail</a>
 
                                         <div class="flex justify-center items-center">
                                             <nav aria-label="Page navigation example">
@@ -142,17 +164,9 @@ foreach ($examsWithQuestions as $row) {
     const cartHeaderEles = document.querySelectorAll('.card-header')
     const editBtn = document.querySelectorAll('.edit-btn')
     const deleteBtn = document.querySelectorAll('.delete-btn')
-
-
     const btnShowPreviewExam = document.querySelectorAll('.btn-show-add-question')
     const btnShowAddQuestion = document.querySelectorAll('.btn-show-preview-exam')
-
-
     const descriptionElement = document.createElement('div')
-
-
-
-
 
     function start() {
         showTable()

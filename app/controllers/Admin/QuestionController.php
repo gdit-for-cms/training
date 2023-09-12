@@ -32,11 +32,11 @@ class QuestionController extends  AppController
 
     public function indexAction(Request $request)
     {
-        $this->data_ary['questions'] = $this->obj_model->getAll();
-        $this->data_ary['answers'] = $this->obj_model_answer::getAll();
+        // $this->data_ary['questions'] = $this->obj_model->getAll();
+        // $this->data_ary['answers'] = $this->obj_model_answer::getAll();
         $req_method_ary = $request->getGet()->all();
 
-        $results_per_page = 1;
+        $results_per_page = 5;
         $results_ary = $this->obj_model->getAllRelation($req_method_ary, $results_per_page);
 
         $this->data_ary['questions'] = $results_ary['results'];
@@ -66,6 +66,7 @@ class QuestionController extends  AppController
         $title = $result_vali_ary['title'];
         $answers =  $result_vali_ary['answer'];
 
+        var_dump(strpos($content, 'src="')); exit;
         foreach ($answers as $answer) {
             if (strlen(trim($answer)) == 0) {
                 return $this->errorResponse("You need to enter the answer.");

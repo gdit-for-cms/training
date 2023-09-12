@@ -42,13 +42,93 @@ class Exam extends Model
         return $this->where($column, $operator, $value)->get();
     }
 
+    public function getAllRelation($req_method_ary, $results_per_page = 1)
+    {
+        $db = static::getDB();
+        //     $query = 'SELECT
+        //     question.id AS question_id,
+        //     question.title AS question_title,
+        //     question.content AS question_content,
+        //     GROUP_CONCAT(CONCAT(answer.content, " - ", answer.is_correct)) AS answers
+        // FROM
+        //     question
+        // LEFT JOIN
+        //     answer ON question.id = answer.question_id
+        $query = 'SELECT 
+        e.id AS exam_id, 
+        e.title AS exam_title, 
+        e.description AS exam_description,
+        e.published AS exam_published,
+        q.id AS question_id, 
+        q.content AS question_content, 
+        q.title as question_title,
+        GROUP_CONCAT(CONCAT(q.title, " - ", q.content)) AS questions
+      FROM exam AS e
+      LEFT JOIN exam_questions AS qe ON e.id = qe.exam_id
+      LEFT JOIN question AS q ON qe.question_id = q.id
+GROUP BY
+e.id
+ORDER BY e.id DESC';
+
+        if (!isset($req_method_ary['page'])) {
+            $req_method_ary['page'] = '1';
+        }
+        $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
+        $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
+
+        $stmt_count = $db->query($query);
+        $numbers_of_page = count($stmt_count->fetchAll(PDO::FETCH_ASSOC));
+        $stmt = $db->query($query . " " . $limit_query);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results, 'page' => $req_method_ary['page']);
+        return $results_ary;
+    }
+
+    public function getDetailExams($req_method_ary, $results_per_page = 5)
+    {
+        $exam_id = 0;
+        if (isset($req_method_ary['exam_id'])) {
+            $exam_id = $req_method_ary['exam_id'];
+        }
+
+        $db = static::getDB();
+        $query = "SELECT
+        q.id AS question_id,
+        q.title AS question_title,
+        q.content AS question_content,
+        GROUP_CONCAT(CONCAT(a.content, ' - ', a.is_correct)) AS answers
+        FROM
+            exam_questions as eq
+        LEFT JOIN
+            answer AS a ON eq.answer_id = a.id
+        LEFT JOIN
+            question as q ON eq.question_id = q.id
+        WHERE 
+            eq.exam_id = '$exam_id' 
+        GROUP BY
+            q.id
+        ORDER BY q.id DESC";
+
+        if (!isset($req_method_ary['page'])) {
+            $req_method_ary['page'] = '1';
+        }
+        $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
+        $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
+
+        $stmt_count = $db->query($query);
+        $numbers_of_page = count($stmt_count->fetchAll(PDO::FETCH_ASSOC));
+        $stmt = $db->query($query . " " . $limit_query);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results, 'page' => $req_method_ary['page']);
+        return $results_ary;
+    }
     public function getExamsWithQuestions($id = '')
     {
         $db = static::getDB();
 
         // Thực hiện câu truy vấn để lấy thông tin bài thi và câu hỏi liên quan
         $query = "SELECT e.id AS exam_id, e.title AS exam_title, e.description AS exam_description,
-                    q.id AS question_id, q.content AS question_content, q.title as question_title
+        e.published AS exam_published,q.id AS question_id, q.content AS question_content, q.title as question_title
                   FROM exam AS e
                   LEFT JOIN exam_questions AS qe ON e.id = qe.exam_id
                   LEFT JOIN question AS q ON qe.question_id = q.id";

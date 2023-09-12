@@ -22,15 +22,15 @@
                         </textarea>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="correct">Correct*</label>
-                        <span>|</span>
+                        <label class="form-label" style="margin-right: 30px;" for="correct">Correct*</label>
+                        <!-- <span>|</span> -->
                         <label class="form-label" for="answer">Answer*</label>
                         <div id="answerContainer">
                             <!-- Ô input mặc định -->
                             <?php
                             foreach ($answers as $answer) {
                             ?>
-                                <div class="form-check">
+                                <div class="form-check" style="padding-left: 45px;">
                                     <input class="form-check-input" style="margin-right: 50px;" name="is_correct[]" type="checkbox" <?php if ($answer['is_correct'] == 1) {
                                                                                                                                         echo "checked";
                                                                                                                                     } ?> value="<?php echo $answer['is_correct'] ?>" onchange="updateCheckboxValue(this)">
@@ -48,6 +48,8 @@
                             <button type="button" class="btn btn-info m-2" onclick="addAnswer()">Add</button>
                         </div>
                     </div>
+                    <a class="btn btn-danger" href="/admin/question/index" class="page-link">Back</a>
+
                     <button id="submit" type="submit" class="btn btn-primary">Edit</button>
                 </form>
             </div>
@@ -69,6 +71,7 @@
 
         var newAnswerDiv = document.createElement("div");
         newAnswerDiv.classList.add("form-check");
+        newAnswerDiv.style = "padding-left: 45px;";
 
         var answerCheckbox = document.createElement("input");
         answerCheckbox.classList.add("form-check-input");

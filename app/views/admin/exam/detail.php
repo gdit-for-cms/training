@@ -1,3 +1,11 @@
+<?php
+// echo "<pre>";
+// var_dump($question_answers);
+// $answers = explode(',', $question_answers[0]['answers']);
+// $answer = explode('-', $answers[0]);
+// var_dump($answer);
+// die();
+?>
 <div class="container-fluid p-0 ">
     <div class="row">
         <div class="col-12">
@@ -18,12 +26,7 @@
                             ?>
                                 <a href="/admin/exam/create?exam_id=<?php echo $exam['id']; ?>"><button type=" button" class="btn btn-success float-end">Add Question</button></a>
                                 <a href="/admin/exam/preview?exam_id=<?php echo $exam['id']; ?>"><button data-id="<?php echo $exam['id']; ?>" type="button" class="btn btn-primary btn-show-preview-exam text-white  mr-2">Preview</button></a>
-                                <div>
-                                    <form action="/admin/exam/export" class="" method="post">
-                                        <input type="hidden" name="exam_id" value="<?php echo $exam['id'] ?>">
-                                        <input type="hidden" name="exam_title" value="<?php echo htmlspecialchars($exam['title']); ?>">
-                                    </form>
-                                </div>
+                                <!-- <button id="createFilesButton" data-id="<?php echo $exam['id'] ?>" id="submit" class="btn btn-primary btn-upload-file-ftp">Upload</button> -->
                             <?php
                             }
                             ?>
@@ -53,19 +56,21 @@
                                 <?php
                                 if (!empty($question_answers)) {
                                     $st = 1;
-                                    foreach ($question_answers as $question_answer) { ?>
+                                    foreach ($question_answers as $question_answer) {
+                                        $answers = explode(',', $question_answer['answers']);
+                                ?>
                                         <tr>
                                             <th scope="row"><?php echo $st++; ?></th>
 
                                             <td>
                                                 <div class="overflow-auto" style='width: 400px;height: 120px; max-height: 100%;'>
-                                                    <?php echo $question_answer['question']['title'] ?>
+                                                    <?php echo $question_answer['question_title'] ?>
                                                 </div>
 
                                             </td>
                                             <td>
                                                 <div class="overflow-auto" style='width: 400px;height: 120px; max-height: 100%;'>
-                                                    <?php echo $question_answer['question']['content'] ?>
+                                                    <?php echo $question_answer['question_content'] ?>
                                                 </div>
                                             </td>
                                             <td>
@@ -73,19 +78,21 @@
                                                     <?php
                                                     $stt = 1;
 
-                                                    foreach ($question_answer['answers'] as $answer) {
-                                                        if ($answer['is_correct'] == 1) {
+                                                    foreach ($answers as $answer) {
+                                                        $answer = explode('-', $answer);
+
+                                                        if ($answer['1'] == 1) {
                                                     ?>
                                                             <span style="background-color: #e0eb37; margin-right: 20px;">
                                                                 <?php
-                                                                echo $stt++ . " ) " . $answer['content'] . "<br>";
+                                                                echo $stt++ . " ) " . $answer[0] . "<br>";
                                                                 ?> </span>
                                                         <?php
                                                         } else {
                                                         ?>
                                                             <span style="margin-right: 20px;">
                                                                 <?php
-                                                                echo $stt++ . " ) " . $answer['content'] . "<br>";
+                                                                echo $stt++ . " ) " . $answer[0] . "<br>";
                                                                 ?> </span>
                                                     <?php
                                                         }
@@ -98,8 +105,8 @@
                                             ?>
                                                 <td>
                                                     <div class="d-flex ">
-                                                        <a href=" /admin/exam/detail-edit?question_id=<?php echo $question_answer['question']['id']; ?>&exam_id=<?php echo $exam['id']; ?>" class="btn btn-primary text-white mx-1 ">Edit</a>
-                                                        <button data-id="<?php echo $question_answer['question']['id']; ?>" type="button" class="btn btn-danger btn-delete-exam-detail text-white ">Delete</button>
+                                                        <a href=" /admin/exam/detail-edit?question_id=<?php echo $question_answer['question_id']; ?>&exam_id=<?php echo $exam['id']; ?>" class="btn btn-primary text-white mx-1 ">Edit</a>
+                                                        <button data-id="<?php echo $question_answer['question_id']; ?>" type="button" class="btn btn-danger btn-delete-exam-detail text-white ">Delete</button>
                                                     </div>
                                                 </td>
                                             <?php
@@ -117,6 +124,35 @@
                                 ?>
                             </tbody>
                         </table>
+                        <div class="flex justify-center items-center">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination">
+                                    <li class="page-item cursor-pointer"><a href="/admin/exam/examDetail?exam_id=<?= $exam['id'] ?>&page=1" class="page-link">
+                                            << </a>
+                                    </li>
+                                    <?php
+                                    $next = $page;
+                                    if ((int)$page > 1) {
+                                    ?>
+                                        <li class="page-item cursor-pointer"><a href="/admin/exam/examDetail?exam_id=<?= $exam['id'] ?>&page=<?php $page--;
+                                                                                                                                                echo $page; ?>" class="page-link">Previous</a></li>
+                                    <?php
+                                    }
+                                    ?>
+                                    <?php for ($i = 1; $i <= $numbers_of_page; $i++) { ?>
+                                        <li class="page-item cursor-pointer"><a style="<?php if ($next == $i) { ?>background-color: rgb(197, 197, 197)<?php } ?>;" href="/admin/exam/examDetail?exam_id=<?= $exam['id'] ?>&page=<?php echo $i; ?>" class="page-link"><?= $i ?></a></li>
+                                    <?php }
+                                    if ($next != $numbers_of_page) {
+                                    ?>
+                                        <li class="page-item cursor-pointer"><a href="/admin/exam/examDetail?exam_id=<?= $exam['id'] ?>&page=<?php echo $next += 1; ?>" class="page-link">Next</a></li>
+
+                                    <?php
+                                    }
+                                    ?>
+                                    <li class="page-item cursor-pointer"><a href="/admin/exam/examDetail?exam_id=<?= $exam['id'] ?>&page=<?php echo $numbers_of_page < 1 ? 1 : $numbers_of_page; ?>" class="page-link">>></a></li>
+                                </ul>
+                            </nav>
+                        </div>
                     </div>
                 </div>
             </div>

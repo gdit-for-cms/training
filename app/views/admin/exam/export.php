@@ -1,33 +1,3 @@
-<?php
-// $ftp_server = 'ftp.example.com';
-// $ftp_username = 'your_ftp_username';
-// $ftp_password = 'your_ftp_password';
-// $ftp_directory = '/path/to/destination/directory/';
-
-// $local_html_file = 'path/to/local/file.html';
-// $local_csv_file = 'path/to/local/file.csv';
-
-// $remote_html_file = $ftp_directory . 'file.html';
-// $remote_csv_file = $ftp_directory . 'file.csv';
-
-// $conn_id = ftp_connect($ftp_server);
-// $login_result = ftp_login($conn_id, $ftp_username, $ftp_password);
-
-// if ($conn_id && $login_result) {
-//     if (
-//         ftp_put($conn_id, $remote_html_file, $local_html_file, FTP_BINARY) &&
-//         ftp_put($conn_id, $remote_csv_file, $local_csv_file, FTP_BINARY)
-//     ) {
-//         echo "Files uploaded successfully.";
-//     } else {
-//         echo "File upload failed.";
-//     }
-
-//     ftp_close($conn_id);
-// } else {
-//     echo "Could not connect to FTP server.";
-// }
-?>
 <!DOCTYPE html>
 <html>
 

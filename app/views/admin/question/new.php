@@ -19,11 +19,13 @@
                         <textarea id="editor-edit-note" class="form-control h-120px" name="content" rows="3"><?php  ?></textarea>
                     </div>
                     <div class="mb-3">
+                        <label class="form-label" for="correct" style="margin-right: 30px;">Correct*</label>
+                        <!-- <span>|</span> -->
                         <label class="form-label" for="answer">Answer*</label>
                         <div id="answerContainer">
                             <!-- Ô input mặc định -->
-                            <div class="form-check">
-                                <input class="form-check-input" name="is_correct[]" type="checkbox" value="0" onchange="updateCheckboxValue(this)">
+                            <div class="form-check" style="padding-left: 45px;">
+                                <input class="form-check-input"  style="margin-right: 50px;" name="is_correct[]" type="checkbox" value="0" onchange="updateCheckboxValue(this)">
                                 <div class="input-with-button">
                                     <input type="text" class="form-control input-answer" name="answer[]" value="" placeholder="Answer...">
                                     <button type="button" class="remove-button btn btn-danger delete-btn text-white" onclick="removeAnswer(this)">Delete</button>
@@ -55,9 +57,10 @@
 
         var newAnswerDiv = document.createElement("div");
         newAnswerDiv.classList.add("form-check");
-
+        newAnswerDiv.style = "padding-left: 45px;";
         var answerCheckbox = document.createElement("input");
         answerCheckbox.classList.add("form-check-input");
+        answerCheckbox.style = "margin-right: 50px;";
         answerCheckbox.type = "checkbox";
         answerCheckbox.name = "is_correct[]";
         answerCheckbox.value = currentAnswerIndex; // Gán giá trị của ô input hiện tại
