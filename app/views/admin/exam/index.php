@@ -61,8 +61,8 @@ foreach ($examsWithQuestions as $row) {
                         <div class="d-flex  mt-2 mr-6">
                             <div class="col-lg-8 card-body">
                                 <?php if ($exam['exam_published'] == 1) { ?>
-                                    <a style="font-weight: bold;" class="" target="_new" href="<?php echo $directory['domain'] . $exam['exam_id'] . '.html'; ?>">Link Exam : <?php echo $directory['domain'] . $exam['exam_id'] . '.html'; ?> </a>
-                                    <button type="button" class=" edit-btn btn btn-info">Copy</button>
+                                    <a style="font-weight: bold;" class="linkToCopy" id="linkToCopy" target="_new" href="<?php echo $directory['domain'] . $exam['exam_id'] . '.html'; ?>">Link Exam : <?php echo $directory['domain'] . $exam['exam_id'] . '.html'; ?> </a>
+                                    <button onclick="copyLink()" type="button" class=" edit-btn btn btn-info">Copy</button>
                                 <?php } ?>
                             </div>
                             <div class="col-lg-4 card-body">
@@ -161,6 +161,26 @@ foreach ($examsWithQuestions as $row) {
     </div>
 </div>
 <script>
+    function copyLink() {
+        // Lấy thẻ <a> bằng cách sử dụng id hoặc bất kỳ phương thức nào khác
+        var linkElement = document.getElementById("linkToCopy");
+
+        // Lấy giá trị của thuộc tính href
+        var linkHref = linkElement.getAttribute("href");
+
+        // Sao chép giá trị href vào clipboard
+        var tempInput = document.createElement("input");
+        tempInput.value = linkHref;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
+
+        // Thông báo cho người dùng
+        alert("Link has been copied to clipboard: " + linkHref);
+    }
+
+
     const cartHeaderEles = document.querySelectorAll('.card-header')
     const editBtn = document.querySelectorAll('.edit-btn')
     const deleteBtn = document.querySelectorAll('.delete-btn')

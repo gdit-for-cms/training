@@ -275,9 +275,12 @@ class ExamController extends AppController
             } else {
                 echo "failed.";
             }
-
-            
-
+            $this->obj_model->updateOne(
+                [
+                    'published' => 1,
+                ],
+                "id = $exam_id"
+            );
             ftp_close($ftp_connection);
         }
     }
