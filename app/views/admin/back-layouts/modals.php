@@ -21,6 +21,7 @@
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane show active" id="upload" role="tabpanel" aria-labelledby="btn-upload-tab">
                             <form action="/admin/image/store" name="upload-images-form" id="upload-images-form" enctype="multipart/form-data" method="post">
+                                <input type="hidden" name="url_current" id="url_current">
                                 <div class=" row group-select-one-file">
                                     <div class="row">
                                         <div class="col-3">

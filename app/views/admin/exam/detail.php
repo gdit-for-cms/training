@@ -1,9 +1,9 @@
 <?php
 // echo "<pre>";
-// var_dump($question_answers);
+// var_dump($question_answers[1]['']);
 // $answers = explode(',', $question_answers[0]['answers']);
-// $answer = explode('-', $answers[0]);
-// var_dump($answer);
+// // $answer = explode('-', $answers[0]);
+// // var_dump($answers);
 // die();
 ?>
 <div class="container-fluid p-0 ">
@@ -80,7 +80,7 @@
 
                                                     foreach ($answers as $answer) {
                                                         $answer = explode('-', $answer);
-
+                                                      
                                                         if ($answer['1'] == 1) {
                                                     ?>
                                                             <span style="background-color: #e0eb37; margin-right: 20px;">

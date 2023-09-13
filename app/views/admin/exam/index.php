@@ -61,12 +61,12 @@ foreach ($examsWithQuestions as $row) {
                         <div class="d-flex  mt-2 mr-6">
                             <div class="col-lg-8 card-body">
                                 <?php if ($exam['exam_published'] == 1) { ?>
-                                    <a style="font-weight: bold;" class="linkToCopy" id="linkToCopy" target="_new" href="<?php echo $directory['domain'] . $exam['exam_id'] . '.html'; ?>">Link Exam : <?php echo $directory['domain'] . $exam['exam_id'] . '.html'; ?> </a>
-                                    <button onclick="copyLink()" type="button" class=" edit-btn btn btn-info">Copy</button>
+                                    <a style="font-weight: bold;" class="linkToCopy" id="linkToCopy<?php echo $exam['exam_id'] ?>" target="_new" href="<?php echo $directory['domain'] . $exam['exam_id'] . '.html'; ?>">Link Exam : <?php echo $directory['domain'] . $exam['exam_id'] . '.html'; ?> </a>
+                                    <button onclick="copyLink('linkToCopy<?php echo $exam['exam_id'] ?>')" type="button" class=" edit-btn btn btn-info">Copy</button>
                                 <?php } ?>
                             </div>
                             <div class="col-lg-4 card-body">
-                                <button id="createFilesButton" data-id="" id="submit" class="btn btn-primary btn-upload-file-ftp mr-2">Upload</button>
+                                <!-- <button id="createFilesButton" data-id="" id="submit" class="btn btn-primary btn-upload-file-ftp mr-2">Upload</button> -->
                                 <a href="/admin/exam/examDetail?exam_id=<?php echo $exam['exam_id'] ?>" class="btn btn-success text-white mr-2">View detail</a>
                                 <a href='/admin/exam/edit?id=<?= $exam['exam_id'] ?>' class="edit-btn btn btn-info text-white mr-2">Edit</a>
                                 <button type="button" data-id="<?= $exam['exam_id'] ?>" class="btn btn-danger btn-delete-question text-white">Delete</button>
@@ -161,9 +161,9 @@ foreach ($examsWithQuestions as $row) {
     </div>
 </div>
 <script>
-    function copyLink() {
+    function copyLink(linkToCopy) {
         // Lấy thẻ <a> bằng cách sử dụng id hoặc bất kỳ phương thức nào khác
-        var linkElement = document.getElementById("linkToCopy");
+        var linkElement = document.getElementById(linkToCopy);
 
         // Lấy giá trị của thuộc tính href
         var linkHref = linkElement.getAttribute("href");

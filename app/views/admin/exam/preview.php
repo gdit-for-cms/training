@@ -67,7 +67,7 @@
             <div class="my-3 p-3 bg-body rounded shadow-sm">
                 <div class="row">
                     <div class="col-12 text-center">
-                        <button id="btn_submit" class="btn btn-primary">Submit</button>
+                        <button id="btn_submit" class="btn btn-primary" disabled>Submit</button>
                     </div>
                 </div>
             </div>
@@ -93,7 +93,7 @@
 <div class="hidden" id="csv_answer"><?php echo $csv_answer; ?></div>
 <script>
     const submitBtn = document.querySelector('#submit')
-
+    // submitBtn.disabled = false;
     function validate() {
         if (titleInput.value == '') {
             submitBtn.disabled = true;

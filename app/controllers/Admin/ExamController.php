@@ -123,7 +123,8 @@ class ExamController extends AppController
         try {
             $this->obj_model->insert([
                 'title' => $exam_title,
-                'description' => $exam_description
+                'description' => $exam_description,
+                'published'=>0
             ]);
 
             return $this->successResponse();
@@ -262,6 +263,7 @@ class ExamController extends AppController
             $check_put_html = file_put_contents($your_server_directory_html, $html_content);
             $check_put_csv = file_put_contents($your_server_directory_csv, $csv_content);
 
+       
             if ($check_put_html !== false && $check_put_csv !== false) {
                 //upload files from your server to the server that needs to store the files
                 $upload_html = ftp_put($ftp_connection, $html_directory . basename($your_server_directory_html), $your_server_directory_html, FTP_BINARY);

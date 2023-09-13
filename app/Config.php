@@ -42,11 +42,12 @@ class Config
 
     // config server by FTP upload file
     const YOUR_SERVER_DIRECTORY = '/htdocs/BT1/training/public/';
+    const YOUR_SERVER_DIRECTORY_QUESION = '/htdocs/BT1/training/public/images/library_images/question/';
+    const FTP_SERVER_PUBLIC_DIRECTORY = '/htdocs/training2/training/server_public/';
     const FTP_SERVER = '192.168.1.208';
     const FTP_USERNAME = 'gdit_ftp';
     const FTP_PASSWORD = 'gdit6385';
     const FTP_PUBLIC_DIRECTORY_HTML = '/htdocs/training2/training/server_public/';
     const FTP_PUBLIC_DIRECTORY_CSV = '/htdocs/training2/training/cgi/csv/';
     const FTP_DOMAIN = 'http://cms208.dev3.local/';
-
 }

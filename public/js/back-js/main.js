@@ -823,6 +823,8 @@ function alertDeleteRule() {
 
 function alertUploadFileExam() {
     $('.btn-upload-file-ftp').click(function (e) {
+        var btn_submit = document.getElementById('btn_submit');
+        btn_submit.disabled=false;
         let uploadFileID = $(this).data('id');
         let pathName = window.location.pathname.split('/')[2];
         var content = document.getElementById('content_exam');

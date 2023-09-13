@@ -66,7 +66,7 @@ class QuestionController extends  AppController
         $title = $result_vali_ary['title'];
         $answers =  $result_vali_ary['answer'];
 
-        var_dump(strpos($content, 'src="')); exit;
+        // var_dump(strpos($content, 'src="')); exit;
         foreach ($answers as $answer) {
             if (strlen(trim($answer)) == 0) {
                 return $this->errorResponse("You need to enter the answer.");

@@ -5,6 +5,7 @@ namespace App\Controllers\Admin;
 use App\Models\Image;
 use Core\Http\Request;
 use Core\Http\ResponseTrait;
+use App\Config;
 
 class ImageController extends AppController
 {
@@ -65,41 +66,83 @@ class ImageController extends AppController
             $all_results = $add_item_result['all_results'];
 
             if (!empty($data_upload)) {
-                $target_dir = "images/library_images";
-                if(!file_exists($target_dir)){
+                $target_dir = "";
+                $check_url = strpos($post['url_current'], "/question/");
+                if ($check_url) {
+                    $target_dir = "questions";
+                } else {
+                    $target_dir = 'images/library_images';
+                }
+                if (!file_exists($target_dir)) {
                     mkdir($target_dir, 0777, true);
                 }
 
-                foreach ($data_upload as $key => $value) {
-                    
-                    $extension = explode('.', $value['file']['name'])[1];
-                    $file_name = rand(10, 1000000) . time() . '.' . $extension;
-                    $file_path = 'images/library_images/' . $file_name;
-                    if (file_exists($file_path)) {
-                        $all_results['failed'][$key] = 'File already exists';
-                    } else {
-                        try {
-                            if (move_uploaded_file($value['file']['tmp_name'], $file_path)) {
-                                $file_data = [
-                                    'name' => $value['name'],
-                                    'path' => $file_path
-                                ];
-                                $result = $this->obj_image->create($file_data);
-                                if ($result) {
-                                    $all_results['success'][$key] = 'Uploaded!';
-                                    $get_data_from_db = $this->obj_image->getBy('path', '=', $file_path);
-                                    if ($get_data_from_db) {
-                                        $all_results['new_images'][$key] = $get_data_from_db;
+                //start Dong Vu Tien Nghia
+                $ftp_server = Config::FTP_SERVER;
+                $ftp_username = Config::FTP_USERNAME;
+                $ftp_password = Config::FTP_PASSWORD;
+                $ftp_server_public_directory = Config::FTP_SERVER_PUBLIC_DIRECTORY;
+                $your_publish_derectory = Config::YOUR_SERVER_DIRECTORY;
+                $ftp_connection = ftp_connect($ftp_server);
+                $login = ftp_login($ftp_connection, $ftp_username, $ftp_password);
+
+
+                //end Dong Vu Tien Nghia
+                if ($ftp_connection && $login) {
+
+                    // Lấy danh sách các tệp và thư mục trong thư mục "public"
+                    $directoryContents = ftp_nlist($ftp_connection, $ftp_server_public_directory);
+
+                    // Kiểm tra xem thư mục "question" có trong danh sách không
+                    $questionFolderExists = in_array($ftp_server_public_directory . $target_dir, $directoryContents);
+
+
+                    if (!$questionFolderExists && $check_url) {
+
+                        ftp_mkdir($ftp_connection, $ftp_server_public_directory . '/' . $target_dir);
+                        ftp_chmod($ftp_connection, 0777, $ftp_server_public_directory . '/' . $target_dir);
+                    }
+
+                    foreach ($data_upload as $key => $value) {
+
+                        $extension = explode('.', $value['file']['name'])[1];
+                        $file_name = rand(10, 1000000) . time() . '.' . $extension;
+                        $file_path = $target_dir . '/' . $file_name;
+                        if (file_exists($file_path)) {
+                            $all_results['failed'][$key] = 'File already exists';
+                        } else {
+                            try {
+                                if (move_uploaded_file($value['file']['tmp_name'], $file_path)) {
+                                    $file_data = [
+                                        'name' => $value['name'],
+                                        'path' => $file_path
+                                    ];
+                                    $result = $this->obj_image->create($file_data);
+                                    if ($result) {
+                                        $all_results['success'][$key] = 'Uploaded!';
+                                        $get_data_from_db = $this->obj_image->getBy('path', '=', $file_path);
+                                        if ($get_data_from_db) {
+                                            $all_results['new_images'][$key] = $get_data_from_db;
+                                        }
+                                    } else {
+                                        unlink($file_path);
+                                        $all_results['failed'][$key] = 'Failed!';
                                     }
                                 } else {
-                                    unlink($file_path);
                                     $all_results['failed'][$key] = 'Failed!';
                                 }
-                            } else {
+                            } catch (\Throwable $th) {
                                 $all_results['failed'][$key] = 'Failed!';
                             }
-                        } catch (\Throwable $th) {
-                            $all_results['failed'][$key] = 'Failed!';
+                        }
+
+                        $ftp_directory_question = $ftp_server_public_directory . $target_dir;
+
+                        if ($check_url) {
+                            $upload_question = ftp_put($ftp_connection, $ftp_directory_question . '/' . basename($your_publish_derectory . $file_path), $your_publish_derectory  . $file_path, FTP_BINARY);
+                            if (!$upload_question) {
+                                die("Cann't upload");
+                            }
                         }
                     }
                 }
