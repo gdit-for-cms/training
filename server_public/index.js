@@ -81,6 +81,7 @@ if (btn_login) {
     })
 }
 
+// When clicking the yes button when login
 if (btn_yes) {
     btn_yes.addEventListener('click', function (e) {
         var url = localStorage.getItem('current_url')
@@ -165,7 +166,7 @@ function after_submit() {
         email: user_email,
         name: user_name,
         file_csv: csv_file_path,
-        exam_results: JSON.stringify(exam_results)  // Chuyển đối tượng thành chuỗi JSON
+        exam_results: JSON.stringify(exam_results)
     }
 
     // Switch to the handle folder to process the scoring and email the results.
@@ -235,4 +236,3 @@ function updateCountdown() {
 }
 
 //////////////////////////////////////////////////////////////////////////
-
