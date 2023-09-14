@@ -34,12 +34,12 @@ const show_email = document.getElementById('show_email')
 const show_name = document.getElementById('show_name')
 
 // Get minutes and seconds stored locally
-let stored_minutes = localStorage.getItem('countdown_minutes');
-let stored_seconds = localStorage.getItem('countdown_seconds');
+let stored_minutes = localStorage.getItem('countdown_minutes')
+let stored_seconds = localStorage.getItem('countdown_seconds')
 
 // If there is no local time, set a fixed number
-let minutes = stored_minutes ? parseInt(stored_minutes) : 10;
-let seconds = stored_seconds ? parseInt(stored_seconds) : 0;
+let minutes = stored_minutes ? parseInt(stored_minutes) : 10
+let seconds = stored_seconds ? parseInt(stored_seconds) : 0
 //////////////////////////////////////////////////////
 
 // Check to see if the user has entered email and name. If not, go to the login page to enter information before taking the test.
@@ -135,31 +135,46 @@ function remove_diacritics(str) {
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
         .replace(/đ/g, 'd')
-        .replace(/Đ/g, 'D');
+        .replace(/Đ/g, 'D')
 }
 
 // Handling after clicking the submit confirmation button
 function after_submit() {
-    // Delete time variables stored locally
-    localStorage.removeItem('countdown_minutes');
-    localStorage.removeItem('countdown_seconds');
-
     // Get user responses
-    var answer = form_exam.querySelectorAll('input[type="radio"]')
-    answer.forEach(function (radio_button) {
-        if (radio_button.checked) {
-            var name = radio_button.getAttribute('name')
-            var value = radio_button.getAttribute('id')
-            exam_results[name] = value.slice(value.length - 1, value.length)
+    var answer = form_exam.querySelectorAll('input[type="checkbox"]')
+    var question = 0
+    var array_ans = []
+    var name_tmp = 0
+    answer.forEach(function (checkbox) {
+        if (checkbox.checked) {
+            var name = checkbox.getAttribute('name')
+            var value = checkbox.getAttribute('id')
+            var ans = value.slice(value.length - 1, value.length)
+
+            if(question == 0){
+                question = name
+                array_ans.push(ans)
+            } else {
+                if (question == name) {
+                    array_ans.push(ans)
+                } else {
+                    exam_results[name_tmp] = array_ans
+                    array_ans = []
+                    question = name
+                    array_ans.push(ans)
+                }
+            }
+            name_tmp = name
         }
     })
+    exam_results[question] = array_ans
 
     // Get the answer file name
     var url = localStorage.getItem('current_url')
     var csv_file_path = ''
     if (url) {
         var file_csv = url.slice(24, url.length - 4)
-        csv_file_path = file_csv + 'csv';
+        csv_file_path = file_csv + 'csv'
     }
 
     var data_to_send = {
@@ -180,10 +195,14 @@ function after_submit() {
             }else{
                 window.location.href = '/view/thanks.html'
             }
-            localStorage.removeItem('user_email');
-            localStorage.removeItem('user_name');
+            localStorage.removeItem('user_email')
+            localStorage.removeItem('user_name')
+
+            // Delete time variables stored locally
+            localStorage.removeItem('countdown_minutes')
+            localStorage.removeItem('countdown_seconds')
         }
-    });
+    })
 }
 
 // Validate for email
@@ -193,8 +212,8 @@ function is_valid_email(email) {
 }
 
 function is_valid_name(name) {
-    var regex = /^[a-zA-Z0-9\s]+$/;
-    return regex.test(name);
+    var regex = /^[a-zA-Z0-9\s]+$/
+    return regex.test(name)
 }
 
 // Handle countdown time
@@ -203,13 +222,13 @@ function updateCountdown() {
         if (countdown_element) {
             countdown_element.innerHTML = 'Thời gian đã hết'
             clearInterval(countdownInterval)
-            after_submit()
+            // after_submit()
         }
     } else {
         if (countdown_element) {
-            const minutesDisplay = String(minutes).padStart(2, '0')
-            const secondsDisplay = String(seconds).padStart(2, '0')
-            countdown_element.innerHTML = `Thời gian còn lại: ${minutesDisplay} phút ${secondsDisplay} giây`
+            const minutes_display = String(minutes).padStart(2, '0')
+            const seconds_display = String(seconds).padStart(2, '0')
+            countdown_element.innerHTML = `Thời gian còn lại: ${minutes_display} phút ${seconds_display} giây`
 
             if (seconds === 0) {
                 minutes--
@@ -219,17 +238,17 @@ function updateCountdown() {
             }
         }
         
-        localStorage.setItem('countdown_minutes', minutes.toString());
-        localStorage.setItem('countdown_seconds', seconds.toString());
+        localStorage.setItem('countdown_minutes', minutes.toString())
+        localStorage.setItem('countdown_seconds', seconds.toString())
     }
 
-    if (minutes == 8 && seconds == 59) {
+    if (minutes == 1 && seconds == 59) {
         modal_accept_submit.style.display = 'block'
         btn_close_accept_submit.removeAttribute("hidden")
         message.innerHTML = 'Your test time is only ' + (minutes*1 + 1) + ' minutes!'
         btn_accept_submit.setAttribute("hidden", true)
     }
-    if (minutes <= 8) {
+    if (minutes <= 1) {
         view_time.classList.remove("bg-primary")
         view_time.classList.add("bg-danger")
     }
