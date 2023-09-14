@@ -1,11 +1,3 @@
-<?php
-// echo "<pre>";
-// var_dump($question_answers[1]['']);
-// $answers = explode(',', $question_answers[0]['answers']);
-// // $answer = explode('-', $answers[0]);
-// // var_dump($answers);
-// die();
-?>
 <div class="container-fluid p-0 ">
     <div class="row">
         <div class="col-12">
@@ -80,7 +72,7 @@
 
                                                     foreach ($answers as $answer) {
                                                         $answer = explode('-', $answer);
-                                                      
+
                                                         if ($answer['1'] == 1) {
                                                     ?>
                                                             <span style="background-color: #e0eb37; margin-right: 20px;">
@@ -127,29 +119,33 @@
                         <div class="flex justify-center items-center">
                             <nav aria-label="Page navigation example">
                                 <ul class="pagination">
-                                    <li class="page-item cursor-pointer"><a href="/admin/exam/examDetail?exam_id=<?= $exam['id'] ?>&page=1" class="page-link">
-                                            << </a>
-                                    </li>
                                     <?php
                                     $next = $page;
-                                    if ((int)$page > 1) {
+                                    if ($page <= $numbers_of_page) {
                                     ?>
-                                        <li class="page-item cursor-pointer"><a href="/admin/exam/examDetail?exam_id=<?= $exam['id'] ?>&page=<?php $page--;
-                                                                                                                                                echo $page; ?>" class="page-link">Previous</a></li>
-                                    <?php
-                                    }
-                                    ?>
-                                    <?php for ($i = 1; $i <= $numbers_of_page; $i++) { ?>
-                                        <li class="page-item cursor-pointer"><a style="<?php if ($next == $i) { ?>background-color: rgb(197, 197, 197)<?php } ?>;" href="/admin/exam/examDetail?exam_id=<?= $exam['id'] ?>&page=<?php echo $i; ?>" class="page-link"><?= $i ?></a></li>
-                                    <?php }
-                                    if ($next != $numbers_of_page) {
-                                    ?>
-                                        <li class="page-item cursor-pointer"><a href="/admin/exam/examDetail?exam_id=<?= $exam['id'] ?>&page=<?php echo $next += 1; ?>" class="page-link">Next</a></li>
+                                        <li class="page-item cursor-pointer"><a href="/admin/question/index?page=1" class="page-link">
+                                                << </a>
+                                        </li>
+                                        <?php
+                                        if ($page > 1) {
+                                        ?>
+                                            <li class=" page-item cursor-pointer"><a href="/admin/question/index?page=<?php $page--;
+                                                                                                                        echo $page; ?>" class="page-link">Previous</a></li>
+                                        <?php
+                                        }
+                                        ?>
+                                        <?php for ($i = 1; $i <= $numbers_of_page; $i++) { ?>
+                                            <li class="page-item cursor-pointer"><a style="<?php if ($next == $i) { ?>background-color: rgb(197, 197, 197)<?php } ?>;" href="/admin/question/index?page=<?php echo $i; ?>" class="page-link"><?= $i ?></a></li>
+                                        <?php }
+                                        if ($next < $numbers_of_page) {
+                                        ?>
+                                            <li class="page-item cursor-pointer"><a href="/admin/question/index?page=<?php echo $next += 1; ?>" class="page-link">Next</a></li>
 
-                                    <?php
-                                    }
-                                    ?>
-                                    <li class="page-item cursor-pointer"><a href="/admin/exam/examDetail?exam_id=<?= $exam['id'] ?>&page=<?php echo $numbers_of_page < 1 ? 1 : $numbers_of_page; ?>" class="page-link">>></a></li>
+                                        <?php
+                                        }
+                                        ?>
+                                        <li class="page-item cursor-pointer"><a href="/admin/question/index?page=<?php echo $numbers_of_page < 1 ? 1 : $numbers_of_page; ?>" class="page-link">>></a></li>
+                                    <?php } ?>
                                 </ul>
                             </nav>
                         </div>

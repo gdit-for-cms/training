@@ -18,7 +18,7 @@ class Question extends Model
     private $_table = 'question';
 
     /**
-     * Get all the users as an associative array
+     * Get all the questions as an associative array
      *
      * @return array
      */

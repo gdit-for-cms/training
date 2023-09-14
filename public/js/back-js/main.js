@@ -185,6 +185,8 @@ function submitForm(formId) {
                         setTimeout(() => {
                             document.location.reload(true);
                         }, "1600");
+                        window.history.back()
+
                     },
                     error: function (response) {
                         Swal.fire({

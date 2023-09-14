@@ -9,6 +9,40 @@
         </div>
         <div class="white_card_body">
             <div class="card-body">
+                <form id="form_new_question col-12" class="" action="create" method="POST">
+                    <div class="mb-3 col-3" style="" >
+                        <label class="form-label" for="title">Title*</label>
+                        <input class="form-control" rows="3" name="title" id="title" placeholder="Title..." />
+                    </div>
+                    <div class="mb-3 col-3">
+                        <label class="form-label" for="title">Description*</label>
+                        <input class="form-control" rows="3" name="title" id="title" placeholder="Title..." />
+                    </div>
+                    <div class="mb-3 col-3">
+                        <label class="form-label" for="title">Title*</label>
+                        <input class="form-control" rows="3" name="title" id="title" placeholder="Title..." />
+                    </div>
+                    <div class="mb-3 col-3">
+                        <label class="form-label" for="title">Title*</label>
+                        <input class="form-control" rows="3" name="title" id="title" placeholder="Title..." />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-12">
+    <div class="white_card card_height_100 mb_30">
+        <div class="white_card_header">
+            <div class="box_header m-0">
+                <div class="main-title">
+                    <h3 class="m-0">New questions</h3>
+                </div>
+            </div>
+        </div>
+        <div class="white_card_body">
+            <div class="card-body">
                 <form id="form_new_question" class="" action="create" method="POST">
                     <div class="mb-3">
                         <label class="form-label" for="title">Title*</label>
@@ -25,7 +59,7 @@
                         <div id="answerContainer">
                             <!-- Ô input mặc định -->
                             <div class="form-check" style="padding-left: 45px;">
-                                <input class="form-check-input"  style="margin-right: 50px;" name="is_correct[]" type="checkbox" value="0" onchange="updateCheckboxValue(this)">
+                                <input class="form-check-input" style="margin-right: 50px;" name="is_correct[]" type="checkbox" value="0" onchange="updateCheckboxValue(this)">
                                 <div class="input-with-button">
                                     <input type="text" class="form-control input-answer" name="answer[]" value="" placeholder="Answer...">
                                     <button type="button" class="remove-button btn btn-danger delete-btn text-white" onclick="removeAnswer(this)">Delete</button>

@@ -2,7 +2,6 @@
 
 namespace App\Controllers\Admin;
 
-
 use App\Controllers\Admin\AppController;
 use App\Requests\AppRequest;
 use App\models\Exam;
@@ -42,48 +41,6 @@ class ExamController extends AppController
 
     public function indexAction(Request $request)
     {
-        // $ftp_server = Config::FTP_SERVER;
-        // $ftp_username = Config::FTP_USERNAME;
-        // $ftp_password = Config::FTP_PASSWORD;
-        // $html_directory =  Config::FTP_PUBLIC_DIRECTORY_HTML;
-        // $csv_directory = Config::FTP_PUBLIC_DIRECTORY_CSV;
-        // $your_server_directory = Config::YOUR_SERVER_DIRECTORY;
-
-        // $ftp_connection = ftp_connect($ftp_server);
-        // $login = ftp_login($ftp_connection, $ftp_username, $ftp_password);
-
-        // $html_content = $request->getPost()->get('html_content');
-        // $csv_content = $request->getPost()->get('csv_content');
-
-        // $exam_id = $request->getGet()->get('id');
-        // $exam = $this->obj_model->getById($exam_id);
-
-
-        // $file_name = "exam" . $exam_id;
-        // $full_new_directory = $your_server_directory . $file_name;
-        // $your_server_directory_html = $full_new_directory . '.html';
-        // $your_server_directory_csv = $full_new_directory . '.csv';
-
-        // if ($ftp_connection && $login) {
-        //     // upload files to my server
-        //     $check_put_html = file_put_contents($your_server_directory_html, $html_content);
-        //     $check_put_csv = file_put_contents($your_server_directory_csv, $csv_content);
-
-        //     if ($check_put_html !== false && $check_put_csv !== false) {
-        //         //upload files from your server to the server that needs to store the files
-        //         $upload_html = ftp_put($ftp_connection, $html_directory . basename($your_server_directory_html), $your_server_directory_html, FTP_BINARY);
-        //         $upload_csv = ftp_put($ftp_connection, $csv_directory . basename($your_server_directory_csv), $your_server_directory_csv, FTP_BINARY);
-
-        //         unlink($your_server_directory_html);
-        //         unlink($your_server_directory_csv);
-        //         if (!$upload_html && !$upload_csv) {
-        //             die("Cann't upload");
-        //         }
-        //     } else {
-        //         echo "failed.";
-        //     }
-        //     ftp_close($ftp_connection);
-        // }
         $file = 'exam';
         $html_directory =  Config::FTP_PUBLIC_DIRECTORY_HTML;
         $csv_directory = Config::FTP_PUBLIC_DIRECTORY_CSV;
@@ -91,7 +48,31 @@ class ExamController extends AppController
         $directory['csv'] = $csv_directory . $file;
         $directory['domain'] = Config::FTP_DOMAIN  . $file;
         $this->data_ary['directory'] = $directory;
-        $this->data_ary['examsWithQuestions'] = $this->obj_model->getExamsWithQuestions();
+        // $this->data_ary['exams'] = $this->obj_model->getAll();
+
+
+
+
+
+        // pagination
+        // $exam_id = $request->getGet()->get('exam_id');
+        // $req_method_ary['exam_id'] = $exam_id;
+        $req_method_ary = $request->getGet()->all();
+        $results_per_page = 5;
+        $results_ary = $this->obj_model->getExam($req_method_ary, $results_per_page);
+
+        
+
+        $numbers_of_result = $results_ary['numbers_of_page'];
+        $numbers_of_page = ceil($numbers_of_result / $results_per_page);
+        $this->data_ary['numbers_of_page'] = $numbers_of_page;
+        $this->data_ary['page'] = (float)$results_ary['page'];
+        $this->data_ary['exams'] = $results_ary['results'];
+
+        // echo "<pre>";
+        // var_dump($this->data_ary['exams']);
+        // die();
+
         $this->data_ary['content'] = 'exam/index';
     }
 
@@ -112,6 +93,7 @@ class ExamController extends AppController
 
         $exam_title = $result_vali_ary['title'];
         $exam_description =  $result_vali_ary['description'];
+        $exam_duration = $result_vali_ary['duration'];
 
         $exams = $this->obj_model->getAll();
         foreach ($exams as $exam) {
@@ -124,7 +106,9 @@ class ExamController extends AppController
             $this->obj_model->insert([
                 'title' => $exam_title,
                 'description' => $exam_description,
-                'published'=>0
+                'published' => 0,
+                'duration' => $exam_duration
+
             ]);
 
             return $this->successResponse();
@@ -263,7 +247,7 @@ class ExamController extends AppController
             $check_put_html = file_put_contents($your_server_directory_html, $html_content);
             $check_put_csv = file_put_contents($your_server_directory_csv, $csv_content);
 
-       
+
             if ($check_put_html !== false && $check_put_csv !== false) {
                 //upload files from your server to the server that needs to store the files
                 $upload_html = ftp_put($ftp_connection, $html_directory . basename($your_server_directory_html), $your_server_directory_html, FTP_BINARY);
@@ -297,6 +281,7 @@ class ExamController extends AppController
 
     public function update(Request $request)
     {
+
         $post_ary = $request->getPost()->all();
 
         $check_exam = $this->obj_model->getById($post_ary['id']);
@@ -318,21 +303,20 @@ class ExamController extends AppController
         $id = $post_ary['id'];
         $title = $post_ary['title'];
         $description = $post_ary['description'];
-
+        $duration = $post_ary['duration'];
         if ($num_rows > 0 && $exam_check_ary[0]['id'] != $id) {
             return $this->errorResponse('Exam has been exist');
         }
 
         try {
-
             $this->obj_model->updateOne(
                 [
                     'title' => $title,
                     'description' => $description,
+                    'duration' => $duration
                 ],
                 "id = $id"
             );
-
             return $this->successResponse();
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
@@ -402,7 +386,5 @@ class ExamController extends AppController
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         };
-
-        // header('Location:/admin/exam/examDetail?exam_id=' . $exam_id);
     }
 }

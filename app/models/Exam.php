@@ -45,15 +45,7 @@ class Exam extends Model
     public function getAllRelation($req_method_ary, $results_per_page = 1)
     {
         $db = static::getDB();
-        //     $query = 'SELECT
-        //     question.id AS question_id,
-        //     question.title AS question_title,
-        //     question.content AS question_content,
-        //     GROUP_CONCAT(CONCAT(answer.content, " - ", answer.is_correct)) AS answers
-        // FROM
-        //     question
-        // LEFT JOIN
-        //     answer ON question.id = answer.question_id
+
         $query = 'SELECT 
         e.id AS exam_id, 
         e.title AS exam_title, 
@@ -122,6 +114,29 @@ ORDER BY e.id DESC';
         $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results, 'page' => $req_method_ary['page']);
         return $results_ary;
     }
+
+    public function getExam($req_method_ary, $results_per_page = 5)
+    {
+
+
+        $db = static::getDB();
+        $query = "SELECT e.id, e.title, e.description, e.published, e.duration, e.updated_at FROM exam as e ORDER BY e.id DESC";
+
+        $req_method_ary['page'] = isset($req_method_ary['page']) && $req_method_ary['page'] >= 1 ? $req_method_ary['page'] : '1';
+        
+        $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
+        $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
+
+        $stmt_count = $db->query($query);
+        $numbers_of_page = count($stmt_count->fetchAll(PDO::FETCH_ASSOC));
+        $stmt = $db->query($query . " " . $limit_query);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results, 'page' => $req_method_ary['page']);
+
+
+        return $results_ary;
+    }
+
     public function getExamsWithQuestions($id = '')
     {
         $db = static::getDB();
@@ -143,6 +158,10 @@ ORDER BY e.id DESC';
             'title' => array(
                 'required',
                 'name',
+                'filled',
+            ),
+            'duration' => array(
+                'required',
                 'filled',
             ),
             'description' => array(),
