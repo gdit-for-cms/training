@@ -56,10 +56,7 @@ class Question extends Model
     public static function  rules($change = '', $value = [])
     {
         $rules_ary = array(
-            'title' => array(
-                'required',
-                'filled',
-            ),
+
             'content' => array(
                 'required',
                 'filled',
@@ -110,6 +107,9 @@ class Question extends Model
         if (!isset($req_method_ary['page'])) {
             $req_method_ary['page'] = '1';
         }
+        if ($req_method_ary['page'] < 1) {
+            $req_method_ary['page'] = '1';
+        }
         $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
         $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
 
@@ -117,7 +117,7 @@ class Question extends Model
         $numbers_of_page = count($stmt_count->fetchAll(PDO::FETCH_ASSOC));
         $stmt = $db->query($query . " " . $limit_query);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results, 'page'=>$req_method_ary['page']);
+        $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results, 'page' => $req_method_ary['page']);
         return $results_ary;
     }
 }

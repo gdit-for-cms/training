@@ -6,6 +6,7 @@ use App\Controllers\Admin\AppController;
 use Core\Http\Request;
 use App\models\Question;
 use App\models\Answer;
+use App\Models\QuestionTitle;
 use App\Requests\AppRequest;
 use Core\Http\ResponseTrait;
 
@@ -23,23 +24,26 @@ class QuestionController extends  AppController
 
     public object $app_request;
 
+    public object $obj_model_question_title;
+
     public function __construct()
     {
         $this->obj_model = new Question;
         $this->obj_model_answer = new Answer;
+        $this->obj_model_question_title = new QuestionTitle;
         $this->app_request = new AppRequest;
     }
 
     public function indexAction(Request $request)
     {
-        // $this->data_ary['questions'] = $this->obj_model->getAll();
-        // $this->data_ary['answers'] = $this->obj_model_answer::getAll();
+
         $req_method_ary = $request->getGet()->all();
 
         $results_per_page = 5;
-        $results_ary = $this->obj_model->getAllRelation($req_method_ary, $results_per_page);
+        // $results_ary = $this->obj_model->getAllRelation($req_method_ary, $results_per_page);
+        $results_ary = $this->obj_model_question_title->getAllHasPagination($req_method_ary, $results_per_page);
 
-        $this->data_ary['questions'] = $results_ary['results'];
+        $this->data_ary['question_titles'] = $results_ary['results'];
         $numbers_of_result = $results_ary['numbers_of_page'];
         $numbers_of_page = ceil($numbers_of_result / $results_per_page);
         $this->data_ary['numbers_of_page'] = $numbers_of_page;
@@ -48,8 +52,15 @@ class QuestionController extends  AppController
         $this->data_ary['content'] = 'question/index';
     }
 
-    public function newAction()
+    public function newAction(Request $request)
     {
+        $req_method_ary = $request->getGet()->all();
+
+        $question_title_id = $req_method_ary['ques-title'];
+
+        $question_title = $this->obj_model_question_title->getById($question_title_id, 'id, title, description');
+
+        $this->data_ary['question_title'] = $question_title;
         $this->data_ary['content'] = 'question/new';
     }
 
@@ -66,7 +77,6 @@ class QuestionController extends  AppController
         $title = $result_vali_ary['title'];
         $answers =  $result_vali_ary['answer'];
 
-        // var_dump(strpos($content, 'src="')); exit;
         foreach ($answers as $answer) {
             if (strlen(trim($answer)) == 0) {
                 return $this->errorResponse("You need to enter the answer.");
@@ -93,6 +103,7 @@ class QuestionController extends  AppController
                     [
                         'title' => $title,
                         'content' => $content,
+                        'question_title_id' => 1
                     ]
                 );
                 $questionId = $this->obj_model->getLatest();

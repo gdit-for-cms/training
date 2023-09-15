@@ -83,15 +83,6 @@ function checkPathName() {
         content = `
                     <div class="d-flex justify-content-center align-items-center w-full">
                         <div class="d-flex flex-col justify-content-center align-items-start">
-                            <span class="mb-2">
-                                <span class="font-bold">Title: </span>
-                                ${title.value}
-                            </span>
-                            <span class="mb-2">
-                                <span class="font-bold">Content: </span>
-                                ${ckeditor.value}
-                            </span>
-                          
                         </div>
                     </div>`
     } else if (pathName.includes('/admin/exam/edit')) {
@@ -138,15 +129,13 @@ function checkPathName() {
                         </div>
                     </div>`
     }
-
     else {
-
         content = `
                     <div class="d-flex justify-content-center align-items-center w-full">
                         <div class="d-flex flex-col justify-content-center align-items-start">
                             <span class="mb-2">
                                 <span class="font-bold">Title: </span>
-                                ${name.value}
+                                ${title.value}
                             </span>
                         </div>
                     </div>`
@@ -366,7 +355,12 @@ function alertDeleteExamDetail() {
 function alertDeleteQuestion() {
     $('.btn-delete-question').click(function (e) {
         let deleteID = $(this).data('id');
-        let pathName = window.location.pathname.split('/')[2]
+        let pathName = window.location.pathname;
+        let pathName2 = pathName.split('/')[2]
+        let pathName3 = pathName.split('/')[3]
+        if (pathName3 == "index" && pathName2 == "question") {
+            pathName = "question-title"
+        }
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -616,6 +610,7 @@ $(document).ready(function () {
     submitForm('#form_create_exam');
     submitForm('#form_edit_exam');
     submitForm('#form_edit_detail_exam');
+    submitForm('#form_new_question_title');
 
 
     // submitForm('#btn-edit-detail-exam');
@@ -826,7 +821,7 @@ function alertDeleteRule() {
 function alertUploadFileExam() {
     $('.btn-upload-file-ftp').click(function (e) {
         var btn_submit = document.getElementById('btn_submit');
-        btn_submit.disabled=false;
+        btn_submit.disabled = false;
         let uploadFileID = $(this).data('id');
         let pathName = window.location.pathname.split('/')[2];
         var content = document.getElementById('content_exam');

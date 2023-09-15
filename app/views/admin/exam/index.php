@@ -1,9 +1,8 @@
-
 <div class="card_box box_shadow position-relative mb_30">
     <div class="white_box_tittle ">
         <div class="main-title2 flex items-center justify-between">
             <h4 class="mb-2 nowrap">Exam</h4>
-            <a href='/admin/exam/new'><button type="button" class="btn btn-success">Create</button></a>
+            <a href='/admin/exam/new'><button type="button" class="btn btn-success">Create </button></a>
         </div>
     </div>
     <div class="box_body white_card_body">
@@ -53,7 +52,7 @@
                                 <td class="col-1">
                                     <?php echo $exam['updated_at'] ?>
                                 </td>
-                                <td class="col-2" style=" align-items: center;">
+                                <td class="col-3" style=" align-items: center;">
                                     <?php if ($exam['published'] == 1) { ?>
                                         <a style="" class="linkToCopy text-primary-hover" id="linkToCopy<?php echo $exam['id']; ?>" target="_new" href="<?php echo $directory['domain'] . $exam['id'] . '.html' ?>"><?php echo $directory['domain'] . $exam['id'] . '.html' ?> </a>
                                     <?php } ?>
@@ -80,9 +79,9 @@
                             </tr>
                         <?php
                         }
+
                         ?>
                     </tbody>
-
                 </table>
                 <div class="flex justify-center items-center">
                     <nav aria-label="Page navigation example">
@@ -118,13 +117,8 @@
                     </nav>
                 </div>
             </div>
-
-            <?php
-
-            ?>
         </div>
     </div>
-
 </div>
 
 <script>
