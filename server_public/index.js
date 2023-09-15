@@ -7,6 +7,10 @@ var key = 1
 var count = 0
 var file_html = ''
 
+const current_date = new Date();
+var start_time_in_seconds = Math.floor(current_date.getTime() / 1000);
+var end_time_in_seconds = Math.floor(current_date.getTime() / 1000);
+
 const input_email = document.getElementById('email')
 const input_name = document.getElementById('name')
 
@@ -73,10 +77,27 @@ if (btn_login) {
         } else if (value_email.length > 50 || value_name.length > 25) {
             alert('Name or email is too long!')
         } else {
-            localStorage.setItem('user_email', value_email)
-            localStorage.setItem('user_name', value_name)
+            var data = {
+                email: value_email,
+            }
 
-            modal_accept_submit.style.display = 'block'
+            $.ajax({
+                type: "POST",
+                url: "/cgi/login.cgi",
+                data: data,
+                success: function (response) {
+                    if(response == 'mail_false'){
+                        alert('Email does not exist!')
+                    } else if (response == 'code_false') {
+                        alert('You have taken this test, you cannot take this again!')
+                    } else {
+                        localStorage.setItem('user_email', value_email)
+                        localStorage.setItem('user_name', value_name)
+
+                        modal_accept_submit.style.display = 'block'
+                    }
+                }
+            })
         }
     })
 }
@@ -87,6 +108,10 @@ if (btn_yes) {
         var url = localStorage.getItem('current_url')
         if (url) {
             file_html = url.slice(24, url.length)
+            
+            const current_date = new Date();
+            start_time_in_seconds = Math.floor(current_date.getTime() / 1000);
+
             window.location.href = file_html
         } else {
             alert('Please click on the correct link!')
@@ -118,8 +143,14 @@ if (btn_accept_submit) {
         e.preventDefault()
         btn_accept_submit.disabled = true
         btn_close_accept_submit.disabled = true
-        after_submit()
+        end_time_in_seconds = Math.floor(current_date.getTime() / 1000)
 
+        if (check_time()) {
+            after_submit()
+        } else {
+            alert('You cheated by interfering in the calculation of exam time. You cannot submit this test!')
+            setTimeout(window.location.href = '/view/login.html', 5000)
+        }
     })
 }
 
@@ -151,7 +182,7 @@ function after_submit() {
             var value = checkbox.getAttribute('id')
             var ans = value.slice(value.length - 1, value.length)
 
-            if(question == 0){
+            if (question == 0) {
                 question = name
                 array_ans.push(ans)
             } else {
@@ -190,9 +221,9 @@ function after_submit() {
         url: "/cgi/handle.cgi",
         data: data_to_send,
         success: function (response) {
-            if(response == 'false'){
+            if (response == 'false') {
                 window.location.href = '/view/error.html'
-            }else{
+            } else {
                 window.location.href = '/view/thanks.html'
             }
             localStorage.removeItem('user_email')
@@ -222,7 +253,12 @@ function updateCountdown() {
         if (countdown_element) {
             countdown_element.innerHTML = 'Thời gian đã hết'
             clearInterval(countdownInterval)
-            // after_submit()
+            if (check_time()) {
+                after_submit()
+            } else {
+                alert('You cheated by interfering in the calculation of exam time. You cannot submit this test!')
+                setTimeout(window.location.href = '/view/login.html', 5000)
+            }
         }
     } else {
         if (countdown_element) {
@@ -237,7 +273,7 @@ function updateCountdown() {
                 seconds--
             }
         }
-        
+
         localStorage.setItem('countdown_minutes', minutes.toString())
         localStorage.setItem('countdown_seconds', seconds.toString())
     }
@@ -245,12 +281,21 @@ function updateCountdown() {
     if (minutes == 1 && seconds == 59) {
         modal_accept_submit.style.display = 'block'
         btn_close_accept_submit.removeAttribute("hidden")
-        message.innerHTML = 'Your test time is only ' + (minutes*1 + 1) + ' minutes!'
+        message.innerHTML = 'Your test time is only ' + (minutes * 1 + 1) + ' minutes!'
         btn_accept_submit.setAttribute("hidden", true)
     }
     if (minutes <= 1) {
         view_time.classList.remove("bg-primary")
         view_time.classList.add("bg-danger")
+    }
+}
+
+function check_time() {
+    var time_difference = end_time_in_seconds - start_time_in_seconds
+    if (time_difference > 10 * 60 * 1000) {
+        return false
+    } else {
+        return true
     }
 }
 
