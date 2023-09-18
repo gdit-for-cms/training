@@ -66,6 +66,7 @@ class QuestionController extends  AppController
 
     public function create(Request $request)
     {
+
         $result_vali_ary = $this->app_request->validate($this->obj_model->rules(), $request, 'post');
 
         if (in_array('error', $result_vali_ary)) {
@@ -74,7 +75,7 @@ class QuestionController extends  AppController
         }
 
         $content = $result_vali_ary['content'];
-        $title = $result_vali_ary['title'];
+        $question_title_id = $result_vali_ary['question_title_id'];
         $answers =  $result_vali_ary['answer'];
 
         foreach ($answers as $answer) {
@@ -101,9 +102,9 @@ class QuestionController extends  AppController
             try {
                 $questionId = $this->obj_model->create(
                     [
-                        'title' => $title,
+                        // 'title' => $title,
                         'content' => $content,
-                        'question_title_id' => 1
+                        'question_title_id' => $question_title_id
                     ]
                 );
                 $questionId = $this->obj_model->getLatest();
@@ -127,10 +128,14 @@ class QuestionController extends  AppController
     }
     public function editAction(Request $request)
     {
-        $id = $request->getGet()->get('id');
+        $id = $request->getGet()->get('ques-title');
 
-        $this->data_ary['question'] = $this->obj_model->getById($id, 'id, title, content');
-        $this->data_ary['answers'] = $this->obj_model_answer->getBy('question_id', '=', $id);
+        // $this->data_ary['question'] = $this->obj_model->getById($id, 'id, title, content');
+        // $this->data_ary['answers'] = $this->obj_model_answer->getBy('question_id', '=', $id);
+        $this->data_ary['question_title'] =  $this->obj_model_question_title->getById($id, 'id, title, description, updated_at');
+        // echo "<pre>";
+        // var_dump($this->data_ary['question_title']);
+        // die();
         $this->data_ary['content'] = 'question/edit';
     }
 
@@ -205,5 +210,22 @@ class QuestionController extends  AppController
                 return $this->errorResponse($th->getMessage());
             };
         }
+    }
+
+    public function detailAction(Request $request)
+    {
+        $req_method_ary = $request->getGet()->all();
+
+        $results_per_page = 5;
+        $results_ary = $this->obj_model->getAllRelation($req_method_ary, $results_per_page);
+        // $results_ary = $this->obj_model_question_title->getAllHasPagination($req_method_ary, $results_per_page);
+
+        $this->data_ary['question_titles'] = $results_ary['results'];
+        $numbers_of_result = $results_ary['numbers_of_page'];
+        $numbers_of_page = ceil($numbers_of_result / $results_per_page);
+        $this->data_ary['numbers_of_page'] = $numbers_of_page;
+        $this->data_ary['page'] = (float)$results_ary['page'];
+
+        $this->data_ary['content'] = 'question/detail';
     }
 }

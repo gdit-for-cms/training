@@ -3,7 +3,7 @@
         <div class="white_card_header">
             <div class="box_header m-0">
                 <div class="main-title">
-                    <h3 class="m-0">Collection questions</h3>
+                    <h3 class="m-0">Collection question</h3>
                 </div>
             </div>
         </div>
@@ -36,38 +36,30 @@
         <div class="white_card_body">
             <div class="card-body">
                 <form id="form_new_question" class="" action="create" method="POST">
-                    <div id="questionContainer">
-                        <div class="d-flex mb-10 border border-dark" id="question_answer">
-                            <div class="mb-3 col-6">
-                                <label for="content" class="form-label">Content*</label>
-                                <textarea id="editor-edit-note" class="form-control h-120px " name="content" rows="3"><?php  ?></textarea>
-                            </div>
-                            <div class="mb-3 col-6">
-                                <label class="form-label" for="correct" style="margin-right: 30px;">Correct*</label>
-                                <!-- <span>|</span> -->
-                                <label class="form-label" for="answer">Answer*</label>
-                                <div id="answerContainer">
-                                    <!-- Ô input mặc định -->
-                                    <div class="form-check" style="padding-left: 45px;">
-                                        <input class="form-check-input" style="margin-right: 50px;" name="is_correct[]" type="checkbox" value="0" onchange="updateCheckboxValue()">
-                                        <div class="input-with-button">
-                                            <input type="text" class="form-control input-answer" name="answer[]" value="" placeholder="Answer...">
-                                            <button type="button" class="remove-button btn btn-danger delete-btn text-white" onclick="removeAnswer()">Delete</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="input-add-answer">
-                                    <button type="button" class="btn btn-success text-white" onclick="addAnswer(this)">+</button>
+                    <input type="hidden" name="question_title_id" value="<?php echo $question_title['id']; ?>">
+                    <div class="mb-3">
+                        <label for="content" class="form-label">Content*</label>
+                        <textarea id="editor-edit-note" class="form-control h-120px" name="content" rows="3"><?php  ?></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="correct" style="margin-right: 30px;">Correct*</label>
+                        <!-- <span>|</span> -->
+                        <label class="form-label" for="answer">Answer*</label>
+                        <div id="answerContainer">
+                            <!-- Ô input mặc định -->
+                            <div class="form-check" style="padding-left: 45px;">
+                                <input class="form-check-input" style="margin-right: 50px;" name="is_correct[]" type="checkbox" value="0" onchange="updateCheckboxValue(this)">
+                                <div class="input-with-button">
+                                    <input type="text" class="form-control input-answer" name="answer[]" value="" placeholder="Answer...">
+                                    <button type="button" class="remove-button btn btn-danger delete-btn text-white" onclick="removeAnswer(this)">Delete</button>
                                 </div>
                             </div>
                         </div>
+                        <div class="input-add-answer">
+                            <button type="button" class="btn btn-info m-2" onclick="addAnswer()">Thêm</button>
+                        </div>
                     </div>
-
-                    <div class="mt-10">
-                        <button type="button" onclick="addQuestion()" class="btn btn-info text-white">Add question</button>
-                        <button id="submit" type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-
+                    <button id="submit" type="submit" class="btn btn-primary">Create</button>
                 </form>
             </div>
         </div>
@@ -76,53 +68,12 @@
 
 
 <script>
-    // function addQuestion() {
-    //     const questionContainer = document.getElementById("questionContainer");
-
-    //     // Create a new question container
-    //     const questionDiv = document.createElement("div");
-    //     questionDiv.classList.add("d-flex", "mb-10", "border-dark", "border", "border-dark");
-    //     questionDiv.id = "question_answer";
-
-    //     // Add the answerHTML code to the question container
-    //     const ques_ans = `
-    //                         <div class="mb-3 col-6">
-    //                             <label for="content" class="form-label">Content*</label>
-    //                             <textarea id="editor-edit-note" class="form-control h-120px " name="content" rows="3"><?php  ?></textarea>
-    //                         </div>
-    //                         <div class="mb-3 col-6">
-    //                             <label class="form-label" for="correct" style="margin-right: 30px;">Correct*</label>
-    //                             <!-- <span>|</span> -->
-    //                             <label class="form-label" for="answer">Answer*</label>
-    //                             <div id="answerContainer">
-    //                                 <!-- Ô input mặc định -->
-    //                                 <div class="form-check" style="padding-left: 45px;">
-    //                                     <input class="form-check-input" style="margin-right: 50px;" name="is_correct[]" type="checkbox" value="0" onchange="updateCheckboxValue()">
-    //                                     <div class="input-with-button">
-    //                                         <input type="text" class="form-control input-answer" name="answer[]" value="" placeholder="Answer...">
-    //                                         <button type="button" class="remove-button btn btn-danger delete-btn text-white" onclick="removeAnswer(this)">Delete</button>
-    //                                     </div>
-    //                                 </div>
-    //                             </div>
-    //                             <div class="input-add-answer">
-    //                                 <button type="button" class="btn btn-success text-white" onclick="addAnswer(this)">+</button>
-    //                             </div>
-    //                         </div>
-    // `;
-    //     questionDiv.innerHTML = ques_ans;
-
-    //     // Append the new question container to the main container
-    //     questionContainer.appendChild(questionDiv);
-    // }
-    function addQuestion(){
-        
-    }
-
+    // Biến tạm để lưu giá trị của ô input hiện tại
     var currentAnswerIndex = 1;
     // Mảng lưu vị trí các checkbox đã chọn
     var selectedPositions = [];
 
-    function addAnswer(button) {
+    function addAnswer() {
         var answerContainer = document.getElementById("answerContainer");
 
         var newAnswerDiv = document.createElement("div");
@@ -137,17 +88,14 @@
         answerCheckbox.addEventListener("change", function() {
             updateCheckboxValue(this);
         });
-
         var inputWithButton = document.createElement("div");
         inputWithButton.classList.add("input-with-button");
-
         var answerInput = document.createElement("input");
         answerInput.type = "text";
         answerInput.classList.add("form-control", "input-answer");
         answerInput.name = "answer[]";
         answerInput.value = "";
         answerInput.placeholder = "Answer...";
-
         var removeButton = document.createElement("button");
         removeButton.type = "button";
         removeButton.textContent = "Delete";
@@ -155,15 +103,11 @@
         removeButton.onclick = function() {
             removeAnswer(this);
         };
-
         inputWithButton.appendChild(answerInput);
         inputWithButton.appendChild(removeButton);
-
         newAnswerDiv.appendChild(answerCheckbox);
         newAnswerDiv.appendChild(inputWithButton);
-
         answerContainer.appendChild(newAnswerDiv);
-
         currentAnswerIndex++; // Tăng giá trị biến tạm lên để sử dụng cho ô input tiếp theo
     }
 
@@ -171,6 +115,7 @@
         var answerContainer = document.getElementById("answerContainer");
         if (answerContainer.children.length > 1) {
             answerContainer.removeChild(button.parentElement.parentElement);
+            updateCheckboxValues(); // Cập nhật lại giá trị của các checkbox sau khi xóa
             // updateCheckboxValues(); // Cập nhật lại giá trị của các checkbox sau khi xóa
         } else {
             alert("Phải có ít nhất một câu trả lời.");
@@ -179,7 +124,6 @@
 
     function updateCheckboxValue(checkbox) {
         const answerIndex = parseInt(checkbox.value);
-
         if (checkbox.checked) {
             if (!selectedPositions.includes(answerIndex)) {
                 selectedPositions.push(answerIndex);
@@ -198,7 +142,6 @@
             checkboxes[i].value = i; // Cập nhật lại giá trị cho các checkbox dựa trên vị trí của chúng
         }
     }
-
     const submitBtn = document.querySelector('#submit')
     const titleInput = document.querySelector('#title')
     const contentInput = document.querySelector('#editor-edit-note')
@@ -208,7 +151,6 @@
         checkChangeInput(contentInput)
     }
     // start()
-
     function validate() {
         if (titleInput.value == '') {
             submitBtn.disabled = true;
@@ -226,7 +168,6 @@
     form.addEventListener('submit', function(event) {
         // Ngăn chặn việc gửi form mặc định để thực hiện xử lý tùy chỉnh
         event.preventDefault();
-
         // Gọi hàm để cập nhật giá trị is_correct trước khi submit
         updateIsCorrectValues();
     })

@@ -123,7 +123,7 @@ ORDER BY e.id DESC';
         $query = "SELECT e.id, e.title, e.description, e.published, e.duration, e.updated_at FROM exam as e ORDER BY e.id DESC";
 
         $req_method_ary['page'] = isset($req_method_ary['page']) && $req_method_ary['page'] >= 1 ? $req_method_ary['page'] : '1';
-        
+
         $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
         $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
 
@@ -163,6 +163,7 @@ ORDER BY e.id DESC';
             'duration' => array(
                 'required',
                 'filled',
+
             ),
             'description' => array(),
         );
@@ -196,5 +197,10 @@ ORDER BY e.id DESC';
                 return $rules_ary;
                 break;
         }
+    }
+
+    public function create($data)
+    {
+        return $this->insert($data);
     }
 }

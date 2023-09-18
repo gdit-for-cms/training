@@ -10,7 +10,7 @@
         <div class="white_card_body">
             <div class="card-body">
                 <form id="form_new_question_title" class=" col-12" action="/admin/question-title/create" method="POST">
-                    <div class="mb-3 col-6" style="">
+                    <div class="mb-3 col-6">
                         <label class="form-label" for="title">Title*</label>
                         <input class="form-control" rows="3" name="title" id="title" placeholder="Title..." />
                     </div>

@@ -50,8 +50,8 @@
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                       <li><a class="dropdown-item" href="/admin/question/new?ques-title=<?php echo $question_title['question_id']; ?>">Add Question</a></li>
-                      <li><a class="dropdown-item" href="/admin/question/index">Detail</a></li>
-                      <li><a class="dropdown-item" href="/admin/question/index">Edit</a></li>
+                      <li><a class="dropdown-item" href="/admin/question/detail?question_id=<?php echo $question_title['question_id']; ?>">Detail</a></li>
+                      <li><a class="dropdown-item" href="/admin/question-title/edit?ques-title=<?php echo $question_title['question_id']; ?>">Edit</a></li>
                       <li>
                         <button type="button" data-id="<?php echo $question_title['question_id']; ?>" class="dropdown-item btn-delete-question ">Delete</button>
                       </li>

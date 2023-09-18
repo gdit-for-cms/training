@@ -1,7 +1,7 @@
 <div class="card_box box_shadow position-relative mb_30">
     <div class="white_box_tittle ">
         <div class="main-title2 flex items-center justify-between">
-            <h4 class="mb-2 nowrap">Exam</h4>
+            <h4 class="mb-2 nowrap">Exam collection</h4>
             <a href='/admin/exam/new'><button type="button" class="btn btn-success">Create </button></a>
         </div>
     </div>
@@ -63,6 +63,9 @@
                                             Action
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+
+                                            <li><a href="/admin/exam-question/new?exam_id=<?php echo $exam['id']; ?>" class="dropdown-item">Add Question</a></li>
+
                                             <li><button id="createFilesButton" data-id="<?php echo $exam['id']; ?>" id="submit" class="dropdown-item btn btn-primary btn-upload-file-ftp mr-2">Upload</button></li>
                                             <li><a class="dropdown-item" href="/admin/exam/examDetail?exam_id=<?php echo $exam['id']; ?>">Detail</a></li>
                                             <li><a class="dropdown-item" href="/admin/exam/edit?id=<?php echo $exam['id']; ?>">Edit</a></li>

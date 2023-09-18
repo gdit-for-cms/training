@@ -68,15 +68,6 @@ function checkPathName() {
         content = `
                     <div class="d-flex justify-content-center align-items-center w-full">
                         <div class="d-flex flex-col justify-content-center align-items-start">
-                            <span class="mb-2">
-                                <span class="font-bold">Title: </span>
-                                ${title.value}
-                            </span>
-                            <span class="mb-2">
-                                <span class="font-bold">Description: </span>
-                                ${description.value}
-                            </span>
-                          
                         </div>
                     </div>`
     } else if (pathName.includes('/admin/question')) {
@@ -358,9 +349,11 @@ function alertDeleteQuestion() {
         let pathName = window.location.pathname;
         let pathName2 = pathName.split('/')[2]
         let pathName3 = pathName.split('/')[3]
+        
         if (pathName3 == "index" && pathName2 == "question") {
-            pathName = "question-title"
+            pathName2 = "question-title"
         }
+
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -372,7 +365,7 @@ function alertDeleteQuestion() {
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: `/admin/${pathName}/delete?id=${deleteID}`,
+                    url: `/admin/${pathName2}/delete?id=${deleteID}`,
                     success: function () {
                         document.location.reload(true);
                     }

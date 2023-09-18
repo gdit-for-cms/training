@@ -10,12 +10,13 @@ use Core\Http\Request;
 use Core\Http\ResponseTrait;
 use App\Models\ExamQuestion;
 use App\Models\Answer;
+use App\Models\QuestionTitle;
 use Core\Http\Config;
 
 class ExamQuestionController extends AppController
 {
     use ResponseTrait;
-    
+
     use Config;
 
     public $title = 'Exam';
@@ -28,14 +29,17 @@ class ExamQuestionController extends AppController
 
     public object $obj_model_exam_question;
 
-    public object $obj_modal_answer;
+    public object $obj_model_answer;
+
+    public object $obj_model_question_title;
 
     public function __construct()
     {
         $this->obj_model = new Exam;
         $this->obj_model_question = new Question;
         $this->obj_model_exam_question = new ExamQuestion;
-        $this->obj_modal_answer = new Answer;
+        $this->obj_model_answer = new Answer;
+        $this->obj_model_question_title = new QuestionTitle;
     }
 
     protected function after()
@@ -49,20 +53,15 @@ class ExamQuestionController extends AppController
         $this->data_ary['content'] = 'exam/index';
     }
 
-    public function newAction()
+    public function newAction(Request $request)
     {
-        $this->data_ary['content'] = 'exam/new';
-    }
+        $req_method_ary = $request->getGet();
+        $exam_id = $req_method_ary->get('exam_id');
+        $results_ary = $this->obj_model_question_title->getAll();
+        $this->data_ary['question_titles'] = $results_ary;
+        $this->data_ary['exam_id'] = $exam_id;
 
-    public function responseShowRule($status, $result = [])
-    {
-        $res = [
-            "success" => $status,
-            "result" => $result
-        ];
-        header('Content-Type: application/json');
-        echo json_encode($res);
-        exit();
+        $this->data_ary['content'] = 'exam_question/new';
     }
 
     public function showAction(Request $request)
@@ -70,9 +69,10 @@ class ExamQuestionController extends AppController
         $exam_id = $request->getGet()->get('id');
         $exam = $this->obj_model->getById($exam_id);
         if ($exam) {
-            return $this->responseShowRule(true, $exam);
+            return $this->successResponse();
+            // return $this->successResponse(true, $exam);
         } else {
-            return $this->responseShowRule(false);
+            return $this->errorResponse(false);
         }
     }
 
@@ -101,7 +101,7 @@ class ExamQuestionController extends AppController
             }
 
             $answer_id = $exam_question['answer_id'];
-            $answer_info = $this->obj_modal_answer->getById($answer_id);
+            $answer_info = $this->obj_model_answer->getById($answer_id);
 
             // Thêm thông tin câu trả lời vào mảng answers
             $question_answers[$question_id]['answers'][] = $answer_info;
@@ -116,9 +116,8 @@ class ExamQuestionController extends AppController
         $this->data_ary['content'] = "exam/new_question";
     }
 
-    public function new_question(Request $request)
-    {
-        $this->data_ary['content'] = "exam/new";
-    }
-    
+    // public function new_question(Request $request)
+    // {
+    //     $this->data_ary['content'] = "exam/new";
+    // }
 }

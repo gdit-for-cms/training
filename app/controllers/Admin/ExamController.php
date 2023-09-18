@@ -61,7 +61,7 @@ class ExamController extends AppController
         $results_per_page = 5;
         $results_ary = $this->obj_model->getExam($req_method_ary, $results_per_page);
 
-        
+
 
         $numbers_of_result = $results_ary['numbers_of_page'];
         $numbers_of_page = ceil($numbers_of_result / $results_per_page);
@@ -137,32 +137,77 @@ class ExamController extends AppController
     }
 
     // add question to the exam
-    public function createAction(Request $request)
+
+    public function create(Request $request)
     {
-        $exam_id = $request->getGet()->get('exam_id');
 
-        $exam =  $this->obj_model->getById($exam_id);
-        $questions = $this->obj_model_question->getAll();
-        $answers = $this->obj_modal_answer->getAll();
-        $exam_questions = $this->obj_model_exam_question->getBy('exam_id', '=', $exam_id, '*');
+        $result_vali_ary = $this->app_request->validate($this->obj_model->rules(), $request, 'post');
 
-        // Get the list of question_ids that already exist in exam_questions
-        $existing_question_ids = array_column($exam_questions, 'question_id');
+        if (in_array('error', $result_vali_ary)) {
+            $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
+            return $this->errorResponse($message_error);
+        }
+        // echo "<pre>";
+        // var_dump($result_vali_ary);
+        // die();
 
-        //Remove questions that already exist in the exam questions array from the questions array
-        $questions = array_filter($questions, function ($question) use ($existing_question_ids) {
-            return !in_array($question['id'], $existing_question_ids);
-        });
+        $title = trim($result_vali_ary['title']);
+        $description = $result_vali_ary['description'];
+        $duration = $result_vali_ary['duration'];
+        $question_titles = $this->obj_model->getAll();
 
-        // Convert the result array to a list of questions
-        $questions = array_values($questions);
+       
 
-        $this->data_ary['questions'] = $questions;
-        $this->data_ary['answers'] = $answers;
-        $this->data_ary['exam'] = $exam;
+        foreach ($question_titles as $question_title) {
+            $check_exam = strcasecmp($question_title['title'], $title);
+            if ($check_exam == 0) {
+                return $this->errorResponse('Exam collection has been exist');
+            }
+        }
+       
+        try {
+            $this->obj_model->create(
+                [
+                    'title' => $title,
+                    'description' => $description,
+                    'duration' => $duration
+                ]
+            );
 
-        $this->data_ary['content'] = "exam/create";
+            return $this->successResponse();
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        };
     }
+
+
+
+    // public function createAction(Request $request)
+    // {
+    //     $exam_id = $request->getGet()->get('exam_id');
+
+    //     $exam =  $this->obj_model->getById($exam_id);
+    //     $questions = $this->obj_model_question->getAll();
+    //     $answers = $this->obj_modal_answer->getAll();
+    //     $exam_questions = $this->obj_model_exam_question->getBy('exam_id', '=', $exam_id, '*');
+
+    //     // Get the list of question_ids that already exist in exam_questions
+    //     $existing_question_ids = array_column($exam_questions, 'question_id');
+
+    //     //Remove questions that already exist in the exam questions array from the questions array
+    //     $questions = array_filter($questions, function ($question) use ($existing_question_ids) {
+    //         return !in_array($question['id'], $existing_question_ids);
+    //     });
+
+    //     // Convert the result array to a list of questions
+    //     $questions = array_values($questions);
+
+    //     $this->data_ary['questions'] = $questions;
+    //     $this->data_ary['answers'] = $answers;
+    //     $this->data_ary['exam'] = $exam;
+
+    //     $this->data_ary['content'] = "exam/create";
+    // }
 
     public function store(Request $request)
     {
