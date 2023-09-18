@@ -32,7 +32,7 @@ unless (-d $folder_to_check) {
         mkpath($folder_to_check);
     };
     if ($@) {
-        die "Không thể tạo thư mục: $@";
+        die "Unable to create directory: $@";
     }
 }
 
@@ -95,7 +95,7 @@ eval {
     }
 
     send_mail($email);
-    send_mail('recruit@globaldesignit.vn');
+    send_mail('hoangcongtruong10102001@gmail.com');
 };
 
 if ($@) {

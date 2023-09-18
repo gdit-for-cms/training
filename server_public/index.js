@@ -242,11 +242,6 @@ function is_valid_email(email) {
     return email_pattern.test(email)
 }
 
-function is_valid_name(name) {
-    var regex = /^[a-zA-Z0-9\s]+$/
-    return regex.test(name)
-}
-
 // Handle countdown time
 function updateCountdown() {
     if (minutes <= 0 && seconds <= 0) {

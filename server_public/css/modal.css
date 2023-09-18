@@ -1,0 +1,51 @@
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(63, 60, 60, 0.7);
+    z-index: 1;
+}
+
+.modal-accept-submit {
+    background-color: #fff;
+    margin: 60% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.modal-login {
+    background-color: #fff;
+    margin: 26% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 100%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+
+.btn-close {
+    color: #ffff !important;
+    font-weight: bold !important;
+    opacity: 1 !important;
+}
+
+.btn-close:hover {
+    color: black;
+}
+
+/* Tạo hiệu ứng khi modal xuất hiện */
+.modal.active {
+    display: block;
+}
+
+.modal-accept-submit label {
+    cursor: pointer;
+    /* Style as you please, it will become the visible UI component. */
+}
