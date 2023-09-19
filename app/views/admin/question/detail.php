@@ -1,14 +1,7 @@
-<?php
-
-// echo "<pre>";
-// var_dump($question_titles);
-// die();
-?>
-
 <div class="card_box box_shadow position-relative mb_30">
     <div class="white_box_tittle ">
         <div class="main-title2 flex items-center justify-between">
-            <h4 class="mb-2 nowrap">Question collection</h4>
+            <h4 class="mb-2 nowrap">Question detail</h4>
             <a href='/admin/question/new?ques-title=<?php echo $question_titles[0]['question_title_id']; ?>'><button type="button" class="btn btn-success">Add question</button></a>
         </div>
     </div>

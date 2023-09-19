@@ -1,28 +1,74 @@
+<?php
+
+// echo "<pre>";
+// var_dump($exam);
+// die();
+?>
 <div class="container-fluid p-0 ">
     <div class="row">
-        <div class="col-12">
-            <div class="white_card card_box card_height_100 mb_30">
-                <div class="px-4 pt-4">
-                    <div class="main-title2 d-flex justify-content-between items-center ">
-
-                        <div class="top-left d-flex">
-                            <h4 class="mb-2 nowrap">List Exams</h4>
-                            <h4 class="mb-2 nowrap fw-bold"> <?php if (isset($exam['title'])) {
-                                                                    echo ': ' . htmlspecialchars($exam['title']);
-                                                                } ?>
-                            </h4>
+        <div class="col-lg-12">
+            <div class="white_card card_height_100 mb_30">
+                <div class="white_card_header">
+                    <div class="box_header m-0">
+                        <div class="main-title">
+                            <h3 class="m-0">Collection exam</h3>
                         </div>
                         <div class="top-right">
                             <?php
                             if ($cur_user['role_id'] != 3) {
                             ?>
                                 <a href="/admin/exam/create?exam_id=<?php echo $exam['id']; ?>"><button type=" button" class="btn btn-success float-end">Add Question</button></a>
-                                <a href="/admin/exam/preview?exam_id=<?php echo $exam['id']; ?>"><button data-id="<?php echo $exam['id']; ?>" type="button" class="btn btn-primary btn-show-preview-exam text-white  mr-2">Preview</button></a>
-                                <!-- <button id="createFilesButton" data-id="<?php echo $exam['id'] ?>" id="submit" class="btn btn-primary btn-upload-file-ftp">Upload</button> -->
+                                <!-- <a href="/admin/exam/preview?exam_id=<?php echo $exam['id']; ?>"><button data-id="<?php echo $exam['id']; ?>" type="button" class="btn btn-primary btn-show-preview-exam text-white  mr-2">Preview</button></a> -->
+                                <!-- <button id="createFilesButton" data-id="<?php echo $exam['id'] ?>" id="submit" class="btn btn-primary mr-3 btn-upload-file-ftp">Upload</button>
+                             -->
+                                <a class="btn btn-primary mr-3" id="createFilesButton" href="/admin/exam/preview?exam_id=<?php echo $exam['id']; ?>" data-id="<?php echo $exam['id']; ?>" id="submit">Upload</a>
+
                             <?php
                             }
                             ?>
                         </div>
+                    </div>
+                </div>
+                <div class="white_card_body">
+                    <div class="card-body d-flex">
+                        <!-- <form id="form_new_question col-12" class="" action="create" method="POST"> -->
+                        <div class="mb-6 col-4 mr-12" style="">
+                            <div class="mb-3 col-4 mr-12">
+                                <label class="form-label" for="title">Title </label>
+                                <input class="form-control" disabled value="<?php echo $exam['title'] ?>" rows="3" placeholder="title..." />
+                            </div>
+                            <div class="mb-3 ">
+                                <label class="form-label" for="duration">Duration (minutes) </label>
+                                <input class="form-control" disabled value="<?php echo $exam['duration'] ?>" rows="3" placeholder="duration..." />
+                            </div>
+                        </div>
+
+                        <div class="mb-6 col-4 mr-12" style="">
+                            <div class="mb-3  mr-12">
+                                <label class="form-label" for="description">Description collection </label>
+                                <input class="form-control" disabled value="<?php echo isset($exam['description']) ? $exam['description'] : "" ?>" rows="3" placeholder="description..." />
+                            </div>
+                            <div class="mb-3 col-1">
+                                <label class="form-label" for="status">Status </label>
+                                <input class="form-control" disabled value="<?php echo $exam['published'] ?>" rows="3" placeholder="status..." />
+                            </div>
+                        </div>
+                        <!-- </form> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="white_card card_box card_height_100 mb_30">
+                <div class="px-4 pt-4">
+                    <div class="main-title2 d-flex justify-content-between items-center ">
+
+                        <div class="top-left d-flex">
+                            <h4 class="mb-2 nowrap">List question</h4>
+
+                        </div>
+
                     </div>
                 </div>
                 <div class="white_card_body">
@@ -31,7 +77,6 @@
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Title Question</th>
                                     <th scope="col">Content Question</th>
                                     <th scope="col">Answer</th>
 
@@ -46,23 +91,23 @@
                             </thead>
                             <tbody class="table-rule-body">
                                 <?php
-                                if (!empty($question_answers)) {
+                                if (!empty($exam_details)) {
                                     $st = 1;
-                                    foreach ($question_answers as $question_answer) {
-                                        $answers = explode(',', $question_answer['answers']);
+
+                                    foreach ($exam_details as $exam_detail) {
+
+                                        $answers = explode(',', $exam_detail['answers']);
+                                        // echo "<pre>";
+                                        // var_dump($exam_detail);
+                                        // die();
                                 ?>
                                         <tr>
                                             <th scope="row"><?php echo $st++; ?></th>
 
-                                            <td>
-                                                <div class="overflow-auto" style='width: 400px;height: 120px; max-height: 100%;'>
-                                                    <?php echo $question_answer['question_title'] ?>
-                                                </div>
 
-                                            </td>
                                             <td>
-                                                <div class="overflow-auto" style='width: 400px;height: 120px; max-height: 100%;'>
-                                                    <?php echo $question_answer['question_content'] ?>
+                                                <div class="overflow-auto" >
+                                                    <?php echo $exam_detail['question_content'] ?>
                                                 </div>
                                             </td>
                                             <td>
@@ -96,10 +141,24 @@
                                             if ($cur_user['role_id'] != 3) {
                                             ?>
                                                 <td>
-                                                    <div class="d-flex ">
-                                                        <a href=" /admin/exam/detail-edit?question_id=<?php echo $question_answer['question_id']; ?>&exam_id=<?php echo $exam['id']; ?>" class="btn btn-primary text-white mx-1 ">Edit</a>
-                                                        <button data-id="<?php echo $question_answer['question_id']; ?>" type="button" class="btn btn-danger btn-delete-exam-detail text-white ">Delete</button>
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            Action
+                                                        </button>
+                                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+
+                                                            <li><a href=" /admin/exam/detail-edit?question_id=<?php echo $exam_detail['question_id']; ?>&exam_id=<?php echo $exam_detail['question_id']; ?>" class="dropdown-item">Edit</a></li>
+                                                            <li>
+                                                                <button data-question_id="<?php echo $exam_detail['question_id']; ?>"  data-exam_id="<?php echo $exam['id']; ?>" type="button" class=" btn-delete-exam-detail dropdown-item">Delete</button>
+                                                            </li>
+
+                                                        </ul>
                                                     </div>
+                                                    <!-- <div class="d-flex ">
+                                                        <a href=" /admin/exam/detail-edit?question_id=<?php echo $exam_detail['question_id']; ?>&exam_id=<?php echo $exam_detail['question_id']; ?>" class="btn btn-primary text-white mx-1 ">Edit</a>
+                                                        <button data-id="<?php echo $exam_detail['question_id']; ?>" type="button" class="btn btn-danger btn-delete-exam-detail text-w
+                                                        hite ">Delete</button>
+                                                    </div> -->
                                                 </td>
                                             <?php
                                             }

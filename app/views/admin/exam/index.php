@@ -2,7 +2,7 @@
     <div class="white_box_tittle ">
         <div class="main-title2 flex items-center justify-between">
             <h4 class="mb-2 nowrap">Exam collection</h4>
-            <a href='/admin/exam/new'><button type="button" class="btn btn-success">Create </button></a>
+            <a href='/admin/exam/new'><button type="button" class="btn btn-success">Create collection</button></a>
         </div>
     </div>
     <div class="box_body white_card_body">
@@ -54,7 +54,7 @@
                                 </td>
                                 <td class="col-3" style=" align-items: center;">
                                     <?php if ($exam['published'] == 1) { ?>
-                                        <a style="" class="linkToCopy text-primary-hover" id="linkToCopy<?php echo $exam['id']; ?>" target="_new" href="<?php echo $directory['domain'] . $exam['id'] . '.html' ?>"><?php echo $directory['domain'] . $exam['id'] . '.html' ?> </a>
+                                        <button  onclick="copyLink('linkToCopy<?php echo $exam['id']; ?>')" class="linkToCopy text-primary-hover" id="linkToCopy<?php echo $exam['id']; ?>" href="<?php echo $directory['domain'] . $exam['id'] . '.html' ?>"><?php echo $directory['domain'] . $exam['id'] . '.html' ?> </button>
                                     <?php } ?>
                                 </td>
                                 <td class="col-1">
@@ -64,9 +64,10 @@
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
 
-                                            <li><a href="/admin/exam-question/new?exam_id=<?php echo $exam['id']; ?>" class="dropdown-item">Add Question</a></li>
+                                            <li><a href="/admin/exam-question/new?exam_id=<?php echo $exam['id']; ?>" class="dropdown-item">Add question to exam</a></li>
+                                            <!-- <li><a href="/admin/exam-question/new?exam_id=<?php echo $exam['id']; ?>" class="dropdown-item">Preview</a></li> -->
 
-                                            <li><button id="createFilesButton" data-id="<?php echo $exam['id']; ?>" id="submit" class="dropdown-item btn btn-primary btn-upload-file-ftp mr-2">Upload</button></li>
+                                            <li><a id="createFilesButton" href="/admin/exam/preview?exam_id=<?php echo $exam['id']; ?>" data-id="<?php echo $exam['id']; ?>" id="submit" class="dropdown-item">Upload</a></li>
                                             <li><a class="dropdown-item" href="/admin/exam/examDetail?exam_id=<?php echo $exam['id']; ?>">Detail</a></li>
                                             <li><a class="dropdown-item" href="/admin/exam/edit?id=<?php echo $exam['id']; ?>">Edit</a></li>
                                             <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
@@ -74,8 +75,9 @@
                                                 <button type="button" data-id="<?php echo $exam['id']; ?>" class="dropdown-item btn-delete-question ">Delete</button>
                                             </li>
                                             <li>
-                                                <button style="" onclick="copyLink('linkToCopy<?php echo $exam['id']; ?>')" type="button" class=" dropdown-item ">Copy link exam</button>
+                                                <!-- <button style="" onclick="copyLink('linkToCopy<?php echo $exam['id']; ?>')" type="button" class=" dropdown-item ">Copy link exam</button> -->
                                             </li>
+                                            <li><a class="dropdown-item" href="">Participant Email</a></li>
                                         </ul>
                                     </div>
                                 </td>

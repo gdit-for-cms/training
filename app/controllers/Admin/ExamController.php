@@ -126,13 +126,16 @@ class ExamController extends AppController
         $results_per_page = 5;
         $results_ary = $this->obj_model->getDetailExams($req_method_ary, $results_per_page);
 
-        $this->data_ary['question_answers'] = $results_ary['results'];
+        $this->data_ary['exam_details'] = $results_ary['results'];
         $this->data_ary['exam'] = $exam;
         $numbers_of_result = $results_ary['numbers_of_page'];
         $numbers_of_page = ceil($numbers_of_result / $results_per_page);
         $this->data_ary['numbers_of_page'] = $numbers_of_page;
         $this->data_ary['page'] = (float)$results_ary['page'];
 
+        // echo "<pre>";
+        // var_dump($this->data_ary['page']);
+        // die();
         $this->data_ary['content'] = 'exam/detail';
     }
 
@@ -156,7 +159,7 @@ class ExamController extends AppController
         $duration = $result_vali_ary['duration'];
         $question_titles = $this->obj_model->getAll();
 
-       
+
 
         foreach ($question_titles as $question_title) {
             $check_exam = strcasecmp($question_title['title'], $title);
@@ -164,7 +167,7 @@ class ExamController extends AppController
                 return $this->errorResponse('Exam collection has been exist');
             }
         }
-       
+
         try {
             $this->obj_model->create(
                 [
@@ -376,8 +379,11 @@ class ExamController extends AppController
 
     public function detailDeleteAction(Request $request)
     {
-        $exam_id = $request->getGet()->get('id');
-        $this->obj_model_exam_question->destroyBy("question_id = $exam_id");
+        $question_id = $request->getGet()->get('question_id');
+        $exam_id = $request->getGet()->get('exam_id');
+
+       $this->obj_model_exam_question->destroyBy("question_id = $question_id and exam_id = $exam_id");
+
     }
 
     public function detailEditAction(Request $request)

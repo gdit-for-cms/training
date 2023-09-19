@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-12 text-center">
             <a class="btn btn-danger" href="/admin/exam/examDetail?exam_id=<?php echo $exam['id'] ?>" class="page-link">Back</a>
-            <button id="createFilesButton" data-id="<?php echo $exam['id'] ?>" id="submit" class="btn btn-primary btn-upload-file-ftp">Upload</button>
+            <a id="createFilesButton" data-id="<?php echo $exam['id'] ?>" id="submit" class="btn btn-primary btn-upload-file-ftp">Publish To Server</a>
         </div>
     </div>
 </div>
@@ -32,15 +32,17 @@
         </div>
         <form id="form_exam">
             <?php
+
             $csv_answer = "";
             $stt = 1;
             $alphabet = range('A', 'Z');
             foreach ($question_answers as $question_answer) { ?>
                 <div class="my-3 p-3 bg-body rounded shadow-sm">
-                    <h5 class="border-bottom pb-2 mb-0">Câu <?php echo $stt; ?>:</h5>
-                    <div class="d-flex text-muted pt-3">
-                        <?php echo $question_answer['question']['content']; ?>
-                    </div>
+                    <h5 class="border-bottom">
+                        <div class="d-flex text-muted pt-3">
+                            <?php echo $question_answer['question']['content']; ?>
+                        </div>
+                    </h5>
                     <div class="d-flex text-muted pt-3">
                         <?php $answerIndex = 0;
                         foreach ($question_answer['answers'] as $answer) {
@@ -50,7 +52,7 @@
                         ?>
                             <div class="col-3">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="<?php echo $stt; ?>" id="<?php echo $stt; ?>_<?php echo $alphabet[$answerIndex]; ?>" />
+                                    <input class="form-check-input" type="checkbox" name="<?php echo $stt; ?>" id="<?php echo $stt; ?>_<?php echo $alphabet[$answerIndex]; ?>" />
                                     <label class="form-check-label " for="<?php echo $stt; ?>_<?php echo $alphabet[$answerIndex]; ?>">
                                         <strong><?php echo $alphabet[$answerIndex] ?>:</strong> <?php echo $answer['content'] ?>
                                     </label>
@@ -64,7 +66,7 @@
                 $stt++;
             }
             ?>
-            <div class="my-3 p-3 bg-body rounded shadow-sm">
+            <div class="my-3 p-3 bg-body rounded">
                 <div class="row">
                     <div class="col-12 text-center">
                         <button id="btn_submit" class="btn btn-primary" disabled>Submit</button>

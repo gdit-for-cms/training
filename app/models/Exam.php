@@ -78,15 +78,18 @@ ORDER BY e.id DESC';
 
     public function getDetailExams($req_method_ary, $results_per_page = 5)
     {
-        $exam_id = 0;
+        $exam_id = $req_method_ary['exam_id'];
+
         if (isset($req_method_ary['exam_id'])) {
             $exam_id = $req_method_ary['exam_id'];
         }
 
         $db = static::getDB();
         $query = "SELECT
+        qt.id AS question_title_id,
+        qt.title AS question_title_tile,
+        qt.description AS question_title_description,
         q.id AS question_id,
-        q.title AS question_title,
         q.content AS question_content,
         GROUP_CONCAT(CONCAT(a.content, ' - ', a.is_correct)) AS answers
         FROM
@@ -95,8 +98,10 @@ ORDER BY e.id DESC';
             answer AS a ON eq.answer_id = a.id
         LEFT JOIN
             question as q ON eq.question_id = q.id
+        LEFT JOIN
+            question_title as qt ON q.question_title_id = qt.id
         WHERE 
-            eq.exam_id = '$exam_id' 
+            eq.exam_id = $exam_id 
         GROUP BY
             q.id
         ORDER BY q.id DESC";
@@ -112,6 +117,7 @@ ORDER BY e.id DESC';
         $stmt = $db->query($query . " " . $limit_query);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results, 'page' => $req_method_ary['page']);
+        
         return $results_ary;
     }
 

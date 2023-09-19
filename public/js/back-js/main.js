@@ -321,7 +321,8 @@ function alertDelete() {
 }
 function alertDeleteExamDetail() {
     $('.btn-delete-exam-detail').click(function (e) {
-        let deleteID = $(this).data('id');
+        let questionID = $(this).data('question_id');
+        let examID = $(this).data('exam_id');
         let pathName = window.location.pathname.split('/')[2]
         Swal.fire({
             title: 'Are you sure?',
@@ -334,7 +335,7 @@ function alertDeleteExamDetail() {
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: `/admin/${pathName}/detail-delete?id=${deleteID}`,
+                    url: `/admin/${pathName}/detail-delete?question_id=${questionID}&exam_id=${examID}`,
                     success: function () {
                         document.location.reload(true);
                     }
@@ -813,10 +814,14 @@ function alertDeleteRule() {
 
 function alertUploadFileExam() {
     $('.btn-upload-file-ftp').click(function (e) {
-        var btn_submit = document.getElementById('btn_submit');
-        btn_submit.disabled = false;
+
+        // var btn_submit = document.getElementById('btn_submit');
+        // btn_submit.disabled = false;
         let uploadFileID = $(this).data('id');
-        let pathName = window.location.pathname.split('/')[2];
+        // let pathName = window.location.pathname.split('/')[2];
+        let pathName = 'exam';
+        
+        // alert(pathName)    
         var content = document.getElementById('content_exam');
         var csv_content = document.getElementById('csv_answer');
         if (csv_content) {
@@ -888,7 +893,9 @@ function alertUploadFileExam() {
                         csv_content: csv_content
                     },
                     success: function (response) {
-                        console.log(response);
+                        // console.log(response);
+                        window.history.back()
+
                     },
                     error: function (E) {
                         console.log(E)
