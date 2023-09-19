@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
     user_name = localStorage.getItem('user_name')
     var current_url = window.location.href
     if (current_url.slice(current_url.length - 4, current_url.length) == 'html' && current_url.slice(24, current_url.length) != '/view/login.html' && current_url.slice(24, current_url.length) != '/view/thanks.html') {
-        localStorage.setItem('current_url', current_url)
+        localStorage.setItem('id', current_url.slice(25, current_url.length - 5))
 
         if (!user_email && !user_name) {
             window.location.href = '/view/login.html'
@@ -77,8 +77,10 @@ if (btn_login) {
         } else if (value_email.length > 50 || value_name.length > 25) {
             alert('Name or email is too long!')
         } else {
+            var id = localStorage.getItem('id')
             var data = {
-                email: value_email,
+                email   : value_email,
+                id      : id,
             }
 
             $.ajax({
@@ -86,15 +88,13 @@ if (btn_login) {
                 url: "/cgi/login.cgi",
                 data: data,
                 success: function (response) {
-                    if(response == 'mail_false'){
-                        alert('Email does not exist!')
-                    } else if (response == 'code_false') {
-                        alert('You have taken this test, you cannot take this again!')
-                    } else {
+                    if(response == 1){
                         localStorage.setItem('user_email', value_email)
                         localStorage.setItem('user_name', value_name)
 
                         modal_accept_submit.style.display = 'block'
+                    } else {
+                        error_login(response)
                     }
                 }
             })
@@ -103,21 +103,23 @@ if (btn_login) {
 }
 
 // When clicking the yes button when login
-if (btn_yes) {
-    btn_yes.addEventListener('click', function (e) {
-        var url = localStorage.getItem('current_url')
-        if (url) {
-            file_html = url.slice(24, url.length)
-            
-            const current_date = new Date();
-            start_time_in_seconds = Math.floor(current_date.getTime() / 1000);
+// if (btn_yes) {
+//     btn_yes.addEventListener('click', function (e) {
+//         var id = localStorage.getItem('id')
+//         var data = {
+//             id      : id,
+//         }
 
-            window.location.href = file_html
-        } else {
-            alert('Please click on the correct link!')
-        }
-    })
-}
+//         $.ajax({
+//             type: "POST",
+//             url: "/cgi/exam.cgi",
+//             // data: data,
+//             success: function (response) {
+//                 console.log(response);
+//             }
+//         })
+//     })
+// }
 
 // When clicking the submit button
 if (btn_submit) {
@@ -158,6 +160,19 @@ if (btn_accept_submit) {
 if (countdown_element) {
     updateCountdown()
     var countdownInterval = setInterval(updateCountdown, 1000)
+}
+
+function error_login(number) {
+    var message = ''
+    if (number == 0) {
+        message = 'Email does not exist in the system!'
+    } else if (number == 0){
+        message = 'Your email is allowed to participate in the test only once!'
+    } else if (number == -1){
+        message = 'Something is wrong, please try again!'
+    }
+
+    alert(message)
 }
 
 // Convert accented words to unaccented

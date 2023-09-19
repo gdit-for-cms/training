@@ -56,17 +56,19 @@
     <div class="modal" id="accept_submit" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="anchor-nameLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content modal-login">
-                <div class="modal-header" style="margin-top: -18px;">
-                    <h5 class="modal-title">Notification</h5>
-                </div>
-                <div class="modal-body">
-                    <h6>After you select "Yes"</h6>
-                    <h6>You will begin the test and we will calculate the time.</h6> 
-                    <h6>Your test time is 10 minutes. Are you ready?</h6>
-                </div>
-                <div class="modal-footer" style="margin-bottom: -18px;">
-                    <button id="btn_yes" class="btn btn-danger">Yes</button>
-                </div>
+                <form action="/cgi/exam.cgi" method="post">
+                    <div class="modal-header" style="margin-top: -18px;">
+                        <h5 class="modal-title">Notification</h5>
+                    </div>
+                    <div class="modal-body">
+                        <h6>After you select "Yes"</h6>
+                        <h6>You will begin the test and we will calculate the time.</h6> 
+                        <h6>Your test time is 10 minutes. Are you ready?</h6>
+                    </div>
+                    <div class="modal-footer" style="margin-bottom: -18px;">
+                        <button id="btn_yes"  class="btn btn-danger">Yes</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
