@@ -17,6 +17,8 @@ const input_name = document.getElementById('name')
 const btn_login = document.getElementById('btn_login')
 const btn_submit = document.getElementById('btn_submit')
 
+const id_exam = document.getElementById('exam')
+
 const form_exam = document.getElementById('form_exam')
 
 const result = document.getElementById('result')
@@ -51,6 +53,8 @@ document.addEventListener('DOMContentLoaded', function () {
     user_email = localStorage.getItem('user_email')
     user_name = localStorage.getItem('user_name')
     var current_url = window.location.href
+    var exam_id = 0
+
     if (current_url.slice(current_url.length - 4, current_url.length) == 'html' && current_url.slice(24, current_url.length) != '/view/login.html' && current_url.slice(24, current_url.length) != '/view/thanks.html') {
         localStorage.setItem('id', current_url.slice(25, current_url.length - 5))
 
@@ -59,9 +63,27 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    exam_id = localStorage.getItem('id')
+    if (id_exam) {
+        id_exam.value = exam_id
+    }
+
     if (show_name && show_name) {
         show_email.innerHTML = user_email
         show_name.innerHTML = user_name
+
+        var data = {
+            id : exam_id
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/cgi/time.cgi",
+            data: data,
+            success: function (response) {
+                console.log(response)
+            }
+        })
     }
 })
 
@@ -102,25 +124,6 @@ if (btn_login) {
     })
 }
 
-// When clicking the yes button when login
-// if (btn_yes) {
-//     btn_yes.addEventListener('click', function (e) {
-//         var id = localStorage.getItem('id')
-//         var data = {
-//             id      : id,
-//         }
-
-//         $.ajax({
-//             type: "POST",
-//             url: "/cgi/exam.cgi",
-//             // data: data,
-//             success: function (response) {
-//                 console.log(response);
-//             }
-//         })
-//     })
-// }
-
 // When clicking the submit button
 if (btn_submit) {
     btn_submit.addEventListener('click', function (e) {
@@ -147,12 +150,25 @@ if (btn_accept_submit) {
         btn_close_accept_submit.disabled = true
         end_time_in_seconds = Math.floor(current_date.getTime() / 1000)
 
-        if (check_time()) {
-            after_submit()
-        } else {
-            alert('You cheated by interfering in the calculation of exam time. You cannot submit this test!')
-            setTimeout(window.location.href = '/view/login.html', 5000)
+        // if (check_time()) {
+        //     after_submit()
+        // } else {
+        //     alert('You cheated by interfering in the calculation of exam time. You cannot submit this test!')
+        //     setTimeout(window.location.href = '/view/login.html', 5000)
+        // }
+        var id = localStorage.getItem('id')
+        var data = {
+            id : id
         }
+
+        $.ajax({
+            type: "POST",
+            url: "/cgi/time.cgi",
+            data: data,
+            success: function (response) {
+                console.log(response);
+            }
+        })
     })
 }
 
@@ -263,12 +279,12 @@ function updateCountdown() {
         if (countdown_element) {
             countdown_element.innerHTML = 'Thời gian đã hết'
             clearInterval(countdownInterval)
-            if (check_time()) {
-                after_submit()
-            } else {
-                alert('You cheated by interfering in the calculation of exam time. You cannot submit this test!')
-                setTimeout(window.location.href = '/view/login.html', 5000)
-            }
+            // if (check_time()) {
+            //     after_submit()
+            // } else {
+            //     alert('You cheated by interfering in the calculation of exam time. You cannot submit this test!')
+            //     setTimeout(window.location.href = '/view/login.html', 5000)
+            // }
         }
     } else {
         if (countdown_element) {

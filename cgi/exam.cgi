@@ -1,37 +1,46 @@
 #!/usr/bin/perl --
 use strict;
 use warnings;
+use CGI;
 
-# Đường dẫn đến tệp HTML
-my $html_file = "/htdocs/training2/training/server_public/1.html"; # Thay thế bằng đường dẫn đến tệp HTML của bạn
+my $cgi = CGI->new; 
+my $id = $cgi->param("exam");
+# my $setting_file = '/htdocs/training2/training/cgi/setting.cgi';
 
-# Đọc nội dung của tệp HTML
+# require $setting_file;
+
+# my $html_path = $html_path;
+
+# Path to the HTML file
+my $html_file = "/htdocs/training2/training/server_public/$id.html";
+
+# Read the contents of the HTML file
 open my $fh, '<', $html_file or die "Không thể mở tệp HTML: $!";
 my @html_lines = <$fh>;
 close $fh;
 
-# Gộp nội dung thành một chuỗi
+# Combine content into a string
 my $html_content = join('', @html_lines);
 
-# Tìm và lưu trữ các phần chứa câu hỏi
+# Find and store sections that contain questions
 my @question_sections;
 while ($html_content =~ /<div class="my-3 p-3 bg-body rounded shadow-sm">(.*?)<\/div>/sg) {
     push @question_sections, $1;
 }
 
-# Xáo trộn vị trí của các câu hỏi
+# Shuffle the positions of the questions
 @question_sections = shuffle(@question_sections);
 
-# Tạo lại nội dung HTML đã được xáo trộn
+# Regenerate obfuscated HTML content
 my $shuffled_html = $html_content;
 my $i = 0;
 $shuffled_html =~ s/<div class="my-3 p-3 bg-body rounded shadow-sm">(.*?)<\/div>/<div class="my-3 p-3 bg-body rounded shadow-sm">$question_sections[$i++]<\/div>/sg;
 
-# In nội dung HTML xáo trộn ra màn hình
+# Print scrambled HTML content to the screen
 print "Content-Type: text/html\n\n";
 print $shuffled_html;
 
-# Hàm xáo trộn mảng
+# The function shuffles the array
 sub shuffle {
     my @array = @_;
     my $n = @array;
