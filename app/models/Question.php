@@ -147,35 +147,23 @@ class Question extends Model
         q.id AS question_id,
         q.content AS question_content,
         a.is_correct AS answer_correct,
-        GROUP_CONCAT(CONCAT(a.is_correct, ' - ', a.content)) AS answers
+        GROUP_CONCAT(CONCAT(a.is_correct, ' - ', a.content, ' - ', a.id)) AS answers
     FROM
         question AS q
     LEFT JOIN
         answer AS a ON q.id = a.question_id
-    WHERE q.question_title_id = $req_method_ary[id]
+    WHERE q.question_title_id = $req_method_ary[id] 
+        AND (q.id, a.id) NOT IN (
+            SELECT question_id, answer_id
+            FROM exam_questions
+        )
     GROUP BY
         q.content
     ORDER BY
         question_title_id DESC";
 
-
-        // if (!isset($req_method_ary['page'])) {
-        //     $req_method_ary['page'] = '1';
-        // }
-        // if ($req_method_ary['page'] < 1) {
-        //     $req_method_ary['page'] = '1';
-        // }
-
-
-        // $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
-        // $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
-
-        // $stmt_count = $db->query($query);
-        // $numbers_of_page = count($stmt_count->fetchAll(PDO::FETCH_ASSOC));
         $stmt = $db->query($query);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        // $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results, 'page' => $req_method_ary['page']);
-        // $results_ary = array('results' => $results);
         return $results;
     }
 }

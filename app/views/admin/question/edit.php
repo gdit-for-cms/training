@@ -12,10 +12,6 @@
                 <form id="form_update_question" class="" action="update" method="POST">
                     <input id="id" name="id" value="<?= $question['id'] ?>" type="hidden" class="form-control">
                     <div class="mb-3">
-                        <label class="form-label" for="title">Title*</label>
-                        <input class="form-control" value="<?php echo $question['title']; ?>" rows="3" name="title" id="title" placeholder="Title..." />
-                    </div>
-                    <div class="mb-3">
                         <label for="content" class="form-label">Content*</label>
                         <textarea id="editor-edit-note" class="form-control h-120px" name="content" rows="3"><?php  ?>
                             <?php echo $question['content']; ?>

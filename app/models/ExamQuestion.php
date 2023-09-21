@@ -41,4 +41,9 @@ class ExamQuestion extends Model
             ->where('question_id', '=', $questionIds)
             ->get($selectColumn);
     }
+
+    public function create($data)
+    {
+        return $this->insert($data);
+    }
 }

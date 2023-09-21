@@ -64,6 +64,32 @@ class ExamQuestionController extends AppController
         $this->data_ary['content'] = 'exam_question/new';
     }
 
+    public function store(Request $request)
+    {
+        try {
+            $req_method_ary = $request->getPost();
+
+            $question_ids = $req_method_ary->get('array_select_question');
+            $exam_id = $req_method_ary->get('exam_id');
+
+            foreach ($question_ids as $question_id) {
+                $answers = $this->obj_model_answer->getBy("question_id", '=', $question_id);
+                if (count($answers) > 0) {
+                    foreach ($answers as $answer) {
+                        $this->obj_model_exam_question->create([
+                            'question_id' => $question_id,
+                            'exam_id' => $exam_id,
+                            'answer_id' => $answer['id']
+                        ]);
+                    }
+                }
+            }
+
+            return $this->successResponse();
+        } catch (\Exception $e) {
+            return $this->errorResponse(false);
+        }
+    }
     public function showAction(Request $request)
     {
         $exam_id = $request->getGet()->get('id');
@@ -84,7 +110,7 @@ class ExamQuestionController extends AppController
         //get exam dua vao exam_id
         $exam =  $this->obj_model->getById($exam_id);
 
-        //lay ra cac exa,_question dua vao exam_id
+        //lay ra cac exam_question dua vao exam_id
         $exam_questions = $this->obj_model_exam_question->getBy('exam_id', '=', $exam_id, '*');
 
         $question_answers = array();
@@ -115,9 +141,4 @@ class ExamQuestionController extends AppController
     {
         $this->data_ary['content'] = "exam/new_question";
     }
-
-    // public function new_question(Request $request)
-    // {
-    //     $this->data_ary['content'] = "exam/new";
-    // }
 }

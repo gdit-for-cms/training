@@ -1,9 +1,3 @@
-<?php
-
-// echo "<pre>";
-// var_dump($exam);
-// die();
-?>
 <div class="container-fluid p-0 ">
     <div class="row">
         <div class="col-lg-12">
@@ -93,20 +87,13 @@
                                 <?php
                                 if (!empty($exam_details)) {
                                     $st = 1;
-
                                     foreach ($exam_details as $exam_detail) {
-
                                         $answers = explode(',', $exam_detail['answers']);
-                                        // echo "<pre>";
-                                        // var_dump($exam_detail);
-                                        // die();
                                 ?>
                                         <tr>
                                             <th scope="row"><?php echo $st++; ?></th>
-
-
                                             <td>
-                                                <div class="overflow-auto" >
+                                                <div class="overflow-auto">
                                                     <?php echo $exam_detail['question_content'] ?>
                                                 </div>
                                             </td>
@@ -149,7 +136,7 @@
 
                                                             <li><a href=" /admin/exam/detail-edit?question_id=<?php echo $exam_detail['question_id']; ?>&exam_id=<?php echo $exam_detail['question_id']; ?>" class="dropdown-item">Edit</a></li>
                                                             <li>
-                                                                <button data-question_id="<?php echo $exam_detail['question_id']; ?>"  data-exam_id="<?php echo $exam['id']; ?>" type="button" class=" btn-delete-exam-detail dropdown-item">Delete</button>
+                                                                <button data-question_id="<?php echo $exam_detail['question_id']; ?>" data-exam_id="<?php echo $exam['id']; ?>" type="button" class=" btn-delete-exam-detail dropdown-item">Delete</button>
                                                             </li>
 
                                                         </ul>

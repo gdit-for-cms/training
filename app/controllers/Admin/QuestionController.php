@@ -128,14 +128,11 @@ class QuestionController extends  AppController
     }
     public function editAction(Request $request)
     {
-        $id = $request->getGet()->get('ques-title');
+        $id = $request->getGet()->get('question_id');
 
-        // $this->data_ary['question'] = $this->obj_model->getById($id, 'id, title, content');
-        // $this->data_ary['answers'] = $this->obj_model_answer->getBy('question_id', '=', $id);
-        $this->data_ary['question_title'] =  $this->obj_model_question_title->getById($id, 'id, title, description, updated_at');
-        // echo "<pre>";
-        // var_dump($this->data_ary['question_title']);
-        // die();
+        $this->data_ary['question'] = $this->obj_model->getById($id, 'id, content');
+        $this->data_ary['answers'] = $this->obj_model_answer->getBy('question_id', '=', $id);
+       
         $this->data_ary['content'] = 'question/edit';
     }
 
@@ -156,7 +153,6 @@ class QuestionController extends  AppController
         }
 
         $content = $result_vali_ary['content'];
-        $title = $result_vali_ary['title'];
         $answers =  $result_vali_ary['answer'];
         $question_id = $request->getPost()->get('id');
 
@@ -186,8 +182,7 @@ class QuestionController extends  AppController
             try {
                 $this->obj_model->updateOne(
                     [
-                        'title' => $title,
-                        'content' => $content,
+                        'content' => $content
                     ],
                     "id = $question_id"
                 );
@@ -225,6 +220,8 @@ class QuestionController extends  AppController
         $numbers_of_page = ceil($numbers_of_result / $results_per_page);
         $this->data_ary['numbers_of_page'] = $numbers_of_page;
         $this->data_ary['page'] = (float)$results_ary['page'];
+        $question_title_id = $req_method_ary['question_id'];
+        $this->data_ary['question_title'] = $this->obj_model_question_title->getById($question_title_id, "title,description");
 
         $this->data_ary['content'] = 'question/detail';
     }

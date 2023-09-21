@@ -1,3 +1,29 @@
+<div class="col-lg-12">
+    <div class="white_card card_height_100 mb_30">
+        <div class="white_card_header">
+            <div class="box_header m-0">
+                <div class="main-title">
+                    <h3 class="m-0">Collection question</h3>
+                </div>
+            </div>
+        </div>
+        <div class="white_card_body">
+            <div class="card-body d-flex">
+                <!-- <form id="form_new_question col-12" class="" action="create" method="POST"> -->
+                <div class="mb-3 col-5 mr-12" style="">
+                    <label class="form-label" for="title">Title collection </label>
+                    <input class="form-control" rows="3" disabled value="<?php echo $question_title['title']; ?>" placeholder="Title..." />
+                </div>
+                <div class="mb-3 col-5">
+                    <label class="form-label" for="title">Description collection </label>
+                    <input class="form-control" disabled value="<?php echo isset($question_title['description']) ? $question_title['description'] : "" ?>" rows="3" placeholder="description..." />
+                </div>
+                <!-- </form> -->
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="card_box box_shadow position-relative mb_30">
     <div class="white_box_tittle ">
         <div class="main-title2 flex items-center justify-between">
@@ -44,7 +70,7 @@
                                         foreach ($answers as $answer) {
                                             $answer = explode('-', $answer);
                                         ?>
-                                            <span style="background-color:<?php echo $answer[0] == 1 ? 'yellow' : '' ?>;"><?php echo  $answer[1] ?>  </span><br>
+                                            <span style="background-color:<?php echo $answer[0] == 1 ? 'yellow' : '' ?>;"><?php echo  $answer[1] ?> </span><br>
                                         <?php
                                         }
                                         ?>
@@ -58,7 +84,7 @@
                                             </button>
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
 
-                                                <li><a class="dropdown-item" href="/admin/question/index">Edit</a></li>
+                                                <li><a class="dropdown-item" href="/admin/question/edit?question_id=<?php echo $question_title['question_id']; ?>">Edit</a></li>
                                                 <li>
                                                     <button type="button" data-id="<?php echo $question_title['question_id']; ?>" class="dropdown-item btn-delete-question ">Delete</button>
                                                 </li>

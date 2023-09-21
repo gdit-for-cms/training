@@ -350,7 +350,7 @@ function alertDeleteQuestion() {
         let pathName = window.location.pathname;
         let pathName2 = pathName.split('/')[2]
         let pathName3 = pathName.split('/')[3]
-        
+
         if (pathName3 == "index" && pathName2 == "question") {
             pathName2 = "question-title"
         }
@@ -613,6 +613,7 @@ $(document).ready(function () {
     alertUploadFileExam()
     alertDeleteQuestion()
     alertDeleteExamDetail()
+    alertAddQuestionToExam()
     // alertEditDetailExam('edit-detail-exam')
     //show answer
     loadAnswers()
@@ -811,6 +812,41 @@ function alertDeleteRule() {
     });
 }
 
+function alertAddQuestionToExam() {
+    $('.btn-add_question_exam').click(function (e) {
+        pathName = 'exam-question';
+        let exam_id = $(this).data('exam_id');
+        // console.log(array_select_question);
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Add 4 Questions to Exam!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: `/admin/${pathName}/store?exam_id=${exam_id}`,
+                    data: {
+                        array_select_question: array_select_question,
+                        exam_id: exam_id,
+                    },
+                    success: function (response) {
+                        // console.log(response);
+                        window.history.back()
+
+                    },
+                    error: function (E) {
+                        console.log(E)
+                    }
+                });
+            }
+        })
+    })
+}
 
 function alertUploadFileExam() {
     $('.btn-upload-file-ftp').click(function (e) {
@@ -820,7 +856,7 @@ function alertUploadFileExam() {
         let uploadFileID = $(this).data('id');
         // let pathName = window.location.pathname.split('/')[2];
         let pathName = 'exam';
-        
+
         // alert(pathName)    
         var content = document.getElementById('content_exam');
         var csv_content = document.getElementById('csv_answer');
