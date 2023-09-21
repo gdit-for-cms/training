@@ -140,6 +140,7 @@ class Question extends Model
         // echo "<pre>";
         // var_dump($req_method_ary);
         // die();
+        $exam_id = $req_method_ary['exam_id'];
 
         $db = static::getDB();
         $query = "SELECT
@@ -155,7 +156,8 @@ class Question extends Model
     WHERE q.question_title_id = $req_method_ary[id] 
         AND (q.id, a.id) NOT IN (
             SELECT question_id, answer_id
-            FROM exam_questions
+            FROM exam_questions as eq
+            Where eq.exam_id = $exam_id
         )
     GROUP BY
         q.content

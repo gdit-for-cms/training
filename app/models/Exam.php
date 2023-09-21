@@ -117,7 +117,7 @@ ORDER BY e.id DESC';
         $stmt = $db->query($query . " " . $limit_query);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results, 'page' => $req_method_ary['page']);
-        
+
         return $results_ary;
     }
 
@@ -208,5 +208,13 @@ ORDER BY e.id DESC';
     public function create($data)
     {
         return $this->insert($data);
+    }
+
+    public function checkHasEmail($data)
+    {
+        if (!isset($data['emails'])) {
+            return false;
+        }
+        return true;
     }
 }

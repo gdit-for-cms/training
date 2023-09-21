@@ -11,6 +11,7 @@ use Core\Http\ResponseTrait;
 use App\Models\ExamQuestion;
 use App\Models\Answer;
 use App\Config;
+use App\Models\ExamParticipant;
 
 class ExamController extends AppController
 {
@@ -30,6 +31,8 @@ class ExamController extends AppController
 
     public object $app_request;
 
+    public object $obj_model_exam_participant;
+
     public function __construct()
     {
         $this->obj_model = new Exam;
@@ -37,11 +40,12 @@ class ExamController extends AppController
         $this->obj_model_exam_question = new ExamQuestion;
         $this->obj_modal_answer = new Answer;
         $this->app_request = new AppRequest;
+        $this->obj_model_exam_participant = new ExamParticipant;
     }
 
     public function indexAction(Request $request)
     {
-        $file = 'exam';
+        $file = '';
         $html_directory =  Config::FTP_PUBLIC_DIRECTORY_HTML;
         $csv_directory = Config::FTP_PUBLIC_DIRECTORY_CSV;
         $directory['html'] = $html_directory . $file;
@@ -133,9 +137,7 @@ class ExamController extends AppController
         $this->data_ary['numbers_of_page'] = $numbers_of_page;
         $this->data_ary['page'] = (float)$results_ary['page'];
 
-        // echo "<pre>";
-        // var_dump($this->data_ary['page']);
-        // die();
+
         $this->data_ary['content'] = 'exam/detail';
     }
 
@@ -146,13 +148,17 @@ class ExamController extends AppController
 
         $result_vali_ary = $this->app_request->validate($this->obj_model->rules(), $request, 'post');
 
+        //check has email
+        $req_method_ary = $request->getPost()->all();
+        $check_has_mail = $this->obj_model->checkHasEmail($req_method_ary);
         if (in_array('error', $result_vali_ary)) {
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
             return $this->errorResponse($message_error);
         }
-        // echo "<pre>";
-        // var_dump($result_vali_ary);
-        // die();
+        if ($check_has_mail) {
+            $emails = $req_method_ary['emails'];
+        }
+
 
         $title = trim($result_vali_ary['title']);
         $description = $result_vali_ary['description'];
@@ -176,6 +182,17 @@ class ExamController extends AppController
                     'duration' => $duration
                 ]
             );
+            $exam = $this->obj_model->getBy('title', '=', $title);
+            // echo "<pre>";
+            // var_dump($exam[0]['id']);
+            // die();
+
+            foreach ($emails as $email) {
+                $this->obj_model_exam_participant->create([
+                    'exam_id'=>$exam[0]['id'],
+                    'email'=>$email
+                ]);
+            }
 
             return $this->successResponse();
         } catch (\Throwable $th) {
@@ -285,7 +302,7 @@ class ExamController extends AppController
         $exam = $this->obj_model->getById($exam_id);
 
 
-        $file_name = "exam" . $exam_id;
+        $file_name = $exam_id;
         $full_new_directory = $your_server_directory . $file_name;
         $your_server_directory_html = $full_new_directory . '.html';
         $your_server_directory_csv = $full_new_directory . '.csv';
@@ -382,8 +399,7 @@ class ExamController extends AppController
         $question_id = $request->getGet()->get('question_id');
         $exam_id = $request->getGet()->get('exam_id');
 
-       $this->obj_model_exam_question->destroyBy("question_id = $question_id and exam_id = $exam_id");
-
+        $this->obj_model_exam_question->destroyBy("question_id = $question_id and exam_id = $exam_id");
     }
 
     public function detailEditAction(Request $request)

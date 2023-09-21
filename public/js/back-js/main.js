@@ -163,9 +163,9 @@ function submitForm(formId) {
                             timer: 1500
                         });
                         setTimeout(() => {
-                            document.location.reload(true);
+                            // document.location.reload(true);
                         }, "1600");
-                        window.history.back()
+                        // window.history.back()
 
                     },
                     error: function (response) {
@@ -851,8 +851,8 @@ function alertAddQuestionToExam() {
 function alertUploadFileExam() {
     $('.btn-upload-file-ftp').click(function (e) {
 
-        // var btn_submit = document.getElementById('btn_submit');
-        // btn_submit.disabled = false;
+        var btn_submit = document.getElementById('btn_submit');
+        btn_submit.disabled = false;
         let uploadFileID = $(this).data('id');
         // let pathName = window.location.pathname.split('/')[2];
         let pathName = 'exam';
