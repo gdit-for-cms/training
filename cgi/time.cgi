@@ -3,60 +3,104 @@ use strict;
 use warnings;
 use CGI;
 use Time::Piece;
+use Text::CSV;
 
 my $cgi = CGI->new; 
 my $id = $cgi->param("id");
+my $random_code = $cgi->param("code");
 
-my $file_to_create = "time/$id.csv";
+sub generate_random_string {
+    my $random_string = '';
+    my @characters = ('A'..'Z', 'a'..'z', 0..9);
+    
+    for (1..4) {
+        my $random_index = int(rand(scalar(@characters)));
+        $random_string .= $characters[$random_index];
+    }
+
+    return $random_string;
+}
+
+if(!$random_code){
+    
+    $random_code = generate_random_string();
+}
+
+my $file_to_create = "time/$random_code-$id.csv";
 
 if (-e $file_to_create) {
     my @timestamps;
-    open my $file_handle, '<', $file_to_create or die "Không thể mở tệp: $!";
+    open my $file_handle, '<', $file_to_create or die "Can not open file: $!";
     
     # Đọc các mốc thời gian từ tệp
     while (<$file_handle>) {
         if (/(.+)$/) {
-            push @timestamps, Time::Piece->strptime($1, "%a %b %d %H:%M:%S %Y");
+            push @timestamps, Time::Piece->strptime($1, "%H:%M:%S");
         }
     }
     
     close $file_handle;
 
     if (@timestamps == 1) {
-        # TH1: File đã có một mốc thời gian
-        # Thêm mốc thời gian hiện tại vào tệp
-        open $file_handle, '>>', $file_to_create or die "Không thể mở tệp: $!";
-        my $current_time = localtime;
-        print $file_handle "$current_time\n";
+        # TH1: The file has been there for a while
+        # Add the current timestamp to the file
+        open $file_handle, '>>', $file_to_create or die "Can not open file: $!";
+        my ($second, $minute, $hour) = (localtime)[0, 1, 2]; # Lấy giây, phút, giờ
+
+        # Tạo định dạng giờ:phút:giây
+        my $formatted_time = sprintf("%02d:%02d:%02d", $hour, $minute, $second);
+
+        # Lưu định dạng giờ:phút:giây vào tệp tin
+        print $file_handle "$formatted_time\n";
         close $file_handle;
 
-        # Lấy 2 mốc thời gian ra kiểm tra
-        my $time1 = $timestamps[0];
-        my $time2 = $timestamps[1];
+        # Take 2 time points to check
+        open $file_handle, '<', $file_to_create or die "Không thể mở tệp: $!";
+    
+        # Đọc các mốc thời gian từ tệp
+        while (<$file_handle>) {
+            if (/(.+)$/) {
+                push @timestamps, Time::Piece->strptime($1, "%H:%M:%S");
+            }
+        }
+        
+        my ($hour1, $min1, $sec1) = split(":", $timestamps[0]);
+        my ($hour2, $min2, $sec2) = split(":", $timestamps[1]);
 
-        my $time_difference = $time2 - $time1;
-
-        if ($time_difference->minutes > 10 || ($time_difference->minutes == 10 && $time_difference->seconds > 30)) {
-            print "Content-Type: text/html\n\n";
-            print "0\n";
-        } else {
+        if($min2 - $min1 < 10){
             print "Content-Type: text/html\n\n";
             print "1\n";
+        } elsif ($min2 - $min1 == 10 && $sec2 - $sec1 <= 30) {
+            print "Content-Type: text/html\n\n";
+            print "1\n";
+        } else {
+            print "Content-Type: text/html\n\n";
+            print "0\n";
         }
     } elsif (@timestamps == 2) {
-        # TH2: File đã có đủ 2 mốc thời gian
+        # TH2: The file already has 2 timestamps
         print "Content-Type: text/html\n\n";
-        print "2\n";
+        print "0\n";
     } else {
-        # TH3: File chưa có mốc thời gian nào
+        # TH3: The file does not have any time stamp
         print "Content-Type: text/html\n\n";
-        print "1\n";
+        print "0\n";
     }
 } else {
-    # Tạo mới tệp và thêm mốc thời gian hiện tại vào
+    # Create a new file and add the current timestamp
     open my $fh, '>', $file_to_create or die "Không thể tạo mới tệp: $!";
-    my $current_time = localtime;
-    print $fh "$current_time\n";
+
+    my ($second, $minute, $hour) = (localtime)[0, 1, 2]; # Lấy giây, phút, giờ
+
+    # Tạo định dạng giờ:phút:giây
+    my $formatted_time = sprintf("%02d:%02d:%02d", $hour, $minute, $second);
+
+    # Lưu định dạng giờ:phút:giây vào tệp tin
+    print $fh "$formatted_time\n";
+    
     close $fh;
+
+    print "Content-Type: text/html\n\n";
+    print $random_code;
 }
 

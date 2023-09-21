@@ -6,6 +6,7 @@ const answers = {}
 var key = 1
 var count = 0
 var file_html = ''
+var code = ''
 
 const current_date = new Date();
 var start_time_in_seconds = Math.floor(current_date.getTime() / 1000);
@@ -58,32 +59,32 @@ document.addEventListener('DOMContentLoaded', function () {
     if (current_url.slice(current_url.length - 4, current_url.length) == 'html' && current_url.slice(24, current_url.length) != '/view/login.html' && current_url.slice(24, current_url.length) != '/view/thanks.html') {
         localStorage.setItem('id', current_url.slice(25, current_url.length - 5))
 
-        if (!user_email && !user_name) {
-            window.location.href = '/view/login.html'
+        window.location.href = '/view/login.html'
+    } else {
+        if (show_name && show_name) {
+            show_email.innerHTML = user_email
+            show_name.innerHTML = user_name
+    
+            exam_id = localStorage.getItem('id')
+
+            var data = {
+                id : exam_id
+            }
+    
+            $.ajax({
+                type: "POST",
+                url: "/cgi/time.cgi",
+                data: data,
+                success: function (response) {
+                    code = response
+                }
+            })
         }
     }
 
     exam_id = localStorage.getItem('id')
     if (id_exam) {
         id_exam.value = exam_id
-    }
-
-    if (show_name && show_name) {
-        show_email.innerHTML = user_email
-        show_name.innerHTML = user_name
-
-        var data = {
-            id : exam_id
-        }
-
-        $.ajax({
-            type: "POST",
-            url: "/cgi/time.cgi",
-            data: data,
-            success: function (response) {
-                console.log(response)
-            }
-        })
     }
 })
 
@@ -148,27 +149,8 @@ if (btn_accept_submit) {
         e.preventDefault()
         btn_accept_submit.disabled = true
         btn_close_accept_submit.disabled = true
-        end_time_in_seconds = Math.floor(current_date.getTime() / 1000)
 
-        // if (check_time()) {
-        //     after_submit()
-        // } else {
-        //     alert('You cheated by interfering in the calculation of exam time. You cannot submit this test!')
-        //     setTimeout(window.location.href = '/view/login.html', 5000)
-        // }
-        var id = localStorage.getItem('id')
-        var data = {
-            id : id
-        }
-
-        $.ajax({
-            type: "POST",
-            url: "/cgi/time.cgi",
-            data: data,
-            success: function (response) {
-                console.log(response);
-            }
-        })
+        check_time()
     })
 }
 
@@ -181,9 +163,9 @@ if (countdown_element) {
 function error_login(number) {
     var message = ''
     if (number == 0) {
+        message = 'Your email is only allowed to participate in the test and submit once!'
+    } else if (number == 2){
         message = 'Email does not exist in the system!'
-    } else if (number == 0){
-        message = 'Your email is allowed to participate in the test only once!'
     } else if (number == -1){
         message = 'Something is wrong, please try again!'
     }
@@ -232,17 +214,12 @@ function after_submit() {
     exam_results[question] = array_ans
 
     // Get the answer file name
-    var url = localStorage.getItem('current_url')
-    var csv_file_path = ''
-    if (url) {
-        var file_csv = url.slice(24, url.length - 4)
-        csv_file_path = file_csv + 'csv'
-    }
+    var id = localStorage.getItem('id')
 
     var data_to_send = {
         email: user_email,
         name: user_name,
-        file_csv: csv_file_path,
+        id: id,
         exam_results: JSON.stringify(exam_results)
     }
 
@@ -252,17 +229,17 @@ function after_submit() {
         url: "/cgi/handle.cgi",
         data: data_to_send,
         success: function (response) {
+            remove_data()
+
             if (response == 'false') {
                 window.location.href = '/view/error.html'
+            } else if(response == 0){
+                error_login()
+                remove_data()
+                setTimeout(window.location.href = '/view/login.html', 5000)
             } else {
                 window.location.href = '/view/thanks.html'
             }
-            localStorage.removeItem('user_email')
-            localStorage.removeItem('user_name')
-
-            // Delete time variables stored locally
-            localStorage.removeItem('countdown_minutes')
-            localStorage.removeItem('countdown_seconds')
         }
     })
 }
@@ -279,12 +256,8 @@ function updateCountdown() {
         if (countdown_element) {
             countdown_element.innerHTML = 'Thời gian đã hết'
             clearInterval(countdownInterval)
-            // if (check_time()) {
-            //     after_submit()
-            // } else {
-            //     alert('You cheated by interfering in the calculation of exam time. You cannot submit this test!')
-            //     setTimeout(window.location.href = '/view/login.html', 5000)
-            // }
+            
+            check_time()
         }
     } else {
         if (countdown_element) {
@@ -317,12 +290,39 @@ function updateCountdown() {
 }
 
 function check_time() {
-    var time_difference = end_time_in_seconds - start_time_in_seconds
-    if (time_difference > 10 * 60 * 1000) {
-        return false
-    } else {
-        return true
+    var id = localStorage.getItem('id')
+    var data = {
+        id : id,
+        code : code
     }
+
+    $.ajax({
+        type: "POST",
+        url: "/cgi/time.cgi",
+        data: data,
+        success: function (response) {
+            if (response == 1) {
+                after_submit()
+            } else {
+                alert('You cheated by interfering in the calculation of exam time. You cannot submit this test!')
+
+                remove_data()
+
+                setTimeout(window.location.href = '/view/login.html', 5000)
+            }
+        }
+    })
+}
+
+function remove_data() {
+    localStorage.removeItem('user_email')
+    localStorage.removeItem('user_name')
+    
+    localStorage.removeItem('id')
+
+    // Delete time variables stored locally
+    localStorage.removeItem('countdown_minutes')
+    localStorage.removeItem('countdown_seconds')
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -5,6 +5,7 @@ use strict;
 use warnings;
 use Text::CSV;
 use File::Path;
+use Scalar::Util qw(looks_like_number);
 my $cgi = CGI->new;
 
 # Get data sent from js.
@@ -14,8 +15,7 @@ my $email = $cgi->param("email");
 my $name = $cgi->param("name");
 
 # The answer file of the test that the user is doing.
-my $file_csv = $cgi->param("file_csv");
-
+my $file_csv = $cgi->param("id");
 # Results of user's work.
 my $exam_results_json = $cgi->param("exam_results");
 
@@ -27,6 +27,58 @@ my %correct_answers;
 
 my $folder_to_check = "csv";
 
+if(!$email || !looks_like_number($file_csv)){
+    print "Content-Type: text/html\n\n";
+    print 0;
+    exit(0);
+}
+
+##########################################
+# Check the email you are logging in and whether this email has been submitted
+
+my $csv_file = "email/email$file_csv.csv";
+
+# Read CSV file and create object variable
+my %csv_data;
+
+my $csv = Text::CSV->new({ binary => 1 }) or die "Unable to create object CSV: " . Text::CSV->error_diag();
+open my $fh, '<', $csv_file or die "Cannot open file $csv_file: $!";
+
+while (my $row = $csv->getline($fh)) {
+    my ($csv_email, $value1, $value2) = @$row;
+    $csv_data{$csv_email} = [$value1, $value2];
+}
+
+$csv->eof or $csv->error_diag();
+close $fh;
+
+# Check if $email exists in the object and make changes if necessary
+if (exists $csv_data{$email}) {
+    if ($csv_data{$email}[0] == 0 && $csv_data{$email}[1] == 2) {
+        $csv_data{$email}[0] = 0;
+        $csv_data{$email}[1] = 0;
+        
+        # Record data to a CSV file
+        open my $output_fh, '>', $csv_file or die "Không thể mở tệp $csv_file: $!";
+        foreach my $key (keys %csv_data) {
+            $csv->print($output_fh, [$key, @{$csv_data{$key}}]);
+            print $output_fh "\n";
+        }
+        close $output_fh;
+    } else {
+        print "Content-Type: text/html\n\n";
+        print 0;
+        exit(0);
+    }
+} else {
+    print "Content-Type: text/html\n\n";
+    print 0;
+    exit(0);
+}
+#####################################
+
+$file_csv = "$file_csv.csv";
+
 unless (-d $folder_to_check) {
     eval {
         mkpath($folder_to_check);
@@ -36,13 +88,13 @@ unless (-d $folder_to_check) {
     }
 }
 
-my $file_path = $folder_to_check . $file_csv;
+my $file_path = "$folder_to_check/$file_csv";
 
 eval {
-    open my $file_handle, '<', $file_path or die "Không thể mở file $file_path: $!";
-    my $csv = Text::CSV->new({ binary => 1 });
+    open my $file_handle, '<', $file_path or die "Can not open file $file_path: $!";
+    my $csv_f = Text::CSV->new({ binary => 1 });
 
-    while (my $row = $csv->getline($file_handle)) {
+    while (my $row = $csv_f->getline($file_handle)) {
         my ($question_id, $answer) = @$row;
         push @{$correct_answers{$question_id}}, $answer;
     }
@@ -91,7 +143,9 @@ eval {
         print MAIL $message;
 
         close(MAIL);
-        print "Email Sent Successfully\n";
+        
+        print "Content-Type: text/html\n\n";
+        print 1;
     }
 
     send_mail($email);
