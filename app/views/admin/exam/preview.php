@@ -2,12 +2,11 @@
     <div class="row">
         <div class="col-12 text-center">
             <a class="btn btn-danger" href="/admin/exam/examDetail?exam_id=<?php echo $exam['id'] ?>" class="page-link">Back</a>
-            <a id="createFilesButton" data-id="<?php echo $exam['id'] ?>" id="submit" class="btn btn-primary btn-upload-file-ftp">Publish To Server</a>
+            <button id="createFilesButton" data-id="<?php echo $exam['id'] ?>" <?php echo count($question_answers) > 0 ? "" : "disabled" ?> id="submit" class="btn btn-primary btn-upload-file-ftp">Publish To Server</button>
         </div>
     </div>
 </div>
 <div id="content_exam">
-
     <nav class="navbar navbar-expand-lg fixed-top navbar-white bg-white" aria-label="Main navigation">
         <div class="container-fluid">
             <div id="view_time" class="d-flex align-items-center p-3 text-white bg-primary rounded shadow-sm">
@@ -38,7 +37,7 @@
             $alphabet = range('A', 'Z');
             foreach ($question_answers as $question_answer) { ?>
                 <div class="my-3 p-3 bg-body rounded shadow-sm">
-                    <h5 class="border-bottom">
+                    <h5>
                         <div class="d-flex text-muted pt-3">
                             <?php echo $question_answer['question']['content']; ?>
                         </div>
@@ -62,10 +61,12 @@
                         } ?>
                     </div>
                 </div>
+
             <?php
                 $stt++;
             }
             ?>
+
             <div class="my-3 p-3 bg-body rounded">
                 <div class="row">
                     <div class="col-12 text-center">
@@ -93,6 +94,18 @@
     </main>
 </div>
 <div class="hidden" id="csv_answer"><?php echo $csv_answer; ?></div>
+
+<!-- exam participants -->
+<?php
+$participants = "";
+if (count($exam_participants) > 0) {
+    foreach ($exam_participants as $exam_participant) {
+        $participants .= $exam_participant['email'] . "," . $exam_participant['is_login'] . "," . $exam_participant['is_submit'] . "\n";
+    }
+}
+
+?>
+<div class="hidden" id="csv_exam_participants"><?php echo $participants; ?></div>
 <script>
     const submitBtn = document.querySelector('#submit')
     // submitBtn.disabled = false;

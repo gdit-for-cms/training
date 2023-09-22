@@ -29,7 +29,7 @@
                         <!-- Ô input mặc định -->
                         <div class="form-check" style="padding-left: 45px;">
                             <div class="input-with-button">
-                                <input type="text" class="form-control input-answer" name="emails[]" value="" placeholder="Email...">
+                                <input type="text" class="form-control input-answer" name="email[]" value="" placeholder="email...">
                                 <button type="button" class="remove-button btn btn-danger delete-btn text-white" onclick="removeAnswer(this)">Delete</button>
                             </div>
                         </div>
@@ -44,39 +44,5 @@
     </div>
 </div>
 <script>
-    function addAnswer() {
-        var answerContainer = document.getElementById("answerContainer");
 
-        var newAnswerDiv = document.createElement("div");
-        newAnswerDiv.classList.add("form-check");
-        newAnswerDiv.style = "padding-left: 45px;";
-
-        var inputWithButton = document.createElement("div");
-        inputWithButton.classList.add("input-with-button");
-        var answerInput = document.createElement("input");
-        answerInput.type = "text";
-        answerInput.classList.add("form-control", "input-answer");
-        answerInput.name = "emails[]";
-        answerInput.value = "";
-        answerInput.placeholder = "Email...";
-        var removeButton = document.createElement("button");
-        removeButton.type = "button";
-        removeButton.textContent = "Delete";
-        removeButton.classList.add("remove-button", "btn", "btn-danger", "delete-btn", "text-white");
-        removeButton.onclick = function() {
-            removeAnswer(this);
-        };
-        inputWithButton.appendChild(answerInput);
-        inputWithButton.appendChild(removeButton);
-        newAnswerDiv.appendChild(inputWithButton);
-        answerContainer.appendChild(newAnswerDiv);
-    }
-
-    function removeAnswer(button) {
-        var answerContainer = document.getElementById("answerContainer");
-        answerContainer.removeChild(button.parentElement.parentElement);
-        updateCheckboxValues(); // Cập nhật lại giá trị của các checkbox sau khi xóa
-        // updateCheckboxValues(); // Cập nhật lại giá trị của các checkbox sau khi xóa
-
-    }
 </script>

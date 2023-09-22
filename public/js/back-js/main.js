@@ -23,10 +23,11 @@ function checkName(objName) {
 
 function checkPathName() {
     var pathName = window.location.pathname
+    var pathName2 = pathName.split('/')[2];
     const name = document.getElementById('name');
     const title = document.getElementById('title');
-    const description = document.getElementById('description');
-    const ckeditor = document.getElementById('editor-edit-note');
+    // const description = document.getElementById('description');
+    // const ckeditor = document.getElementById('editor-edit-note');
     const question = document.getElementById('quesion_id');
     var content = ''
     if (pathName.includes('/admin/user')) {
@@ -64,7 +65,7 @@ function checkPathName() {
                             </span>
                         </div>
                     </div>`
-    } else if (pathName.includes('/admin/exam/new')) {
+    } else if (pathName.includes('/admin/exam')) {
         content = `
                     <div class="d-flex justify-content-center align-items-center w-full">
                         <div class="d-flex flex-col justify-content-center align-items-start">
@@ -74,21 +75,6 @@ function checkPathName() {
         content = `
                     <div class="d-flex justify-content-center align-items-center w-full">
                         <div class="d-flex flex-col justify-content-center align-items-start">
-                        </div>
-                    </div>`
-    } else if (pathName.includes('/admin/exam/edit')) {
-        content = `
-                    <div class="d-flex justify-content-center align-items-center w-full">
-                        <div class="d-flex flex-col justify-content-center align-items-start">
-                            <span class="mb-2">
-                                <span class="font-bold">Title: </span>
-                                ${title.value}
-                            </span>
-                            <span class="mb-2">
-                                <span class="font-bold">Content: </span>
-                                ${description.value}
-                            </span>
-                          
                         </div>
                     </div>`
     } else if (pathName.includes('/admin/exam/detail-edit')) {
@@ -107,7 +93,7 @@ function checkPathName() {
                         </div>
                     </div>`
     }
-    else if (pathName.includes('/admin/exam/create')) {
+    else if (pathName.includes('/admin/exam')) {
         const selectElement = document.getElementById('questionSelect');
         var selectedOption = selectElement.options[selectElement.selectedIndex];
 
@@ -163,9 +149,9 @@ function submitForm(formId) {
                             timer: 1500
                         });
                         setTimeout(() => {
-                            // document.location.reload(true);
+                            document.location.reload(true);
                         }, "1600");
-                        // window.history.back()
+                        window.history.back()
 
                     },
                     error: function (response) {
@@ -617,6 +603,9 @@ $(document).ready(function () {
     // alertEditDetailExam('edit-detail-exam')
     //show answer
     loadAnswers()
+    addAnswer()
+    removeAnswer()
+
     //Ngo Duy Hung
     alertDeleteListRule();
     alertDeleteRule();
@@ -816,10 +805,14 @@ function alertAddQuestionToExam() {
     $('.btn-add_question_exam').click(function (e) {
         pathName = 'exam-question';
         let exam_id = $(this).data('exam_id');
+
+        let total_select = document.getElementById("total_select");
+        total_select = total_select.innerHTML;
+        // alert(total_select)
         // console.log(array_select_question);
         Swal.fire({
             title: 'Are you sure?',
-            text: "Add 4 Questions to Exam!",
+            text: "Add " + total_select + " Questions to Exam!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',
@@ -848,6 +841,103 @@ function alertAddQuestionToExam() {
     })
 }
 
+function updateCheckboxValue(checkbox) {
+    const answerIndex = parseInt(checkbox.value);
+    if (checkbox.checked) {
+        if (!selectedPositions.includes(answerIndex)) {
+            selectedPositions.push(answerIndex);
+        }
+    } else {
+        const indexToRemove = selectedPositions.indexOf(answerIndex);
+        if (indexToRemove > -1) {
+            selectedPositions.splice(indexToRemove, 1);
+        }
+    }
+}
+// Cập nhật giá trị is_correct trước khi gửi form
+function updateIsCorrectValues() {
+    var checkboxes = document.querySelectorAll('input[name="is_correct[]"]');
+    for (var i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].value = i; // Cập nhật lại giá trị cho các checkbox dựa trên vị trí của chúng
+    }
+}
+
+function addAnswer() {
+    pathName = window.location.pathname.split('/')[2];
+    let content = "email"
+    if (pathName == 'question') {
+        content = "answer"
+        console.log(pathName);
+        var answerCheckbox = document.createElement("input");
+        answerCheckbox.classList.add("form-check-input");
+        answerCheckbox.style = "margin-right: 50px;";
+        answerCheckbox.type = "checkbox";
+        answerCheckbox.name = "is_correct[]";
+        if (pathName == "question") {
+            answerCheckbox.value = currentAnswerIndex; // Gán giá trị của ô input hiện tại
+        }
+        answerCheckbox.addEventListener("change", function () {
+            updateCheckboxValue(this);
+        });
+        //nếu là add question thì có thêm column đáp án đúng
+
+    }
+
+
+    var answerContainer = document.getElementById("answerContainer");
+
+    var newAnswerDiv = document.createElement("div");
+    newAnswerDiv.classList.add("form-check");
+    newAnswerDiv.style = "padding-left: 45px;";
+
+    var inputWithButton = document.createElement("div");
+    inputWithButton.classList.add("input-with-button");
+    var answerInput = document.createElement("input");
+    answerInput.type = "text";
+    answerInput.classList.add("form-control", "input-answer");
+    answerInput.name = content + "[]";
+    answerInput.value = "";
+    answerInput.placeholder = content + "...";
+
+    var removeButton = document.createElement("button");
+    removeButton.type = "button";
+    removeButton.textContent = "Delete";
+    removeButton.classList.add("remove-button", "btn", "btn-danger", "delete-btn", "text-white");
+    removeButton.onclick = function () {
+        removeAnswer(this, pathName);
+    };
+
+    inputWithButton.appendChild(answerInput);
+    inputWithButton.appendChild(removeButton);
+
+    if (pathName == 'question') {
+        newAnswerDiv.appendChild(answerCheckbox);
+
+    }
+    newAnswerDiv.appendChild(inputWithButton);
+
+    answerContainer.appendChild(newAnswerDiv);
+
+    if (pathName == "question") {
+        currentAnswerIndex++;
+    }
+}
+
+
+
+function removeAnswer(button, pathName) {
+    var answerContainer = document.getElementById("answerContainer");
+    pathName = window.location.pathname.split('/')[2];
+
+    if (pathName == "question" && answerContainer.children.length <= 1) {
+        alert("Phải có ít nhất một câu trả lời.");
+    }
+    else {
+        answerContainer.removeChild(button.parentElement.parentElement);
+    }
+    updateCheckboxValues(); // Cập nhật lại giá trị của các checkbox sau khi xóa
+    // updateCheckboxValues(); // Cập nhật lại giá trị của các checkbox sau khi xóa
+}
 function alertUploadFileExam() {
     $('.btn-upload-file-ftp').click(function (e) {
 
@@ -860,13 +950,19 @@ function alertUploadFileExam() {
         // alert(pathName)    
         var content = document.getElementById('content_exam');
         var csv_content = document.getElementById('csv_answer');
+        var csv_exam_participants = document.getElementById('csv_exam_participants');
+
         if (csv_content) {
             csv_content = csv_content.innerHTML;
         }
         if (content) {
             content = content.innerHTML;
         }
+        if (csv_exam_participants) {
+            csv_exam_participants = csv_exam_participants.innerHTML;
+        }
 
+        console.log(content);
         var html_content = `
         <!DOCTYPE html>
         <html lang="en">
@@ -926,7 +1022,8 @@ function alertUploadFileExam() {
                     url: `/admin/${pathName}/upload?id=${uploadFileID}`,
                     data: {
                         html_content: html_content,
-                        csv_content: csv_content
+                        csv_content: csv_content,
+                        csv_exam_participants: csv_exam_participants
                     },
                     success: function (response) {
                         // console.log(response);

@@ -46,4 +46,45 @@ class ExamParticipant extends Model
     {
         return $this->insert($data);
     }
+
+   
+
+    public function rules($change = '', $value = array())
+    {
+        $rules_ary = array(
+            'email' => array(
+                'email',
+            ),
+        );
+        switch ($change) {
+            case 'add':
+                return array_merge($rules_ary, $value);
+                break;
+            case 'remove_key':
+                foreach ($value as $each) {
+                    if (array_key_exists($each, $rules_ary)) {
+                        unset($rules_ary[$each]);
+                    }
+                }
+                return $rules_ary;
+                break;
+            case 'remove_value':
+                foreach ($value as $key => $value_key) {
+                    if (array_key_exists($key, $rules_ary)) {
+                        foreach ($value_key as $each) {
+                            $key_value = array_search($each, $rules_ary[$key]);
+                            unset($rules_ary[$key][$key_value]);
+                        }
+                    }
+                }
+                return $rules_ary;
+                break;
+            case 'replace':
+                return $value;
+                break;
+            default:
+                return $rules_ary;
+                break;
+        }
+    }
 }

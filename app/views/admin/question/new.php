@@ -50,7 +50,7 @@
                             <div class="form-check" style="padding-left: 45px;">
                                 <input class="form-check-input" style="margin-right: 50px;" name="is_correct[]" type="checkbox" value="0" onchange="updateCheckboxValue(this)">
                                 <div class="input-with-button">
-                                    <input type="text" class="form-control input-answer" name="answer[]" value="" placeholder="Answer...">
+                                    <input type="text" class="form-control input-answer" name="answer[]" value="" placeholder="answer...">
                                     <button type="button" class="remove-button btn btn-danger delete-btn text-white" onclick="removeAnswer(this)">Delete</button>
                                 </div>
                             </div>
@@ -73,78 +73,78 @@
     // Mảng lưu vị trí các checkbox đã chọn
     var selectedPositions = [];
 
-    function addAnswer() {
-        var answerContainer = document.getElementById("answerContainer");
+    // function addAnswer() {
+    //     var answerContainer = document.getElementById("answerContainer");
 
-        var newAnswerDiv = document.createElement("div");
-        newAnswerDiv.classList.add("form-check");
-        newAnswerDiv.style = "padding-left: 45px;";
-        var answerCheckbox = document.createElement("input");
-        answerCheckbox.classList.add("form-check-input");
-        answerCheckbox.style = "margin-right: 50px;";
-        answerCheckbox.type = "checkbox";
-        answerCheckbox.name = "is_correct[]";
-        answerCheckbox.value = currentAnswerIndex; // Gán giá trị của ô input hiện tại
-        answerCheckbox.addEventListener("change", function() {
-            updateCheckboxValue(this);
-        });
-        var inputWithButton = document.createElement("div");
-        inputWithButton.classList.add("input-with-button");
-        var answerInput = document.createElement("input");
-        answerInput.type = "text";
-        answerInput.classList.add("form-control", "input-answer");
-        answerInput.name = "answer[]";
-        answerInput.value = "";
-        answerInput.placeholder = "Answer...";
-        var removeButton = document.createElement("button");
-        removeButton.type = "button";
-        removeButton.textContent = "Delete";
-        removeButton.classList.add("remove-button", "btn", "btn-danger", "delete-btn", "text-white");
-        removeButton.onclick = function() {
-            removeAnswer(this);
-        };
-        inputWithButton.appendChild(answerInput);
-        inputWithButton.appendChild(removeButton);
-        newAnswerDiv.appendChild(answerCheckbox);
-        newAnswerDiv.appendChild(inputWithButton);
-        answerContainer.appendChild(newAnswerDiv);
-        currentAnswerIndex++; // Tăng giá trị biến tạm lên để sử dụng cho ô input tiếp theo
-    }
+    //     var newAnswerDiv = document.createElement("div");
+    //     newAnswerDiv.classList.add("form-check");
+    //     newAnswerDiv.style = "padding-left: 45px;";
+    //     var answerCheckbox = document.createElement("input");
+    //     answerCheckbox.classList.add("form-check-input");
+    //     answerCheckbox.style = "margin-right: 50px;";
+    //     answerCheckbox.type = "checkbox";
+    //     answerCheckbox.name = "is_correct[]";
+    //     answerCheckbox.value = currentAnswerIndex; // Gán giá trị của ô input hiện tại
+    //     answerCheckbox.addEventListener("change", function() {
+    //         updateCheckboxValue(this);
+    //     });
+    //     var inputWithButton = document.createElement("div");
+    //     inputWithButton.classList.add("input-with-button");
+    //     var answerInput = document.createElement("input");
+    //     answerInput.type = "text";
+    //     answerInput.classList.add("form-control", "input-answer");
+    //     answerInput.name = "answer[]";
+    //     answerInput.value = "";
+    //     answerInput.placeholder = "Answer...";
+    //     var removeButton = document.createElement("button");
+    //     removeButton.type = "button";
+    //     removeButton.textContent = "Delete";
+    //     removeButton.classList.add("remove-button", "btn", "btn-danger", "delete-btn", "text-white");
+    //     removeButton.onclick = function() {
+    //         removeAnswer(this);
+    //     };
+    //     inputWithButton.appendChild(answerInput);
+    //     inputWithButton.appendChild(removeButton);
+    //     newAnswerDiv.appendChild(answerCheckbox);
+    //     newAnswerDiv.appendChild(inputWithButton);
+    //     answerContainer.appendChild(newAnswerDiv);
+    //     currentAnswerIndex++; // Tăng giá trị biến tạm lên để sử dụng cho ô input tiếp theo
+    // }
 
-    function removeAnswer(button) {
-        var answerContainer = document.getElementById("answerContainer");
-        if (answerContainer.children.length > 1) {
-            answerContainer.removeChild(button.parentElement.parentElement);
-            updateCheckboxValues(); // Cập nhật lại giá trị của các checkbox sau khi xóa
-            // updateCheckboxValues(); // Cập nhật lại giá trị của các checkbox sau khi xóa
-        } else {
-            alert("Phải có ít nhất một câu trả lời.");
-        }
-    }
+    // function removeAnswer(button) {
+    //     var answerContainer = document.getElementById("answerContainer");
+    //     if (answerContainer.children.length > 1) {
+    //         answerContainer.removeChild(button.parentElement.parentElement);
+    //         updateCheckboxValues(); // Cập nhật lại giá trị của các checkbox sau khi xóa
+    //         // updateCheckboxValues(); // Cập nhật lại giá trị của các checkbox sau khi xóa
+    //     } else {
+    //         alert("Phải có ít nhất một câu trả lời.");
+    //     }
+    // }
 
-    function updateCheckboxValue(checkbox) {
-        const answerIndex = parseInt(checkbox.value);
-        if (checkbox.checked) {
-            if (!selectedPositions.includes(answerIndex)) {
-                selectedPositions.push(answerIndex);
-            }
-        } else {
-            const indexToRemove = selectedPositions.indexOf(answerIndex);
-            if (indexToRemove > -1) {
-                selectedPositions.splice(indexToRemove, 1);
-            }
-        }
-    }
-    // Cập nhật giá trị is_correct trước khi gửi form
-    function updateIsCorrectValues() {
-        var checkboxes = document.querySelectorAll('input[name="is_correct[]"]');
-        for (var i = 0; i < checkboxes.length; i++) {
-            checkboxes[i].value = i; // Cập nhật lại giá trị cho các checkbox dựa trên vị trí của chúng
-        }
-    }
-    const submitBtn = document.querySelector('#submit')
-    const titleInput = document.querySelector('#title')
-    const contentInput = document.querySelector('#editor-edit-note')
+    // function updateCheckboxValue(checkbox) {
+    //     const answerIndex = parseInt(checkbox.value);
+    //     if (checkbox.checked) {
+    //         if (!selectedPositions.includes(answerIndex)) {
+    //             selectedPositions.push(answerIndex);
+    //         }
+    //     } else {
+    //         const indexToRemove = selectedPositions.indexOf(answerIndex);
+    //         if (indexToRemove > -1) {
+    //             selectedPositions.splice(indexToRemove, 1);
+    //         }
+    //     }
+    // }
+    // // Cập nhật giá trị is_correct trước khi gửi form
+    // function updateIsCorrectValues() {
+    //     var checkboxes = document.querySelectorAll('input[name="is_correct[]"]');
+    //     for (var i = 0; i < checkboxes.length; i++) {
+    //         checkboxes[i].value = i; // Cập nhật lại giá trị cho các checkbox dựa trên vị trí của chúng
+    //     }
+    // }
+    // const submitBtn = document.querySelector('#submit')
+    // const titleInput = document.querySelector('#title')
+    // const contentInput = document.querySelector('#editor-edit-note')
 
     function start() {
         checkChangeInput(titleInput)

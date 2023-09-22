@@ -210,11 +210,11 @@ ORDER BY e.id DESC';
         return $this->insert($data);
     }
 
-    public function checkHasEmail($data)
-    {
-        if (!isset($data['emails'])) {
-            return false;
-        }
-        return true;
+    function beginTransaction(){
+        return $this->getDB()->beginTransaction();
+    }
+
+    function commitTransaction(){
+        return $this->getDB()->commit();
     }
 }

@@ -11,12 +11,9 @@
                             <?php
                             if ($cur_user['role_id'] != 3) {
                             ?>
-                                <a href="/admin/exam/create?exam_id=<?php echo $exam['id']; ?>"><button type=" button" class="btn btn-success float-end">Add Question</button></a>
-                                <!-- <a href="/admin/exam/preview?exam_id=<?php echo $exam['id']; ?>"><button data-id="<?php echo $exam['id']; ?>" type="button" class="btn btn-primary btn-show-preview-exam text-white  mr-2">Preview</button></a> -->
-                                <!-- <button id="createFilesButton" data-id="<?php echo $exam['id'] ?>" id="submit" class="btn btn-primary mr-3 btn-upload-file-ftp">Upload</button>
-                             -->
-                                <a class="btn btn-primary mr-3" id="createFilesButton" href="/admin/exam/preview?exam_id=<?php echo $exam['id']; ?>" data-id="<?php echo $exam['id']; ?>" id="submit">Upload</a>
-
+                                <a href="/admin/exam-question/new?exam_id=<?php echo $exam['id']; ?>"><button type=" button" class="btn btn-success float-end">Add Question</button></a>
+                                <a class="btn btn-primary mr-3" id="createFilesButton" href="/admin/exam/preview?exam_id=<?php echo $exam['id']; ?>" data-id="<?php echo $exam['id']; ?>" id="submit">Upload exam</a>
+                                <a class="btn btn-info mr-3 text-white" href="/admin/exam/edit?id=<?php echo $exam['id']; ?>">Edit</a>
                             <?php
                             }
                             ?>
@@ -27,25 +24,59 @@
                     <div class="card-body d-flex">
                         <!-- <form id="form_new_question col-12" class="" action="create" method="POST"> -->
                         <div class="mb-6 col-4 mr-12" style="">
-                            <div class="mb-3 col-4 mr-12">
+                            <div class="mb-3 mr-12">
                                 <label class="form-label" for="title">Title </label>
                                 <input class="form-control" disabled value="<?php echo $exam['title'] ?>" rows="3" placeholder="title..." />
                             </div>
-                            <div class="mb-3 ">
-                                <label class="form-label" for="duration">Duration (minutes) </label>
-                                <input class="form-control" disabled value="<?php echo $exam['duration'] ?>" rows="3" placeholder="duration..." />
-                            </div>
-                        </div>
-
-                        <div class="mb-6 col-4 mr-12" style="">
                             <div class="mb-3  mr-12">
                                 <label class="form-label" for="description">Description collection </label>
                                 <input class="form-control" disabled value="<?php echo isset($exam['description']) ? $exam['description'] : "" ?>" rows="3" placeholder="description..." />
                             </div>
-                            <div class="mb-3 col-1">
-                                <label class="form-label" for="status">Status </label>
-                                <input class="form-control" disabled value="<?php echo $exam['published'] ?>" rows="3" placeholder="status..." />
+                        </div>
+
+                        <div class="mb-6 col-2 mr-12" style="">
+                            <div class="mb-3 ">
+                                <label class="form-label" for="duration">Duration (minutes) </label>
+                                <input class="form-control" disabled value="<?php echo $exam['duration'] ?>" rows="3" placeholder="duration..." />
                             </div>
+
+                            <div class="mb-3">
+                                <label class="form-label" for="status">Status </label>
+                                <input class="form-control" disabled value="<?php echo $exam['published'] == 1 ? "Đã upload lên server" : " Chưa upload lên server" ?>" rows="3" placeholder="status..." />
+                            </div>
+                        </div>
+                        <div class="col-4 mr-7">
+                            <table class="table table-striped table-bordered table-responsive  ">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th scope="col">#</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-rule-body">'
+                                    <?php
+                                    if (count($emails) > 0) {
+                                        $stt = 1;
+                                        foreach ($emails as $email) {
+                                    ?>
+                                            <tr class="text-center">
+                                                <td><?php echo $stt++; ?></td>
+                                                <td><?php echo $email['email'] ?></td>
+                                                <td><?php echo $email['is_submit'] == 2 ? "Chưa nộp bài" : "Đã nộp bài"; ?></td>
+                                            </tr>
+                                        <?php
+                                        }
+                                    } else {
+                                        ?>
+                                        <tr class="text-center">
+                                            <td colspan="3">Empty</td>
+                                        </tr>
+                                    <?php
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
                         </div>
                         <!-- </form> -->
                     </div>
