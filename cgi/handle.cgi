@@ -1,4 +1,7 @@
 #!/usr/bin/perl --
+my $setting_file = './Setting.pm';
+require $setting_file;
+
 use CGI;
 use JSON;
 use strict;
@@ -25,7 +28,7 @@ my $exam_results = decode_json($exam_results_json);
 # Read data from the answer file.
 my %correct_answers;
 
-my $folder_to_check = "csv";
+my $folder_to_check = our $CSV;
 
 if(!$email || !looks_like_number($file_csv)){
     print "Content-Type: text/html\n\n";
@@ -35,8 +38,8 @@ if(!$email || !looks_like_number($file_csv)){
 
 ##########################################
 # Check the email you are logging in and whether this email has been submitted
-
-my $csv_file = "email/email$file_csv.csv";
+my $email_path = our $EMAIL;
+my $csv_file = "$email_path$file_csv.csv";
 
 # Read CSV file and create object variable
 my %csv_data;
@@ -128,12 +131,12 @@ eval {
     sub send_mail {
         print CGI::header();
         my ($to) = @_;
-        my $from = 'truong.hc@globaldesignit.vn';
-        my $subject = 'EMAIL TEST RESULTS';
+        my $from = our $EMAIL_FROM;
+        my $subject = our $EMAIL_SUBJECT;
         my $message = "Dear $name\n";
-        $message .= "Thank you for participating in our test.\n";
+        $message .= our $EMAIL_CONTENT;
         $message .= "Results: $total_mark / $total_question";
-        open(MAIL, '|/usr/local/bin/catchmail --smtp-ip 192.168.1.208 -f truong.hc@globaldesignit.vn');
+        open(MAIL, "|/usr/local/bin/catchmail --smtp-ip 192.168.1.208 -f $from");
         
         # Email Header
         print MAIL "To: $to\n";
@@ -148,7 +151,10 @@ eval {
         print 1;
     }
 
+    # Send mail for user
     send_mail($email);
+
+    # Send mail for admin
     send_mail('hoangcongtruong10102001@gmail.com');
 };
 

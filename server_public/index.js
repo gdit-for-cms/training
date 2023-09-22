@@ -58,7 +58,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (current_url.slice(current_url.length - 4, current_url.length) == 'html' && current_url.slice(24, current_url.length) != '/view/login.html' && current_url.slice(24, current_url.length) != '/view/thanks.html') {
         localStorage.setItem('id', current_url.slice(25, current_url.length - 5))
-
         window.location.href = '/view/login.html'
     } else {
         if (show_name && show_name) {
@@ -80,6 +79,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             })
         }
+    }
+
+    if(current_url.slice(24, current_url.length) == '/view/login.html'){
+        localStorage.removeItem('user_email')
+        localStorage.removeItem('user_name')
+
+        // Delete time variables stored locally
+        localStorage.removeItem('countdown_minutes')
+        localStorage.removeItem('countdown_seconds')
     }
 
     exam_id = localStorage.getItem('id')
@@ -167,7 +175,7 @@ function error_login(number) {
     } else if (number == 2){
         message = 'Email does not exist in the system!'
     } else if (number == -1){
-        message = 'Something is wrong, please try again!'
+        message = 'Something is wrong, Please access the LINK we sent you again!'
     }
 
     alert(message)
@@ -278,6 +286,7 @@ function updateCountdown() {
     }
 
     if (minutes == 1 && seconds == 59) {
+        modal_accept_submit.style.display = 'none'
         modal_accept_submit.style.display = 'block'
         btn_close_accept_submit.removeAttribute("hidden")
         message.innerHTML = 'Your test time is only ' + (minutes * 1 + 1) + ' minutes!'

@@ -1,4 +1,6 @@
 #!/usr/bin/perl --
+my $setting_file = './Setting.pm';
+require $setting_file;
 
 use strict;
 use warnings;
@@ -17,7 +19,9 @@ if(!$email || !looks_like_number($id)){
     print -1;
     exit(0);
 }
-my $csv_file = "email/email$id.csv";
+my $email_path = our $EMAIL;
+
+my $csv_file = "$email_path$id.csv";
 
 # Read CSV file and create object variable
 my %csv_data;
@@ -40,7 +44,7 @@ if (exists $csv_data{$email}) {
         $csv_data{$email}[1] = 2;
         
         # Record data to a CSV file
-        open my $output_fh, '>', $csv_file or die "Không thể mở tệp $csv_file: $!";
+        open my $output_fh, '>', $csv_file or die "Cannot open file $csv_file: $!";
         foreach my $key (keys %csv_data) {
             $csv->print($output_fh, [$key, @{$csv_data{$key}}]);
             print $output_fh "\n";

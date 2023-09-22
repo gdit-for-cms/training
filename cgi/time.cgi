@@ -1,4 +1,7 @@
 #!/usr/bin/perl --
+my $setting_file = './Setting.pm';
+require $setting_file;
+
 use strict;
 use warnings;
 use CGI;
@@ -22,15 +25,16 @@ sub generate_random_string {
 }
 
 if(!$random_code){
-    
     $random_code = generate_random_string();
 }
 
-my $file_to_create = "time/$random_code-$id.csv";
+my $time_path = our $TIME;
+
+my $file_to_create = "$time_path$random_code-$id.csv";
 
 if (-e $file_to_create) {
     my @timestamps;
-    open my $file_handle, '<', $file_to_create or die "Can not open file: $!";
+    open my $file_handle, '<', $file_to_create or die "Cannot open file: $!";
     
     # Đọc các mốc thời gian từ tệp
     while (<$file_handle>) {
@@ -44,20 +48,20 @@ if (-e $file_to_create) {
     if (@timestamps == 1) {
         # TH1: The file has been there for a while
         # Add the current timestamp to the file
-        open $file_handle, '>>', $file_to_create or die "Can not open file: $!";
-        my ($second, $minute, $hour) = (localtime)[0, 1, 2]; # Lấy giây, phút, giờ
+        open $file_handle, '>>', $file_to_create or die "Cannot open file: $!";
+        my ($second, $minute, $hour) = (localtime)[0, 1, 2];
 
-        # Tạo định dạng giờ:phút:giây
+        # Create hour:minute:second format
         my $formatted_time = sprintf("%02d:%02d:%02d", $hour, $minute, $second);
 
-        # Lưu định dạng giờ:phút:giây vào tệp tin
+        # Save hours:minutes:seconds format to file
         print $file_handle "$formatted_time\n";
         close $file_handle;
 
         # Take 2 time points to check
-        open $file_handle, '<', $file_to_create or die "Không thể mở tệp: $!";
+        open $file_handle, '<', $file_to_create or die "Cannot open file: $!";
     
-        # Đọc các mốc thời gian từ tệp
+        # Read timestamps from file
         while (<$file_handle>) {
             if (/(.+)$/) {
                 push @timestamps, Time::Piece->strptime($1, "%H:%M:%S");
@@ -88,7 +92,7 @@ if (-e $file_to_create) {
     }
 } else {
     # Create a new file and add the current timestamp
-    open my $fh, '>', $file_to_create or die "Không thể tạo mới tệp: $!";
+    open my $fh, '>', $file_to_create or die "Cannot create file: $!";
 
     my ($second, $minute, $hour) = (localtime)[0, 1, 2]; # Lấy giây, phút, giờ
 
