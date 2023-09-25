@@ -239,10 +239,19 @@ class QuestionController extends  AppController
     }
     public function searchAction(Request $request)
     {
-        $req_method_ary = $request->getGet()->all();
+        $req_method_ary = $request->getPost()->all();
         $results_per_page = 5;
         $results_ary = $this->obj_model_question_title->getAllHasPagination($req_method_ary, $results_per_page);
-        
+
+
+        // echo "<pre>";
+        // var_dump($results_ary); 
+        // die();
+        // $numbers_of_result = $results_ary['numbers_of_page'];
+        // $numbers_of_page = ceil($numbers_of_result / $results_per_page);
+        // $results_ary['numbers_of_page'] = $numbers_of_page;
+        // $results_ary['page'] = (float)$results_ary['page'];
+
         return $this->responseShowRule(200, $results_ary);
     }
 }
