@@ -10,27 +10,17 @@ use Text::CSV;
 
 my $cgi = CGI->new; 
 my $id = $cgi->param("id");
-my $random_code = $cgi->param("code");
+my $code = $cgi->param("code");
 
-sub generate_random_string {
-    my $random_string = '';
-    my @characters = ('A'..'Z', 'a'..'z', 0..9);
-    
-    for (1..4) {
-        my $random_index = int(rand(scalar(@characters)));
-        $random_string .= $characters[$random_index];
-    }
-
-    return $random_string;
-}
-
-if(!$random_code){
-    $random_code = generate_random_string();
+if(!$code || !$id){
+    print "Content-Type: text/html\n\n";
+    print "0\n";
+    exit(0);
 }
 
 my $time_path = our $TIME;
 
-my $file_to_create = "$time_path$random_code-$id.csv";
+my $file_to_create = "$time_path$code-$id.csv";
 
 if (-e $file_to_create) {
     my @timestamps;
@@ -91,20 +81,8 @@ if (-e $file_to_create) {
         print "0\n";
     }
 } else {
-    # Create a new file and add the current timestamp
-    open my $fh, '>', $file_to_create or die "Cannot create file: $!";
-
-    my ($second, $minute, $hour) = (localtime)[0, 1, 2]; # Lấy giây, phút, giờ
-
-    # Tạo định dạng giờ:phút:giây
-    my $formatted_time = sprintf("%02d:%02d:%02d", $hour, $minute, $second);
-
-    # Lưu định dạng giờ:phút:giây vào tệp tin
-    print $fh "$formatted_time\n";
-    
-    close $fh;
-
     print "Content-Type: text/html\n\n";
-    print $random_code;
+    print "0\n";
+    exit(0);
 }
 

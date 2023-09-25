@@ -16,6 +16,7 @@ my $cgi = CGI->new;
 # User information.
 my $email = $cgi->param("email");
 my $name = $cgi->param("name");
+my $code = $cgi->param("code");
 
 # The answer file of the test that the user is doing.
 my $file_csv = $cgi->param("id");
@@ -24,13 +25,14 @@ my $exam_results_json = $cgi->param("exam_results");
 
 my $exam_results = decode_json($exam_results_json);
 
-
+my $time_path = our $TIME;
+my $file_to_create = "$time_path$code-$file_csv.csv";
 # Read data from the answer file.
 my %correct_answers;
 
 my $folder_to_check = our $CSV;
 
-if(!$email || !looks_like_number($file_csv)){
+if(!$email || !looks_like_number($file_csv) || !$name || !$code || !$exam_results_json){
     print "Content-Type: text/html\n\n";
     print 0;
     exit(0);
@@ -79,7 +81,14 @@ if (exists $csv_data{$email}) {
     exit(0);
 }
 #####################################
-
+if (-e $file_to_create) {
+    unlink $file_to_create or die "Cannot delete file: $!";
+} else {
+    print "Content-Type: text/html\n\n";
+    print 0;
+    exit(0);
+}
+#####################################
 $file_csv = "$file_csv.csv";
 
 unless (-d $folder_to_check) {

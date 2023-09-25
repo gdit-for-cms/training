@@ -65,17 +65,24 @@ document.addEventListener('DOMContentLoaded', function () {
             show_name.innerHTML = user_name
     
             exam_id = localStorage.getItem('id')
-
+            code = user_email.match(/([^@]*)@/)
             var data = {
-                id : exam_id
+                id : exam_id,
+                code : code[1]
             }
     
             $.ajax({
                 type: "POST",
-                url: "/cgi/time.cgi",
+                url: "/cgi/time_first.cgi",
                 data: data,
                 success: function (response) {
-                    code = response
+                    if(response == 0) {
+                        alert('You cheated by interfering in the calculation of exam time. You cannot submit this test!')
+
+                        remove_data()
+
+                        setTimeout(window.location.href = '/view/login.html', 5000)
+                    }
                 }
             })
         }
@@ -223,11 +230,13 @@ function after_submit() {
 
     // Get the answer file name
     var id = localStorage.getItem('id')
+    code = user_email.match(/([^@]*)@/)
 
     var data_to_send = {
         email: user_email,
         name: user_name,
         id: id,
+        code: code[1],
         exam_results: JSON.stringify(exam_results)
     }
 
@@ -300,14 +309,15 @@ function updateCountdown() {
 
 function check_time() {
     var id = localStorage.getItem('id')
+    code = user_email.match(/([^@]*)@/)
     var data = {
         id : id,
-        code : code
+        code : code[1]
     }
 
     $.ajax({
         type: "POST",
-        url: "/cgi/time.cgi",
+        url: "/cgi/time_second.cgi",
         data: data,
         success: function (response) {
             if (response == 1) {
