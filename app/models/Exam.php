@@ -104,12 +104,14 @@ ORDER BY e.id DESC';
             eq.exam_id = $exam_id 
         GROUP BY
             q.id
-        ORDER BY q.id DESC";
+        ORDER BY q.id DESC ";
 
         if (!isset($req_method_ary['page'])) {
             $req_method_ary['page'] = '1';
         }
         $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
+        // echo $req_method_ary['page'];
+        // die();
         $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
 
         $stmt_count = $db->query($query);

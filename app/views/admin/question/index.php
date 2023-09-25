@@ -9,11 +9,10 @@
     <div class="default-according" id="accordion2">
 
       <div class="flex col-4 mb-6">
-        <input id="search_input" type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-        <button id="search_btn" type="button" disabled class="btn btn-primary">search</button>
-        <button id="delete_search" type="button" class="btn btn-danger text-white ml-2">X</button>
+        <input id="searchInput" type="search" class="form-control rounded" placeholder="Search..." aria-label="Search" aria-describedby="search-addon" />
+        <!-- <button id="search_btn_clcik" type="button" disabled class="btn btn-primary">search</button> -->
+        <!-- <button id="delete_search" type="button" class="btn btn-danger text-white ml-2">X</button> -->
       </div>
-
       <div class="table_member_body table-responsive m-b-30 flex flex-col items-center justify-center">
 
         <table id="<?= "1" ?>" class="table table-striped">
@@ -26,7 +25,10 @@
               <th scope="col">ACTION</th>
             </tr>
           </thead>
-          <tbody class="body_table_main">
+          <tbody class="body_table_main" id="table_result">
+
+            <!-- <div id="searchResults"></div> -->
+
             <?php
             $stt = 1;
             foreach ($question_titles as $question_title) {
@@ -103,3 +105,92 @@
     </div>
   </div>
 </div>
+<script>
+  const searchInput = document.getElementById("searchInput");
+  const searchBtn = document.getElementById("search_btn_clcik");
+  const searchResults = document.getElementById("searchResults");
+
+  // searchInput.addEventListener("input", function() {
+  //   // Kiểm tra nếu input không trống thì xóa thuộc tính disabled của nút
+  //   if (searchInput.value.trim() !== "") {
+  //     searchBtn.removeAttribute("disabled");
+  //   } else {
+  //     // Nếu input trống, thêm thuộc tính disabled lại cho nút
+  //     searchBtn.setAttribute("disabled", "disabled");
+  //   }
+  // });
+
+  searchInput.addEventListener("input", function() {
+    const keyword = searchInput.value;
+    const pathName = "question";
+    const method = "POST";
+    const url = `/admin/${pathName}/search?keyword=${keyword}`;
+
+
+
+    // Xác định dữ liệu bạn muốn gửi, ở đây mình gửi dưới dạng chuỗi JSON
+    const data = JSON.stringify({
+      keyword: keyword
+    });
+
+    // Tạo đối tượng XMLHttpRequest
+    const xhr = new XMLHttpRequest();
+    xhr.open(method, url, true);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    // Gửi yêu cầu AJAX đi
+    xhr.send(data);
+
+
+
+    // Xử lý sự kiện khi yêu cầu hoàn thành
+    xhr.onload = function() {
+      // Xử lý phản hồi từ controller
+      const response = JSON.parse(xhr.responseText);
+      const table_result = document.getElementById("table_result");
+      // In kết quả lên console (hoặc thực hiện bất kỳ xử lý nào khác bạn muốn)
+      if (response.success == 200) {
+        let result = response.result.results
+        let resultHTML = '';
+
+        let stt = 1;
+        console.log(result[0])
+
+        for (let i = 0; i < result.length; i++) {
+
+          resultHTML += `<tr>
+                <td class="col-1">${stt++}</td>
+                <td class="col-2">
+                  ${result[i]['question_title']}               
+                </td>
+                <td class="col-3 " style="height: 100px; max-height: 100%;">
+                  ${result[i]['question_description']}
+                </td>
+                <td class="col-1">
+                  2023-09-18 23:59:20                </td>
+
+                <td class="col-1">
+                  <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                      Action
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                      <li><a class="dropdown-item" href="/admin/question/new?ques-title=${result[i]['question_id']}">Add Question</a></li>
+                      <li><a class="dropdown-item" href="/admin/question/detail?question_id=${result[i]['question_id']}">Detail</a></li>
+                      <li><a class="dropdown-item" href="/admin/question-title/edit?ques-title=${result[i]['question_id']}">Edit</a></li>
+                      <li>
+                        <button type="button" data-id="${result[i]['question_id']}" class="dropdown-item btn-delete-question ">Delete</button>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>`
+        }
+        table_result.innerHTML = resultHTML;
+      }
+    };
+
+
+
+
+  });
+</script>

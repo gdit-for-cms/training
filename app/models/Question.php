@@ -168,4 +168,9 @@ class Question extends Model
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $results;
     }
+
+    public function search($model, $keyword)
+    {
+        
+    }
 }

@@ -66,6 +66,14 @@ class QuestionTitle extends Model
 
     public function getAllHasPagination($req_method_ary, $results_per_page = 5)
     {
+        $where = '';
+        if (isset($req_method_ary['keyword'])) {
+            $where = $req_method_ary['keyword'];
+        }
+        // $check = strpos($where,'%');
+        // echo "<pre>";
+        // var_dump($check);
+        // die();
         $db = static::getDB();
         $query = 'SELECT
         question_title.id AS question_id,
@@ -73,7 +81,7 @@ class QuestionTitle extends Model
         question_title.description AS question_description,
         question_title.updated_at AS question_updated_at
         FROM
-        question_title
+        question_title where question_title.title like '.' "%'.$where.'%" 
         ORDER BY question_title.id DESC';
 
         if (!isset($req_method_ary['page'])) {
@@ -153,9 +161,6 @@ class QuestionTitle extends Model
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results, 'page' => $req_method_ary['page']);
 
-        echo "<pre>";
-        var_dump($results_ary);
-        die();
         return $results_ary;
     }
 }

@@ -12,6 +12,7 @@ use App\Models\ExamQuestion;
 use App\Models\Answer;
 use App\Config;
 use App\Models\ExamParticipant;
+use App\Models\QuestionTitle;
 
 class ExamController extends AppController
 {
@@ -33,6 +34,8 @@ class ExamController extends AppController
 
     public object $obj_model_exam_participant;
 
+    public object $obj_model_question_title;
+
     public function __construct()
     {
         $this->obj_model = new Exam;
@@ -41,6 +44,7 @@ class ExamController extends AppController
         $this->obj_modal_answer = new Answer;
         $this->app_request = new AppRequest;
         $this->obj_model_exam_participant = new ExamParticipant;
+        $this->obj_model_question_title = new QuestionTitle;
     }
 
     public function indexAction(Request $request)
@@ -118,11 +122,12 @@ class ExamController extends AppController
         $exam_id = $request->getGet()->get('exam_id');
         $exam =  $this->obj_model->getById($exam_id);
         $req_method_ary = $request->getGet()->all();
+
         $req_method_ary['exam_id'] = $exam_id;
         $results_per_page = 5;
         $results_ary = $this->obj_model->getDetailExams($req_method_ary, $results_per_page);
-
         $this->data_ary['exam_details'] = $results_ary['results'];
+
         $this->data_ary['exam'] = $exam;
         $numbers_of_result = $results_ary['numbers_of_page'];
         $numbers_of_page = ceil($numbers_of_result / $results_per_page);
@@ -132,6 +137,13 @@ class ExamController extends AppController
         $emails = $this->obj_model_exam_participant->getBy("exam_id", '=', $exam_id);
         $this->data_ary['emails'] = $emails;
 
+
+        // //start add question
+        // $req_method_ary = $request->getGet();
+        // $exam_id = $req_method_ary->get('exam_id');
+        // $results_ary = $this->obj_model_question_title->getAll();
+        // $this->data_ary['question_titles'] = $results_ary;
+        // //end add question
         $this->data_ary['content'] = 'exam/detail';
     }
     public function checkHasEmail($data)
@@ -141,8 +153,6 @@ class ExamController extends AppController
         }
         return true;
     }
-
-    // add question to the exam
 
     public function create(Request $request)
     {
@@ -266,7 +276,6 @@ class ExamController extends AppController
         return $this->successResponse();
     }
 
-    //show preview exam
     public function previewAction(Request $request)
     {
         $exam_id = $request->getGet()->get('exam_id');
@@ -395,6 +404,30 @@ class ExamController extends AppController
 
         $emails = $this->obj_model_exam_participant->getBy("exam_id", '=', $exam_id);
         $this->data_ary['emails'] = $emails;
+
+
+        $req_method_ary = $request->getGet()->all();
+        $req_method_ary['exam_id'] = $exam_id;
+        $results_per_page = 5;
+        $results_ary = $this->obj_model->getDetailExams($req_method_ary, $results_per_page);
+        $this->data_ary['exam_details'] = $results_ary['results'];
+        $numbers_of_result = $results_ary['numbers_of_page'];
+        $numbers_of_page = ceil($numbers_of_result / $results_per_page);
+        $this->data_ary['numbers_of_page'] = $numbers_of_page;
+        $this->data_ary['page'] = (float)$results_ary['page'];
+
+
+        //start add question
+        // $req_method_ary = $request->getGet();
+        // $exam_id = $req_method_ary->get('id');
+        $results_ary = $this->obj_model_question_title->getAll("edit");
+        $this->data_ary['question_titles'] = $results_ary;
+        //end add question
+
+        // echo "<pre>";
+        // var_dump($results_ary);
+        // die();
+
 
         $this->data_ary['content'] = "exam/edit";
     }

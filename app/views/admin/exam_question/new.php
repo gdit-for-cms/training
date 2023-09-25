@@ -26,9 +26,6 @@
     </div>
 </div>
 
-<style>
-
-</style>
 <script>
     const newArray = []
     let check_click = false;

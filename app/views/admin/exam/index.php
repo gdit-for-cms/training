@@ -67,7 +67,7 @@
                                             <li><a href="/admin/exam-question/new?exam_id=<?php echo $exam['id']; ?>" class="dropdown-item">Add question to exam</a></li>
                                             <!-- <li><a href="/admin/exam-question/new?exam_id=<?php echo $exam['id']; ?>" class="dropdown-item">Preview</a></li> -->
 
-                                            <li><a id="createFilesButton" href="/admin/exam/preview?exam_id=<?php echo $exam['id']; ?>" data-id="<?php echo $exam['id']; ?>" id="submit" class="dropdown-item">Upload exam</a></li>
+                                            <li><a id="createFilesButton" href="/admin/exam/preview?exam_id=<?php echo $exam['id']; ?>" data-id="<?php echo $exam['id']; ?>" id="submit" class="dropdown-item">Publish exam</a></li>
                                             <li><a class="dropdown-item" href="/admin/exam/examDetail?exam_id=<?php echo $exam['id']; ?>">Detail</a></li>
                                             <li><a class="dropdown-item" href="/admin/exam/edit?id=<?php echo $exam['id']; ?>">Edit</a></li>
                                             <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->

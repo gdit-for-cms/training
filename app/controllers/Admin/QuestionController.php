@@ -8,6 +8,7 @@ use App\models\Question;
 use App\models\Answer;
 use App\Models\QuestionTitle;
 use App\Requests\AppRequest;
+use Core\Http\Response;
 use Core\Http\ResponseTrait;
 
 class QuestionController extends  AppController
@@ -132,7 +133,7 @@ class QuestionController extends  AppController
 
         $this->data_ary['question'] = $this->obj_model->getById($id, 'id, content');
         $this->data_ary['answers'] = $this->obj_model_answer->getBy('question_id', '=', $id);
-       
+
         $this->data_ary['content'] = 'question/edit';
     }
 
@@ -224,5 +225,24 @@ class QuestionController extends  AppController
         $this->data_ary['question_title'] = $this->obj_model_question_title->getById($question_title_id, "title,description");
 
         $this->data_ary['content'] = 'question/detail';
+    }
+
+    public function responseShowRule($status, $result = [])
+    {
+        $res = [
+            "success" => $status,
+            "result" => $result
+        ];
+        header('Content-Type: application/json');
+        echo json_encode($res);
+        exit();
+    }
+    public function searchAction(Request $request)
+    {
+        $req_method_ary = $request->getGet()->all();
+        $results_per_page = 5;
+        $results_ary = $this->obj_model_question_title->getAllHasPagination($req_method_ary, $results_per_page);
+        
+        return $this->responseShowRule(200, $results_ary);
     }
 }
