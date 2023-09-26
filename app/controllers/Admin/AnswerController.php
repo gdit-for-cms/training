@@ -39,18 +39,14 @@ class AnswerController extends  AppController
     {
         $app_request = new AppRequest;
         $result_vali_ary = $app_request->validate($this->obj_model->rules(), $request, 'post');
-
         if (in_array('error', $result_vali_ary)) {
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
             return $this->errorResponse($message_error);
         }
-
         $content = $result_vali_ary['content'];
         $title = $result_vali_ary['title'];
-
         $question_check_ary = $this->obj_model->getBy('content', '=', $content);
         $num_rows = count($question_check_ary);
-
         if ($num_rows == 1) {
             return $this->errorResponse('Question has been exist');
         } else {
@@ -65,29 +61,6 @@ class AnswerController extends  AppController
             } catch (\Throwable $th) {
                 return $this->errorResponse($th->getMessage());
             };
-        }
-    }
-    
-    public function responseShowRule($status, $result = [])
-    {
-        $res = [
-            "success" => $status,
-            "result" => $result
-        ];
-        header('Content-Type: application/json');
-        echo json_encode($res);
-        exit();
-    }
-
-    public function showAction(Request $request)
-    {
-        $question_id = $request->getGet()->get('question_id');
-
-        $rule = $this->obj_model->getBy('question_id', '=', $question_id, '*');
-        if ($rule) {
-            return $this->responseShowRule(true, $rule);
-        } else {
-            return $this->responseShowRule(false);
         }
     }
 }

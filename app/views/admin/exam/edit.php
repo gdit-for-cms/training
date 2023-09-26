@@ -1,8 +1,3 @@
-<?php
-// echo "<pre>";
-// var_dump($exam);
-// die();
-?>
 <div class="col-lg-12">
     <div class="white_card card_height_100 mb_30">
         <div class="white_card_header">
@@ -91,8 +86,8 @@
             <div class="box_header m-0">
                 <div class="main-title">
                     <h3 class="m-0">Edit select questions</h3>
-                    </div>
-                    <div class="top-right">
+                </div>
+                <div class="top-right">
                     <?php
                     if ($cur_user['role_id'] != 3) {
                     ?>
@@ -167,8 +162,6 @@
                                     ?>
                                         <td>
                                             <button data-question_id="<?php echo $exam_detail['question_id']; ?>" data-exam_id="<?php echo $exam['id']; ?>" type="button" class="btn btn-danger delete-btn btn-delete-exam-detail">Delete</button>
-
-
                                         </td>
                                     <?php
                                     }
@@ -220,34 +213,6 @@
                 </div>
             </div>
         </div>
-        <!-- <div class="white_card_body">
-            <div class="card-body">
-                <div class="d-flex">
-                    <div class="col-2 metismenu" style="background-color: #dddcdc;text-align: center;margin-right: 15px;">
-
-                        <ul class="metismenu" style="padding: 15px 25px">
-                            <?php foreach ($question_titles as $question_title) { ?>
-                                <li class="border text-center has-arrow mb-1 collection_hover" style="" onclick="getQuestion('<?php echo $question_title['id']; ?>')">
-                                    <button class="" style="" type="button" class=" dropdown-item ">
-                                        <?php echo $question_title['title'] ?>
-                                    </button>
-                                </li>
-                            <?php } ?>
-                        </ul>
-                        <div style="display: grid;">
-                            <span>Số câu đã chọn : <span id="total_select">0</span> </span>
-                            <button data-exam_id="<?php echo $exam['id']; ?>" id="select" type="submit" class="btn btn-primary btn-add_question_exam">Save</button>
-                        </div>
-                    </div>
-
-                    <div class="col-10 d-flex">
-                        <div id="questionList" class="col-12">
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
     </div>
 </div>
 <style>
@@ -258,7 +223,6 @@
     let check_click = false;
     let array_select_question = [];
     let select = 0;
-
 
     function getQuestion(question_title_id) {
         // Gọi AJAX để lấy danh sách câu hỏi từ server
@@ -273,11 +237,7 @@
                 const questionList = document.getElementById('questionList');
                 let questionListHTML = '';
                 results.forEach(result => {
-
-
-
                     const question_id = result.question_id;
-
                     const answers = result.answers;
                     const myArray = answers.split(", ");
                     const resultArrayAnswer = [];
@@ -331,22 +291,17 @@
         get_question_id = 'select_ques' + questionID;
         const questionContainer = document.getElementById(get_question_id)
 
-        // Kiểm tra xem questionID có tồn tại trong mảng không
         if (!array_select_question.includes(questionID)) {
             array_select_question.push(questionID);
             questionContainer.classList.add("selected")
             select++;
 
         } else {
-            // Nếu đã tồn tại, loại bỏ nó khỏi mảng
             array_select_question = array_select_question.filter(item => item !== questionID);
             questionContainer.classList.remove("selected")
             select--
         }
-
         const select_total = document.getElementById("total_select")
         select_total.textContent = select
-        // console.log(select_total.textContent);
-
     }
 </script>

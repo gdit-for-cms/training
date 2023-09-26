@@ -37,7 +37,6 @@
         <div class="default-according" id="accordion2">
 
             <div class="table_member_body table-responsive m-b-30 flex flex-col items-center justify-center">
-
                 <table id="<?= "1" ?>" class="table table-striped">
                     <thead>
                         <tr>
@@ -51,7 +50,6 @@
                         <?php
                         if (!empty($question_titles)  && isset($question_titles[0]['question_content'])) {
                             $stt = 1;
-
                             foreach ($question_titles as $question_title) {
                         ?>
                                 <tr>
@@ -71,20 +69,16 @@
                                         }
                                         ?>
                                     </td>
-
-
                                     <td class="col-1">
                                         <div class="dropdown">
                                             <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                                 Action
                                             </button>
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-
                                                 <li><a class="dropdown-item" href="/admin/question/edit?question_id=<?php echo $question_title['question_id']; ?>">Edit</a></li>
                                                 <li>
                                                     <button type="button" data-id="<?php echo $question_title['question_id']; ?>" class="dropdown-item btn-delete-question ">Delete</button>
                                                 </li>
-
                                             </ul>
                                         </div>
                                     </td>
@@ -99,8 +93,6 @@
                         <?php
                         }
                         ?>
-
-
                     </tbody>
                 </table>
                 <div class="flex justify-center items-center">

@@ -10,8 +10,6 @@
 
       <div class="flex col-4 mb-6">
         <input id="searchInput" type="search" class="form-control rounded" placeholder="Search..." aria-label="Search" aria-describedby="search-addon" />
-        <!-- <button id="search_btn_clcik" type="button" disabled class="btn btn-primary">search</button> -->
-        <!-- <button id="delete_search" type="button" class="btn btn-danger text-white ml-2">X</button> -->
       </div>
       <div class="table_member_body table-responsive m-b-30 flex flex-col items-center justify-center">
 
@@ -26,9 +24,6 @@
             </tr>
           </thead>
           <tbody class="body_table_main" id="table_result">
-
-            <!-- <div id="searchResults"></div> -->
-
             <?php
             $stt = 1;
             foreach ($question_titles as $question_title) {
@@ -44,7 +39,6 @@
                 <td class="col-1">
                   <?php echo $question_title['question_updated_at'] ?>
                 </td>
-
                 <td class="col-1">
                   <div class="dropdown">
                     <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -64,7 +58,6 @@
               </tr>
             <?php
             }
-
             ?>
           </tbody>
         </table>
@@ -72,9 +65,6 @@
           <nav aria-label="Page navigation example">
             <ul class="pagination" id="pagination">
               <?php
-              // echo $page."<pr>";
-              // echo $numbers_of_page;
-              // die();
               $next = $page;
               if ($page <= $numbers_of_page) {
               ?>
@@ -114,8 +104,6 @@
   const paginationContainer = document.getElementById("pagination");
 
   searchInput.addEventListener("input", function() {
-
-
     var keyword = searchInput.value;
     const pathName = "question";
     const method = "POST";
@@ -149,8 +137,6 @@
         let stt = 1;
 
         for (let i = 0; i < result.length; i++) {
-          // console.log(result[i]['question_title']);
-
           resultHTML += `<tr>
             <td class="col-1">${stt++}</td>
             <td class="col-2">${result[i]['question_title']}</td>
@@ -174,18 +160,6 @@
           </tr>`;
         }
         table_result.innerHTML = resultHTML;
-        // let paginate = "";
-        // let page = response.result.page;
-        // let next = page
-        // console.log(page)
-
-        // paginate += `<li class="page-item cursor-pointer"><a href="/admin/question/index?page=1" class="page-link"><< </a></li>`
-        // if (page > 1) {
-        //   page--;
-        //   paginate += `<li class=" page-item cursor-pointer"><a href="/admin/question/index?page=${page}" class="page-link">Previous</a></li>`;
-        // }
-        // paginationContainer.innerHTML = paginate;
-
       };
     };
   });

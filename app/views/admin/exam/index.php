@@ -7,13 +7,9 @@
     </div>
     <div class="box_body white_card_body">
         <div class="default-according" id="accordion2">
-
             <div class="flex col-4 mb-6">
                 <input id="searchInput" type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-                <!-- <button id="search_btn" type="button" disabled class="btn btn-primary">search</button>
-                <button id="delete_search" type="button" class="btn btn-danger text-white ml-2">X</button> -->
             </div>
-
             <div class="table_member_body table-responsive m-b-30 flex flex-col items-center justify-center">
 
                 <table id="<?= "1" ?>" class="table table-striped">
@@ -48,7 +44,6 @@
                                     </div>
                                 </td>
                                 <td class="col-1 text-center"><?php echo $exam['duration']; ?></td>
-
                                 <td class="col-1">
                                     <?php echo $exam['updated_at'] ?>
                                 </td>
@@ -63,14 +58,10 @@
                                             Action
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-
                                             <li><a href="/admin/exam-question/new?exam_id=<?php echo $exam['id']; ?>" class="dropdown-item">Add question to exam</a></li>
-                                            <!-- <li><a href="/admin/exam-question/new?exam_id=<?php echo $exam['id']; ?>" class="dropdown-item">Preview</a></li> -->
-
                                             <li><a id="createFilesButton" href="/admin/exam/preview?exam_id=<?php echo $exam['id']; ?>" data-id="<?php echo $exam['id']; ?>" id="submit" class="dropdown-item">Publish exam</a></li>
                                             <?php if ($exam['published'] == 1) { ?>
                                                 <li><a href="/admin/exam/unpublish?exam_id=<?php echo $exam['id']; ?>" data-id="<?php echo $exam['id']; ?>" id="submit" class="dropdown-item">UnPublish exam</a></li>
-
                                             <?php } ?>
                                             <li><a class="dropdown-item" href="/admin/exam/examDetail?exam_id=<?php echo $exam['id']; ?>">Detail</a></li>
                                             <li><a class="dropdown-item" href="/admin/exam/edit?id=<?php echo $exam['id']; ?>">Edit </a></li>
@@ -78,7 +69,6 @@
                                             <li>
                                                 <button type="button" data-id="<?php echo $exam['id']; ?>" class="dropdown-item btn-delete-question ">Delete</button>
                                             </li>
-
                                             <li><a class="dropdown-item" href="/admin/exam/edit?id=<?php echo $exam['id']; ?>">Participant Email</a></li>
                                         </ul>
                                     </div>
@@ -86,7 +76,6 @@
                             </tr>
                         <?php
                         }
-
                         ?>
                     </tbody>
                 </table>
@@ -132,10 +121,8 @@
     function copyLink(linkToCopy) {
         // Lấy thẻ <a> bằng cách sử dụng id hoặc bất kỳ phương thức nào khác
         var linkElement = document.getElementById(linkToCopy);
-
         // Lấy giá trị của thuộc tính href
         var linkHref = linkElement.getAttribute("href");
-
         // Sao chép giá trị href vào clipboard
         var tempInput = document.createElement("input");
         tempInput.value = linkHref;
@@ -153,7 +140,6 @@
     const editBtn = document.querySelectorAll('.edit-btn')
     const deleteBtn = document.querySelectorAll('.delete-btn')
     const btnShowPreviewExam = document.querySelectorAll('.btn-show-add-question')
-    const btnShowAddQuestion = document.querySelectorAll('.btn-show-preview-exam')
     const descriptionElement = document.createElement('div')
 
     function start() {
@@ -188,33 +174,6 @@
             })
         })
     };
-
-    btnShowAddQuestion.forEach((btn) => {
-        btn.setAttribute('data-bs-toggle', 'modal')
-        btn.setAttribute('data-bs-target', '#viewExamPreview')
-        btn.addEventListener('click', (e) => {
-
-            ruleId = btn.dataset.id
-            $.ajax({
-                type: "GET",
-                // url: `/admin/rule/show?id=6085`,
-                url: `/admin/question/show?id=2`,
-
-                success: function(data) {
-                    result = data['result']
-
-                    descriptionElement.textContent = result['description']
-                    examDesciption.appendChild(descriptionElement)
-
-                },
-                cache: false,
-                contentType: false,
-                processData: false
-            }).fail(function() {
-                e.preventDefault()
-            });
-        })
-    })
 
     //search
     const searchInput = document.getElementById("searchInput");

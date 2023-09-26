@@ -98,12 +98,10 @@ class QuestionTitle extends Model
         question_title where question_title.title like ' . ' "%' . $keyword_search . '%" ESCAPE "\\\\"
         ORDER BY question_title.id DESC';
 
-        if (!isset($req_method_ary['page'])) {
+        if (!isset($req_method_ary['page']) || $req_method_ary['page'] < 1) {
             $req_method_ary['page'] = '1';
         }
-        if ($req_method_ary['page'] < 1) {
-            $req_method_ary['page'] = '1';
-        }
+       
         $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
         $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
 
@@ -135,46 +133,4 @@ class QuestionTitle extends Model
     {
         return $this->update($data, $condition);
     }
-
-    // public function getAllRelation($req_method_ary, $results_per_page = 5)
-    // {
-
-    //     $db = static::getDB();
-    //     $query = "SELECT
-    //     qt.id AS question_title_id,
-    //     qt.title AS question_title_title,
-    //     qt.description AS question_title_description,
-    //     q.content AS question_content,
-    //     a.is_correct AS answer_correct,
-    //     q.id AS question_id,
-    //     GROUP_CONCAT(CONCAT(a.is_correct, ' - ', a.content)) AS answers
-    // FROM
-    //     question_title AS qt
-    // LEFT JOIN
-    //     question AS q ON qt.id = q.question_title_id
-    // LEFT JOIN
-    //     answer AS a ON q.id = a.question_id
-    // GROUP BY
-    //     qt.id, qt.title, qt.description, q.content
-    // ORDER BY
-    //     question_title_id DESC";
-
-
-
-    //     if (!isset($req_method_ary['page'])) {
-    //         $req_method_ary['page'] = '1';
-    //     }
-
-    //     if ($req_method_ary['page'] < 1) {
-    //         $req_method_ary['page'] = '1';
-    //     }
-
-    //     $stmt_count = $db->query($query);
-    //     $numbers_of_page = count($stmt_count->fetchAll(PDO::FETCH_ASSOC));
-    //     $stmt = $db->query($query);
-    //     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    //     $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results, 'page' => $req_method_ary['page']);
-
-    //     return $results_ary;
-    // }
 }

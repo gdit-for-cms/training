@@ -42,7 +42,6 @@
                         </div>
                     </div>
                     <br>
-                    <!-- <button id="submit" data-id="<?php echo $exam_id; ?>" type="submit" class="btn btn-edit-detail-exam btn-primary">Edit</button> -->
                     <button id="submit" type="submit" class="btn btn-primary">Edit</button>
                 </form>
             </div>

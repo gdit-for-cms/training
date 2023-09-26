@@ -42,7 +42,6 @@ class Config
 
     // config server by FTP upload file
     const YOUR_SERVER_DIRECTORY = '/htdocs/BT1/training/public/';
-    const YOUR_SERVER_DIRECTORY_QUESION = '/htdocs/BT1/training/public/images/library_images/question/';
     const FTP_SERVER_PUBLIC_DIRECTORY = '/htdocs/training2/training/server_public/';
     const FTP_SERVER = '192.168.1.208';
     const FTP_USERNAME = 'gdit_ftp';

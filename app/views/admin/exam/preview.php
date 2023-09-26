@@ -31,11 +31,9 @@
         </div>
         <form id="form_exam">
             <?php
-
             $csv_answer = "";
             $stt = 1;
             $alphabet = range('A', 'Z');
-
             foreach ($question_answers as $question_answer) { ?>
                 <div class="my-3 p-3 bg-body rounded shadow-sm">
                     <h5 class="border-bottom">
@@ -62,13 +60,10 @@
                         } ?>
                     </div>
                 </div>
-
             <?php
                 $stt++;
             }
             ?>
-
-
         </form>
         <div class="my-3 p-3 bg-body rounded">
             <div class="row">
@@ -96,7 +91,6 @@
     </main>
 </div>
 <div class="hidden" id="csv_answer"><?php echo $csv_answer; ?></div>
-
 <!-- exam participants -->
 <?php
 $participants = "";
@@ -105,12 +99,11 @@ if (count($exam_participants) > 0) {
         $participants .= $exam_participant['email'] . "," . $exam_participant['is_login'] . "," . $exam_participant['is_submit'] . "\n";
     }
 }
-
 ?>
 <div class="hidden" id="csv_exam_participants"><?php echo $participants; ?></div>
 <script>
     const submitBtn = document.querySelector('#submit')
-    // submitBtn.disabled = false;
+
     function validate() {
         if (titleInput.value == '') {
             submitBtn.disabled = true;

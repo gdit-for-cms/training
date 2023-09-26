@@ -9,7 +9,6 @@
         </div>
         <div class="white_card_body">
             <div class="card-body d-flex">
-                <!-- <form id="form_new_question col-12" class="" action="create" method="POST"> -->
                 <div class="mb-3 col-5 mr-12" style="">
                     <label class="form-label" for="title">Title collection </label>
                     <input class="form-control" rows="3" disabled value="<?php echo $question_title['title']; ?>" placeholder="Title..." />
@@ -18,7 +17,6 @@
                     <label class="form-label" for="title">Description collection </label>
                     <input class="form-control" disabled value="<?php echo isset($question_title['description']) ? $question_title['description'] : "" ?>" rows="3" placeholder="description..." />
                 </div>
-                <!-- </form> -->
             </div>
         </div>
     </div>
@@ -43,10 +41,8 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="correct" style="margin-right: 30px;">Correct*</label>
-                        <!-- <span>|</span> -->
                         <label class="form-label" for="answer">Answer*</label>
                         <div id="answerContainer">
-                            <!-- Ô input mặc định -->
                             <div class="form-check" style="padding-left: 45px;">
                                 <input class="form-check-input" style="margin-right: 50px;" name="is_correct[]" type="checkbox" value="0" onchange="updateCheckboxValue(this)">
                                 <div class="input-with-button">
@@ -73,84 +69,12 @@
     // Mảng lưu vị trí các checkbox đã chọn
     var selectedPositions = [];
 
-    // function addAnswer() {
-    //     var answerContainer = document.getElementById("answerContainer");
-
-    //     var newAnswerDiv = document.createElement("div");
-    //     newAnswerDiv.classList.add("form-check");
-    //     newAnswerDiv.style = "padding-left: 45px;";
-    //     var answerCheckbox = document.createElement("input");
-    //     answerCheckbox.classList.add("form-check-input");
-    //     answerCheckbox.style = "margin-right: 50px;";
-    //     answerCheckbox.type = "checkbox";
-    //     answerCheckbox.name = "is_correct[]";
-    //     answerCheckbox.value = currentAnswerIndex; // Gán giá trị của ô input hiện tại
-    //     answerCheckbox.addEventListener("change", function() {
-    //         updateCheckboxValue(this);
-    //     });
-    //     var inputWithButton = document.createElement("div");
-    //     inputWithButton.classList.add("input-with-button");
-    //     var answerInput = document.createElement("input");
-    //     answerInput.type = "text";
-    //     answerInput.classList.add("form-control", "input-answer");
-    //     answerInput.name = "answer[]";
-    //     answerInput.value = "";
-    //     answerInput.placeholder = "Answer...";
-    //     var removeButton = document.createElement("button");
-    //     removeButton.type = "button";
-    //     removeButton.textContent = "Delete";
-    //     removeButton.classList.add("remove-button", "btn", "btn-danger", "delete-btn", "text-white");
-    //     removeButton.onclick = function() {
-    //         removeAnswer(this);
-    //     };
-    //     inputWithButton.appendChild(answerInput);
-    //     inputWithButton.appendChild(removeButton);
-    //     newAnswerDiv.appendChild(answerCheckbox);
-    //     newAnswerDiv.appendChild(inputWithButton);
-    //     answerContainer.appendChild(newAnswerDiv);
-    //     currentAnswerIndex++; // Tăng giá trị biến tạm lên để sử dụng cho ô input tiếp theo
-    // }
-
-    // function removeAnswer(button) {
-    //     var answerContainer = document.getElementById("answerContainer");
-    //     if (answerContainer.children.length > 1) {
-    //         answerContainer.removeChild(button.parentElement.parentElement);
-    //         updateCheckboxValues(); // Cập nhật lại giá trị của các checkbox sau khi xóa
-    //         // updateCheckboxValues(); // Cập nhật lại giá trị của các checkbox sau khi xóa
-    //     } else {
-    //         alert("Phải có ít nhất một câu trả lời.");
-    //     }
-    // }
-
-    // function updateCheckboxValue(checkbox) {
-    //     const answerIndex = parseInt(checkbox.value);
-    //     if (checkbox.checked) {
-    //         if (!selectedPositions.includes(answerIndex)) {
-    //             selectedPositions.push(answerIndex);
-    //         }
-    //     } else {
-    //         const indexToRemove = selectedPositions.indexOf(answerIndex);
-    //         if (indexToRemove > -1) {
-    //             selectedPositions.splice(indexToRemove, 1);
-    //         }
-    //     }
-    // }
-    // // Cập nhật giá trị is_correct trước khi gửi form
-    // function updateIsCorrectValues() {
-    //     var checkboxes = document.querySelectorAll('input[name="is_correct[]"]');
-    //     for (var i = 0; i < checkboxes.length; i++) {
-    //         checkboxes[i].value = i; // Cập nhật lại giá trị cho các checkbox dựa trên vị trí của chúng
-    //     }
-    // }
-    // const submitBtn = document.querySelector('#submit')
-    // const titleInput = document.querySelector('#title')
-    // const contentInput = document.querySelector('#editor-edit-note')
 
     function start() {
         checkChangeInput(titleInput)
         checkChangeInput(contentInput)
     }
-    // start()
+
     function validate() {
         if (titleInput.value == '') {
             submitBtn.disabled = true;
@@ -166,9 +90,7 @@
     }
     const form = document.querySelector('#form_new_question');
     form.addEventListener('submit', function(event) {
-        // Ngăn chặn việc gửi form mặc định để thực hiện xử lý tùy chỉnh
         event.preventDefault();
-        // Gọi hàm để cập nhật giá trị is_correct trước khi submit
         updateIsCorrectValues();
     })
 </script>

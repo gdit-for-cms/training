@@ -8,7 +8,6 @@ use App\models\Question;
 use App\models\Answer;
 use App\Models\QuestionTitle;
 use App\Requests\AppRequest;
-use Core\Http\Response;
 use Core\Http\ResponseTrait;
 
 class QuestionController extends  AppController
@@ -39,7 +38,6 @@ class QuestionController extends  AppController
     {
 
         $req_method_ary = $request->getGet()->all();
-
         $results_per_page = 5;
         $results_ary = $this->obj_model_question_title->getAllHasPagination($req_method_ary, $results_per_page);
         $this->data_ary['question_titles'] = $results_ary['results'];
@@ -60,6 +58,24 @@ class QuestionController extends  AppController
         $this->data_ary['content'] = 'question/new';
     }
 
+    public function check_enter_answer($answers)
+    {
+        foreach ($answers as $answer) {
+            if (strlen(trim($answer)) == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function check_unique_answer($answers)
+    {
+        if (count($answers) > count(array_unique($answers))) {
+            return false;
+        }
+        return true;
+    }
+
     public function create(Request $request)
     {
         $result_vali_ary = $this->app_request->validate($this->obj_model->rules(), $request, 'post');
@@ -71,13 +87,10 @@ class QuestionController extends  AppController
         $question_title_id = $result_vali_ary['question_title_id'];
         $answers =  $result_vali_ary['answer'];
 
-        foreach ($answers as $answer) {
-            if (strlen(trim($answer)) == 0) {
-                return $this->errorResponse("You need to enter the answer.");
-            }
+        if (!$this->check_enter_answer($answers)) {
+            return $this->errorResponse("You need to enter the answer.");
         }
-        $answer_comp = count(array_unique($answers));
-        if (count($answers) > $answer_comp) {
+        if (!$this->check_unique_answer($answers)) {
             return $this->errorResponse("Answers cannot be duplicated.");
         }
 
@@ -91,6 +104,7 @@ class QuestionController extends  AppController
             return $this->errorResponse('Question has been exist');
         } else {
             try {
+                $this->obj_model->beginTransaction();
                 $questionId = $this->obj_model->create(
                     [
                         'content' => $content,
@@ -108,7 +122,7 @@ class QuestionController extends  AppController
                         ]
                     );
                 }
-
+                $this->obj_model->commitTransaction();
                 return $this->successResponse();
             } catch (\Throwable $th) {
                 return $this->errorResponse($th->getMessage());
@@ -142,13 +156,11 @@ class QuestionController extends  AppController
         $answers =  $result_vali_ary['answer'];
         $question_id = $request->getPost()->get('id');
 
-        foreach ($answers as $answer) {
-            if (strlen(trim($answer)) == 0) {
-                return $this->errorResponse("You need to enter the answer.");
-            }
+        if (!$this->check_enter_answer($answers)) {
+            return $this->errorResponse("You need to enter the answer.");
         }
-        $answer_comp = count(array_unique($answers));
-        if (count($answers) > $answer_comp) {
+
+        if (!$this->check_unique_answer($answers)) {
             return $this->errorResponse("Answers cannot be duplicated.");
         }
 
@@ -165,7 +177,7 @@ class QuestionController extends  AppController
         } else {
 
             try {
-                // $this->obj_model->beginTransaction();
+                $this->obj_model->beginTransaction();
                 $this->obj_model->updateOne(
                     [
                         'content' => $content
@@ -185,7 +197,7 @@ class QuestionController extends  AppController
                         ]
                     );
                 }
-                // $this->obj_model->commitTransaction();
+                $this->obj_model->commitTransaction();
                 return $this->successResponse();
             } catch (\Throwable $th) {
 

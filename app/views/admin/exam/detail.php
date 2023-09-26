@@ -22,7 +22,6 @@
                 </div>
                 <div class="white_card_body">
                     <div class="card-body d-flex">
-                        <!-- <form id="form_new_question col-12" class="" action="create" method="POST"> -->
                         <div class="mb-6 col-4 mr-12" style="">
                             <div class="mb-3 mr-12">
                                 <label class="form-label" for="title">Title </label>
@@ -78,7 +77,6 @@
                                 </tbody>
                             </table>
                         </div>
-                        <!-- </form> -->
                     </div>
                 </div>
             </div>
@@ -165,18 +163,13 @@
                                                         </button>
                                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
 
-                                                            <!-- <li><a href=" /admin/exam/detail-edit?question_id=<?php echo $exam_detail['question_id']; ?>&exam_id=<?php echo $exam_detail['question_id']; ?>" class="dropdown-item">Edit</a></li> -->
                                                             <li>
                                                                 <button data-question_id="<?php echo $exam_detail['question_id']; ?>" data-exam_id="<?php echo $exam['id']; ?>" type="button" class=" btn-delete-exam-detail dropdown-item">Delete</button>
                                                             </li>
 
                                                         </ul>
                                                     </div>
-                                                    <!-- <div class="d-flex ">
-                                                        <a href=" /admin/exam/detail-edit?question_id=<?php echo $exam_detail['question_id']; ?>&exam_id=<?php echo $exam_detail['question_id']; ?>" class="btn btn-primary text-white mx-1 ">Edit</a>
-                                                        <button data-id="<?php echo $exam_detail['question_id']; ?>" type="button" class="btn btn-danger btn-delete-exam-detail text-w
-                                                        hite ">Delete</button>
-                                                    </div> -->
+  
                                                 </td>
                                             <?php
                                             }

@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Core\Model;
 use Core\QueryBuilder;
-use PDO;
 
 /**
  * Example user model

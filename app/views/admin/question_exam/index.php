@@ -154,7 +154,6 @@
     const editBtn = document.querySelectorAll('.edit-btn')
     const deleteBtn = document.querySelectorAll('.delete-btn')
     const btnShowPreviewExam = document.querySelectorAll('.btn-show-add-question')
-    const btnShowAddQuestion = document.querySelectorAll('.btn-show-preview-exam')
     const descriptionElement = document.createElement('div')
 
     function start() {
@@ -189,31 +188,4 @@
             })
         })
     };
-
-    btnShowAddQuestion.forEach((btn) => {
-        btn.setAttribute('data-bs-toggle', 'modal')
-        btn.setAttribute('data-bs-target', '#viewExamPreview')
-        btn.addEventListener('click', (e) => {
-
-            ruleId = btn.dataset.id
-            $.ajax({
-                type: "GET",
-                // url: `/admin/rule/show?id=6085`,
-                url: `/admin/exam/show?id=2`,
-
-                success: function(data) {
-                    result = data['result']
-
-                    descriptionElement.textContent = result['description']
-                    examDesciption.appendChild(descriptionElement)
-
-                },
-                cache: false,
-                contentType: false,
-                processData: false
-            }).fail(function() {
-                e.preventDefault()
-            });
-        })
-    })
 </script>

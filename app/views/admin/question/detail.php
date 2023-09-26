@@ -9,7 +9,6 @@
         </div>
         <div class="white_card_body">
             <div class="card-body d-flex">
-                <!-- <form id="form_new_question col-12" class="" action="create" method="POST"> -->
                 <div class="mb-3 col-5 mr-12" style="">
                     <label class="form-label" for="title">Title collection </label>
                     <input class="form-control" rows="3" disabled value="<?php echo $question_title['title']; ?>" placeholder="Title..." />
@@ -18,7 +17,6 @@
                     <label class="form-label" for="title">Description collection </label>
                     <input class="form-control" disabled value="<?php echo isset($question_title['description']) ? $question_title['description'] : "" ?>" rows="3" placeholder="description..." />
                 </div>
-                <!-- </form> -->
             </div>
         </div>
     </div>
@@ -49,7 +47,6 @@
                         <?php
                         if (!empty($question_titles)  && isset($question_titles[0]['question_content'])) {
                             $stt = 1;
-
                             foreach ($question_titles as $question_title) {
                         ?>
                                 <tr>
@@ -69,15 +66,12 @@
                                         }
                                         ?>
                                     </td>
-
-
                                     <td class="col-1">
                                         <div class="dropdown">
                                             <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                                 Action
                                             </button>
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-
                                                 <li><a class="dropdown-item" href="/admin/question/edit?question_id=<?php echo $question_title['question_id']; ?>">Edit</a></li>
                                                 <li>
                                                     <button type="button" data-id="<?php echo $question_title['question_id']; ?>" class="dropdown-item btn-delete-question ">Delete</button>
@@ -97,8 +91,6 @@
                         <?php
                         }
                         ?>
-
-
                     </tbody>
                 </table>
                 <div class="flex justify-center items-center">
@@ -125,7 +117,6 @@
                                 if ($next < $numbers_of_page) {
                                 ?>
                                     <li class="page-item cursor-pointer"><a href="/admin/question/detail?question_id=<?php echo $question_titles[0]['question_title_id']; ?>&page=<?php echo $next += 1; ?>" class="page-link">Next</a></li>
-
                                 <?php
                                 }
                                 ?>

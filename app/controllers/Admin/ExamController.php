@@ -60,18 +60,11 @@ class ExamController extends AppController
         $req_method_ary = $request->getGet()->all();
         $results_per_page = 5;
         $results_ary = $this->obj_model->getExam($req_method_ary, $results_per_page);
-
-
-
         $numbers_of_result = $results_ary['numbers_of_page'];
         $numbers_of_page = ceil($numbers_of_result / $results_per_page);
         $this->data_ary['numbers_of_page'] = $numbers_of_page;
         $this->data_ary['page'] = (float)$results_ary['page'];
         $this->data_ary['exams'] = $results_ary['results'];
-
-        // echo "<pre>";
-        // var_dump($this->data_ary['exams']);
-        // die();
 
         $this->data_ary['content'] = 'exam/index';
     }
@@ -83,18 +76,14 @@ class ExamController extends AppController
 
     public function insert(Request $request)
     {
-
         $result_vali_ary = $this->app_request->validate($this->obj_model->rules(), $request, 'post');
-
         if (in_array('error', $result_vali_ary)) {
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
             return $this->errorResponse($message_error);
         }
-
         $exam_title = $result_vali_ary['title'];
         $exam_description =  $result_vali_ary['description'];
         $exam_duration = $result_vali_ary['duration'];
-
         $exams = $this->obj_model->getAll();
         foreach ($exams as $exam) {
             $check_exam = strcasecmp($exam['title'], $exam_title);
@@ -127,8 +116,8 @@ class ExamController extends AppController
         $results_per_page = 5;
         $results_ary = $this->obj_model->getDetailExams($req_method_ary, $results_per_page);
         $this->data_ary['exam_details'] = $results_ary['results'];
-
         $this->data_ary['exam'] = $exam;
+
         $numbers_of_result = $results_ary['numbers_of_page'];
         $numbers_of_page = ceil($numbers_of_result / $results_per_page);
         $this->data_ary['numbers_of_page'] = $numbers_of_page;
@@ -136,14 +125,6 @@ class ExamController extends AppController
 
         $emails = $this->obj_model_exam_participant->getBy("exam_id", '=', $exam_id);
         $this->data_ary['emails'] = $emails;
-
-
-        // //start add question
-        // $req_method_ary = $request->getGet();
-        // $exam_id = $req_method_ary->get('exam_id');
-        // $results_ary = $this->obj_model_question_title->getAll();
-        // $this->data_ary['question_titles'] = $results_ary;
-        // //end add question
         $this->data_ary['content'] = 'exam/detail';
     }
     public function checkHasEmail($data)
@@ -156,9 +137,7 @@ class ExamController extends AppController
 
     public function create(Request $request)
     {
-
         $result_vali_ary = $this->app_request->validate($this->obj_model->rules(), $request, 'post');
-
         //check has email
         $req_method_ary = $request->getPost()->all();
         $check_has_mail = $this->checkHasEmail($req_method_ary);
@@ -167,7 +146,6 @@ class ExamController extends AppController
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
             return $this->errorResponse($message_error);
         }
-
         $title = trim($result_vali_ary['title']);
         $description = $result_vali_ary['description'];
         $duration = $result_vali_ary['duration'];
@@ -180,10 +158,8 @@ class ExamController extends AppController
             }
         }
 
-
         try {
             $this->obj_model->beginTransaction();
-
             $this->obj_model->create(
                 [
                     'title' => $title,
@@ -191,7 +167,6 @@ class ExamController extends AppController
                     'duration' => $duration
                 ]
             );
-
             if ($check_has_mail) {
                 $email_arrays = $req_method_ary['email'];
                 $exam = $this->obj_model->getBy('title', '=', $title);
@@ -216,11 +191,9 @@ class ExamController extends AppController
                         'is_submit' => 2
                     ]);
                     array_push($arr_check_email, trim($email));
-
                     $stt_email++;
                 }
             }
-
             $this->obj_model->commitTransaction();
             return $this->successResponse();
         } catch (\Throwable $th) {
@@ -237,7 +210,6 @@ class ExamController extends AppController
             if ($email == "") {
                 return $this->errorResponse("phải điền vào các ô email");
             }
-            // $result_vali_ary = $this->app_request->validate($this->obj_model_exam_participant->rules(), $request, 'post');
             if (!email($email)) {
                 return $this->errorResponse("email số " . $stt_email . " không đúng định dạng");
             }
@@ -251,7 +223,6 @@ class ExamController extends AppController
                 'is_submit' => 2
             ]);
             array_push($arr_check_email, trim($email));
-
             $stt_email++;
         }
         return true;
@@ -264,9 +235,7 @@ class ExamController extends AppController
         $question_id = $question_answers->get('question_id');
         $answer_ids = $question_answers->get('selected_answers');
 
-        // Lấy danh sách answer_id hiện có trong cơ sở dữ liệu
         foreach ($answer_ids as $answer_id) {
-            // Thêm mới answer có answer_id vào cơ sở dữ liệu
             $this->obj_model_exam_question->insert([
                 'exam_id' => $exam_id,
                 'answer_id' => $answer_id,
@@ -285,23 +254,16 @@ class ExamController extends AppController
         $question_answers = array();
 
         foreach ($exam_questions as $exam_question) {
-
             $question_id = $exam_question['question_id'];
-
             if (!isset($question_answers[$question_id])) {
                 $question_answers[$question_id] = array(
                     'question' => $this->obj_model_question->getById($question_id),
                     'answers' => array()
                 );
             }
-
-            // $answer_id = $exam_question['answer_id'];
             $answer_info = $this->obj_modal_answer->getBy('question_id', '=', $exam_question['question_id']);
-
-            // Thêm thông tin câu trả lời vào mảng answers
             $question_answers[$question_id]['answers'] = $answer_info;
         }
-
         $this->data_ary['question_answers'] = $question_answers;
         $this->data_ary['exam'] = $exam;
         $this->data_ary['exam_participants'] = $exam_participants;
@@ -336,7 +298,6 @@ class ExamController extends AppController
         } else {
             echo "could not delete $file\n";
         }
-
         // close the connection
         ftp_close($this->configFTP());
     }
@@ -366,20 +327,15 @@ class ExamController extends AppController
         $html_content = $request->getPost()->get('html_content');
         $csv_content = $request->getPost()->get('csv_content');
         $csv_exam_participants = $request->getPost()->get('csv_exam_participants');
-
-
         $exam_id = $request->getGet()->get('id');
-        // $exam = $this->obj_model->getById($exam_id);
 
         // file name csv answer and question html
         $file_name = $exam_id;
         //file email exam participant
         $file_exam_participant = "email" . $exam_id;
 
-
         $full_new_directory = $your_server_directory . $file_name;
         $full_new_directory_exam = $your_server_directory . $file_exam_participant;
-
 
         $your_server_directory_html = $full_new_directory . '.html';
         $your_server_directory_csv = $full_new_directory . '.csv';
@@ -391,7 +347,6 @@ class ExamController extends AppController
             $check_put_csv = file_put_contents($your_server_directory_csv, $csv_content);
             $check_put_csv_exam_participant = file_put_contents($your_server_directory_email, $csv_exam_participants);
 
-
             if ($check_put_html !== false && $check_put_csv !== false && $check_put_csv_exam_participant !== false) {
                 //upload files from your server to the server that needs to store the files
                 $upload_html = ftp_put($check_config, $html_directory . basename($your_server_directory_html), $your_server_directory_html, FTP_BINARY);
@@ -402,7 +357,6 @@ class ExamController extends AppController
                 $chmod_html = ftp_chmod($check_config, 0777, $html_directory . basename($your_server_directory_html));
                 $chmod_csv = ftp_chmod($check_config, 0777, $csv_directory . basename($your_server_directory_csv));
                 $chmod_email = ftp_chmod($check_config, 0777, $email_directory . basename($your_server_directory_email));
-
 
                 unlink($your_server_directory_html);
                 unlink($your_server_directory_csv);
@@ -456,7 +410,6 @@ class ExamController extends AppController
     {
 
         $result_vali_ary = $this->app_request->validate($this->obj_model->rules(), $request, 'post');
-
         if (in_array('error', $result_vali_ary)) {
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
             return $this->errorResponse($message_error);
@@ -464,14 +417,13 @@ class ExamController extends AppController
         //check has email
         $post_ary = $request->getPost()->all();
         $check_has_mail = $this->checkHasEmail($post_ary);
-
         $exam_check_ary = $this->obj_model->getBy('title', '=', $post_ary['title']);
         $num_rows = count($exam_check_ary);
-
         $id = $post_ary['id'];
         $title = $post_ary['title'];
         $description = $post_ary['description'];
         $duration = $post_ary['duration'];
+
         if ($num_rows > 0 && $exam_check_ary[0]['id'] != $id) {
             return $this->errorResponse('Exam has been exist');
         }
@@ -488,7 +440,6 @@ class ExamController extends AppController
                 "id = $id"
             );
             $this->obj_model_exam_participant->destroyBy("exam_id = " . $id);
-
             if ($check_has_mail) {
                 $email_arrays = $post_ary['email'];
                 $stt_email = 1;
@@ -558,7 +509,6 @@ class ExamController extends AppController
     {
         $question_id = $request->getGet()->get('question_id');
         $exam_id =  $request->getGet()->get('exam_id');
-
         $exam_questions = $this->obj_model_exam_question->getExamQuestionByIds($exam_id, $question_id, '*');
         $question = $this->obj_model_question->getById($question_id);
         $answers = $this->obj_modal_answer->getBy('question_id', '=', $question_id, '*');
@@ -572,15 +522,11 @@ class ExamController extends AppController
 
     public function editDetailExamAction(Request $request)
     {
-
         $post_ary = $request->getPost();
         $exam_id =  $post_ary->get('exam_id');
         $question_id =  $post_ary->get('question_id');
         $answer_ids =  $post_ary->get('selected_answer');
-
         $this->obj_model_exam_question->destroyBy('question_id' . '=' . $question_id . ' and ' . 'exam_id' . '=' . $exam_id);
-
-
         try {
             $this->obj_model->beginTransaction();
 

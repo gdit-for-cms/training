@@ -219,9 +219,7 @@
     const viewRuleDetailModal = document.getElementById('viewRuleDetail')
     const viewRuleNotes = document.getElementById('rule-notes')
     const ruleCategory = document.getElementById('rule-category')
-
     const ruleContent = document.getElementById('rule-content')
-    
     const ruleDetail = document.getElementById('rule-detail')
     const ruleNote = document.getElementById('rule-note')
     const categoryElement = document.createElement('div')
@@ -459,7 +457,6 @@
                     ruleCategory.appendChild(categoryElement)
 
                     contentElement.textContent = result['content']
-                    alert(contentElement.textContent)
                     ruleContent.appendChild(contentElement)
 
                     detailElement.textContent = result['detail']

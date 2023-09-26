@@ -49,7 +49,6 @@ class QuestionTitleController extends  AppController
         }
         $title = $result_vali_ary['title'];
         $description = $result_vali_ary['description'];
-
         $question_titles = $this->obj_model->getAll();
         foreach ($question_titles as $question_title) {
             $check_exam = strcasecmp($question_title['title'], $title);
@@ -83,9 +82,6 @@ class QuestionTitleController extends  AppController
         $this->data_ary['question_title'] =  $this->obj_model_question->getById($id, 'id, content');
 
         $req_method_ary = $request->getGet()->all();
-        // echo "<pre>";
-        // var_dump( $req_method_ary);
-        // die();
         $req_method_ary['question_id'] = $id;
         $results_per_page = 5;
         $results_ary = $this->obj_model_question->getAllRelation($req_method_ary, $results_per_page);
@@ -94,7 +90,6 @@ class QuestionTitleController extends  AppController
         $numbers_of_page = ceil($numbers_of_result / $results_per_page);
         $this->data_ary['numbers_of_page'] = $numbers_of_page;
         $this->data_ary['page'] = (float)$results_ary['page'];
-        // $question_title_id = $req_method_ary['question_id'];
         $this->data_ary['question_title'] = $this->obj_model->getById($id, "id,title,description");
 
         $this->data_ary['content'] = 'question_title/edit';
@@ -106,7 +101,6 @@ class QuestionTitleController extends  AppController
         $post_ary = $request->getPost()->all();
         $check_exam = $this->obj_model->getById($post_ary['id']);
         $change_data_flg = false;
-
         foreach ($post_ary as $key => $value) {
             if ($check_exam[$key] != $value) {
                 $change_data_flg = true;
@@ -116,10 +110,8 @@ class QuestionTitleController extends  AppController
         if (!$change_data_flg) {
             return $this->errorResponse('Nothing to update');
         }
-
         $ques_title_check_ary = $this->obj_model->getBy('title', '=', $post_ary['title']);
         $num_rows = count($ques_title_check_ary);
-
         $id = $post_ary['id'];
         $title = $post_ary['title'];
         $description = $post_ary['description'];

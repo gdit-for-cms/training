@@ -19,7 +19,6 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label" style="margin-right: 30px;" for="correct">Correct*</label>
-                        <!-- <span>|</span> -->
                         <label class="form-label" for="answer">Answer*</label>
                         <div id="answerContainer">
                             <!-- Ô input mặc định -->
@@ -45,18 +44,13 @@
                         </div>
                     </div>
                     <a class="btn btn-danger" href="/admin/question/index" class="page-link">Back</a>
-
                     <button id="submit" type="submit" class="btn btn-primary">Edit</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
-
 <script>
-    // chức năng thêm xóa câu hỏi 
-
     // Biến tạm để lưu giá trị của ô input hiện tại
     var currentAnswerIndex = 0;
     // Mảng lưu vị trí các checkbox đã chọn
@@ -105,14 +99,14 @@
 
         answerContainer.appendChild(newAnswerDiv);
 
-        currentAnswerIndex++; // Tăng giá trị biến tạm lên để sử dụng cho ô input tiếp theo
+        currentAnswerIndex++;
     }
 
     function removeAnswer(button) {
         var answerContainer = document.getElementById("answerContainer");
         if (answerContainer.children.length > 1) {
             answerContainer.removeChild(button.parentElement.parentElement);
-            updateCheckboxValues(); // Cập nhật lại giá trị của các checkbox sau khi xóa
+            updateCheckboxValues();
         } else {
             alert("Phải có ít nhất một câu trả lời.");
         }
@@ -136,7 +130,7 @@
     function updateCheckboxValues() {
         var checkboxes = document.querySelectorAll('input[name="is_correct[]"]');
         for (var i = 0; i < checkboxes.length; i++) {
-            checkboxes[i].value = i; // Cập nhật lại giá trị cho các checkbox dựa trên vị trí của chúng
+            checkboxes[i].value = i;
         }
     }
     //end chức năng thêm xóa answer
@@ -144,16 +138,13 @@
     function updateIsCorrectValues() {
         var checkboxes = document.querySelectorAll('input[name="is_correct[]"]');
         for (var i = 0; i < checkboxes.length; i++) {
-            checkboxes[i].value = i; // Cập nhật lại giá trị cho các checkbox dựa trên vị trí của chúng
+            checkboxes[i].value = i;
         }
     }
 
     const form = document.querySelector('#form_update_question');
     form.addEventListener('submit', function(event) {
-        // Ngăn chặn việc gửi form mặc định để thực hiện xử lý tùy chỉnh
         event.preventDefault();
-
-        // Gọi hàm để cập nhật giá trị is_correct trước khi submit
         updateIsCorrectValues();
     })
 

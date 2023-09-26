@@ -79,7 +79,6 @@ class Exam extends Model
     public function getDetailExams($req_method_ary, $results_per_page = 5)
     {
         $exam_id = $req_method_ary['exam_id'];
-
         if (isset($req_method_ary['exam_id'])) {
             $exam_id = $req_method_ary['exam_id'];
         }
@@ -129,7 +128,6 @@ class Exam extends Model
             $where = trim($req_method_ary['keyword']);
 
             $keywords = str_split($where);
-
             $specialChars = ["@", "#", "$", "%", "^", "&", "(", ")", "_", "+", "|", "~", "=", "`", "{", "}", "[", "]", ":", "\\", ";", "'", "<", ">", "?", ",", ".", "/", "\\", "-"];
             $a = 1;
             foreach ($keywords as $keyword) {
@@ -169,8 +167,6 @@ class Exam extends Model
     public function getExamsWithQuestions($id = '')
     {
         $db = static::getDB();
-
-        // Thực hiện câu truy vấn để lấy thông tin bài thi và câu hỏi liên quan
         $query = "SELECT e.id AS exam_id, e.title AS exam_title, e.description AS exam_description,
         e.published AS exam_published,q.id AS question_id, q.content AS question_content, q.title as question_title
                   FROM exam AS e

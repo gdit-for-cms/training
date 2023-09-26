@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,12 +9,11 @@
     <link href="/css/front-css/main.css" rel="stylesheet">
     <title><?= $title ?></title>
 </head>
-
 <body>
     <?php require_once 'header.php' ?>
     <?php require_once 'modal.php' ?>
     <div id="container">
-        <?php require_once '../app/views/homepage/' . $content . '.php' ?>
+        <?php require_once '../app/views/homepage/'.$content.'.php' ?>
     </div>
     <?php require_once 'footer.php' ?>
 
@@ -23,22 +21,22 @@
     <script src="/js/front-js/sweetalert2.all.min.js"></script>
     <script src="/js/front-js/main.js"></script>
     <script>
-        $(document).ready(function() {
-            $('#modal-trigger').click(function() {
+        $(document).ready(function () {
+            $('#modal-trigger').click(function () {
                 event.preventDefault();
                 $('.box-lightbox').addClass('open');
             })
-            $('#js-login').click(function(event) {
+            $('#js-login').click(function (event) {
                 event.preventDefault();
                 $('.cd-login').addClass('active');
                 $('.cd-signup').removeClass('active');
             })
-            $('#js-register').click(function(event) {
+            $('#js-register').click(function (event) {
                 event.preventDefault();
                 $('.cd-signup').addClass('active');
                 $('.cd-login').removeClass('active');
             })
-            $('.js-lightbox-close').click(function() {
+            $('.js-lightbox-close').click(function () {
                 $('.box-lightbox').removeClass('open');
             })
         });
