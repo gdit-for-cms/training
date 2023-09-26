@@ -4,10 +4,6 @@ namespace App\Models;
 
 use Core\Model;
 use Core\QueryBuilder;
-use PDO;
-use App\Models\Exam;
-use App\Models\Question;
-use App\Models\Answer;
 
 /**
  * Example user model

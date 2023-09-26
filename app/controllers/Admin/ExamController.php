@@ -107,8 +107,8 @@ class ExamController extends AppController
                 'title' => $exam_title,
                 'description' => $exam_description,
                 'published' => 0,
-                'duration' => $exam_duration
-
+                'duration' => $exam_duration,
+                'updated_at' => (new \DateTime())->format('Y-m-d H:i:s')
             ]);
 
             return $this->successResponse();
@@ -285,6 +285,7 @@ class ExamController extends AppController
         $question_answers = array();
 
         foreach ($exam_questions as $exam_question) {
+
             $question_id = $exam_question['question_id'];
 
             if (!isset($question_answers[$question_id])) {
@@ -294,12 +295,13 @@ class ExamController extends AppController
                 );
             }
 
-            $answer_id = $exam_question['answer_id'];
-            $answer_info = $this->obj_modal_answer->getById($answer_id);
+            // $answer_id = $exam_question['answer_id'];
+            $answer_info = $this->obj_modal_answer->getBy('question_id', '=', $exam_question['question_id']);
 
             // Thêm thông tin câu trả lời vào mảng answers
-            $question_answers[$question_id]['answers'][] = $answer_info;
+            $question_answers[$question_id]['answers'] = $answer_info;
         }
+
         $this->data_ary['question_answers'] = $question_answers;
         $this->data_ary['exam'] = $exam;
         $this->data_ary['exam_participants'] = $exam_participants;
@@ -326,6 +328,33 @@ class ExamController extends AppController
         }
         return $ftp_connection;
     }
+
+    public function deleteFTP($file)
+    {
+        if (ftp_delete($this->configFTP(), $file)) {
+            echo "$file deleted successful\n";
+        } else {
+            echo "could not delete $file\n";
+        }
+
+        // close the connection
+        ftp_close($this->configFTP());
+    }
+
+    public function deleteFileFTPExam($exam_id)
+    {
+        $html_directory =  Config::FTP_PUBLIC_DIRECTORY_HTML;
+        $csv_directory = Config::FTP_PUBLIC_DIRECTORY_CSV;
+        $email_directory = Config::FTP_PUBLIC_DIRECTORY_EMAIL;
+
+        $file_exam_html = $html_directory . $exam_id . ".html";
+        $file_answer_csv = $csv_directory . $exam_id . ".csv";
+        $file_email_csv = $email_directory . "email" . $exam_id . ".csv";
+
+        $this->deleteFTP($file_exam_html);
+        $this->deleteFTP($file_answer_csv);
+        $this->deleteFTP($file_email_csv);
+    }
     public function uploadAction(Request $request)
     {
         $check_config = $this->configFTP();
@@ -338,11 +367,9 @@ class ExamController extends AppController
         $csv_content = $request->getPost()->get('csv_content');
         $csv_exam_participants = $request->getPost()->get('csv_exam_participants');
 
-        // echo $csv_exam_participants;
-        // die();
 
         $exam_id = $request->getGet()->get('id');
-        $exam = $this->obj_model->getById($exam_id);
+        // $exam = $this->obj_model->getById($exam_id);
 
         // file name csv answer and question html
         $file_name = $exam_id;
@@ -389,6 +416,7 @@ class ExamController extends AppController
             $this->obj_model->updateOne(
                 [
                     'published' => 1,
+                    'uploaded_at' => (new \DateTime())->format('Y-m-d H:i:s')
                 ],
                 "id = $exam_id"
             );
@@ -405,29 +433,21 @@ class ExamController extends AppController
         $emails = $this->obj_model_exam_participant->getBy("exam_id", '=', $exam_id);
         $this->data_ary['emails'] = $emails;
 
-
         $req_method_ary = $request->getGet()->all();
         $req_method_ary['exam_id'] = $exam_id;
         $results_per_page = 5;
         $results_ary = $this->obj_model->getDetailExams($req_method_ary, $results_per_page);
         $this->data_ary['exam_details'] = $results_ary['results'];
+
         $numbers_of_result = $results_ary['numbers_of_page'];
         $numbers_of_page = ceil($numbers_of_result / $results_per_page);
         $this->data_ary['numbers_of_page'] = $numbers_of_page;
         $this->data_ary['page'] = (float)$results_ary['page'];
 
-
         //start add question
-        // $req_method_ary = $request->getGet();
-        // $exam_id = $req_method_ary->get('id');
         $results_ary = $this->obj_model_question_title->getAll("edit");
         $this->data_ary['question_titles'] = $results_ary;
         //end add question
-
-        // echo "<pre>";
-        // var_dump($results_ary);
-        // die();
-
 
         $this->data_ary['content'] = "exam/edit";
     }
@@ -462,7 +482,8 @@ class ExamController extends AppController
                 [
                     'title' => $title,
                     'description' => $description,
-                    'duration' => $duration
+                    'duration' => $duration,
+                    'uploaded_at' => (new \DateTime())->format('Y-m-d H:i:s')
                 ],
                 "id = $id"
             );
@@ -504,10 +525,25 @@ class ExamController extends AppController
         };
     }
 
+    public function unpublishAction(Request $request)
+    {
+        $exam_id = $request->getGet()->get('exam_id');
+        $this->obj_model->updateOne(
+            [
+                'published' => 0,
+                'updated_at' => (new \DateTime())->format('Y-m-d H:i:s')
+            ],
+            "id = $exam_id"
+        );
+        $this->deleteFileFTPExam($exam_id);
+        header('Location:/admin/exam/index');
+        exit;
+    }
     public function deleteAction(Request $request)
     {
         $exam_id = $request->getGet()->get('id');
         $this->obj_model->destroyBy("id = $exam_id");
+        // $this->deleteFileFTPExam($exam_id);
     }
 
     public function detailDeleteAction(Request $request)
@@ -544,19 +580,20 @@ class ExamController extends AppController
 
         $this->obj_model_exam_question->destroyBy('question_id' . '=' . $question_id . ' and ' . 'exam_id' . '=' . $exam_id);
 
-        foreach ($answer_ids as $answer_id) {
-            $this->obj_model_exam_question->insert([
-                'exam_id' => $exam_id,
-                'answer_id' => $answer_id,
-                'question_id' => $question_id
-            ]);
-        }
 
         try {
+            $this->obj_model->beginTransaction();
+
+            foreach ($answer_ids as $answer_id) {
+                $this->obj_model_exam_question->insert([
+                    'exam_id' => $exam_id,
+                    'answer_id' => $answer_id,
+                    'question_id' => $question_id
+                ]);
+            }
             $id = $post_ary['id'];
             $title = $post_ary['title'];
             $description = $post_ary['description'];
-
             $this->obj_model->updateOne(
                 [
                     'title' => $title,
@@ -564,10 +601,40 @@ class ExamController extends AppController
                 ],
                 "id = $id"
             );
+            $this->obj_model->commitTransaction();
 
             return $this->successResponse();
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         };
+    }
+
+    public function responseShowRule($status, $result = [])
+    {
+        $res = [
+            "success" => $status,
+            "result" => $result
+        ];
+        header('Content-Type: application/json');
+        echo json_encode($res);
+        exit();
+    }
+
+    public function searchAction(Request $request)
+    {
+        $file = '';
+        $html_directory =  Config::FTP_PUBLIC_DIRECTORY_HTML;
+        $csv_directory = Config::FTP_PUBLIC_DIRECTORY_CSV;
+        $directory['html'] = $html_directory . $file;
+        $directory['csv'] = $csv_directory . $file;
+        $directory['domain'] = Config::FTP_DOMAIN  . $file;
+        $this->data_ary['directory'] = $directory;
+
+        // pagination
+        $req_method_ary = $request->getPost()->all();
+        $results_per_page = 10;
+        $results_ary = $this->obj_model->getExam($req_method_ary, $results_per_page);
+        $results_ary['directory'] = $directory;
+        return $this->responseShowRule(200, $results_ary);
     }
 }

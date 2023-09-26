@@ -9,9 +9,9 @@
         <div class="default-according" id="accordion2">
 
             <div class="flex col-4 mb-6">
-                <input id="search_input" type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-                <button id="search_btn" type="button" disabled class="btn btn-primary">search</button>
-                <button id="delete_search" type="button" class="btn btn-danger text-white ml-2">X</button>
+                <input id="searchInput" type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                <!-- <button id="search_btn" type="button" disabled class="btn btn-primary">search</button>
+                <button id="delete_search" type="button" class="btn btn-danger text-white ml-2">X</button> -->
             </div>
 
             <div class="table_member_body table-responsive m-b-30 flex flex-col items-center justify-center">
@@ -29,7 +29,7 @@
                             <th scope="col">ACTION</th>
                         </tr>
                     </thead>
-                    <tbody class="body_table_main">
+                    <tbody class="body_table_main" id="table_result">
                         <?php
                         $stt = 1;
                         foreach ($exams as $exam) {
@@ -52,9 +52,9 @@
                                 <td class="col-1">
                                     <?php echo $exam['updated_at'] ?>
                                 </td>
-                                <td class="col-3" style=" align-items: center;">
+                                <td class="col-2" style=" align-items: center;">
                                     <?php if ($exam['published'] == 1) { ?>
-                                        <button  onclick="copyLink('linkToCopy<?php echo $exam['id']; ?>')" class="linkToCopy text-primary-hover" id="linkToCopy<?php echo $exam['id']; ?>" href="<?php echo $directory['domain'] . $exam['id'] . '.html' ?>"><?php echo $directory['domain'] . $exam['id'] . '.html' ?> </button>
+                                        <button onclick="copyLink('linkToCopy<?php echo $exam['id']; ?>')" class="linkToCopy text-primary-hover" id="linkToCopy<?php echo $exam['id']; ?>" href="<?php echo $directory['domain'] . $exam['id'] . '.html' ?>"><?php echo $directory['domain'] . $exam['id'] . '.html' ?> </button>
                                     <?php } ?>
                                 </td>
                                 <td class="col-1">
@@ -68,15 +68,17 @@
                                             <!-- <li><a href="/admin/exam-question/new?exam_id=<?php echo $exam['id']; ?>" class="dropdown-item">Preview</a></li> -->
 
                                             <li><a id="createFilesButton" href="/admin/exam/preview?exam_id=<?php echo $exam['id']; ?>" data-id="<?php echo $exam['id']; ?>" id="submit" class="dropdown-item">Publish exam</a></li>
+                                            <?php if ($exam['published'] == 1) { ?>
+                                                <li><a href="/admin/exam/unpublish?exam_id=<?php echo $exam['id']; ?>" data-id="<?php echo $exam['id']; ?>" id="submit" class="dropdown-item">UnPublish exam</a></li>
+
+                                            <?php } ?>
                                             <li><a class="dropdown-item" href="/admin/exam/examDetail?exam_id=<?php echo $exam['id']; ?>">Detail</a></li>
-                                            <li><a class="dropdown-item" href="/admin/exam/edit?id=<?php echo $exam['id']; ?>">Edit</a></li>
+                                            <li><a class="dropdown-item" href="/admin/exam/edit?id=<?php echo $exam['id']; ?>">Edit </a></li>
                                             <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
                                             <li>
                                                 <button type="button" data-id="<?php echo $exam['id']; ?>" class="dropdown-item btn-delete-question ">Delete</button>
                                             </li>
-                                            <li>
-                                                <!-- <button style="" onclick="copyLink('linkToCopy<?php echo $exam['id']; ?>')" type="button" class=" dropdown-item ">Copy link exam</button> -->
-                                            </li>
+
                                             <li><a class="dropdown-item" href="/admin/exam/edit?id=<?php echo $exam['id']; ?>">Participant Email</a></li>
                                         </ul>
                                     </div>
@@ -90,7 +92,7 @@
                 </table>
                 <div class="flex justify-center items-center">
                     <nav aria-label="Page navigation example">
-                        <ul class="pagination">
+                        <ul class="pagination" id="pagination">
                             <?php
                             $next = $page;
                             if ($page <= $numbers_of_page) {
@@ -196,7 +198,7 @@
             $.ajax({
                 type: "GET",
                 // url: `/admin/rule/show?id=6085`,
-                url: `/admin/exam/show?id=2`,
+                url: `/admin/question/show?id=2`,
 
                 success: function(data) {
                     result = data['result']
@@ -213,4 +215,112 @@
             });
         })
     })
+
+    //search
+    const searchInput = document.getElementById("searchInput");
+    const paginationContainer = document.getElementById("pagination");
+
+    searchInput.addEventListener("input", function() {
+
+        var keyword = searchInput.value;
+        const pathName = "exam";
+        const method = "POST";
+        const url = `/admin/${pathName}/search`;
+
+        if (keyword.trim() == "") {
+            paginationContainer.style.display = "flex";
+        } else {
+            paginationContainer.style.display = "none";
+        }
+        const xhr = new XMLHttpRequest();
+        xhr.open(method, url, true);
+
+        // Xác định dữ liệu bạn muốn gửi dưới dạng form data
+        const formData = new FormData();
+        formData.append("keyword", keyword);
+
+        // Gửi yêu cầu AJAX đi
+        xhr.send(formData);
+        // Xử lý sự kiện khi yêu cầu hoàn thành
+        xhr.onload = function() {
+            // Xử lý phản hồi từ controller
+            const response = JSON.parse(xhr.responseText);
+            const table_result = document.getElementById("table_result");
+            console.log(response)
+
+            if (response.success == 200) {
+                let result = response.result.results;
+                const directory = response.result.directory;
+                let resultHTML = '';
+                let stt = 1;
+
+                for (let i = 0; i < result.length; i++) {
+                    console.log(result[i]['title']);
+
+                    let status = '';
+                    let check = result[i]['published']
+                    if (check == 1) {
+                        status = "Đã xuất bản"
+                    } else {
+                        status = "Chưa xuất bản"
+                    }
+                    let linkExam = '';
+                    if (result[i]['published'] == 1) {
+                        linkExam = `<button onclick="copyLink('linkToCopy${result[i]['id']}')" class="linkToCopy text-primary-hover" id="linkToCopy${result[i]['id']}" href="${directory['domain']}${result[i]['id']}.html">${directory['domain']}${result[i]['id']}.html</button>`
+                    }
+
+                    resultHTML += `
+          
+                    <tr>
+                                <td class="col-1">${stt++}</td>
+                                <td class="col-3">
+                                ${result[i]['title']}
+                                </td>
+                                <td class="col-2 " style='height: 100px; max-height: 100%;'>
+                                ${result[i]['description']}
+
+                                </td>
+                                <td class="col-1">
+                                    <div class="overflow-auto" style='height: 50px; max-height: 100%;'>
+                                       ${status}
+                                    </div>
+                                </td>
+                                <td class="col-1 text-center">
+                                    ${result[i]['duration']}
+                                </td>
+
+                                <td class="col-1">
+                                    ${result[i]['updated_at']}
+                                </td>
+                                <td class="col-2" style=" align-items: center;">
+                                    ${linkExam}
+                                </td>
+                                <td class="col-1">
+                                    <div class="dropdown">
+                                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Action
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+
+                                            <li><a href="/admin/exam-question/new?exam_id=${result[i]['id']}" class="dropdown-item">Add question to exam</a></li>
+
+                                            <li><a id="createFilesButton" href="/admin/exam/preview?exam_id=${result[i]['id']}" data-id="${result[i]['id']}" id="submit" class="dropdown-item">Publish exam</a></li>
+                                            <li><a class="dropdown-item" href="/admin/exam/examDetail?exam_id=${result[i]['id']}">Detail</a></li>
+                                            <li><a class="dropdown-item" href="/admin/exam/edit?id=${result[i]['id']}">Edit</a></li>
+                                            <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
+                                            <li>
+                                                <button type="button" data-id="${result[i]['id']}" class="dropdown-item btn-delete-question ">Delete</button>
+                                            </li>
+                                         
+                                            <li><a class="dropdown-item" href="/admin/exam/edit?id=${result[i]['id']}">Participant Email</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+          `;
+                }
+                table_result.innerHTML = resultHTML;
+            };
+        };
+    });
 </script>

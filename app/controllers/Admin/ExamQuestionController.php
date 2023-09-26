@@ -73,16 +73,21 @@ class ExamQuestionController extends AppController
             $exam_id = $req_method_ary->get('exam_id');
 
             foreach ($question_ids as $question_id) {
-                $answers = $this->obj_model_answer->getBy("question_id", '=', $question_id);
-                if (count($answers) > 0) {
-                    foreach ($answers as $answer) {
-                        $this->obj_model_exam_question->create([
-                            'question_id' => $question_id,
-                            'exam_id' => $exam_id,
-                            'answer_id' => $answer['id']
-                        ]);
-                    }
-                }
+                $this->obj_model_exam_question->create([
+                    'question_id' => $question_id,
+                    'exam_id' => $exam_id,
+                    // 'answer_id' => $answer['id']
+                ]);
+                // $answers = $this->obj_model_answer->getBy("question_id", '=', $question_id);
+                // if (count($answers) > 0) {
+                //     foreach ($answers as $answer) {
+                //         $this->obj_model_exam_question->create([
+                //             'question_id' => $question_id,
+                //             'exam_id' => $exam_id,
+                //             'answer_id' => $answer['id']
+                //         ]);
+                //     }
+                // }
             }
 
             return $this->successResponse();
@@ -96,46 +101,35 @@ class ExamQuestionController extends AppController
         $exam = $this->obj_model->getById($exam_id);
         if ($exam) {
             return $this->successResponse();
-            // return $this->successResponse(true, $exam);
         } else {
             return $this->errorResponse(false);
         }
     }
 
-    public function examDetailAction(Request $request)
-    {
-        //dựa vào method get lay exam_id
-        $exam_id = $request->getGet()->get('exam_id');
+    // public function examDetailAction(Request $request)
+    // {
+    //     $exam_id = $request->getGet()->get('exam_id');
+    //     $exam =  $this->obj_model->getById($exam_id);
+    //     $exam_questions = $this->obj_model_exam_question->getBy('exam_id', '=', $exam_id, '*');
+    //     $question_answers = array();
 
-        //get exam dua vao exam_id
-        $exam =  $this->obj_model->getById($exam_id);
+    //     foreach ($exam_questions as $exam_question) {
+    //         $question_id = $exam_question['question_id'];
+    //         if (!isset($question_answers[$question_id])) {
+    //             $question_answers[$question_id] = array(
+    //                 'question' => $this->obj_model_question->getById($question_id),
+    //                 'answers' => array()
+    //             );
+    //         }
 
-        //lay ra cac exam_question dua vao exam_id
-        $exam_questions = $this->obj_model_exam_question->getBy('exam_id', '=', $exam_id, '*');
-
-        $question_answers = array();
-
-        foreach ($exam_questions as $exam_question) {
-
-            $question_id = $exam_question['question_id'];
-
-            if (!isset($question_answers[$question_id])) {
-                $question_answers[$question_id] = array(
-                    'question' => $this->obj_model_question->getById($question_id),
-                    'answers' => array()
-                );
-            }
-
-            $answer_id = $exam_question['answer_id'];
-            $answer_info = $this->obj_model_answer->getById($answer_id);
-
-            // Thêm thông tin câu trả lời vào mảng answers
-            $question_answers[$question_id]['answers'][] = $answer_info;
-        }
-        $this->data_ary['question_answers'] = $question_answers;
-        $this->data_ary['exam'] = $exam;
-        $this->data_ary['content'] = "exam/detail";
-    }
+    //         $answer_id = $exam_question['answer_id'];
+    //         $answer_info = $this->obj_model_answer->getById($answer_id);
+    //         $question_answers[$question_id]['answers'][] = $answer_info;
+    //     }
+    //     $this->data_ary['question_answers'] = $question_answers;
+    //     $this->data_ary['exam'] = $exam;
+    //     $this->data_ary['content'] = "exam/detail";
+    // }
 
     public function createAction(Request $request)
     {

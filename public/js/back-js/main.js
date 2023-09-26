@@ -605,7 +605,7 @@ $(document).ready(function () {
     loadAnswers()
     addAnswer()
     removeAnswer()
-
+    searchInputs()
     //Ngo Duy Hung
     alertDeleteListRule();
     alertDeleteRule();
@@ -962,7 +962,6 @@ function alertUploadFileExam() {
             csv_exam_participants = csv_exam_participants.innerHTML;
         }
 
-        console.log(content);
         var html_content = `
         <!DOCTYPE html>
         <html lang="en">
@@ -995,14 +994,14 @@ function alertUploadFileExam() {
     
     
         <!-- Custom styles for this template -->
-        <link href="/css/offcanvas.css" rel="stylesheet"></head>
+        <link href="/css/offcanvas.css" rel="stylesheet">
+        <link href="/css/modal.css" rel="stylesheet">
+        </head>
         <body>
             ${content}
 
             <script src="/index.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            <script src="/js/ajax.js"></script>
 
         </body>
         </html>    
@@ -1201,4 +1200,74 @@ function alertEditDetailExam(formId) {
             }
         })
     })
+}
+
+function searchInputs() {
+    // Lưu trạng thái ban đầu của phân trang
+    const searchInput = document.getElementById("searchInput");
+    const paginationContainer = document.getElementById("pagination");
+
+    searchInput.addEventListener("input", function () {
+
+        var keyword = searchInput.value;
+        const pathName = "question";
+        const method = "POST";
+        const url = `/admin/${pathName}/search`;
+
+        if (keyword.trim() == "") {
+            paginationContainer.style.display = "flex";
+        } else {
+            paginationContainer.style.display = "none";
+        }
+        const xhr = new XMLHttpRequest();
+        xhr.open(method, url, true);
+
+        // Xác định dữ liệu bạn muốn gửi dưới dạng form data
+        const formData = new FormData();
+        formData.append("keyword", keyword);
+
+        // Gửi yêu cầu AJAX đi
+        xhr.send(formData);
+
+        // Xử lý sự kiện khi yêu cầu hoàn thành
+        xhr.onload = function () {
+            // Xử lý phản hồi từ controller
+            const response = JSON.parse(xhr.responseText);
+            const table_result = document.getElementById("table_result");
+            console.log(response)
+
+            if (response.success == 200) {
+                let result = response.result.results;
+                let resultHTML = '';
+                let stt = 1;
+
+                for (let i = 0; i < result.length; i++) {
+                    // console.log(result[i]['question_title']);
+
+                    resultHTML += `<tr>
+                <td class="col-1">${stt++}</td>
+                <td class="col-2">${result[i]['question_title']}</td>
+                <td class="col-3 " style="height: 100px; max-height: 100%;">${result[i]['question_description']}</td>
+                <td class="col-1">2023-09-18 23:59:20</td>
+                <td class="col-1">
+                  <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                      Action
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                      <li><a class="dropdown-item" href="/admin/question/new?ques-title=${result[i]['question_id']}">Add Question</a></li>
+                      <li><a class="dropdown-item" href="/admin/question/detail?question_id=${result[i]['question_id']}">Detail</a></li>
+                      <li><a class="dropdown-item" href="/admin/question-title/edit?ques-title=${result[i]['question_id']}">Edit</a></li>
+                      <li>
+                        <button type="button" data-id="${result[i]['question_id']}" class="dropdown-item btn-delete-question">Delete</button>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>`;
+                }
+                table_result.innerHTML = resultHTML;
+            };
+        };
+    });
 }

@@ -35,9 +35,10 @@
             $csv_answer = "";
             $stt = 1;
             $alphabet = range('A', 'Z');
+
             foreach ($question_answers as $question_answer) { ?>
                 <div class="my-3 p-3 bg-body rounded shadow-sm">
-                    <h5>
+                    <h5 class="border-bottom">
                         <div class="d-flex text-muted pt-3">
                             <?php echo $question_answer['question']['content']; ?>
                         </div>
@@ -67,14 +68,15 @@
             }
             ?>
 
-            <div class="my-3 p-3 bg-body rounded">
-                <div class="row">
-                    <div class="col-12 text-center">
-                        <button id="btn_submit" class="btn btn-primary" disabled>Submit</button>
-                    </div>
+
+        </form>
+        <div class="my-3 p-3 bg-body rounded">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <button id="btn_submit" class="btn btn-primary" disabled>Submit</button>
                 </div>
             </div>
-        </form>
+        </div>
         <div class="modal" id="accept_submit" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="anchor-nameLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content modal-accept-submit">

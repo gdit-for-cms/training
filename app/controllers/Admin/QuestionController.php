@@ -41,9 +41,7 @@ class QuestionController extends  AppController
         $req_method_ary = $request->getGet()->all();
 
         $results_per_page = 5;
-        // $results_ary = $this->obj_model->getAllRelation($req_method_ary, $results_per_page);
         $results_ary = $this->obj_model_question_title->getAllHasPagination($req_method_ary, $results_per_page);
-
         $this->data_ary['question_titles'] = $results_ary['results'];
         $numbers_of_result = $results_ary['numbers_of_page'];
         $numbers_of_page = ceil($numbers_of_result / $results_per_page);
@@ -56,25 +54,19 @@ class QuestionController extends  AppController
     public function newAction(Request $request)
     {
         $req_method_ary = $request->getGet()->all();
-
         $question_title_id = $req_method_ary['ques-title'];
-
         $question_title = $this->obj_model_question_title->getById($question_title_id, 'id, title, description');
-
         $this->data_ary['question_title'] = $question_title;
         $this->data_ary['content'] = 'question/new';
     }
 
     public function create(Request $request)
     {
-
         $result_vali_ary = $this->app_request->validate($this->obj_model->rules(), $request, 'post');
-
         if (in_array('error', $result_vali_ary)) {
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
             return $this->errorResponse($message_error);
         }
-
         $content = $result_vali_ary['content'];
         $question_title_id = $result_vali_ary['question_title_id'];
         $answers =  $result_vali_ary['answer'];
@@ -93,23 +85,19 @@ class QuestionController extends  AppController
             return $this->errorResponse("You need to choose at least one correct answer.");
         }
         $is_corrects = $result_vali_ary['is_correct'];
-
         $question_check_ary = $this->obj_model->getBy('content', '=', $content);
         $num_rows = count($question_check_ary);
         if ($num_rows > 0) {
             return $this->errorResponse('Question has been exist');
         } else {
-
             try {
                 $questionId = $this->obj_model->create(
                     [
-                        // 'title' => $title,
                         'content' => $content,
                         'question_title_id' => $question_title_id
                     ]
                 );
                 $questionId = $this->obj_model->getLatest();
-                // Insert các answer dựa vào questionId và vị trí đúng
                 foreach ($answers as $index => $answerContent) {
                     $isCorrect = in_array($index, $is_corrects) ? 1 : 0;
                     $this->obj_model_answer->create(
@@ -127,10 +115,10 @@ class QuestionController extends  AppController
             };
         }
     }
+
     public function editAction(Request $request)
     {
         $id = $request->getGet()->get('question_id');
-
         $this->data_ary['question'] = $this->obj_model->getById($id, 'id, content');
         $this->data_ary['answers'] = $this->obj_model_answer->getBy('question_id', '=', $id);
 
@@ -145,18 +133,14 @@ class QuestionController extends  AppController
 
     public function update(Request $request)
     {
-
         $result_vali_ary = $this->app_request->validate($this->obj_model->rules(), $request, 'post');
-
         if (in_array('error', $result_vali_ary)) {
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
             return $this->errorResponse($message_error);
         }
-
         $content = $result_vali_ary['content'];
         $answers =  $result_vali_ary['answer'];
         $question_id = $request->getPost()->get('id');
-
 
         foreach ($answers as $answer) {
             if (strlen(trim($answer)) == 0) {
@@ -181,6 +165,7 @@ class QuestionController extends  AppController
         } else {
 
             try {
+                // $this->obj_model->beginTransaction();
                 $this->obj_model->updateOne(
                     [
                         'content' => $content
@@ -200,6 +185,7 @@ class QuestionController extends  AppController
                         ]
                     );
                 }
+                // $this->obj_model->commitTransaction();
                 return $this->successResponse();
             } catch (\Throwable $th) {
 
@@ -211,11 +197,8 @@ class QuestionController extends  AppController
     public function detailAction(Request $request)
     {
         $req_method_ary = $request->getGet()->all();
-
         $results_per_page = 5;
         $results_ary = $this->obj_model->getAllRelation($req_method_ary, $results_per_page);
-        // $results_ary = $this->obj_model_question_title->getAllHasPagination($req_method_ary, $results_per_page);
-
         $this->data_ary['question_titles'] = $results_ary['results'];
         $numbers_of_result = $results_ary['numbers_of_page'];
         $numbers_of_page = ceil($numbers_of_result / $results_per_page);
@@ -237,20 +220,12 @@ class QuestionController extends  AppController
         echo json_encode($res);
         exit();
     }
+
     public function searchAction(Request $request)
     {
         $req_method_ary = $request->getPost()->all();
-        $results_per_page = 5;
+        $results_per_page = 10;
         $results_ary = $this->obj_model_question_title->getAllHasPagination($req_method_ary, $results_per_page);
-
-
-        // echo "<pre>";
-        // var_dump($results_ary); 
-        // die();
-        // $numbers_of_result = $results_ary['numbers_of_page'];
-        // $numbers_of_page = ceil($numbers_of_result / $results_per_page);
-        // $results_ary['numbers_of_page'] = $numbers_of_page;
-        // $results_ary['page'] = (float)$results_ary['page'];
 
         return $this->responseShowRule(200, $results_ary);
     }

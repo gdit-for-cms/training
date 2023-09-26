@@ -88,7 +88,6 @@ class QuestionTitle extends Model
                 }
             }
         }
-        
         $db = static::getDB();
         $query = 'SELECT
         question_title.id AS question_id,
@@ -98,8 +97,6 @@ class QuestionTitle extends Model
         FROM
         question_title where question_title.title like ' . ' "%' . $keyword_search . '%" ESCAPE "\\\\"
         ORDER BY question_title.id DESC';
-        // echo $query;
-        // die();
 
         if (!isset($req_method_ary['page'])) {
             $req_method_ary['page'] = '1';

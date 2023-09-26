@@ -47,8 +47,6 @@ class QuestionTitleController extends  AppController
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
             return $this->errorResponse($message_error);
         }
-
-
         $title = $result_vali_ary['title'];
         $description = $result_vali_ary['description'];
 
@@ -59,7 +57,6 @@ class QuestionTitleController extends  AppController
                 return $this->errorResponse('Question collection has been exist');
             }
         }
-
         try {
             $this->obj_model->create(
                 [
@@ -83,8 +80,22 @@ class QuestionTitleController extends  AppController
     public function editAction(Request $request)
     {
         $id = $request->getGet()->get('ques-title');
+        $this->data_ary['question_title'] =  $this->obj_model_question->getById($id, 'id, content');
 
-        $this->data_ary['question_title'] =  $this->obj_model->getById($id, 'id, title, description, updated_at');
+        $req_method_ary = $request->getGet()->all();
+        // echo "<pre>";
+        // var_dump( $req_method_ary);
+        // die();
+        $req_method_ary['question_id'] = $id;
+        $results_per_page = 5;
+        $results_ary = $this->obj_model_question->getAllRelation($req_method_ary, $results_per_page);
+        $this->data_ary['question_titles'] = $results_ary['results'];
+        $numbers_of_result = $results_ary['numbers_of_page'];
+        $numbers_of_page = ceil($numbers_of_result / $results_per_page);
+        $this->data_ary['numbers_of_page'] = $numbers_of_page;
+        $this->data_ary['page'] = (float)$results_ary['page'];
+        // $question_title_id = $req_method_ary['question_id'];
+        $this->data_ary['question_title'] = $this->obj_model->getById($id, "id,title,description");
 
         $this->data_ary['content'] = 'question_title/edit';
     }
@@ -93,9 +104,7 @@ class QuestionTitleController extends  AppController
     {
 
         $post_ary = $request->getPost()->all();
-
         $check_exam = $this->obj_model->getById($post_ary['id']);
-
         $change_data_flg = false;
 
         foreach ($post_ary as $key => $value) {
@@ -110,10 +119,6 @@ class QuestionTitleController extends  AppController
 
         $ques_title_check_ary = $this->obj_model->getBy('title', '=', $post_ary['title']);
         $num_rows = count($ques_title_check_ary);
-
-        // echo "<pre>";
-        // var_dump($ques_title_check_ary);
-        // die();
 
         $id = $post_ary['id'];
         $title = $post_ary['title'];
@@ -146,17 +151,11 @@ class QuestionTitleController extends  AppController
         echo json_encode($res);
         exit();
     }
+
     public function showAction(Request $request)
     {
-        // $question_title_id = $request->getGet()->get('id');
-        // $questions = $this->obj_model_question->getBy('question_title_id', '=', $question_title_id, '*');
-        // $re = $request->getGet()->get('id');
         $req_method_ary = $request->getGet()->all();
         $questions = $this->obj_model_question->getQuestionAnswer($req_method_ary, 'all');
-
-        // echo "<pre>";
-        // var_dump($questions);
-        // die();
         if ($questions) {
             return $this->responseShowRule(true, $questions);
         } else {

@@ -90,10 +90,6 @@ class Question extends Model
 
     public function getAllRelation($req_method_ary, $results_per_page = 5)
     {
-        // echo "<pre>";
-        // var_dump($req_method_ary);
-        // die();
-
         $db = static::getDB();
         $query = "SELECT
         qt.id AS question_title_id,
@@ -103,17 +99,18 @@ class Question extends Model
         a.is_correct AS answer_correct,
         q.id AS question_id,
         GROUP_CONCAT(CONCAT(a.is_correct, ' - ', a.content)) AS answers
-    FROM
-        question_title AS qt
-    LEFT JOIN
-        question AS q ON qt.id = q.question_title_id
-    LEFT JOIN
-        answer AS a ON q.id = a.question_id
-    WHERE qt.id = $req_method_ary[question_id]
-    GROUP BY
-        qt.id, qt.title, qt.description, q.content
-    ORDER BY
-        question_title_id DESC";
+        FROM
+            question_title AS qt
+        LEFT JOIN
+            question AS q ON qt.id = q.question_title_id
+        LEFT JOIN
+            answer AS a ON q.id = a.question_id
+        WHERE 
+            qt.id = $req_method_ary[question_id]
+        GROUP BY
+            qt.id, qt.title, qt.description, q.content
+        ORDER BY
+            question_title_id DESC";
 
 
         if (!isset($req_method_ary['page'])) {
@@ -137,9 +134,6 @@ class Question extends Model
 
     public function getQuestionAnswer($req_method_ary, $results_per_page = 5)
     {
-        // echo "<pre>";
-        // var_dump($req_method_ary);
-        // die();
         $exam_id = $req_method_ary['exam_id'];
 
         $db = static::getDB();
@@ -149,28 +143,33 @@ class Question extends Model
         q.content AS question_content,
         a.is_correct AS answer_correct,
         GROUP_CONCAT(CONCAT(a.is_correct, ' - ', a.content, ' - ', a.id)) AS answers
-    FROM
-        question AS q
-    LEFT JOIN
-        answer AS a ON q.id = a.question_id
-    WHERE q.question_title_id = $req_method_ary[id] 
-        AND (q.id, a.id) NOT IN (
-            SELECT question_id, answer_id
-            FROM exam_questions as eq
-            Where eq.exam_id = $exam_id
-        )
-    GROUP BY
-        q.content
-    ORDER BY
-        question_title_id DESC";
+        FROM
+            question AS q
+        LEFT JOIN
+            answer AS a ON q.id = a.question_id
+        WHERE q.question_title_id = $req_method_ary[id] 
+            AND (q.id, a.id) NOT IN (
+                SELECT question_id, answer_id
+                FROM exam_questions as eq
+                Where eq.exam_id = $exam_id
+            )
+        GROUP BY
+            q.content
+        ORDER BY
+            question_title_id DESC";
 
         $stmt = $db->query($query);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $results;
     }
 
-    public function search($model, $keyword)
+    function beginTransaction()
     {
-        
+        return $this->getDB()->beginTransaction();
+    }
+
+    function commitTransaction()
+    {
+        return $this->getDB()->commit();
     }
 }

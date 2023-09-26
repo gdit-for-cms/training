@@ -34,12 +34,6 @@
     <div class="box_body white_card_body">
         <div class="default-according" id="accordion2">
 
-            <div class="flex col-4 mb-6">
-                <input id="search_input" type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-                <button id="search_btn" type="button" disabled class="btn btn-primary">search</button>
-                <button id="delete_search" type="button" class="btn btn-danger text-white ml-2">X</button>
-            </div>
-
             <div class="table_member_body table-responsive m-b-30 flex flex-col items-center justify-center">
 
                 <table id="<?= "1" ?>" class="table table-striped">

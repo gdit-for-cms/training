@@ -51,9 +51,9 @@
                       Action
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                      <li><a class="dropdown-item" href="/admin/question/new?ques-title=<?php echo $question_title['question_id']; ?>">Add Question</a></li>
+                      <li><a class="dropdown-item" href="/admin/question/new?ques-title=<?php echo $question_title['question_id']; ?>">Add question</a></li>
                       <li><a class="dropdown-item" href="/admin/question/detail?question_id=<?php echo $question_title['question_id']; ?>">Detail</a></li>
-                      <li><a class="dropdown-item" href="/admin/question-title/edit?ques-title=<?php echo $question_title['question_id']; ?>">Edit</a></li>
+                      <li><a class="dropdown-item" href="/admin/question-title/edit?ques-title=<?php echo $question_title['question_id']; ?>">Edit collection</a></li>
                       <li>
                         <button type="button" data-id="<?php echo $question_title['question_id']; ?>" class="dropdown-item btn-delete-question ">Delete</button>
                       </li>
@@ -109,30 +109,27 @@
   </div>
 </div>
 <script>
-  const searchInput = document.getElementById("searchInput");
-  // const searchBtn = document.getElementById("search_btn_clcik");
-  // const searchResults = document.getElementById("searchResults");
-  const paginationContainer = document.getElementById("pagination");
   // Lưu trạng thái ban đầu của phân trang
+  const searchInput = document.getElementById("searchInput");
+  const paginationContainer = document.getElementById("pagination");
 
   searchInput.addEventListener("input", function() {
+
+
     var keyword = searchInput.value;
     const pathName = "question";
     const method = "POST";
     const url = `/admin/${pathName}/search`;
-    // const a = pagination;
-
 
     if (keyword.trim() == "") {
-      // Nếu có dữ liệu trong input, ẩn phân trang
-      // paginationContainer.style.display = "none";
-
+      paginationContainer.style.display = "flex";
+    } else {
+      paginationContainer.style.display = "none";
     }
-    // Tạo đối tượng XMLHttpRequest
     const xhr = new XMLHttpRequest();
     xhr.open(method, url, true);
 
-    // Xác định dữ liệu bạn muốn gửi, ở đây mình gửi dưới dạng form data
+    // Xác định dữ liệu bạn muốn gửi dưới dạng form data
     const formData = new FormData();
     formData.append("keyword", keyword);
 
@@ -144,11 +141,9 @@
       // Xử lý phản hồi từ controller
       const response = JSON.parse(xhr.responseText);
       const table_result = document.getElementById("table_result");
-
       console.log(response)
 
-      // In kết quả lên console (hoặc thực hiện bất kỳ xử lý nào khác bạn muốn)
-      if (response.success == 200) { // Sử dụng === để so sánh chính xác
+      if (response.success == 200) {
         let result = response.result.results;
         let resultHTML = '';
         let stt = 1;
@@ -178,7 +173,6 @@
             </td>
           </tr>`;
         }
-        // console.log(resultHTML)
         table_result.innerHTML = resultHTML;
         // let paginate = "";
         // let page = response.result.page;

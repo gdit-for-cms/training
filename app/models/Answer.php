@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Core\Model;
 use Core\QueryBuilder;
-use PDO;
 
 /**
  * Example user model
@@ -56,6 +55,11 @@ class Answer extends Model
     public function destroyBy($condition)
     {
         return $this->destroy($condition);
+    }
+
+    public function getLatest()
+    {
+        return (new self)->last();
     }
 
     public static function rules($change = '', $value = [])

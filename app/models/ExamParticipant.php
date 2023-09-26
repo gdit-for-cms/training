@@ -47,8 +47,6 @@ class ExamParticipant extends Model
         return $this->insert($data);
     }
 
-   
-
     public function rules($change = '', $value = array())
     {
         $rules_ary = array(

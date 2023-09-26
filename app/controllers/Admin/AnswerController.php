@@ -67,6 +67,7 @@ class AnswerController extends  AppController
             };
         }
     }
+    
     public function responseShowRule($status, $result = [])
     {
         $res = [
@@ -77,6 +78,7 @@ class AnswerController extends  AppController
         echo json_encode($res);
         exit();
     }
+
     public function showAction(Request $request)
     {
         $question_id = $request->getGet()->get('question_id');

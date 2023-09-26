@@ -55,12 +55,12 @@ class Exam extends Model
         q.content AS question_content, 
         q.title as question_title,
         GROUP_CONCAT(CONCAT(q.title, " - ", q.content)) AS questions
-      FROM exam AS e
-      LEFT JOIN exam_questions AS qe ON e.id = qe.exam_id
-      LEFT JOIN question AS q ON qe.question_id = q.id
-GROUP BY
-e.id
-ORDER BY e.id DESC';
+        FROM exam AS e
+        LEFT JOIN exam_questions AS qe ON e.id = qe.exam_id
+        LEFT JOIN question AS q ON qe.question_id = q.id
+        GROUP BY
+        e.id
+        ORDER BY e.id DESC';
 
         if (!isset($req_method_ary['page'])) {
             $req_method_ary['page'] = '1';
@@ -95,9 +95,9 @@ ORDER BY e.id DESC';
         FROM
             exam_questions as eq
         LEFT JOIN
-            answer AS a ON eq.answer_id = a.id
-        LEFT JOIN
             question as q ON eq.question_id = q.id
+        LEFT JOIN
+            answer AS a ON q.id = a.question_id
         LEFT JOIN
             question_title as qt ON q.question_title_id = qt.id
         WHERE 
@@ -110,8 +110,6 @@ ORDER BY e.id DESC';
             $req_method_ary['page'] = '1';
         }
         $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
-        // echo $req_method_ary['page'];
-        // die();
         $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
 
         $stmt_count = $db->query($query);
@@ -125,10 +123,33 @@ ORDER BY e.id DESC';
 
     public function getExam($req_method_ary, $results_per_page = 5)
     {
+        $where = '';
+        $keyword_search = "";
+        if (isset($req_method_ary['keyword'])) {
+            $where = trim($req_method_ary['keyword']);
 
+            $keywords = str_split($where);
 
+            $specialChars = ["@", "#", "$", "%", "^", "&", "(", ")", "_", "+", "|", "~", "=", "`", "{", "}", "[", "]", ":", "\\", ";", "'", "<", ">", "?", ",", ".", "/", "\\", "-"];
+            $a = 1;
+            foreach ($keywords as $keyword) {
+                if (in_array($keyword, $specialChars)) {
+                    if ($keyword == "\\") {
+                        $keyword_search .= "\\\\" . $keyword;
+                    } else {
+                        $keyword_search .= "\\" . $keyword;
+                    }
+                    $a++;
+                } else {
+                    $keyword_search .= $keyword;
+                }
+            }
+        }
         $db = static::getDB();
-        $query = "SELECT e.id, e.title, e.description, e.published, e.duration, e.updated_at FROM exam as e ORDER BY e.id DESC";
+        $query = 'SELECT e.id, e.title, e.description, e.published, e.duration, e.updated_at 
+                    FROM exam as e 
+                    where e.title like ' . ' "%' . $keyword_search . '%" ESCAPE "\\\\"
+                    ORDER BY e.id DESC';
 
         $req_method_ary['page'] = isset($req_method_ary['page']) && $req_method_ary['page'] >= 1 ? $req_method_ary['page'] : '1';
 
@@ -212,11 +233,13 @@ ORDER BY e.id DESC';
         return $this->insert($data);
     }
 
-    function beginTransaction(){
+    function beginTransaction()
+    {
         return $this->getDB()->beginTransaction();
     }
 
-    function commitTransaction(){
+    function commitTransaction()
+    {
         return $this->getDB()->commit();
     }
 }
