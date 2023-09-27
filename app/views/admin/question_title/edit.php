@@ -42,7 +42,7 @@
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">CONTENT</th>
-                            <th scope="col">ANSWER</th>
+                            <th scope="col">ANSWER<span>( <span style="padding-left: 20px; background-color: yellow;"></span> : correct)</span></th>
                             <th scope="col">ACTION</th>
                         </tr>
                     </thead>

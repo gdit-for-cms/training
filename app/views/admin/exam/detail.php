@@ -76,6 +76,8 @@
                                     ?>
                                 </tbody>
                             </table>
+                            <a href="/admin/exam/edit?id=<?php echo $exam['id']; ?>"><button type=" button" class="btn btn-success float-end">Add email</button></a>
+
                         </div>
                     </div>
                 </div>
@@ -101,7 +103,7 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Content Question</th>
-                                    <th scope="col">Answer</th>
+                                    <th scope="col">Answer<span>( <span style="padding-left: 20px; background-color: yellow;"></span> : correct)</span></th>
 
                                     <?php
                                     if ($cur_user['role_id'] != 3) {
@@ -136,7 +138,7 @@
 
                                                         if ($answer['1'] == 1) {
                                                     ?>
-                                                            <span style="background-color: #e0eb37; margin-right: 20px;">
+                                                            <span style="background-color: yellow; margin-right: 20px;">
                                                                 <?php
                                                                 echo $stt++ . " ) " . $answer[0] . "<br>";
                                                                 ?> </span>
@@ -169,7 +171,7 @@
 
                                                         </ul>
                                                     </div>
-  
+
                                                 </td>
                                             <?php
                                             }

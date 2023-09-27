@@ -68,6 +68,18 @@ function checkPathName() {
                         <div class="d-flex flex-col justify-content-center align-items-start">
                         </div>
                     </div>`
+    } else if (pathName.includes('/admin/room')) {
+        content = `
+                    <div class="d-flex justify-content-center align-items-center w-full">
+                        <div class="d-flex flex-col justify-content-center align-items-start">
+                        </div>
+                    </div>`
+    } else if (pathName.includes('/admin/position')) {
+        content = `
+                    <div class="d-flex justify-content-center align-items-center w-full">
+                        <div class="d-flex flex-col justify-content-center align-items-start">
+                        </div>
+                    </div>`
     } else if (pathName.includes('/admin/question')) {
         content = `
                     <div class="d-flex justify-content-center align-items-center w-full">
@@ -92,6 +104,7 @@ function checkPathName() {
     }
     else if (pathName.includes('/admin/exam')) {
         const selectElement = document.getElementById('questionSelect');
+        var selectedOption = selectElement.options[selectElement.selectedIndex];
 
         content = `
                     <div class="d-flex justify-content-center align-items-center w-full">
@@ -161,6 +174,38 @@ function submitForm(formId) {
             }
         })
     })
+    // $('#submit_confirm_btn').click(function (e) {
+    //     var form = $(formId);
+    //     var actionUrl = form.attr('action');
+    //     console.log(form.serialize());
+    //     $.ajax({
+    //         type: "POST",
+    //         url: actionUrl,
+    //         data: form.serialize(),
+    //         dataType: 'json',
+    //         success: function (response) {
+    //             Swal.fire({
+    //                 icon: 'success',
+    //                 title: "Successfully",
+    //                 showConfirmButton: false,
+    //                 timer: 1500
+    //             });
+    //             setTimeout(() => {
+    //                 document.location.reload(true);
+    //             }, "1600");
+    //         },
+    //         error: function (response) {
+    //             Swal.fire({
+    //                 icon: 'error',
+    //                 title: 'Oops...',
+    //                 text: response.responseJSON.message,
+    //             });
+    //         }
+    //     });
+    // })
+    // $(formId).submit(function (e) {
+    //     e.preventDefault();
+    // });
 };
 
 function alertDelete() {

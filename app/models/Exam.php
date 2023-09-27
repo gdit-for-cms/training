@@ -184,10 +184,12 @@ class Exam extends Model
                 'required',
                 'name',
                 'filled',
+                'max:255',
             ),
             'duration' => array(
                 'required',
                 'filled',
+                'max:2000',
 
             ),
             'description' => array(),

@@ -32,10 +32,10 @@
                         ?>
                             <tr>
                                 <td class="col-1"><?php echo $stt++; ?></td>
-                                <td class="col-3">
+                                <td class="col-3  text-ellipsis">
                                     <?php echo $exam['title'] ?>
                                 </td>
-                                <td class="col-2 " style='height: 100px; max-height: 100%;'>
+                                <td class="col-2 text-ellipsis" style='height: 100px; max-height: 100%;'>
                                     <?php echo isset($exam['description']) ? $exam['description'] : "" ?>
                                 </td>
                                 <td class="col-1">

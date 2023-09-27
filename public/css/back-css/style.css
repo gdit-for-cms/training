@@ -862,3 +862,10 @@
       li.collection_hover:hover {
         background-color: #c1bebe;
       }
+
+      .text-ellipsis {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px;
+      }

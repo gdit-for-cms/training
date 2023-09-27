@@ -40,11 +40,11 @@
 
                         </div>
                         <div class="input-add-answer">
-                            <button type="button" class="btn btn-info m-2" onclick="addAnswer()">Add</button>
+                            <button type="button" class="btn btn-info m-2 text-white" onclick="addAnswer()">Add</button>
                         </div>
                     </div>
                     <a class="btn btn-danger" href="/admin/question/index" class="page-link">Back</a>
-                    <button id="submit" type="submit" class="btn btn-primary">Edit</button>
+                    <button id="submit" type="submit" class="btn btn-primary">Save</button>
                 </form>
             </div>
         </div>
@@ -55,7 +55,7 @@
     var currentAnswerIndex = 0;
     // Mảng lưu vị trí các checkbox đã chọn
     var selectedPositions = [];
-    
+
     const form = document.querySelector('#form_update_question');
     form.addEventListener('submit', function(event) {
         event.preventDefault();

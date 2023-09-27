@@ -137,6 +137,8 @@ class ExamController extends AppController
 
     public function create(Request $request)
     {
+
+        // return $this->errorResponse('Exam collection has been exist');
         $result_vali_ary = $this->app_request->validate($this->obj_model->rules(), $request, 'post');
         //check has email
         $req_method_ary = $request->getPost()->all();

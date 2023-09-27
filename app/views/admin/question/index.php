@@ -30,10 +30,10 @@
             ?>
               <tr>
                 <td class="col-1"><?php echo $stt++; ?></td>
-                <td class="col-2">
+                <td class="col-2  text-ellipsis">
                   <?php echo $question_title['question_title'] ?>
                 </td>
-                <td class="col-3 " style='height: 100px; max-height: 100%;'>
+                <td class="col-3 text-ellipsis" style='height: 100px; max-height: 100%;'>
                   <?php echo isset($question_title['question_description']) ? $question_title['question_description'] : "" ?>
                 </td>
                 <td class="col-1">

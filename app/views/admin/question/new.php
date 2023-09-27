@@ -52,7 +52,7 @@
                             </div>
                         </div>
                         <div class="input-add-answer">
-                            <button type="button" class="btn btn-info m-2" onclick="addAnswer()">Thêm</button>
+                            <button type="button" class="btn btn-info m-2 text-white" onclick="addAnswer()">Add</button>
                         </div>
                     </div>
                     <button id="submit" type="submit" class="btn btn-primary">Create</button>
