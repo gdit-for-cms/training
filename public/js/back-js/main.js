@@ -23,11 +23,8 @@ function checkName(objName) {
 
 function checkPathName() {
     var pathName = window.location.pathname
-    var pathName2 = pathName.split('/')[2];
     const name = document.getElementById('name');
     const title = document.getElementById('title');
-    // const description = document.getElementById('description');
-    // const ckeditor = document.getElementById('editor-edit-note');
     const question = document.getElementById('quesion_id');
     var content = ''
     if (pathName.includes('/admin/user')) {
@@ -95,7 +92,6 @@ function checkPathName() {
     }
     else if (pathName.includes('/admin/exam')) {
         const selectElement = document.getElementById('questionSelect');
-        var selectedOption = selectElement.options[selectElement.selectedIndex];
 
         content = `
                     <div class="d-flex justify-content-center align-items-center w-full">
@@ -165,38 +161,6 @@ function submitForm(formId) {
             }
         })
     })
-    // $('#submit_confirm_btn').click(function (e) {
-    //     var form = $(formId);
-    //     var actionUrl = form.attr('action');
-    //     console.log(form.serialize());
-    //     $.ajax({
-    //         type: "POST",
-    //         url: actionUrl,
-    //         data: form.serialize(),
-    //         dataType: 'json',
-    //         success: function (response) {
-    //             Swal.fire({
-    //                 icon: 'success',
-    //                 title: "Successfully",
-    //                 showConfirmButton: false,
-    //                 timer: 1500
-    //             });
-    //             setTimeout(() => {
-    //                 document.location.reload(true);
-    //             }, "1600");
-    //         },
-    //         error: function (response) {
-    //             Swal.fire({
-    //                 icon: 'error',
-    //                 title: 'Oops...',
-    //                 text: response.responseJSON.message,
-    //             });
-    //         }
-    //     });
-    // })
-    // $(formId).submit(function (e) {
-    //     e.preventDefault();
-    // });
 };
 
 function alertDelete() {
@@ -600,6 +564,7 @@ $(document).ready(function () {
     alertDeleteQuestion()
     alertDeleteExamDetail()
     alertAddQuestionToExam()
+    searchAjax()
     // alertEditDetailExam('edit-detail-exam')
     //show answer
     loadAnswers()
@@ -773,6 +738,7 @@ function alertDeleteListRule() {
         })
     });
 }
+
 function alertDeleteRule() {
     $('.btn-delete-rule').click(function (e) {
         let deleteID = $(this).data('id');
@@ -923,8 +889,6 @@ function addAnswer() {
     }
 }
 
-
-
 function removeAnswer(button, pathName) {
     var answerContainer = document.getElementById("answerContainer");
     pathName = window.location.pathname.split('/')[2];
@@ -938,6 +902,7 @@ function removeAnswer(button, pathName) {
     updateCheckboxValues(); // Cập nhật lại giá trị của các checkbox sau khi xóa
     // updateCheckboxValues(); // Cập nhật lại giá trị của các checkbox sau khi xóa
 }
+
 function alertUploadFileExam() {
     $('.btn-upload-file-ftp').click(function (e) {
 
@@ -1117,40 +1082,6 @@ function loadAnswers() {
     });
 }
 
-function alertEditDetailExam1() {
-    $('.btn-edit-detail-exam').click(function (e) {
-        let exam_id = $(this).data('id');
-        let selected_answers = document.getElementsByName('selected_answer[]');
-        let question_id = document.getElementById('quesion_id').value;
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "Edit detail exam?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    type: "POST",
-                    url: `/admin/exam/edit-detail-exam`,
-                    data: {
-                        exam_id: exam_id,
-                        selected_answers: selected_answers,
-                        question_id: question_id
-                    },
-                    success: function (response) {
-                        console.log(response);
-                    },
-                    error: function (E) {
-                        console.log(E)
-                    }
-                });
-            }
-        })
-    })
-}
 function alertEditDetailExam(formId) {
     $(formId).submit(function (e) {
         var content = `<div class="d-flex justify-content-center align-items-center w-full">
@@ -1265,6 +1196,235 @@ function searchInputs() {
                   </div>
                 </td>
               </tr>`;
+                }
+                table_result.innerHTML = resultHTML;
+            };
+        };
+    });
+}
+
+function getQuestion(question_title_id) {
+    // Gọi AJAX để lấy danh sách câu hỏi từ server
+    const exam = document.getElementById("select");
+    const exam_id = exam.getAttribute("data-exam_id")
+    $.ajax({
+        type: "GET",
+        url: `/admin/question-title/show?id=${question_title_id}&exam_id=${exam_id}`,
+        success: function (data) {
+
+            const results = data.result;
+            const questionList = document.getElementById('questionList');
+            let questionListHTML = '';
+            results.forEach(result => {
+                const question_id = result.question_id;
+                const answers = result.answers;
+                const myArray = answers.split(", ");
+                const resultArrayAnswer = [];
+
+                myArray.forEach(subArray => {
+                    const subArrayElements = subArray.split(',');
+
+                    resultArrayAnswer.push(subArrayElements);
+                });
+
+                let answerListHTML = '';
+
+                for (let i = 0; i < resultArrayAnswer['0'].length; i++) {
+                    const item = resultArrayAnswer[0][i];
+                    const splitArray = item.split(' - ');
+                    const answerHTML = `
+                            <li>${splitArray[1]}</li>
+                        `;
+
+                    answerListHTML += answerHTML
+                }
+                let bg_question = "";
+
+                if (array_select_question.includes(question_id)) {
+                    bg_question = "selected"
+                }
+                const content = result.question_content;
+                const questionHTML = `<div class="col-12 d-flex mb-10 ques_exam ${bg_question}" onclick="select_ques_to_exam('${question_id}')" id="select_ques${question_id}" data-question_id="${question_id}" style="border: 1px solid rgb(0, 0, 0);">
+                                            <div class="col-8" style="border: 1px solid rgb(0, 0, 0);">
+                                                ${content}
+                                            </div>
+                                            <div class="col-4" style="border: 1px solid rgb(0, 0, 0);">
+                                                <ul  id="answerList">
+                                                    ${answerListHTML}
+                                                </ul>
+                                            </div>
+                                        </div>`;
+                questionListHTML += questionHTML;
+            });
+            questionList.innerHTML = questionListHTML;
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.error("AJAX request failed:", textStatus, errorThrown);
+        }
+    });
+}
+
+function select_ques_to_exam(questionID) {
+
+    get_question_id = 'select_ques' + questionID;
+    const questionContainer = document.getElementById(get_question_id)
+
+    if (!array_select_question.includes(questionID)) {
+        array_select_question.push(questionID);
+        questionContainer.classList.add("selected")
+        select++;
+
+    } else {
+        array_select_question = array_select_question.filter(item => item !== questionID);
+        questionContainer.classList.remove("selected")
+        select--
+    }
+    const select_total = document.getElementById("total_select")
+    select_total.textContent = select
+}
+
+//index detail
+function copyLink(linkToCopy) {
+    // Lấy thẻ <a> bằng cách sử dụng id hoặc bất kỳ phương thức nào khác
+    var linkElement = document.getElementById(linkToCopy);
+    // Lấy giá trị của thuộc tính href
+    var linkHref = linkElement.getAttribute("href");
+    // Sao chép giá trị href vào clipboard
+    var tempInput = document.createElement("input");
+    tempInput.value = linkHref;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempInput);
+
+    // Thông báo cho người dùng
+    alert("Link has been copied to clipboard: " + linkHref);
+}
+
+function searchAjax() {
+    searchInput.addEventListener("input", function () {
+        var keyword = searchInput.value;
+        let pathName = window.location.pathname.split('/')[2]
+        const method = "POST";
+        const url = `/admin/${pathName}/search`;
+
+        if (keyword.trim() == "") {
+            paginationContainer.style.display = "flex";
+        } else {
+            paginationContainer.style.display = "none";
+        }
+        const xhr = new XMLHttpRequest();
+        xhr.open(method, url, true);
+
+        // Xác định dữ liệu bạn muốn gửi dưới dạng form data
+        const formData = new FormData();
+        formData.append("keyword", keyword);
+
+        // Gửi yêu cầu AJAX đi
+        xhr.send(formData);
+        // Xử lý sự kiện khi yêu cầu hoàn thành
+        xhr.onload = function () {
+            // Xử lý phản hồi từ controller
+            const response = JSON.parse(xhr.responseText);
+            const table_result = document.getElementById("table_result");
+            console.log(response)
+
+            if (response.success == 200) {
+                let result = response.result.results;
+                const directory = response.result.directory;
+                let resultHTML = '';
+                let stt = 1;
+
+                for (let i = 0; i < result.length; i++) {
+                    console.log(result[i]['title']);
+
+                    if (pathName == "exam") {
+                        let status = '';
+                        let check = result[i]['published']
+                        if (check == 1) {
+                            status = "Đã xuất bản"
+                        } else {
+                            status = "Chưa xuất bản"
+                        }
+                        let linkExam = '';
+                        if (result[i]['published'] == 1) {
+                            linkExam = `<button onclick="copyLink('linkToCopy${result[i]['id']}')" class="linkToCopy text-primary-hover" id="linkToCopy${result[i]['id']}" href="${directory['domain']}${result[i]['id']}.html">${directory['domain']}${result[i]['id']}.html</button>`
+                        }
+
+                        resultHTML += `
+      
+                <tr>
+                            <td class="col-1">${stt++}</td>
+                            <td class="col-3">
+                            ${result[i]['title']}
+                            </td>
+                            <td class="col-2 " style='height: 100px; max-height: 100%;'>
+                            ${result[i]['description']}
+
+                            </td>
+                            <td class="col-1">
+                                <div class="overflow-auto" style='height: 50px; max-height: 100%;'>
+                                   ${status}
+                                </div>
+                            </td>
+                            <td class="col-1 text-center">
+                                ${result[i]['duration']}
+                            </td>
+
+                            <td class="col-1">
+                                ${result[i]['updated_at']}
+                            </td>
+                            <td class="col-2" style=" align-items: center;">
+                                ${linkExam}
+                            </td>
+                            <td class="col-1">
+                                <div class="dropdown">
+                                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Action
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+
+                                        <li><a href="/admin/exam-question/new?exam_id=${result[i]['id']}" class="dropdown-item">Add question to exam</a></li>
+
+                                        <li><a id="createFilesButton" href="/admin/exam/preview?exam_id=${result[i]['id']}" data-id="${result[i]['id']}" id="submit" class="dropdown-item">Publish exam</a></li>
+                                        <li><a class="dropdown-item" href="/admin/exam/examDetail?exam_id=${result[i]['id']}">Detail</a></li>
+                                        <li><a class="dropdown-item" href="/admin/exam/edit?id=${result[i]['id']}">Edit</a></li>
+                                        <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
+                                        <li>
+                                            <button type="button" data-id="${result[i]['id']}" class="dropdown-item btn-delete-question ">Delete</button>
+                                        </li>
+                                     
+                                        <li><a class="dropdown-item" href="/admin/exam/edit?id=${result[i]['id']}">Participant Email</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+      `;
+                    } else if (pathName == "question") {
+                        resultHTML += `<tr>
+            <td class="col-1">${stt++}</td>
+            <td class="col-2">${result[i]['question_title']}</td>
+            <td class="col-3 " style="height: 100px; max-height: 100%;">${result[i]['question_description']}</td>
+            <td class="col-1">2023-09-18 23:59:20</td>
+            <td class="col-1">
+              <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                  Action
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                  <li><a class="dropdown-item" href="/admin/question/new?ques-title=${result[i]['question_id']}">Add Question</a></li>
+                  <li><a class="dropdown-item" href="/admin/question/detail?question_id=${result[i]['question_id']}">Detail</a></li>
+                  <li><a class="dropdown-item" href="/admin/question-title/edit?ques-title=${result[i]['question_id']}">Edit</a></li>
+                  <li>
+                    <button type="button" data-id="${result[i]['question_id']}" class="dropdown-item btn-delete-question">Delete</button>
+                  </li>
+                </ul>
+              </div>
+            </td>
+          </tr>`;
+                    }
+
                 }
                 table_result.innerHTML = resultHTML;
             };

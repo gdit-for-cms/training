@@ -69,25 +69,6 @@
     // Mảng lưu vị trí các checkbox đã chọn
     var selectedPositions = [];
 
-
-    function start() {
-        checkChangeInput(titleInput)
-        checkChangeInput(contentInput)
-    }
-
-    function validate() {
-        if (titleInput.value == '') {
-            submitBtn.disabled = true;
-        } else {
-            submitBtn.disabled = false;
-        }
-    }
-
-    function checkChangeInput(input) {
-        input.addEventListener('keyup', () => {
-            validate()
-        })
-    }
     const form = document.querySelector('#form_new_question');
     form.addEventListener('submit', function(event) {
         event.preventDefault();

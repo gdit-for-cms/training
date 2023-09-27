@@ -104,25 +104,25 @@ class QuestionController extends  AppController
             return $this->errorResponse('Question has been exist');
         } else {
             try {
-                $this->obj_model->beginTransaction();
+                // $this->obj_model->beginTransaction();
                 $questionId = $this->obj_model->create(
                     [
                         'content' => $content,
                         'question_title_id' => $question_title_id
                     ]
                 );
-                $questionId = $this->obj_model->getLatest();
+                $question = $this->obj_model->getBy("content","=",$content);
                 foreach ($answers as $index => $answerContent) {
                     $isCorrect = in_array($index, $is_corrects) ? 1 : 0;
                     $this->obj_model_answer->create(
                         [
-                            'question_id' => $questionId['id'],
+                            'question_id' => $question[0]['id'],
                             'content' => $answerContent,
                             'is_correct' => $isCorrect,
                         ]
                     );
                 }
-                $this->obj_model->commitTransaction();
+                // $this->obj_model->commitTransaction();
                 return $this->successResponse();
             } catch (\Throwable $th) {
                 return $this->errorResponse($th->getMessage());
@@ -177,7 +177,7 @@ class QuestionController extends  AppController
         } else {
 
             try {
-                $this->obj_model->beginTransaction();
+                // $this->obj_model->beginTransaction();
                 $this->obj_model->updateOne(
                     [
                         'content' => $content
@@ -197,7 +197,7 @@ class QuestionController extends  AppController
                         ]
                     );
                 }
-                $this->obj_model->commitTransaction();
+                // $this->obj_model->commitTransaction();
                 return $this->successResponse();
             } catch (\Throwable $th) {
 
