@@ -1,5 +1,5 @@
 <div class="d-flex">
-    <div class="col-2 metismenu" style="background-color: #dddcdc;
+    <div class="col-3 metismenu" style="background-color: #dddcdc;
     text-align: center;
     margin-right: 15px;">
         <ul class="metismenu" style="padding: 15px 25px">
