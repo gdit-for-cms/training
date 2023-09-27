@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.84.0">
+    <title>Signin Template</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+
+
+    <!-- Custom styles for this template -->
+    <link href="/css/signin.css" rel="stylesheet">
+    <link href="/css/offcanvas.css" rel="stylesheet">
+    <link href="/css/modal.css" rel="stylesheet">
+</head>
+
+<body class="text-center">
+
+    <main class="form-signin">
+        <img class="mb-4" src="/view/logo.png" alt="" width="72" height="72">
+        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+
+        <div class="form-floating">
+            <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com">
+            <label for="floatingInput">Email address</label>
+        </div>
+        <div class="form-floating">
+            <input type="text" class="form-control" id="name" name="name" placeholder="name">
+            <label for="floatingPassword">Full name</label>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary mt-3" id="btn_login">Sign in</button>
+        <p class="mt-5 mb-3 text-muted">&copy; 2023</p>
+    </main>
+
+    <div class="modal" id="accept_submit" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="anchor-nameLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content modal-login">
+                <form action="/cgi/exam.cgi" method="post">
+                    <input type="hidden" id="exam" name="exam">
+                    <div class="modal-header" style="margin-top: -18px;">
+                        <h5 class="modal-title">Notification</h5>
+                    </div>
+                    <div class="modal-body">
+                        <h6>After you select "Yes"</h6>
+                        <h6>You will begin the test and we will calculate the time.</h6> 
+                        <h6>Your test time is 10 minutes. Are you ready?</h6>
+                    </div>
+                    <div class="modal-footer" style="margin-bottom: -18px;">
+                        <button id="btn_yes"  class="btn btn-danger">Yes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="/index.js"></script>
+    <script src="/js/ajax.js"></script>
+</body>
+
+</html>
