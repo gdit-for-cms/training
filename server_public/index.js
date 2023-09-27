@@ -19,6 +19,7 @@ const btn_login = document.getElementById('btn_login')
 const btn_submit = document.getElementById('btn_submit')
 
 const id_exam = document.getElementById('exam')
+const email_login = document.getElementById('email_login')
 
 const form_exam = document.getElementById('form_exam')
 
@@ -116,6 +117,8 @@ if (btn_login) {
             alert('Name or email is too long!')
         } else {
             var id = localStorage.getItem('id')
+            email_login.value = value_email
+
             var data = {
                 email   : value_email,
                 id      : id,

@@ -1,6 +1,7 @@
 #!/usr/bin/perl --
 use strict;
 use warnings;
+use Text::CSV;
 use CGI;
 use List::Util qw/shuffle/;
 use HTML::TreeBuilder;
@@ -10,15 +11,56 @@ require $setting_file;
 
 my $cgi = CGI->new;
 my $id = $cgi->param("exam");
+my $email = $cgi->param("email");
 
-my $HTML = our $HTML;
+our $HTML;
 
-if(!$id){
+if(!$id || !$email){
     print "Content-Type: text/html\n\n";
     print -1;
     exit(0);
 }
+##########################################
+my $email_path = our $EMAIL;
 
+my $csv_file = "$email_path$id.csv";
+
+# Read CSV file and create object variable
+my %csv_data;
+
+my $csv = Text::CSV->new({ binary => 1 }) or die "Unable to create object CSV: " . Text::CSV->error_diag();
+open my $fh_login, '<', $csv_file or die "Cannot open file $csv_file: $!";
+
+while (my $row = $csv->getline($fh_login)) {
+    my ($csv_email, $value1, $value2) = @$row;
+    $csv_data{$csv_email} = [$value1, $value2];
+}
+
+$csv->eof or $csv->error_diag();
+close $fh_login;
+
+# Check if $email exists in the object and make changes if necessary
+if (exists $csv_data{$email}) {
+    if ($csv_data{$email}[0] == 1 && $csv_data{$email}[1] == 2) {
+        $csv_data{$email}[0] = 0;
+        $csv_data{$email}[1] = 2;
+        
+        # Record data to a CSV file
+        open my $output_fh, '>', $csv_file or die "Cannot open file $csv_file: $!";
+        foreach my $key (keys %csv_data) {
+            $csv->print($output_fh, [$key, @{$csv_data{$key}}]);
+            print $output_fh "\n";
+        }
+        close $output_fh;
+    } else {
+        print "Content-Type: text/html\n\n";
+        print 0;
+    }
+} else {
+    print "Content-Type: text/html\n\n";
+    print 2;
+}
+##########################################
 # Path to the HTML file
 my $html_file = "$HTML/$id.html";
 

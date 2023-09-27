@@ -40,17 +40,6 @@ close $fh;
 # Check if $email exists in the object and make changes if necessary
 if (exists $csv_data{$email}) {
     if ($csv_data{$email}[0] == 1 && $csv_data{$email}[1] == 2) {
-        $csv_data{$email}[0] = 0;
-        $csv_data{$email}[1] = 2;
-        
-        # Record data to a CSV file
-        open my $output_fh, '>', $csv_file or die "Cannot open file $csv_file: $!";
-        foreach my $key (keys %csv_data) {
-            $csv->print($output_fh, [$key, @{$csv_data{$key}}]);
-            print $output_fh "\n";
-        }
-        close $output_fh;
-        
         print "Content-Type: text/html\n\n";
         print 1;
     } else {
