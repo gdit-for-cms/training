@@ -5,6 +5,9 @@ our $HTML = '/htdocs/training2/training/server_public';
 our $EMAIL = 'email/email';
 
 # Path to file containing times
+our $RANDOM = 'random/';
+
+# Path to file containing times
 our $TIME = 'time/';
 
 # Path to the file containing the answer

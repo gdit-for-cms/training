@@ -31,6 +31,7 @@ const btn_yes = document.getElementById('btn_yes')
 const btn_accept_change = document.getElementById('btn_accept_change')
 const btn_close_accept_submit = document.getElementById('btn_close_accept_submit')
 const message = document.getElementById('message')
+const noti = document.getElementById('noti')
 
 const countdown_element = document.getElementById('countdown')
 
@@ -57,9 +58,27 @@ document.addEventListener('DOMContentLoaded', function () {
     var current_url = window.location.href
     var exam_id = 0
 
-    if (current_url.slice(current_url.length - 4, current_url.length) == 'html' && current_url.slice(24, current_url.length) != '/view/login.html' && current_url.slice(24, current_url.length) != '/view/thanks.html') {
-        localStorage.setItem('id', current_url.slice(25, current_url.length - 5))
-        window.location.href = '/view/login.html'
+    var location = current_url.indexOf('/', 25)
+    if (current_url.slice(24, current_url.length) != '/view/login.html' && current_url.slice(24, current_url.length) != '/view/thanks.html') {
+        localStorage.setItem('id', current_url.slice(25, location))
+        localStorage.setItem('code', current_url.slice(location + 1, current_url.length))
+        var data = {
+            id      : localStorage.getItem('id'),
+            code    : localStorage.getItem('code')
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/cgi/random.cgi",
+            data: data,
+            success: function (response) {
+                if(response == 1){
+                    window.location.href = '/view/login.html'
+                } else {
+                    window.location.href = '/view/404.html'
+                }
+            }
+        })
     } else {
         if (show_name && show_name) {
             show_email.innerHTML = user_email
@@ -78,8 +97,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 data: data,
                 success: function (response) {
                     if(response == 0) {
-                        alert('You cheated by interfering in the calculation of exam time. You cannot submit this test!')
-
+                        var message = '<h5>You cheated by interfering in the calculation of exam time. You cannot submit this test!</h5>'
+                        modal_login(message)
                         remove_data()
 
                         setTimeout(window.location.href = '/view/login.html', 5000)
@@ -88,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
         }
     }
-
+ 
     if(current_url.slice(24, current_url.length) == '/view/login.html'){
         localStorage.removeItem('user_email')
         localStorage.removeItem('user_name')
@@ -109,12 +128,19 @@ if (btn_login) {
     btn_login.addEventListener('click', function (e) {
         var value_email = input_email.value
         var value_name = remove_diacritics(input_name.value)
+        var message = ''
         if (value_email == '' || value_name == '' || value_email == null || value_name == null) {
-            alert('You must enter all the information!')
+            message = `<h6>You must enter all the information!</h6>`
+            modal_login(message, 1)
         } else if (!is_valid_email(value_email)) {
-            alert('Incorrect email format!')
-        } else if (value_email.length > 50 || value_name.length > 25) {
-            alert('Name or email is too long!')
+            message = `<h6>Incorrect email format!</h6>`
+            modal_login(message, 1)
+        } else if (value_email.length > 50) {
+            message = `<h6>Email is too long!</h6>`
+            modal_login(message, 1)
+        }  else if (value_name.length > 25) {
+            message = `<h6>Name is too long!</h6>`
+            modal_login(message, 1)
         } else {
             var id = localStorage.getItem('id')
             email_login.value = value_email
@@ -133,7 +159,12 @@ if (btn_login) {
                         localStorage.setItem('user_email', value_email)
                         localStorage.setItem('user_name', value_name)
 
-                        modal_accept_submit.style.display = 'block'
+                        var message = `
+                            <h6>After you select "Yes"</h6>
+                            <h6>You will begin the test and we will calculate the time.</h6>
+                            <h6>Your test time is 10 minutes. Are you ready?</h6>
+                        `
+                        modal_login(message)
                     } else {
                         error_login(response)
                     }
@@ -147,9 +178,10 @@ if (btn_login) {
 if (btn_submit) {
     btn_submit.addEventListener('click', function (e) {
         e.preventDefault()
-        message.innerHTML = 'Are you sure to submit?'
-        modal_accept_submit.style.display = 'block'
-        btn_accept_submit.removeAttribute("hidden")
+
+        var message = `<h5>Are you sure to submit?</h5>`
+        
+        modal_login(message)
     })
 }
 
@@ -178,17 +210,29 @@ if (countdown_element) {
     var countdownInterval = setInterval(updateCountdown, 1000)
 }
 
+function modal_login(mes, off) {
+    message.innerHTML = mes
+    modal_accept_submit.style.display = 'block'
+
+    // 1: hidden button yes; 2: remove hidden button yes
+    if(off == 1) {
+        btn_yes.setAttribute("hidden", true)
+    } else {
+        btn_yes.removeAttribute("hidden")
+    }
+}
+
 function error_login(number) {
     var message = ''
     if (number == 0) {
-        message = 'Your email is only allowed to participate in the test and submit once!'
+        message = `<h6>Your email is only allowed to participate in the test and submit once!</h6>`
     } else if (number == 2){
-        message = 'Email does not exist in the system!'
+        message = `<h6>Email does not exist in the system!</h6>`
     } else if (number == -1){
-        message = 'Something is wrong, Please access the LINK we sent you again!'
+        message = `<h6>Something is wrong, Please access the LINK we sent you again!</h6>`
     }
 
-    alert(message)
+    modal_login(message, 1)
 }
 
 // Convert accented words to unaccented
@@ -299,10 +343,10 @@ function updateCountdown() {
 
     if (minutes == 1 && seconds == 59) {
         modal_accept_submit.style.display = 'none'
-        modal_accept_submit.style.display = 'block'
         btn_close_accept_submit.removeAttribute("hidden")
-        message.innerHTML = 'Your test time is only ' + (minutes * 1 + 1) + ' minutes!'
-        btn_accept_submit.setAttribute("hidden", true)
+
+        var message = `<h5>Your test time is only ` + (minutes * 1 + 1) + ` minutes!</h5>`
+        modal_login(message, 1)
     }
     if (minutes <= 1) {
         view_time.classList.remove("bg-primary")
@@ -326,8 +370,8 @@ function check_time() {
             if (response == 1) {
                 after_submit()
             } else {
-                alert('You cheated by interfering in the calculation of exam time. You cannot submit this test!')
-
+                var message = `<h5>You cheated by interfering in the calculation of exam time. You cannot submit this test!</h5>`
+                modal_login(message)
                 remove_data()
 
                 setTimeout(window.location.href = '/view/login.html', 5000)
