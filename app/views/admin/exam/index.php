@@ -15,14 +15,17 @@
                 <table id="<?= "1" ?>" class="table table-striped">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">TITLE</th>
-                            <th scope="col">DESCIPTION</th>
-                            <th scope="col">STATUS</th>
-                            <th scope="col" style="display: grid;"><span>DURATION</span> <span>(minutes)</span></th>
-                            <th scope="col">LAST UPDATE</th>
-                            <th scope="col">LINK EXAM</th>
-                            <th scope="col">ACTION</th>
+                            <th>#</th>
+                            <th>TITLE</th>
+                            <th>AUTHOR</th>
+                            <th>STATUS</th>
+                            <th>DATE</th>
+                            <th>TIME START</th>
+                            <th>TIME END</th>
+                            <th><span>DURATION</span><br> <span>(minutes)</span></th>
+                            <th>LAST UPDATE</th>
+                            <!-- <th>LINK EXAM</th> -->
+                            <th>ACTION</th>
                         </tr>
                     </thead>
                     <tbody class="body_table_main" id="table_result">
@@ -31,28 +34,38 @@
                         foreach ($exams as $exam) {
                         ?>
                             <tr>
-                                <td class="col-1"><?php echo $stt++; ?></td>
-                                <td class="col-3  text-ellipsis">
+                                <th scope="row" ><?php echo $stt++; ?></th>
+                                <td class="text-ellipsis">
                                     <?php echo $exam['title'] ?>
                                 </td>
-                                <td class="col-2 text-ellipsis" style='height: 100px; max-height: 100%;'>
-                                    <?php echo isset($exam['description']) ? $exam['description'] : "" ?>
+
+                                <td class="text-ellipsis">
+                                    Admin 1
                                 </td>
-                                <td class="col-1">
-                                    <div class="overflow-auto" style='height: 50px; max-height: 100%;'>
-                                        <?php echo $exam['published'] == 1 ? 'Đã xuất bản' : 'Chưa xuất bản'; ?>
+                                <td></td>
+                                <td>
+                                    <div class="overflow-auto">
+                                        <?php echo $exam['published'] == 1 ? 'Đã xuất bản' : 'Chưa xuất bản'; ?><br>
+                                         __ngày/tháng/năm giờ/phút__
                                     </div>
                                 </td>
-                                <td class="col-1 text-center"><?php echo $exam['duration']; ?></td>
-                                <td class="col-1">
+                                <td>
                                     <?php echo $exam['updated_at'] ?>
                                 </td>
-                                <td class="col-2" style=" align-items: center;">
+                                <td>
+                                    <?php echo $exam['updated_at'] ?>
+                                </td>
+
+                                <td class=" text-center"><?php echo $exam['duration']; ?></td>
+                                <td>
+                                    <?php echo $exam['updated_at'] ?>
+                                </td>
+                                <!-- <td style=" align-items: center;">
                                     <?php if ($exam['published'] == 1) { ?>
                                         <button onclick="copyLink('linkToCopy<?php echo $exam['id']; ?>')" class="linkToCopy text-primary-hover" id="linkToCopy<?php echo $exam['id']; ?>" href="<?php echo $directory['domain'] . $exam['id'] . '.html' ?>"><?php echo $directory['domain'] . $exam['id'] . '.html' ?> </button>
                                     <?php } ?>
-                                </td>
-                                <td class="col-1">
+                                </td> -->
+                                <td>
                                     <div class="dropdown">
                                         <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                             Action
@@ -67,9 +80,9 @@
                                             <li><a class="dropdown-item" href="/admin/exam/edit?id=<?php echo $exam['id']; ?>">Edit </a></li>
                                             <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
                                             <li>
-                                                <button type="button" data-id="<?php echo $exam['id']; ?>" class="dropdown-item btn-delete-question ">Delete</button>
+                                                <button type="button" data-path="exam" data-id="<?php echo $exam['id']; ?>" class="dropdown-item btn-delete-question ">Delete</button>
                                             </li>
-                                            <li><a class="dropdown-item" href="/admin/exam/edit?id=<?php echo $exam['id']; ?>">Participant Email</a></li>
+                                            <!-- <li><a class="dropdown-item" href="/admin/exam/edit?id=<?php echo $exam['id']; ?>">Participant Email</a></li> -->
                                         </ul>
                                     </div>
                                 </td>
@@ -81,33 +94,31 @@
                 </table>
                 <div class="flex justify-center items-center">
                     <nav aria-label="Page navigation example">
-                        <ul class="pagination" id="pagination">
+                        <ul class="paginations" id="paginations">
                             <?php
                             $next = $page;
                             if ($page <= $numbers_of_page) {
-                            ?>
-                                <li class="page-item cursor-pointer"><a href="/admin/exam/index?page=1" class="page-link">
-                                        << </a>
-                                </li>
-                                <?php
                                 if ($page > 1) {
-                                ?>
-                                    <li class=" page-item cursor-pointer"><a href="/admin/exam/index?page=<?php $page--;
-                                                                                                            echo $page; ?>" class="page-link">Previous</a></li>
+                            ?>
+                                    <li class=" cursor-pointer"><a href="/admin/exam/index?page=1">
+                                            << </a>
+                                    </li>
+                                    <li class="  cursor-pointer"><a href="/admin/exam/index?page=<?php $page--;
+                                                                                                    echo $page; ?>">Previous</a></li>
                                 <?php
                                 }
                                 ?>
                                 <?php for ($i = 1; $i <= $numbers_of_page; $i++) { ?>
-                                    <li class="page-item cursor-pointer"><a style="<?php if ($next == $i) { ?>background-color: rgb(197, 197, 197)<?php } ?>;" href="/admin/exam/index?page=<?php echo $i; ?>" class="page-link"><?= $i ?></a></li>
+                                    <li class=" cursor-pointer"><a style="<?php if ($next == $i) { ?>background-color: rgb(197, 197, 197)<?php } ?>;" href="/admin/exam/index?page=<?php echo $i; ?>"><?= $i ?></a></li>
                                 <?php }
                                 if ($next < $numbers_of_page) {
                                 ?>
-                                    <li class="page-item cursor-pointer"><a href="/admin/exam/index?page=<?php echo $next += 1; ?>" class="page-link">Next</a></li>
+                                    <li class=" cursor-pointer"><a href="/admin/exam/index?page=<?php echo $next += 1; ?>">Next</a></li>
+                                    <li class=" cursor-pointer"><a href="/admin/exam/index?page=<?php echo $numbers_of_page < 1 ? 1 : $numbers_of_page; ?>">>></a></li>
 
                                 <?php
                                 }
                                 ?>
-                                <li class="page-item cursor-pointer"><a href="/admin/exam/index?page=<?php echo $numbers_of_page < 1 ? 1 : $numbers_of_page; ?>" class="page-link">>></a></li>
                             <?php } ?>
                         </ul>
                     </nav>
@@ -118,6 +129,6 @@
 </div>
 <script>
     //search
-    const searchInput = document.getElementById("searchInput");
-    const paginationContainer = document.getElementById("pagination");
+    // const searchInput = document.getElementById("searchInput");
+    const paginationContainer = document.getElementById("paginations");
 </script>

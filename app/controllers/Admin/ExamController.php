@@ -58,7 +58,7 @@ class ExamController extends AppController
         $this->data_ary['directory'] = $directory;
         // pagination
         $req_method_ary = $request->getGet()->all();
-        $results_per_page = 5;
+        $results_per_page = 10;
         $results_ary = $this->obj_model->getExam($req_method_ary, $results_per_page);
         $numbers_of_result = $results_ary['numbers_of_page'];
         $numbers_of_page = ceil($numbers_of_result / $results_per_page);

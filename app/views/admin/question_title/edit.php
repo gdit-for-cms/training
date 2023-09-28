@@ -42,7 +42,7 @@
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">CONTENT</th>
-                            <th scope="col">ANSWER<span>( <span style="padding-left: 20px; background-color: yellow;"></span> : correct)</span></th>
+                            <th scope="col">ANSWER</th>
                             <th scope="col">ACTION</th>
                         </tr>
                     </thead>
@@ -57,14 +57,14 @@
                                     <td class="col-6">
                                         <?php echo $question_title['question_content'] ?>
                                     </td>
-                                    <td class="col-3 " style='height: 100px; max-height: 100%;'>
+                                    <td class="col-3 " style='max-height: 100%;'>
                                         <?php
                                         $st = 1;
                                         $answers = explode(',', $question_title['answers']);
                                         foreach ($answers as $answer) {
                                             $answer = explode('-', $answer);
                                         ?>
-                                            <span style="background-color:<?php echo $answer[0] == 1 ? 'yellow' : '' ?>;"><?php echo  $answer[1] ?> </span><br>
+                                            <span style="font-weight:<?php echo $answer[0] == 1 ? 'bold' : '' ?>;"><?php echo  $answer[1] ?> </span><br>
                                         <?php
                                         }
                                         ?>
@@ -77,7 +77,7 @@
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                                 <li><a class="dropdown-item" href="/admin/question/edit?question_id=<?php echo $question_title['question_id']; ?>">Edit</a></li>
                                                 <li>
-                                                    <button type="button" data-id="<?php echo $question_title['question_id']; ?>" class="dropdown-item btn-delete-question ">Delete</button>
+                                                    <button type="button" data-path="question" data-id="<?php echo $question_title['question_id']; ?>" class="dropdown-item btn-delete-question ">Delete</button>
                                                 </li>
                                             </ul>
                                         </div>
@@ -97,17 +97,18 @@
                 </table>
                 <div class="flex justify-center items-center">
                     <nav aria-label="Page navigation example">
-                        <ul class="pagination">
+                        <ul class="paginations" id="paginations">
                             <?php
                             $next = $page;
                             if ($page <= $numbers_of_page && isset($question_titles[0]['question_content'])) {
                             ?>
-                                <li class="page-item cursor-pointer"><a href="/admin/question/detail?question_id=<?php echo $question_titles[0]['question_title_id']; ?>&page=1" class="page-link">
-                                        << </a>
-                                </li>
+
                                 <?php
                                 if ($page > 1) {
                                 ?>
+                                    <li class="page-item cursor-pointer"><a href="/admin/question/detail?question_id=<?php echo $question_titles[0]['question_title_id']; ?>&page=1" class="page-link">
+                                            << </a>
+                                    </li>
                                     <li class=" page-item cursor-pointer"><a href="/admin/question/detail?question_id=<?php echo $question_titles[0]['question_title_id']; ?>&page=<?php $page--;
                                                                                                                                                                                     echo $page; ?>" class="page-link">Previous</a></li>
                                 <?php
@@ -119,11 +120,11 @@
                                 if ($next < $numbers_of_page) {
                                 ?>
                                     <li class="page-item cursor-pointer"><a href="/admin/question/detail?question_id=<?php echo $question_titles[0]['question_title_id']; ?>&page=<?php echo $next += 1; ?>" class="page-link">Next</a></li>
+                                    <li class="page-item cursor-pointer"><a href="/admin/question/detail?question_id=<?php echo $question_titles[0]['question_title_id']; ?>&page=<?php echo $numbers_of_page < 1 ? 1 : $numbers_of_page; ?>" class="page-link">>></a></li>
 
                                 <?php
                                 }
                                 ?>
-                                <li class="page-item cursor-pointer"><a href="/admin/question/detail?question_id=<?php echo $question_titles[0]['question_title_id']; ?>&page=<?php echo $numbers_of_page < 1 ? 1 : $numbers_of_page; ?>" class="page-link">>></a></li>
                             <?php } ?>
                         </ul>
                     </nav>

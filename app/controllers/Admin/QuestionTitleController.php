@@ -83,7 +83,7 @@ class QuestionTitleController extends  AppController
 
         $req_method_ary = $request->getGet()->all();
         $req_method_ary['question_id'] = $id;
-        $results_per_page = 5;
+        $results_per_page = 10;
         $results_ary = $this->obj_model_question->getAllRelation($req_method_ary, $results_per_page);
         $this->data_ary['question_titles'] = $results_ary['results'];
         $numbers_of_result = $results_ary['numbers_of_page'];

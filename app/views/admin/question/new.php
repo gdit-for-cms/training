@@ -64,11 +64,13 @@
 
 
 <script>
+    $(document).ready(function() {
+        heightCkeditor();
+    });
     // Biến tạm để lưu giá trị của ô input hiện tại
     var currentAnswerIndex = 1;
     // Mảng lưu vị trí các checkbox đã chọn
     var selectedPositions = [];
-
     const form = document.querySelector('#form_new_question');
     form.addEventListener('submit', function(event) {
         event.preventDefault();

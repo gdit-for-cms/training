@@ -160,7 +160,7 @@ function submitForm(formId) {
                         setTimeout(() => {
                             document.location.reload(true);
                         }, "1600");
-                        window.history.back()
+                        // window.history.back()
 
                     },
                     error: function (response) {
@@ -342,13 +342,7 @@ function alertDeleteExamDetail() {
 function alertDeleteQuestion() {
     $('.btn-delete-question').click(function (e) {
         let deleteID = $(this).data('id');
-        let pathName = window.location.pathname;
-        let pathName2 = pathName.split('/')[2]
-        let pathName3 = pathName.split('/')[3]
-
-        if (pathName3 == "index" && pathName2 == "question") {
-            pathName2 = "question-title"
-        }
+        let path = $(this).data('path');
 
         Swal.fire({
             title: 'Are you sure?',
@@ -361,7 +355,7 @@ function alertDeleteQuestion() {
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: `/admin/${pathName2}/delete?id=${deleteID}`,
+                    url: `/admin/${path}/delete?id=${deleteID}`,
                     success: function () {
                         document.location.reload(true);
                     }
@@ -615,7 +609,7 @@ $(document).ready(function () {
     loadAnswers()
     addAnswer()
     removeAnswer()
-    searchInputs()
+    // searchInputs()
     //Ngo Duy Hung
     alertDeleteListRule();
     alertDeleteRule();
@@ -871,6 +865,12 @@ function updateIsCorrectValues() {
     for (var i = 0; i < checkboxes.length; i++) {
         checkboxes[i].value = i; // Cập nhật lại giá trị cho các checkbox dựa trên vị trí của chúng
     }
+}
+
+function heightCkeditor() {
+    const ckHeight = document.querySelector(".ck-editor__editable");
+    const childCk = ckHeight.querySelector("p");
+    childCk.classList.add("height_ckeditor");
 }
 
 function addAnswer() {
@@ -1181,8 +1181,8 @@ function alertEditDetailExam(formId) {
 function searchInputs() {
     // Lưu trạng thái ban đầu của phân trang
     const searchInput = document.getElementById("searchInput");
-    const paginationContainer = document.getElementById("pagination");
-
+    const paginationContainer = document.getElementById("paginations");
+alert("asd")
     searchInput.addEventListener("input", function () {
 
         var keyword = searchInput.value;
@@ -1222,8 +1222,8 @@ function searchInputs() {
 
                     resultHTML += `<tr>
                 <td class="col-1">${stt++}</td>
-                <td class="col-2">${result[i]['question_title']}</td>
-                <td class="col-3 " style="height: 100px; max-height: 100%;">${result[i]['question_description']}</td>
+                <td class="col-2 text-ellipsis">${result[i]['question_title']}</td>
+                <td class="col-3 text-ellipsis">${result[i]['question_description']}</td>
                 <td class="col-1">2023-09-18 23:59:20</td>
                 <td class="col-1">
                   <div class="dropdown">
@@ -1404,12 +1404,12 @@ function searchAjax() {
                             <td class="col-3">
                             ${result[i]['title']}
                             </td>
-                            <td class="col-2 " style='height: 100px; max-height: 100%;'>
+                            <td class="col-2 text-ellipsis">
                             ${result[i]['description']}
 
                             </td>
                             <td class="col-1">
-                                <div class="overflow-auto" style='height: 50px; max-height: 100%;'>
+                                <div class="overflow-auto">
                                    ${status}
                                 </div>
                             </td>

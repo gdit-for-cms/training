@@ -33,7 +33,7 @@
                 <td class="col-2  text-ellipsis">
                   <?php echo $question_title['question_title'] ?>
                 </td>
-                <td class="col-3 text-ellipsis" style='height: 100px; max-height: 100%;'>
+                <td class="col-3 text-ellipsis" style=' max-height: 100%;'>
                   <?php echo isset($question_title['question_description']) ? $question_title['question_description'] : "" ?>
                 </td>
                 <td class="col-1">
@@ -45,9 +45,9 @@
                       Action
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                      <li><a class="dropdown-item" href="/admin/question/new?ques-title=<?php echo $question_title['question_id']; ?>">Add question</a></li>
+                      <!-- <li><a class="dropdown-item" href="/admin/question/new?ques-title=<?php echo $question_title['question_id']; ?>">Add question</a></li> -->
                       <li><a class="dropdown-item" href="/admin/question/detail?question_id=<?php echo $question_title['question_id']; ?>">Detail</a></li>
-                      <li><a class="dropdown-item" href="/admin/question-title/edit?ques-title=<?php echo $question_title['question_id']; ?>">Edit collection</a></li>
+                      <li><a class="dropdown-item" href="/admin/question-title/edit?ques-title=<?php echo $question_title['question_id']; ?>">Edit</a></li>
                       <li>
                         <button type="button" data-id="<?php echo $question_title['question_id']; ?>" class="dropdown-item btn-delete-question ">Delete</button>
                       </li>
@@ -63,34 +63,31 @@
         </table>
         <div class="flex justify-center items-center">
           <nav aria-label="Page navigation example">
-            <ul class="pagination" id="pagination">
+            <ul class="paginations" id="paginations">
               <?php
               $next = $page;
               if ($page <= $numbers_of_page) {
-              ?>
-                <li class="page-item cursor-pointer"><a href="/admin/question/index?page=1" class="page-link">
-                    << </a>
-                </li>
-                <?php
+
                 if ($page > 1) {
-                ?>
-                  <li class=" page-item cursor-pointer"><a href="/admin/question/index?page=<?php $page--;
-                                                                                            echo $page; ?>" class="page-link">Previous</a></li>
+              ?>
+                  <li class=" cursor-pointer"><a href="/admin/question/index?page=1">
+                      << </a>
+                  </li>
+                  <li class="  cursor-pointer"><a href="/admin/question/index?page=<?php $page--;
+                                                                                            echo $page; ?>">Previous</a></li>
                 <?php
                 }
                 ?>
                 <?php for ($i = 1; $i <= $numbers_of_page; $i++) { ?>
-                  <li class="page-item cursor-pointer"><a style="<?php if ($next == $i) { ?>background-color: rgb(197, 197, 197)<?php } ?>;" href="/admin/question/index?page=<?php echo $i; ?>" class="page-link"><?= $i ?></a></li>
+                  <li class=" cursor-pointer"><a style="<?php if ($next == $i) { ?>background-color: rgb(197, 197, 197)<?php } ?>;" href="/admin/question/index?page=<?php echo $i; ?>"><?= $i ?></a></li>
                 <?php }
                 if ($next < $numbers_of_page) {
                 ?>
-                  <li class="page-item cursor-pointer"><a href="/admin/question/index?page=<?php echo $next += 1; ?>" class="page-link">Next</a></li>
-
-                <?php
+                  <li class=" cursor-pointer"><a href="/admin/question/index?page=<?php echo $next += 1; ?>">Next</a></li>
+                  <li class=" cursor-pointer"><a href="/admin/question/index?page=<?php echo $numbers_of_page < 1 ? 1 : $numbers_of_page; ?>">>></a></li>
+              <?php
                 }
-                ?>
-                <li class="page-item cursor-pointer"><a href="/admin/question/index?page=<?php echo $numbers_of_page < 1 ? 1 : $numbers_of_page; ?>" class="page-link">>></a></li>
-              <?php } ?>
+              } ?>
             </ul>
           </nav>
         </div>
@@ -101,5 +98,5 @@
 <script>
   // Lưu trạng thái ban đầu của phân trang
   const searchInput = document.getElementById("searchInput");
-  const paginationContainer = document.getElementById("pagination");
+  const pagenationContainer = document.getElementById("paginations");
 </script>
