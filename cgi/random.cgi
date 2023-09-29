@@ -20,19 +20,18 @@ if(!$id || !$code){
 
 my $random_file = "$RANDOM$id.csv";
 
-open(my $fh, '<', $random_file) or die "Không thể mở tệp '$random_file' $!";
+open(my $fh, '<', $random_file) or die "Cannot open file '$random_file' $!";
 
-# Đọc nội dung từ tệp CSV vào một mảng
+# Read content from CSV file into an array
 my @data;
 while (my $line = <$fh>) {
     chomp $line;
     push @data, $line;
 }
 
-# Đóng tệp CSV
 close($fh);
 
-# Kiểm tra xem $a có tồn tại trong mảng hay không
+# Checks if $a exists in the array
 if (grep { $_ eq $code } @data) {
     print "Content-Type: text/html\n\n";
     print 1;

@@ -20,6 +20,7 @@ const btn_submit = document.getElementById('btn_submit')
 
 const id_exam = document.getElementById('exam')
 const email_login = document.getElementById('email_login')
+const random = document.getElementById('random')
 
 const form_exam = document.getElementById('form_exam')
 
@@ -59,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var exam_id = 0
 
     var location = current_url.indexOf('/', 25)
-    if (current_url.slice(24, current_url.length) != '/view/login.html' && current_url.slice(24, current_url.length) != '/view/thanks.html') {
+    if (current_url.slice(24, current_url.length) != '/view/login.html' && current_url.slice(24, current_url.length) != '/view/thanks.html' && current_url.slice(24, current_url.length) != '/cgi/exam.cgi') {
         localStorage.setItem('id', current_url.slice(25, location))
         localStorage.setItem('code', current_url.slice(location + 1, current_url.length))
         var data = {
@@ -98,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 success: function (response) {
                     if(response == 0) {
                         var message = '<h5>You cheated by interfering in the calculation of exam time. You cannot submit this test!</h5>'
-                        modal_login(message)
+                        modal_login(message, 1)
                         remove_data()
 
                         setTimeout(window.location.href = '/view/login.html', 5000)
@@ -118,8 +119,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     exam_id = localStorage.getItem('id')
-    if (id_exam) {
+    var ran = localStorage.getItem('code')
+    if (id_exam && random) {
         id_exam.value = exam_id
+        random.value = ran
     }
 })
 
@@ -371,7 +374,7 @@ function check_time() {
                 after_submit()
             } else {
                 var message = `<h5>You cheated by interfering in the calculation of exam time. You cannot submit this test!</h5>`
-                modal_login(message)
+                modal_login(message, 1)
                 remove_data()
 
                 setTimeout(window.location.href = '/view/login.html', 5000)

@@ -12,10 +12,11 @@ require $setting_file;
 my $cgi = CGI->new;
 my $id = $cgi->param("exam");
 my $email = $cgi->param("email");
+my $code = $cgi->param("code");
 
 our $HTML;
 
-if(!$id || !$email){
+if(!$id || !$email || !$code){
     print "Content-Type: text/html\n\n";
     print -1;
     exit(0);
@@ -59,6 +60,35 @@ if (exists $csv_data{$email}) {
 } else {
     print "Content-Type: text/html\n\n";
     print 2;
+}
+##########################################
+our $RANDOM;
+
+my $random_file = "$RANDOM$id.csv";
+
+open my $fh_random, '<', $random_file or die "Cannot open file $random_file: $!";
+my @data = <$fh_random>;
+close $fh_random;
+
+chomp(@data);
+
+my $found = 0;
+for my $i (0..$#data) {
+    if ($data[$i] eq $code) {
+        splice(@data, $i, 1);
+        $found = 1;
+        last;
+    }
+}
+
+if ($found) {
+    open my $output_file, '>', $random_file or die "Cannot open file $random_file: $!";
+    print $output_file join("\n", @data);
+    close $output_file;
+} else {
+    print "Content-Type: text/html\n\n";
+    print 0;
+    exit(0);
 }
 ##########################################
 # Path to the HTML file
