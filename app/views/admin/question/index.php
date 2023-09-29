@@ -16,11 +16,24 @@
         <table id="<?= "1" ?>" class="table table-striped">
           <thead>
             <tr>
-              <th scope="col">#</th>
-              <th scope="col">TITLE</th>
-              <th scope="col">DESCIPTION</th>
-              <th scope="col">UPDATE_AT</th>
-              <th scope="col">ACTION</th>
+              <th class="text-center">
+                <!-- <span>Select All</span><br> -->
+                <input type="checkbox" id="selectAll" class="checkbox" name="select_all">
+              </th>
+              <th>#</th>
+              <th>TITLE</th>
+              <th>
+                TYPE
+                <select class="role_select select_option w-26 text-medium border " name="role_id" aria-label="Default select example">
+                  <option value="0" selected="">All Status</option>
+                  <option value="1">PHP</option>
+                  <option value="2">AI</option>
+                  <option value="3">BO</option>
+                </select>
+              </th>
+              <!-- <th>DESCIPTION</th> -->
+              <th>UPDATE_AT</th>
+              <th>ACTION</th>
             </tr>
           </thead>
           <tbody class="body_table_main" id="table_result">
@@ -29,31 +42,39 @@
             foreach ($question_titles as $question_title) {
             ?>
               <tr>
-                <td class="col-1"><?php echo $stt++; ?></td>
-                <td class="col-2  text-ellipsis">
+                <th class="text-center"><input type="checkbox" value="<?php echo $question_title['question_id']; ?>" name="item[]" class="checkbox" id=""></th>
+
+                <td class=""><?php echo $stt++; ?></td>
+                <td class="  text-ellipsis">
                   <?php echo $question_title['question_title'] ?>
                 </td>
-                <td class="col-3 text-ellipsis" style=' max-height: 100%;'>
-                  <?php echo isset($question_title['question_description']) ? $question_title['question_description'] : "" ?>
+                <td>
+                  PHP, INTERNSHIP
                 </td>
-                <td class="col-1">
+                <!-- <td class=" text-ellipsis" style=' max-height: 100%;'>
+                  <?php echo isset($question_title['question_description']) ? $question_title['question_description'] : "" ?>
+                </td> -->
+                <td class="">
                   <?php echo $question_title['question_updated_at'] ?>
                 </td>
-                <td class="col-1">
-                  <div class="dropdown">
+                <td class="">
+
+                  <a href="/admin/question/detail?question_id=<?php echo $question_title['question_id']; ?>"><button type="button" class="btn btn-success">Detail</button></a>
+                  <a href="/admin/question-title/edit?ques-title=<?php echo $question_title['question_id']; ?>"><button type="button" class="btn btn-info text-white">Edit</button></a>
+                  <button type="button" data-path="exam" data-id="<?php echo $question_title['question_id']; ?>" class="btn btn-danger text-white btn-delete-question ">Delete</button>
+
+                  <!-- <div class="dropdown">
                     <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                       Action
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                      <!-- <li><a class="dropdown-item" href="/admin/question/new?ques-title=<?php echo $question_title['question_id']; ?>">Add question</a></li> -->
                       <li><a class="dropdown-item" href="/admin/question/detail?question_id=<?php echo $question_title['question_id']; ?>">Detail</a></li>
                       <li><a class="dropdown-item" href="/admin/question-title/edit?ques-title=<?php echo $question_title['question_id']; ?>">Edit</a></li>
                       <li>
                         <button type="button" data-id="<?php echo $question_title['question_id']; ?>" class="dropdown-item btn-delete-question ">Delete</button>
                       </li>
-
                     </ul>
-                  </div>
+                  </div> -->
                 </td>
               </tr>
             <?php
@@ -74,7 +95,7 @@
                       << </a>
                   </li>
                   <li class="  cursor-pointer"><a href="/admin/question/index?page=<?php $page--;
-                                                                                            echo $page; ?>">Previous</a></li>
+                                                                                    echo $page; ?>">Previous</a></li>
                 <?php
                 }
                 ?>
@@ -99,4 +120,24 @@
   // Lưu trạng thái ban đầu của phân trang
   const searchInput = document.getElementById("searchInput");
   const pagenationContainer = document.getElementById("paginations");
+
+  // Lấy tham chiếu đến checkbox "Select All" và tất cả các checkbox khác
+  var selectAllCheckbox = document.getElementById("selectAll");
+  var checkboxes = document.querySelectorAll(".checkbox");
+
+  // Thêm sự kiện click vào checkbox "Select All"
+  selectAllCheckbox.addEventListener("click", function() {
+    checkboxes.forEach(function(checkbox) {
+      checkbox.checked = selectAllCheckbox.checked;
+    });
+  });
+
+  // // Thêm sự kiện click vào từng checkbox để kiểm tra trạng thái "Select All"
+  // checkboxes.forEach(function(checkbox) {
+  //     checkbox.addEventListener("click", function() {
+  //         selectAllCheckbox.checked = checkboxes.every(function(c) {
+  //             return c.checked;
+  //         });
+  //     });
+  // });
 </script>

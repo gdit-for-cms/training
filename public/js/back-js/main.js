@@ -1404,10 +1404,7 @@ function searchAjax() {
                             <td class="col-3">
                             ${result[i]['title']}
                             </td>
-                            <td class="col-2 text-ellipsis">
-                            ${result[i]['description']}
-
-                            </td>
+                           
                             <td class="col-1">
                                 <div class="overflow-auto">
                                    ${status}

@@ -15,15 +15,37 @@
                 <table id="<?= "1" ?>" class="table table-striped">
                     <thead>
                         <tr>
+                            <th class="text-center">
+                                <!-- <span>Select All</span><br> -->
+                                <input type="checkbox" id="selectAll" class="checkbox" name="select_all">
+                            </th>
+
                             <th>#</th>
                             <th>TITLE</th>
-                            <th>AUTHOR</th>
-                            <th>STATUS</th>
-                            <th>DATE</th>
-                            <th>TIME START</th>
-                            <th>TIME END</th>
-                            <th><span>DURATION</span><br> <span>(minutes)</span></th>
-                            <th>LAST UPDATE</th>
+                            <th>
+                                STATUS
+                                <select class="role_select select_option w-26 text-medium border " name="role_id" aria-label="Default select example">
+                                    <option value="0" selected="">All</option>
+                                    <option value="1">Note Started</option>
+                                    <option value="2">In Progress</option>
+                                    <option value="3">Completed</option>
+                                </select>
+                            </th>
+
+                            <!-- <th>AUTHOR</th> -->
+                            <th>
+                                PUBLISH
+                                <select class="role_select select_option w-26 text-medium border " name="role_id" aria-label="Default select example">
+                                    <option value="0" selected="">All</option>
+                                    <option value="1">Published</option>
+                                    <option value="2">Unpublished</option>
+                                </select>
+                            </th>
+                            <th>TIME</th>
+                            <!-- <th>TIME START</th>
+                            <th>TIME END</th> -->
+                            <!-- <th><span>DURATION</span><br> <span>(minutes)</span></th> -->
+                            <!-- <th>LAST UPDATE</th> -->
                             <!-- <th>LINK EXAM</th> -->
                             <th>ACTION</th>
                         </tr>
@@ -34,39 +56,45 @@
                         foreach ($exams as $exam) {
                         ?>
                             <tr>
-                                <th scope="row" ><?php echo $stt++; ?></th>
+                                <th class="text-center"><input type="checkbox" value="<?php echo $exam['id']; ?>" name="item[]" class="checkbox" id=""></th>
+                                <th scope="row"><?php echo $stt++; ?></th>
                                 <td class="text-ellipsis">
                                     <?php echo $exam['title'] ?>
                                 </td>
-
-                                <td class="text-ellipsis">
-                                    Admin 1
+                                <td>
+                                    In Progress
                                 </td>
-                                <td></td>
+                                <!-- <td class="text-ellipsis">
+                                    Admin 1
+                                </td> -->
+                                <!-- <td></td> -->
                                 <td>
                                     <div class="overflow-auto">
                                         <?php echo $exam['published'] == 1 ? 'Đã xuất bản' : 'Chưa xuất bản'; ?><br>
-                                         __ngày/tháng/năm giờ/phút__
+                                        __ngày/tháng/năm giờ/phút__
                                     </div>
                                 </td>
                                 <td>
-                                    <?php echo $exam['updated_at'] ?>
-                                </td>
-                                <td>
+                                    <?php echo $exam['updated_at'] ?><br>
+                                    <!-- </td>
+                                <td> -->
                                     <?php echo $exam['updated_at'] ?>
                                 </td>
 
-                                <td class=" text-center"><?php echo $exam['duration']; ?></td>
-                                <td>
+                                <!-- <td class=" text-center"><?php echo $exam['duration']; ?></td> -->
+                                <!-- <td>
                                     <?php echo $exam['updated_at'] ?>
-                                </td>
+                                </td> -->
                                 <!-- <td style=" align-items: center;">
                                     <?php if ($exam['published'] == 1) { ?>
                                         <button onclick="copyLink('linkToCopy<?php echo $exam['id']; ?>')" class="linkToCopy text-primary-hover" id="linkToCopy<?php echo $exam['id']; ?>" href="<?php echo $directory['domain'] . $exam['id'] . '.html' ?>"><?php echo $directory['domain'] . $exam['id'] . '.html' ?> </button>
                                     <?php } ?>
                                 </td> -->
                                 <td>
-                                    <div class="dropdown">
+                                    <a href="/admin/exam/examDetail?exam_id=<?php echo $exam['id']; ?>"><button type="button" class="btn btn-success">Detail</button></a>
+                                    <a href="/admin/exam/edit?id=<?php echo $exam['id']; ?>"><button type="button" class="btn btn-info text-white">Edit</button></a>
+                                    <button type="button" data-path="exam" data-id="<?php echo $exam['id']; ?>" class="btn btn-danger text-white btn-delete-question ">Delete</button>
+                                    <!-- <div class="dropdown">
                                         <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                             Action
                                         </button>
@@ -78,13 +106,11 @@
                                             <?php } ?>
                                             <li><a class="dropdown-item" href="/admin/exam/examDetail?exam_id=<?php echo $exam['id']; ?>">Detail</a></li>
                                             <li><a class="dropdown-item" href="/admin/exam/edit?id=<?php echo $exam['id']; ?>">Edit </a></li>
-                                            <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
                                             <li>
                                                 <button type="button" data-path="exam" data-id="<?php echo $exam['id']; ?>" class="dropdown-item btn-delete-question ">Delete</button>
                                             </li>
-                                            <!-- <li><a class="dropdown-item" href="/admin/exam/edit?id=<?php echo $exam['id']; ?>">Participant Email</a></li> -->
                                         </ul>
-                                    </div>
+                                    </div> -->
                                 </td>
                             </tr>
                         <?php
@@ -92,6 +118,33 @@
                         ?>
                     </tbody>
                 </table>
+                <!-- <div class="">
+                    <img class="selectallarrow" src="./themes/pmahomme/img/arrow_ltr.png" width="38" height="22" alt="With selected:">
+                    <input type="checkbox" id="tablesForm_checkall" class="checkall_box" title="Check all">
+                    <label for="tablesForm_checkall">Check all</label>
+                    <select name="submit_mult" style="margin: 0 3em 0 3em;">
+                        <option value="With selected:" selected="selected">With selected:</option>
+                        <option value="copy_tbl">Copy table</option>
+                        <option value="show_create">Show create</option>
+                        <option value="export">Export</option>
+                        <optgroup label="Delete data or table">
+                            <option value="empty_tbl">Empty</option>
+                            <option value="drop_tbl">Drop</option>
+                        </optgroup>
+                        <optgroup label="Table maintenance">
+                            <option value="analyze_tbl">Analyze table</option>
+                            <option value="check_tbl">Check table</option>
+                            <option value="checksum_tbl">Checksum table</option>
+                            <option value="optimize_tbl">Optimize table</option>
+                            <option value="repair_tbl">Repair table</option>
+                        </optgroup>
+                        <optgroup label="Prefix">
+                            <option value="add_prefix_tbl">Add prefix to table</option>
+                            <option value="replace_prefix_tbl">Replace table prefix</option>
+                            <option value="copy_tbl_change_prefix">Copy table with prefix</option>
+                        </optgroup>
+                    </select>
+                </div> -->
                 <div class="flex justify-center items-center">
                     <nav aria-label="Page navigation example">
                         <ul class="paginations" id="paginations">
@@ -131,4 +184,27 @@
     //search
     // const searchInput = document.getElementById("searchInput");
     const paginationContainer = document.getElementById("paginations");
+
+
+    // <input type="checkbox" id="selectAll" class="checkbox" name="select_all">
+
+    // Lấy tham chiếu đến checkbox "Select All" và tất cả các checkbox khác
+    var selectAllCheckbox = document.getElementById("selectAll");
+    var checkboxes = document.querySelectorAll(".checkbox");
+
+    // Thêm sự kiện click vào checkbox "Select All"
+    selectAllCheckbox.addEventListener("click", function() {
+        checkboxes.forEach(function(checkbox) {
+            checkbox.checked = selectAllCheckbox.checked;
+        });
+    });
+
+    // // Thêm sự kiện click vào từng checkbox để kiểm tra trạng thái "Select All"
+    // checkboxes.forEach(function(checkbox) {
+    //     checkbox.addEventListener("click", function() {
+    //         selectAllCheckbox.checked = checkboxes.every(function(c) {
+    //             return c.checked;
+    //         });
+    //     });
+    // });
 </script>
