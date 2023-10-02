@@ -3,7 +3,7 @@
         <div class="col-12 text-center">
             <a class="btn btn-danger" href="/admin/exam/examDetail?exam_id=<?php echo $exam['id'] ?>" class="page-link">Back</a>
             <button id="createFilesButton" data-id="<?php echo $exam['id'] ?>" <?php echo count($question_answers) > 0 ? "" : "disabled" ?> id="submit" class="btn btn-primary btn-upload-file-ftp">Publish To Server</button>
-            <a href="/admin/exam-question/new?exam_id=<?php echo $exam['id']; ?>"><button type=" button" class="btn btn-success">Add Question</button></a>
+            <!-- <a href="/admin/exam-question/new?exam_id=<?php echo $exam['id']; ?>"><button type=" button" class="btn btn-success">Add Question</button></a> -->
         </div>
     </div>
 </div>

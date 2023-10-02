@@ -843,7 +843,8 @@
       }
 
       .input-answer {
-        width: 500px;
+        width: 1000px;
+        height: 45px;
       }
 
       .input-add-answer {
@@ -855,8 +856,13 @@
       }
 
       .selected {
-        border: 1px solid #fca5a5;
-        background-color: #dddcdc;
+        border: 1px solid #2d57e2;
+        /* background-color: #dddcdc; */
+      }
+
+      .not-selected {
+        border: 1px solid #817272;
+        /* background-color: #dddcdc; */
       }
 
       li.collection_hover:hover {
@@ -881,4 +887,17 @@
       .paginations li a {
         padding: 6px 12px;
         border: 1px solid rgb(222 226 230);
+      }
+
+      .input-answer-email {
+        width: 400px;
+      }
+
+      .btn-select {
+        border: 1px solid;
+        padding: 1px 8px;
+        margin-bottom: 15px;
+        background-color: darkgrey;
+        border-radius: 4px;
+        font-weight: 600;
       }

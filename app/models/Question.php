@@ -136,6 +136,12 @@ class Question extends Model
     {
         $exam_id = $req_method_ary['exam_id'];
 
+        $where = "WHERE q.question_title_id = $req_method_ary[id]";
+        if ($req_method_ary['id'] == "orther") {
+            $where = "WHERE q.question_title_id is null";
+        }
+        // echo $req_method_ary['id'];
+        // die();
         $db = static::getDB();
         $query = "SELECT
         
@@ -147,7 +153,7 @@ class Question extends Model
             question AS q
         LEFT JOIN
             answer AS a ON q.id = a.question_id
-        WHERE q.question_title_id = $req_method_ary[id] 
+       $where
             AND (q.id, a.id) NOT IN (
                 SELECT question_id, answer_id
                 FROM exam_questions as eq

@@ -3,7 +3,7 @@
         <div class="white_card_header">
             <div class="box_header m-0">
                 <div class="main-title">
-                    <h3 class="m-0">Edit collection exam</h3>
+                    <h3 class="m-0">Edit collection</h3>
                 </div>
             </div>
         </div>
@@ -36,10 +36,6 @@
                                     </div>
 
                                     <div class="mb-6 col-2 mr-12" style="">
-                                        <div class="mb-3 ">
-                                            <label class="form-label" for="duration">Duration (minutes) </label>
-                                            <input class="form-control" name="duration" value="<?php echo $exam['duration'] ?>" rows="3" placeholder="duration..." />
-                                        </div>
 
                                         <div class="mb-3">
                                             <label class="form-label" for="status">Status </label>
@@ -131,7 +127,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="overflow-auto" style='width: 400px;height: 120px; max-height: 100%;'>
+                                        <div class="overflow-auto">
                                             <?php
                                             $stt = 1;
 
@@ -180,17 +176,18 @@
                 </table>
                 <div class="flex justify-center items-center">
                     <nav aria-label="Page navigation example">
-                        <ul class="pagination">
+                        <ul class="paginations">
                             <?php
                             $next = $page;
                             if ($page <= $numbers_of_page) {
                             ?>
-                                <li class="page-item cursor-pointer"><a href="/admin/exam/edit?id=<?php echo $exam['id']; ?>&page=1" class="page-link">
-                                        << </a>
-                                </li>
+
                                 <?php
                                 if ($page > 1) {
                                 ?>
+                                    <li class="page-item cursor-pointer"><a href="/admin/exam/edit?id=<?php echo $exam['id']; ?>&page=1" class="page-link">
+                                            << </a>
+                                    </li>
                                     <li class=" page-item cursor-pointer"><a href="/admin/exam/edit?id=<?php echo $exam['id']; ?>&page=<?php $page--;
                                                                                                                                         echo $page; ?>" class="page-link">Previous</a></li>
                                 <?php
@@ -202,11 +199,11 @@
                                 if ($next < $numbers_of_page) {
                                 ?>
                                     <li class="page-item cursor-pointer"><a href="/admin/exam/edit/id=<?php echo $exam['id']; ?>&page=<?php echo $next += 1; ?>" class="page-link">Next</a></li>
+                                    <li class="page-item cursor-pointer"><a href="/admin/exam/edit?id=<?php echo $exam['id']; ?>&page=<?php echo $numbers_of_page < 1 ? 1 : $numbers_of_page; ?>" class="page-link">>></a></li>
 
                                 <?php
                                 }
                                 ?>
-                                <li class="page-item cursor-pointer"><a href="/admin/exam/edit?id=<?php echo $exam['id']; ?>&page=<?php echo $numbers_of_page < 1 ? 1 : $numbers_of_page; ?>" class="page-link">>></a></li>
                             <?php } ?>
                         </ul>
                     </nav>

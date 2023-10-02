@@ -1182,7 +1182,6 @@ function searchInputs() {
     // Lưu trạng thái ban đầu của phân trang
     const searchInput = document.getElementById("searchInput");
     const paginationContainer = document.getElementById("paginations");
-alert("asd")
     searchInput.addEventListener("input", function () {
 
         var keyword = searchInput.value;
@@ -1273,13 +1272,21 @@ function getQuestion(question_title_id) {
                 });
 
                 let answerListHTML = '';
-
+                console.log(resultArrayAnswer);
                 for (let i = 0; i < resultArrayAnswer['0'].length; i++) {
                     const item = resultArrayAnswer[0][i];
                     const splitArray = item.split(' - ');
-                    const answerHTML = `
-                            <li>${splitArray[1]}</li>
-                        `;
+
+                    var answerHTML = '';
+                    if (splitArray[0] == 1) {
+                        answerHTML += `
+                        <li style="font-weight:bold;color:blue">${splitArray[1]}</li>
+                    `;
+                    } else {
+                        answerHTML += `
+                        <li>${splitArray[1]}</li>
+                    `;
+                    }
 
                     answerListHTML += answerHTML
                 }
@@ -1289,11 +1296,11 @@ function getQuestion(question_title_id) {
                     bg_question = "selected"
                 }
                 const content = result.question_content;
-                const questionHTML = `<div class="col-12 d-flex mb-10 ques_exam ${bg_question}" onclick="select_ques_to_exam('${question_id}')" id="select_ques${question_id}" data-question_id="${question_id}" style="border: 1px solid rgb(0, 0, 0);">
-                                            <div class="col-8" style="border: 1px solid rgb(0, 0, 0);">
+                const questionHTML = `<div class="col-12 d-flex mb-10 ques_exam ${bg_question}" onclick="select_ques_to_exam('${question_id}')" id="select_ques${question_id}" data-question_id="${question_id}" >
+                                            <div class="col-8 not-selected">
                                                 ${content}
                                             </div>
-                                            <div class="col-4" style="border: 1px solid rgb(0, 0, 0);">
+                                            <div class="col-4 not-selected">
                                                 <ul  id="answerList">
                                                     ${answerListHTML}
                                                 </ul>
@@ -1301,13 +1308,28 @@ function getQuestion(question_title_id) {
                                         </div>`;
                 questionListHTML += questionHTML;
             });
-            questionList.innerHTML = questionListHTML;
+            console.log(data)
+            var select_all = `<button class="btn-select" onclick="select_ques_exam()">Select all</button>`;
+            // questionListHTML.innerHTML = select_all;
+            select_all += questionListHTML
+            questionList.innerHTML = select_all;
 
         },
         error: function (jqXHR, textStatus, errorThrown) {
             console.error("AJAX request failed:", textStatus, errorThrown);
         }
     });
+}
+// $('.btn_sort').click(function (e) {
+function select_ques_exam(e) {
+
+    const quesExams = document.querySelectorAll(".ques_exam");
+    quesExams.forEach((element) => {
+        const questionID = element.getAttribute("data-question_id")
+        select_ques_to_exam(questionID);
+    });
+    const select_total = document.getElementById("total_select")
+    select_total.textContent = select
 }
 
 function select_ques_to_exam(questionID) {
@@ -1317,6 +1339,8 @@ function select_ques_to_exam(questionID) {
 
     if (!array_select_question.includes(questionID)) {
         array_select_question.push(questionID);
+        // questionContainer.classList.remove("not-selected")
+
         questionContainer.classList.add("selected")
         select++;
 
@@ -1399,74 +1423,51 @@ function searchAjax() {
 
                         resultHTML += `
       
-                <tr>
-                            <td class="col-1">${stt++}</td>
-                            <td class="col-3">
+                        <tr>
+                        <th class="text-center"><input type="checkbox" value=${result[i]['id']}" name="item[]" class="checkbox" id=""></th>
+
+                            <td class="">${stt++}</td>
+                            <td class="text-ellipsis">
                             ${result[i]['title']}
                             </td>
                            
-                            <td class="col-1">
+                            <td>
+                                    In Progress
+                                </td>
+
+                            <td class="">
                                 <div class="overflow-auto">
-                                   ${status}
+                                   ${status}<br>
+                                   __ngày/tháng/năm giờ/phút__
                                 </div>
                             </td>
-                            <td class="col-1 text-center">
-                                ${result[i]['duration']}
-                            </td>
-
-                            <td class="col-1">
+                            <td class="">
+                                ${result[i]['updated_at']}
+                          
                                 ${result[i]['updated_at']}
                             </td>
-                            <td class="col-2" style=" align-items: center;">
-                                ${linkExam}
-                            </td>
-                            <td class="col-1">
-                                <div class="dropdown">
-                                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Action
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-
-                                        <li><a href="/admin/exam-question/new?exam_id=${result[i]['id']}" class="dropdown-item">Add question to exam</a></li>
-
-                                        <li><a id="createFilesButton" href="/admin/exam/preview?exam_id=${result[i]['id']}" data-id="${result[i]['id']}" id="submit" class="dropdown-item">Publish exam</a></li>
-                                        <li><a class="dropdown-item" href="/admin/exam/examDetail?exam_id=${result[i]['id']}">Detail</a></li>
-                                        <li><a class="dropdown-item" href="/admin/exam/edit?id=${result[i]['id']}">Edit</a></li>
-                                        <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
-                                        <li>
-                                            <button type="button" data-id="${result[i]['id']}" class="dropdown-item btn-delete-question ">Delete</button>
-                                        </li>
-                                     
-                                        <li><a class="dropdown-item" href="/admin/exam/edit?id=${result[i]['id']}">Participant Email</a></li>
-                                    </ul>
-                                </div>
+                            <td class="">
+                            <a href="/admin/exam/examDetail?exam_id=${result[i]['id']}"><button type="button" class="btn btn-success">Detail</button></a>
+                            <a href="/admin/exam/edit?id=${result[i]['id']}"><button type="button" class="btn btn-info text-white">Edit</button></a>
+                            <button type="button" data-path="exam" data-id="${result[i]['id']}" class="btn btn-danger text-white btn-delete-question ">Delete</button>
+                            
                             </td>
                         </tr>
       `;
                     } else if (pathName == "question") {
                         resultHTML += `<tr>
-            <td class="col-1">${stt++}</td>
-            <td class="col-2">${result[i]['question_title']}</td>
-            <td class="col-3 " style="height: 100px; max-height: 100%;">${result[i]['question_description']}</td>
-            <td class="col-1">2023-09-18 23:59:20</td>
-            <td class="col-1">
-              <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                  Action
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                  <li><a class="dropdown-item" href="/admin/question/new?ques-title=${result[i]['question_id']}">Add Question</a></li>
-                  <li><a class="dropdown-item" href="/admin/question/detail?question_id=${result[i]['question_id']}">Detail</a></li>
-                  <li><a class="dropdown-item" href="/admin/question-title/edit?ques-title=${result[i]['question_id']}">Edit</a></li>
-                  <li>
-                    <button type="button" data-id="${result[i]['question_id']}" class="dropdown-item btn-delete-question">Delete</button>
-                  </li>
-                </ul>
-              </div>
+            <th class="text-center"><input type="checkbox" value="${result[i]['question_id']}" name="item[]" class="checkbox" id=""></th>
+            <td class="">${stt++}</td>
+            <td class="text-ellipsis">${result[i]['question_title']}</td>
+            <td class="">2023-09-18 23:59:20</td>
+            <td class="">
+            <a href="/admin/question/detail?question_id=${result[i]['question_id']}"><button type="button" class="btn btn-success">Detail</button></a>
+            <a href="/admin/question-title/edit?ques-title=${result[i]['question_id']}"><button type="button" class="btn btn-info text-white">Edit</button></a>
+            <button type="button" data-path="exam" data-id="${result[i]['question_id']}" class="btn btn-danger text-white btn-delete-question ">Delete</button>
+
             </td>
           </tr>`;
                     }
-
                 }
                 table_result.innerHTML = resultHTML;
             };

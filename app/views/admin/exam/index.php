@@ -71,30 +71,36 @@
                                 <td>
                                     <div class="overflow-auto">
                                         <?php echo $exam['published'] == 1 ? 'Đã xuất bản' : 'Chưa xuất bản'; ?><br>
-                                        __ngày/tháng/năm giờ/phút__
+                                        <?php echo $exam['uploaded_at'] ?>
                                     </div>
                                 </td>
                                 <td>
-                                    <?php echo $exam['updated_at'] ?><br>
-                                    <!-- </td>
+                                    <?php
+                                    if (isset($exam['time_start']) && isset($exam['time_end'])) {
+                                    ?>
+                                        <?php echo $exam['time_start'] ?><br>
+                                        <!-- </td>
                                 <td> -->
-                                    <?php echo $exam['updated_at'] ?>
+                                        <?php echo $exam['time_end'] ?>
                                 </td>
-
-                                <!-- <td class=" text-center"><?php echo $exam['duration']; ?></td> -->
-                                <!-- <td>
+                            <?php } else {
+                                ?>
+                                    Thời gian làm bài exam chưa có
+                                <?php
+                                    } ?>
+                            <!-- <td>
                                     <?php echo $exam['updated_at'] ?>
                                 </td> -->
-                                <!-- <td style=" align-items: center;">
+                            <!-- <td style=" align-items: center;">
                                     <?php if ($exam['published'] == 1) { ?>
                                         <button onclick="copyLink('linkToCopy<?php echo $exam['id']; ?>')" class="linkToCopy text-primary-hover" id="linkToCopy<?php echo $exam['id']; ?>" href="<?php echo $directory['domain'] . $exam['id'] . '.html' ?>"><?php echo $directory['domain'] . $exam['id'] . '.html' ?> </button>
                                     <?php } ?>
                                 </td> -->
-                                <td>
-                                    <a href="/admin/exam/examDetail?exam_id=<?php echo $exam['id']; ?>"><button type="button" class="btn btn-success">Detail</button></a>
-                                    <a href="/admin/exam/edit?id=<?php echo $exam['id']; ?>"><button type="button" class="btn btn-info text-white">Edit</button></a>
-                                    <button type="button" data-path="exam" data-id="<?php echo $exam['id']; ?>" class="btn btn-danger text-white btn-delete-question ">Delete</button>
-                                    <!-- <div class="dropdown">
+                            <td>
+                                <a href="/admin/exam/examDetail?exam_id=<?php echo $exam['id']; ?>"><button type="button" class="btn btn-success">Detail</button></a>
+                                <a href="/admin/exam/edit?id=<?php echo $exam['id']; ?>"><button type="button" class="btn btn-info text-white">Edit</button></a>
+                                <button type="button" data-path="exam" data-id="<?php echo $exam['id']; ?>" class="btn btn-danger text-white btn-delete-question ">Delete</button>
+                                <!-- <div class="dropdown">
                                         <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                             Action
                                         </button>
@@ -111,7 +117,7 @@
                                             </li>
                                         </ul>
                                     </div> -->
-                                </td>
+                            </td>
                             </tr>
                         <?php
                         }

@@ -55,6 +55,9 @@ class QuestionController extends  AppController
         $question_title_id = $req_method_ary['ques-title'];
         $question_title = $this->obj_model_question_title->getById($question_title_id, 'id, title, description');
         $this->data_ary['question_title'] = $question_title;
+        // echo "<pre>";
+        // var_dump($this->data_ary['question_title']);
+        // die();
         $this->data_ary['content'] = 'question/new';
     }
 
@@ -76,6 +79,16 @@ class QuestionController extends  AppController
         return true;
     }
 
+    public function check_length_answer($answers)
+    {
+        foreach ($answers as $answer) {
+            if (strlen($answer) > 255) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public function create(Request $request)
     {
         $result_vali_ary = $this->app_request->validate($this->obj_model->rules(), $request, 'post');
@@ -84,7 +97,10 @@ class QuestionController extends  AppController
             return $this->errorResponse($message_error);
         }
         $content = $result_vali_ary['content'];
-        $question_title_id = $result_vali_ary['question_title_id'];
+        $question_title_id = "";
+        if (isset($result_vali_ary['question_title_id'])) {
+            $question_title_id = $result_vali_ary['question_title_id'];
+        }
         $answers =  $result_vali_ary['answer'];
 
         if (!$this->check_enter_answer($answers)) {
@@ -97,6 +113,10 @@ class QuestionController extends  AppController
         if (!isset($result_vali_ary['is_correct'])) {
             return $this->errorResponse("You need to choose at least one correct answer.");
         }
+
+        if (!$this->check_length_answer($answers)) {
+            return $this->errorResponse("Answer length is limited to 255 characters.");
+        }
         $is_corrects = $result_vali_ary['is_correct'];
         $question_check_ary = $this->obj_model->getBy('content', '=', $content);
         $num_rows = count($question_check_ary);
@@ -105,13 +125,22 @@ class QuestionController extends  AppController
         } else {
             try {
                 // $this->obj_model->beginTransaction();
-                $questionId = $this->obj_model->create(
-                    [
-                        'content' => $content,
-                        'question_title_id' => $question_title_id
-                    ]
-                );
-                $question = $this->obj_model->getBy("content","=",$content);
+                if (isset($result_vali_ary['question_title_id'])) {
+                    $questionId = $this->obj_model->create(
+                        [
+                            'content' => $content,
+                            'question_title_id' => $question_title_id
+                        ]
+                    );
+                } else {
+                    $questionId = $this->obj_model->create(
+                        [
+                            'content' => $content,
+                        ]
+                    );
+                }
+
+                $question = $this->obj_model->getBy("content", "=", $content);
                 foreach ($answers as $index => $answerContent) {
                     $isCorrect = in_array($index, $is_corrects) ? 1 : 0;
                     $this->obj_model_answer->create(
@@ -159,15 +188,15 @@ class QuestionController extends  AppController
         if (!$this->check_enter_answer($answers)) {
             return $this->errorResponse("You need to enter the answer.");
         }
-
         if (!$this->check_unique_answer($answers)) {
             return $this->errorResponse("Answers cannot be duplicated.");
         }
-
         if (!isset($result_vali_ary['is_correct'])) {
             return $this->errorResponse("You need to choose at least one correct answer");
         }
-
+        if (!$this->check_length_answer($answers)) {
+            return $this->errorResponse("Answer length is limited to 255 characters.");
+        }
         $is_corrects = $result_vali_ary['is_correct'];
         $question_check_ary = $this->obj_model->getBy('content', '=', $content);
         $num_rows = count($question_check_ary);

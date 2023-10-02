@@ -144,7 +144,7 @@ class Exam extends Model
             }
         }
         $db = static::getDB();
-        $query = 'SELECT e.id, e.title, e.description, e.published, e.duration, e.updated_at 
+        $query = 'SELECT e.id, e.title, e.description, e.published, e.uploaded_at, e.time_start, e.time_end, e.updated_at 
                     FROM exam as e 
                     where e.title like ' . ' "%' . $keyword_search . '%" ESCAPE "\\\\"
                     ORDER BY e.id DESC';
@@ -185,12 +185,6 @@ class Exam extends Model
                 'name',
                 'filled',
                 'max:255',
-            ),
-            'duration' => array(
-                'required',
-                'filled',
-                'max:2000',
-
             ),
             'description' => array(),
         );

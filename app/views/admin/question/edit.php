@@ -18,6 +18,14 @@
                         </textarea>
                     </div>
                     <div class="mb-3">
+                        <p>* Note</p>
+                        <p class="" style="padding-left: 20px;">
+                            Correct : Choose the correct answers<br>
+                            Answer : Enter the answer to the question<br>
+                            Button Add : Click the "add" button to add an answer
+                        </p>
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label" style="margin-right: 30px;" for="correct">Correct*</label>
                         <label class="form-label" for="answer">Answer*</label>
                         <div id="answerContainer">
@@ -51,6 +59,9 @@
     </div>
 </div>
 <script>
+    $(document).ready(function() {
+        heightCkeditor();
+    });
     // Biến tạm để lưu giá trị của ô input hiện tại
     var currentAnswerIndex = 0;
     // Mảng lưu vị trí các checkbox đã chọn

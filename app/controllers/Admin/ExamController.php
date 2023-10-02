@@ -66,6 +66,9 @@ class ExamController extends AppController
         $this->data_ary['page'] = (float)$results_ary['page'];
         $this->data_ary['exams'] = $results_ary['results'];
 
+        // echo "<pre>";
+        // var_dump( $this->data_ary['exams']);
+        // die();
         $this->data_ary['content'] = 'exam/index';
     }
 
@@ -150,7 +153,20 @@ class ExamController extends AppController
         }
         $title = trim($result_vali_ary['title']);
         $description = $result_vali_ary['description'];
-        $duration = $result_vali_ary['duration'];
+        $date_start = $result_vali_ary['date_start'];
+        $date_end = $result_vali_ary['date_end'];
+        //so sanh datetime
+        $current_time = time();
+        if (strtotime($date_start) < $current_time) {
+            return $this->errorResponse("Time start must be greater than or equal to the current time");
+        }
+        if (strtotime($date_start) >= strtotime($date_end)) {
+            return $this->errorResponse("Time start must be less than the end time!");
+        }
+
+        // echo "<pre>";
+        // var_dump($result_vali_ary);
+        // die();
         $question_titles = $this->obj_model->getAll();
 
         foreach ($question_titles as $question_title) {
@@ -166,7 +182,8 @@ class ExamController extends AppController
                 [
                     'title' => $title,
                     'description' => $description,
-                    'duration' => $duration
+                    'time_start' => $date_start,
+                    'time_end' => $date_end
                 ]
             );
             if ($check_has_mail) {
@@ -178,13 +195,14 @@ class ExamController extends AppController
                 foreach ($email_arrays as $email) {
                     $email = trim($email);
                     if ($email == "") {
-                        return $this->errorResponse("phải điền vào các ô email");
+                        return $this->errorResponse("Email fields must be filled out");
                     }
                     if (!email($email)) {
-                        return $this->errorResponse("email số " . $stt_email . " không đúng định dạng");
+                        return $this->errorResponse("
+                        Email number " . $stt_email . " is not in the correct format");
                     }
                     if (in_array($email, $arr_check_email)) {
-                        return $this->errorResponse("email số " . $stt_email . " đã trùng lặp");
+                        return $this->errorResponse("Email number " . $stt_email . " was duplicated");
                     }
                     $this->obj_model_exam_participant->create([
                         'exam_id' => $exam_id,

@@ -1,4 +1,4 @@
-<div class="col-lg-12">
+<!-- <div class="col-lg-12">
     <div class="white_card card_height_100 mb_30">
         <div class="white_card_header">
             <div class="box_header m-0">
@@ -47,4 +47,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->

@@ -13,20 +13,20 @@
                     <input type="hidden" class="form-control" rows="3" value="<?php echo $question_title['id']; ?>" name="id" id="id" placeholder="Title..." />
 
                     <div class="mb-3 col-6" style="">
-                        <label class="form-label" for="title">Title*</label>
+                        <label class="form-label" for="title">Title<span style="color: red;">*</span></label>
                         <input class="form-control" rows="3" value="<?php echo $question_title['title']; ?>" name="title" id="title" placeholder="Title..." />
                     </div>
                     <div class="mb-3 col-6">
-                        <label class="form-label" for="title">Description*</label>
+                        <label class="form-label" for="title">Description</label>
                         <input class="form-control" rows="3" value="<?php echo isset($question_title['description']) ? $question_title['description'] : ''; ?>" name="description" id="description" placeholder="Description..." />
                     </div>
-                    <button id="submit" type="submit" class="btn btn-primary">Submit</button>
+                    <button id="submit" type="submit" class="btn btn-primary">Save</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
-<div class="card_box box_shadow position-relative mb_30">
+<!-- <div class="card_box box_shadow position-relative mb_30">
     <div class="white_box_tittle ">
         <div class="main-title2 flex items-center justify-between">
             <h4 class="mb-2 nowrap">Question list</h4>
@@ -132,4 +132,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->

@@ -3,19 +3,20 @@
         <div class="white_card_header">
             <div class="box_header m-0">
                 <div class="main-title">
-                    <h3 class="m-0">Collection question</h3>
+                    <h3 class="m-0 fs-2">Collection question</h3>
                 </div>
             </div>
         </div>
-        <div class="white_card_body">
+        <div class="white_card_body" style="margin-left: 15px;">
             <div class="card-body d-flex">
                 <div class="mb-3 col-5 mr-12" style="">
-                    <label class="form-label" for="title">Title collection </label>
-                    <input class="form-control" rows="3" disabled value="<?php echo $question_title['title']; ?>" placeholder="Title..." />
-                </div>
-                <div class="mb-3 col-5">
-                    <label class="form-label" for="title">Description collection </label>
-                    <input class="form-control" disabled value="<?php echo isset($question_title['description']) ? $question_title['description'] : "" ?>" rows="3" placeholder="description..." />
+                    <b><label class="form-label" for="title">Title collection : </label></b>
+                    <?php echo $question_title['title']; ?>
+                    <!-- </div>
+                <div class="mb-3 col-5"> -->
+                    <br>
+                    <b><label class="form-label" for="title">Description collection : </label></b>
+                    <?php echo isset($question_title['description']) ? $question_title['description'] : "" ?>
                 </div>
             </div>
         </div>
@@ -25,11 +26,14 @@
 <div class="card_box box_shadow position-relative mb_30">
     <div class="white_box_tittle ">
         <div class="main-title2 flex items-center justify-between">
-            <h4 class="mb-2 nowrap">Question detail</h4>
-            <a href='/admin/question/new?ques-title=<?php echo $question_titles[0]['question_title_id']; ?>'><button type="button" class="btn btn-success">Add question</button></a>
+            <h4 class="mb-2 nowrap">Question list</h4>
         </div>
+
     </div>
+
     <div class="box_body white_card_body">
+        <a href='/admin/question/new?ques-title=<?php echo $question_titles[0]['question_title_id']; ?>'><button type="button" class="btn btn-success mb-3">Add question</button></a>
+
         <div class="default-according" id="accordion2">
 
             <div class="table_member_body table-responsive m-b-30 flex flex-col items-center justify-center">
@@ -50,35 +54,33 @@
                             foreach ($question_titles as $question_title) {
                         ?>
                                 <tr>
-                                    <td class="col-1"><?php echo $stt++; ?></td>
-                                    <td class="col-6">
+                                    <td class=""><?php echo $stt++; ?></td>
+                                    <td class="text-ellipsis ">
                                         <?php echo $question_title['question_content'] ?>
                                     </td>
-                                    <td class="col-3 ">
+                                    <td class="col-5">
                                         <?php
                                         $st = 1;
                                         $answers = explode(',', $question_title['answers']);
                                         foreach ($answers as $answer) {
                                             $answer = explode('-', $answer);
+                                            if ($answer[0] == 1) {
                                         ?>
-                                            <span style="font-weight:<?php echo $answer[0] == 1 ? 'bold' : '' ?>;"><?php echo  $answer[1] ?> </span><br>
+                                                <span style=" ;font-weight:bold;color:blue ;border: 1px solid; margin-right: 10px; padding: 1px; border-radius:2px"><?php echo  $answer[1] ?> </span>
+
+                                            <?php
+                                            } else { ?>
+                                                <span style="border: 1px solid; margin-right: 10px; padding: 1px; border-radius:2px"><?php echo  $answer[1] ?> </span>
+                                            <?php
+                                            }
+                                            ?>
                                         <?php
                                         }
                                         ?>
                                     </td>
-                                    <td class="col-1">
-                                        <div class="dropdown">
-                                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                                Action
-                                            </button>
-                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                                <li><a class="dropdown-item" href="/admin/question/edit?question_id=<?php echo $question_title['question_id']; ?>">Edit</a></li>
-                                                <li>
-                                                    <button type="button" data-path="question" data-id="<?php echo $question_title['question_id']; ?>" class="dropdown-item btn-delete-question ">Delete</button>
-                                                </li>
-
-                                            </ul>
-                                        </div>
+                                    <td class="">
+                                        <a href="/admin/question/edit?question_id=<?php echo $question_title['question_id']; ?>"><button type="button" class="btn btn-info text-white">Edit</button></a>
+                                        <button type="button" data-path="question" data-id="<?php echo $question_title['question_id']; ?>" class="btn btn-danger text-white btn-delete-question ">Delete</button>
                                     </td>
                                 </tr>
                             <?php
@@ -92,7 +94,9 @@
                         }
                         ?>
                     </tbody>
+
                 </table>
+
                 <div class="flex justify-center items-center">
                     <nav aria-label="Page navigation example">
                         <ul class="paginations">
@@ -129,5 +133,6 @@
                 </div>
             </div>
         </div>
+
     </div>
 </div>
