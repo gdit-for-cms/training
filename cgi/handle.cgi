@@ -64,7 +64,7 @@ if (exists $csv_data{$email}) {
         $csv_data{$email}[1] = 0;
         
         # Record data to a CSV file
-        open my $output_fh, '>', $csv_file or die "Không thể mở tệp $csv_file: $!";
+        open my $output_fh, '>', $csv_file or die "Cannot open file $csv_file: $!";
         foreach my $key (keys %csv_data) {
             $csv->print($output_fh, [$key, @{$csv_data{$key}}]);
             print $output_fh "\n";
@@ -116,14 +116,26 @@ eval {
     # Mark.
     my $total_mark = 0;
     my $total_question = 0;
+    while (my ($key, $value) = each %correct_answers) {
+        $total_question++;
+    }
+
     foreach my $question_id (keys %$exam_results) {
         my $user_answers = $exam_results->{$question_id};
         my $correct_answer = $correct_answers{$question_id};
+        my $mark = 0;
+        my $count_ua = 0;
+        my $count_ca = 0;
 
-        $total_question++;
-
-        if ($user_answers && $correct_answer) {
-            my $mark = 1;
+        foreach my $ele (@$user_answers) {
+            $count_ua++;
+        }
+        foreach my $ele (@$correct_answer) {
+            $count_ca++;
+        }
+        
+        if ($count_ua == $count_ca) {
+            $mark = 1;
 
             foreach my $user_answer (@$user_answers) {
                 unless (grep { $_ eq $user_answer } @$correct_answer) {
@@ -132,8 +144,10 @@ eval {
                 }
             }
 
-            $total_mark += $mark;
+        } else {
+            $mark = 0;
         }
+        $total_mark += $mark;
     }
 
     # Email the results to the user.

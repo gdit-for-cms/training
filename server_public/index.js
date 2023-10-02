@@ -220,8 +220,10 @@ function modal_login(mes, off) {
     // 1: hidden button yes; 2: remove hidden button yes
     if(off == 1) {
         btn_yes.setAttribute("hidden", true)
+        btn_accept_submit.setAttribute("hidden", true)
     } else {
         btn_yes.removeAttribute("hidden")
+        btn_accept_submit.removeAttribute("hidden")
     }
 }
 
@@ -297,7 +299,6 @@ function after_submit() {
         data: data_to_send,
         success: function (response) {
             remove_data()
-
             if (response == 'false') {
                 window.location.href = '/view/error.html'
             } else if(response == 0){
@@ -388,6 +389,7 @@ function remove_data() {
     localStorage.removeItem('user_name')
     
     localStorage.removeItem('id')
+    localStorage.removeItem('code')
 
     // Delete time variables stored locally
     localStorage.removeItem('countdown_minutes')

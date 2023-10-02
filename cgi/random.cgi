@@ -2,6 +2,7 @@
 use strict;
 use warnings;
 use CGI;
+use Scalar::Util qw(looks_like_number);
 
 my $setting_file = './Setting.pm';
 require $setting_file;
@@ -12,7 +13,7 @@ my $code = $cgi->param("code");
 
 our $RANDOM;
 
-if(!$id || !$code){
+if(!looks_like_number($id) || !$code){
     print "Content-Type: text/html\n\n";
     print -1;
     exit(0);

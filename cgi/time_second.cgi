@@ -7,12 +7,13 @@ use warnings;
 use CGI;
 use Time::Piece;
 use Text::CSV;
+use Scalar::Util qw(looks_like_number);
 
 my $cgi = CGI->new; 
 my $id = $cgi->param("id");
 my $code = $cgi->param("code");
 
-if(!$code || !$id){
+if(!$code || !looks_like_number($id)){
     print "Content-Type: text/html\n\n";
     print "0\n";
     exit(0);
