@@ -42,6 +42,9 @@ if (exists $csv_data{$email}) {
     if ($csv_data{$email}[0] == 1 && $csv_data{$email}[1] == 2) {
         print "Content-Type: text/html\n\n";
         print 1;
+    } elsif($csv_data{$email}[0] == 0 && $csv_data{$email}[1] == 2) {
+        print "Content-Type: text/html\n\n";
+        print 3;
     } else {
         print "Content-Type: text/html\n\n";
         print 0;

@@ -10,6 +10,9 @@ our $RANDOM = 'random/';
 # Path to file containing times
 our $TIME = 'time/';
 
+# Path to file containing time die
+our $TIME_DIE = 'time_die/';
+
 # Path to the file containing the answer
 our $CSV = 'csv';
 

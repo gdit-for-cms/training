@@ -17,6 +17,7 @@ my $cgi = CGI->new;
 my $email = $cgi->param("email");
 my $name = $cgi->param("name");
 my $code = $cgi->param("code");
+my $random = $cgi->param("random");
 
 # The answer file of the test that the user is doing.
 my $file_csv = $cgi->param("id");
@@ -83,6 +84,35 @@ if (exists $csv_data{$email}) {
 #####################################
 if (-e $file_to_create) {
     unlink $file_to_create or die "Cannot delete file: $!";
+} else {
+    print "Content-Type: text/html\n\n";
+    print 0;
+    exit(0);
+}
+##########################################
+our $RANDOM;
+
+my $random_file = "$RANDOM$file_csv.csv";
+
+open my $fh_random, '<', $random_file or die "Cannot open file $random_file: $!";
+my @data = <$fh_random>;
+close $fh_random;
+
+chomp(@data);
+
+my $found = 0;
+for my $i (0..$#data) {
+    if ($data[$i] eq $random) {
+        splice(@data, $i, 1);
+        $found = 1;
+        last;
+    }
+}
+
+if ($found) {
+    open my $output_file, '>', $random_file or die "Cannot open file $random_file: $!";
+    print $output_file join("\n", @data);
+    close $output_file;
 } else {
     print "Content-Type: text/html\n\n";
     print 0;

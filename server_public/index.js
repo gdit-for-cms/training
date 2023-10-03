@@ -91,13 +91,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 id : exam_id,
                 code : code[1]
             }
-    
             $.ajax({
                 type: "POST",
                 url: "/cgi/time_first.cgi",
                 data: data,
                 success: function (response) {
-                    if(response == 0) {
+                    if(response == -1) {
+                        console.log(1);
                         var message = '<h5>You cheated by interfering in the calculation of exam time. You cannot submit this test!</h5>'
                         modal_login(message, 1)
                         remove_data()
@@ -168,6 +168,18 @@ if (btn_login) {
                             <h6>Your test time is 10 minutes. Are you ready?</h6>
                         `
                         modal_login(message)
+                    } else if(response == 3) {
+                        localStorage.setItem('user_email', value_email)
+                        localStorage.setItem('user_name', value_name)
+
+                        var message = `
+                            <h6>You have started the test before.</h6>
+                            <h6>Make sure you are not cheating.</h6>
+                            <h6>We still count the time you have problems into your exam time.</h6>
+                            <h6>Please submit your assignment as soon as possible.</h6>
+                            <h6>Good luck!</h6>
+                        `
+                        modal_login(message)
                     } else {
                         error_login(response)
                     }
@@ -230,7 +242,10 @@ function modal_login(mes, off) {
 function error_login(number) {
     var message = ''
     if (number == 0) {
-        message = `<h6>Your email is only allowed to participate in the test and submit once!</h6>`
+        message = `
+            <h6>You have completed the test.</h6>
+            <h6>Please check your email to see the results.</h6>
+        `
     } else if (number == 2){
         message = `<h6>Email does not exist in the system!</h6>`
     } else if (number == -1){
@@ -289,6 +304,7 @@ function after_submit() {
         name: user_name,
         id: id,
         code: code[1],
+        random: localStorage.getItem('code'),
         exam_results: JSON.stringify(exam_results)
     }
 
@@ -302,7 +318,7 @@ function after_submit() {
             if (response == 'false') {
                 window.location.href = '/view/error.html'
             } else if(response == 0){
-                error_login()
+                error_login(response)
                 remove_data()
                 setTimeout(window.location.href = '/view/login.html', 5000)
             } else {
@@ -322,7 +338,7 @@ function is_valid_email(email) {
 function updateCountdown() {
     if (minutes <= 0 && seconds <= 0) {
         if (countdown_element) {
-            countdown_element.innerHTML = 'Thời gian đã hết'
+            countdown_element.innerHTML = "Time's up"
             clearInterval(countdownInterval)
             
             check_time()
@@ -331,7 +347,7 @@ function updateCountdown() {
         if (countdown_element) {
             const minutes_display = String(minutes).padStart(2, '0')
             const seconds_display = String(seconds).padStart(2, '0')
-            countdown_element.innerHTML = `Thời gian còn lại: ${minutes_display} phút ${seconds_display} giây`
+            countdown_element.innerHTML = `Time remaining: ${minutes_display} minute ${seconds_display} second`
 
             if (seconds === 0) {
                 minutes--

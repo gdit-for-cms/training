@@ -15,7 +15,7 @@ my $code = $cgi->param("code");
 
 if(!$code || !looks_like_number($id)){
     print "Content-Type: text/html\n\n";
-    print "0\n";
+    print "-1\n";
     exit(0);
 }
 

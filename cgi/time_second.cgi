@@ -27,7 +27,7 @@ if (-e $file_to_create) {
     my @timestamps;
     open my $file_handle, '<', $file_to_create or die "Cannot open file: $!";
     
-    # Đọc các mốc thời gian từ tệp
+    # Read timestamps from file
     while (<$file_handle>) {
         if (/(.+)$/) {
             push @timestamps, Time::Piece->strptime($1, "%H:%M:%S");
@@ -58,7 +58,8 @@ if (-e $file_to_create) {
                 push @timestamps, Time::Piece->strptime($1, "%H:%M:%S");
             }
         }
-        
+        close $file_handle;
+
         my ($hour1, $min1, $sec1) = split(":", $timestamps[0]);
         my ($hour2, $min2, $sec2) = split(":", $timestamps[1]);
 
