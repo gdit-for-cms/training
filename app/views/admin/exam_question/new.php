@@ -1,6 +1,5 @@
 <div class="d-flex">
-    <div class="col-4">
-
+    <div class="col-3">
         <div class=" metismenu" style="background-color: #dddcdc; margin-right: 15px;">
             <ul class="metismenu" style="padding: 15px 25px">
                 <?php foreach ($question_titles as $question_title) { ?>
@@ -30,7 +29,7 @@
             </div>
         </div>
     </div>
-    <div class="col-8 d-flex">
+    <div class="col-9 d-flex">
         <div id="questionList" class="col-12">
             <!-- Nơi để hiển thị danh sách câu hỏi sau khi AJAX được gọi -->
 

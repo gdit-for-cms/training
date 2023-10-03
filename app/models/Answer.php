@@ -72,7 +72,7 @@ class Answer extends Model
                 'required',
                 'filled',
                 'content',
-                'maxLen:255',
+                'maxLen:2000',
             ],
             'is_correct' => [
                 'required',

@@ -31,9 +31,9 @@ class AppController extends Controller
         }
         $cur_user = [
             'role_id' => $request->getUser()['role_id'],
-            'permissions' => $permissions_access_ary
+            'permissions' => $permissions_access_ary,
+            'user_id'=>$request->getUser()['id']
         ];
-
         $this->data_ary['cur_user'] = $cur_user;
         $this->data_ary['title'] = $this->title;
     }

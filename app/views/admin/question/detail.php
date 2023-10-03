@@ -9,7 +9,7 @@
         </div>
         <div class="white_card_body" style="margin-left: 15px;">
             <div class="card-body d-flex">
-                <div class="mb-3 col-5 mr-12" style="">
+                <div class="mb-3 col-10 mr-12" style="">
                     <b><label class="form-label" for="title">Title collection : </label></b>
                     <?php echo $question_title['title']; ?>
                     <!-- </div>
@@ -38,7 +38,7 @@
 
             <div class="table_member_body table-responsive m-b-30 flex flex-col items-center justify-center">
 
-                <table id="<?= "1" ?>" class="table table-striped">
+                <table id="<?= "1" ?>" class="table table-striped table-bordered table-responsive">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
@@ -55,30 +55,34 @@
                         ?>
                                 <tr>
                                     <td class=""><?php echo $stt++; ?></td>
-                                    <td class="text-ellipsis ">
+                                    <td class="col-3 text-ellipsis ">
                                         <?php echo $question_title['question_content'] ?>
                                     </td>
                                     <td class="col-5">
-                                        <?php
-                                        $st = 1;
-                                        $answers = explode(',', $question_title['answers']);
-                                        foreach ($answers as $answer) {
-                                            $answer = explode('-', $answer);
-                                            if ($answer[0] == 1) {
-                                        ?>
-                                                <span style=" ;font-weight:bold;color:blue ;border: 1px solid; margin-right: 10px; padding: 1px; border-radius:2px"><?php echo  $answer[1] ?> </span>
+                                        <div class="answer-container">
+                                            <ul>
+                                                <?php
+                                                $st = 1;
+                                                $answers = explode(',', $question_title['answers']);
+                                                foreach ($answers as $answer) {
+                                                    $answer = explode('-', $answer);
+                                                    if ($answer[0] == 1) {
+                                                ?>
+                                                        <li class="text-ellipsis answer" style="color: blue;"><?php echo  $answer[1] ?> </li>
 
-                                            <?php
-                                            } else { ?>
-                                                <span style="border: 1px solid; margin-right: 10px; padding: 1px; border-radius:2px"><?php echo  $answer[1] ?> </span>
-                                            <?php
-                                            }
-                                            ?>
-                                        <?php
-                                        }
-                                        ?>
+                                                    <?php
+                                                    } else { ?>
+                                                        <li class="text-ellipsis answer" style=""><?php echo  $answer[1] ?> </li>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                <?php
+                                                }
+                                                ?>
+                                            </ul>
+                                        </div>
                                     </td>
-                                    <td class="">
+                                    <td class="col-3">
                                         <a href="/admin/question/edit?question_id=<?php echo $question_title['question_id']; ?>"><button type="button" class="btn btn-info text-white">Edit</button></a>
                                         <button type="button" data-path="question" data-id="<?php echo $question_title['question_id']; ?>" class="btn btn-danger text-white btn-delete-question ">Delete</button>
                                     </td>

@@ -9,17 +9,16 @@
         </div>
         <div class="white_card_body">
             <div class="card-body">
-                <form id="form_new_question_title" class=" col-12" action="/admin/question-title/create" method="POST">
-                    <div class="mb-3 col-6">
+                <form id="form_new_question_title" class="ml-10 col-12" action="/admin/question-title/create" method="POST">
+                    <div class="mb-3 col-10">
                         <label class="form-label" for="title">Title<span style="color: red;">*</span></label>
                         <input class="form-control" rows="3" name="title" id="title" placeholder="Title..." />
                     </div>
-                    <div class="mb-3 col-6">
+                    <div class="mb-3 col-10">
                         <label class="form-label" for="title">Description</label>
-                        <input class="form-control" rows="3" name="description" id="description" placeholder="Description..." />
+                        <textarea class="form-control" rows="10" name="description" id="description" placeholder="Description..."></textarea>
                     </div>
                     <button id="submit" type="submit" class="btn btn-primary">Submit</button>
-
                 </form>
             </div>
         </div>

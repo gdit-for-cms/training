@@ -12,7 +12,7 @@
             </div>
             <div class="table_member_body table-responsive m-b-30 flex flex-col items-center justify-center">
 
-                <table id="<?= "1" ?>" class="table table-striped">
+                <table id="<?= "1" ?>" class="table table-striped table-bordered table-responsive">
                     <thead>
                         <tr>
                             <th class="text-center">
@@ -26,7 +26,7 @@
                                 STATUS
                                 <select class="role_select select_option w-26 text-medium border " name="role_id" aria-label="Default select example">
                                     <option value="0" selected="">All</option>
-                                    <option value="1">Note Started</option>
+                                    <option value="1">Not Started</option>
                                     <option value="2">In Progress</option>
                                     <option value="3">Completed</option>
                                 </select>
@@ -42,11 +42,6 @@
                                 </select>
                             </th>
                             <th>TIME</th>
-                            <!-- <th>TIME START</th>
-                            <th>TIME END</th> -->
-                            <!-- <th><span>DURATION</span><br> <span>(minutes)</span></th> -->
-                            <!-- <th>LAST UPDATE</th> -->
-                            <!-- <th>LINK EXAM</th> -->
                             <th>ACTION</th>
                         </tr>
                     </thead>
@@ -54,6 +49,7 @@
                         <?php
                         $stt = 1;
                         foreach ($exams as $exam) {
+                            $check_status = false;
                         ?>
                             <tr>
                                 <th class="text-center"><input type="checkbox" value="<?php echo $exam['id']; ?>" name="item[]" class="checkbox" id=""></th>
@@ -62,12 +58,26 @@
                                     <?php echo $exam['title'] ?>
                                 </td>
                                 <td>
-                                    In Progress
+                                    <?php
+                                    $startTime = strtotime($exam['time_start']);
+                                    $endTime = strtotime($exam['time_end']);
+                                    $currentTime = time();
+
+                                    if ($currentTime < $startTime) {
+                                        $check_status = true; ?>
+                                        <span style="color: #FF0000;">Not Started</span>
+                                    <?php
+
+                                    } elseif ($currentTime >= $startTime && $currentTime <= $endTime) { ?>
+                                        <span style="color: #3c7cdb;">In Progress</span>
+                                    <?php
+                                    } else {
+                                    ?>
+                                        <span style="color: #008000;">Finished</span>
+                                    <?php
+                                    }
+                                    ?>
                                 </td>
-                                <!-- <td class="text-ellipsis">
-                                    Admin 1
-                                </td> -->
-                                <!-- <td></td> -->
                                 <td>
                                     <div class="overflow-auto">
                                         <?php echo $exam['published'] == 1 ? 'Đã xuất bản' : 'Chưa xuất bản'; ?><br>
@@ -79,78 +89,31 @@
                                     if (isset($exam['time_start']) && isset($exam['time_end'])) {
                                     ?>
                                         <?php echo $exam['time_start'] ?><br>
-                                        <!-- </td>
-                                <td> -->
+
                                         <?php echo $exam['time_end'] ?>
-                                </td>
-                            <?php } else {
-                                ?>
-                                    Thời gian làm bài exam chưa có
-                                <?php
+                                    <?php } else {
+                                    ?>
+                                        <!-- Thời gian làm bài exam chưa có -->
+                                    <?php
                                     } ?>
-                            <!-- <td>
-                                    <?php echo $exam['updated_at'] ?>
-                                </td> -->
-                            <!-- <td style=" align-items: center;">
-                                    <?php if ($exam['published'] == 1) { ?>
-                                        <button onclick="copyLink('linkToCopy<?php echo $exam['id']; ?>')" class="linkToCopy text-primary-hover" id="linkToCopy<?php echo $exam['id']; ?>" href="<?php echo $directory['domain'] . $exam['id'] . '.html' ?>"><?php echo $directory['domain'] . $exam['id'] . '.html' ?> </button>
-                                    <?php } ?>
-                                </td> -->
-                            <td>
-                                <a href="/admin/exam/examDetail?exam_id=<?php echo $exam['id']; ?>"><button type="button" class="btn btn-success">Detail</button></a>
-                                <a href="/admin/exam/edit?id=<?php echo $exam['id']; ?>"><button type="button" class="btn btn-info text-white">Edit</button></a>
-                                <button type="button" data-path="exam" data-id="<?php echo $exam['id']; ?>" class="btn btn-danger text-white btn-delete-question ">Delete</button>
-                                <!-- <div class="dropdown">
-                                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Action
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                            <li><a href="/admin/exam-question/new?exam_id=<?php echo $exam['id']; ?>" class="dropdown-item">Add question to exam</a></li>
-                                            <li><a id="createFilesButton" href="/admin/exam/preview?exam_id=<?php echo $exam['id']; ?>" data-id="<?php echo $exam['id']; ?>" id="submit" class="dropdown-item">Publish exam</a></li>
-                                            <?php if ($exam['published'] == 1) { ?>
-                                                <li><a href="/admin/exam/unpublish?exam_id=<?php echo $exam['id']; ?>" data-id="<?php echo $exam['id']; ?>" id="submit" class="dropdown-item">UnPublish exam</a></li>
-                                            <?php } ?>
-                                            <li><a class="dropdown-item" href="/admin/exam/examDetail?exam_id=<?php echo $exam['id']; ?>">Detail</a></li>
-                                            <li><a class="dropdown-item" href="/admin/exam/edit?id=<?php echo $exam['id']; ?>">Edit </a></li>
-                                            <li>
-                                                <button type="button" data-path="exam" data-id="<?php echo $exam['id']; ?>" class="dropdown-item btn-delete-question ">Delete</button>
-                                            </li>
-                                        </ul>
-                                    </div> -->
-                            </td>
+                                </td>
+
+                                <td>
+                                    <div style="display: flex;">
+                                        <a href="/admin/exam/examDetail?exam_id=<?php echo $exam['id']; ?>"><button type="button" class="btn btn-success mr-2">Detail</button></a>
+                                        <?php if ($check_status) { ?>
+                                            <a href="/admin/exam/edit?id=<?php echo $exam['id']; ?>"><button type="button" class="btn btn-info text-white mr-2">Edit</button></a>
+                                        <?php } ?>
+                                        <button type="button" data-path="exam" data-id="<?php echo $exam['id']; ?>" class="btn btn-danger text-white btn-delete-question mr-2">Delete</button>
+                                    </div>
+                                </td>
                             </tr>
                         <?php
                         }
                         ?>
                     </tbody>
                 </table>
-                <!-- <div class="">
-                    <img class="selectallarrow" src="./themes/pmahomme/img/arrow_ltr.png" width="38" height="22" alt="With selected:">
-                    <input type="checkbox" id="tablesForm_checkall" class="checkall_box" title="Check all">
-                    <label for="tablesForm_checkall">Check all</label>
-                    <select name="submit_mult" style="margin: 0 3em 0 3em;">
-                        <option value="With selected:" selected="selected">With selected:</option>
-                        <option value="copy_tbl">Copy table</option>
-                        <option value="show_create">Show create</option>
-                        <option value="export">Export</option>
-                        <optgroup label="Delete data or table">
-                            <option value="empty_tbl">Empty</option>
-                            <option value="drop_tbl">Drop</option>
-                        </optgroup>
-                        <optgroup label="Table maintenance">
-                            <option value="analyze_tbl">Analyze table</option>
-                            <option value="check_tbl">Check table</option>
-                            <option value="checksum_tbl">Checksum table</option>
-                            <option value="optimize_tbl">Optimize table</option>
-                            <option value="repair_tbl">Repair table</option>
-                        </optgroup>
-                        <optgroup label="Prefix">
-                            <option value="add_prefix_tbl">Add prefix to table</option>
-                            <option value="replace_prefix_tbl">Replace table prefix</option>
-                            <option value="copy_tbl_change_prefix">Copy table with prefix</option>
-                        </optgroup>
-                    </select>
-                </div> -->
+
                 <div class="flex justify-center items-center">
                     <nav aria-label="Page navigation example">
                         <ul class="paginations" id="paginations">
@@ -205,12 +168,12 @@
         });
     });
 
-    // // Thêm sự kiện click vào từng checkbox để kiểm tra trạng thái "Select All"
-    // checkboxes.forEach(function(checkbox) {
-    //     checkbox.addEventListener("click", function() {
-    //         selectAllCheckbox.checked = checkboxes.every(function(c) {
-    //             return c.checked;
-    //         });
-    //     });
-    // });
+    // Thêm sự kiện click vào từng checkbox để kiểm tra trạng thái "Select All"
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener("click", function() {
+            selectAllCheckbox.checked = checkboxes.every(function(c) {
+                return c.checked;
+            });
+        });
+    });
 </script>

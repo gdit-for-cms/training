@@ -39,6 +39,7 @@ class QuestionTitle extends Model
             'title' => array(
                 'required',
                 'filled',
+                'maxLen:255'
             ),
             'description' => array(),
         );

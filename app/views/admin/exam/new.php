@@ -10,6 +10,7 @@
         <div class="white_card_body">
             <div class="card-body">
                 <form id="form_create_exam" class="" action="create" method="POST">
+                    <input type="hidden" value="<?= $cur_user['user_id']?>" name="user_id">
                     <div class="">
                         <div class="mb-3 col-8 mr-7">
                             <label class="form-label" for="title">Title <span style="color: red;">*</span></label>
@@ -17,7 +18,7 @@
                         </div>
                         <div class="mb-3 col-8 mr-7">
                             <label class="form-label" for="title">Description</label>
-                            <input class="form-control" rows="3" name="description" id="description" placeholder="Description..." />
+                            <textarea class="form-control" rows="7" name="description" id="description" placeholder="Description..." ></textarea>
                         </div>
                         <!-- <div class="mb-3 col-8 mr-7">
                             <label class="form-label" for="minutes">Duration (minutes)<span style="color: red;">*</span></label>

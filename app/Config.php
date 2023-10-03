@@ -49,5 +49,6 @@ class Config
     const FTP_PUBLIC_DIRECTORY_HTML = '/htdocs/training2/training/server_public/';
     const FTP_PUBLIC_DIRECTORY_CSV = '/htdocs/training2/training/cgi/csv/';
     const FTP_PUBLIC_DIRECTORY_EMAIL = '/htdocs/training2/training/cgi/email/';
+    const FTP_PUBLIC_DIRECTORY_LINK_EXAM = '/htdocs/training2/training/cgi/random/';
     const FTP_DOMAIN = 'http://cms208.dev3.local/';
 }

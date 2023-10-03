@@ -9,47 +9,91 @@
                         </div>
                         <div class="top-right">
                             <?php
+                            $startTime = strtotime($exam['time_start']);
+                            $endTime = strtotime($exam['time_end']);
+                            $check_status = false;
+                            $currentTime = time();
+
+                            if ($currentTime < $startTime) {
+                                $check_status = true; ?>
+                                <?php
+
+                            }
                             if ($cur_user['role_id'] != 3) {
-                            ?>
-                                <a href="/admin/exam-question/new?exam_id=<?php echo $exam['id']; ?>"><button type=" button" class="btn btn-success float-end">Add Question</button></a>
-                                <a class="btn btn-primary mr-3" id="createFilesButton" href="/admin/exam/preview?exam_id=<?php echo $exam['id']; ?>" data-id="<?php echo $exam['id']; ?>" id="submit">Upload exam</a>
-                                <!-- <a class="btn btn-info mr-3 text-white" href="/admin/exam/edit?id=<?php echo $exam['id']; ?>">Edit</a> -->
+                                if ($check_status) {
+                                ?>
+
+                                    <a href="/admin/exam-question/new?exam_id=<?php echo $exam['id']; ?>"><button type=" button" class="btn btn-success float-end">Add Question</button></a>
+                                    <a class="btn btn-primary mr-3" id="createFilesButton" href="/admin/exam/preview?exam_id=<?php echo $exam['id']; ?>" data-id="<?php echo $exam['id']; ?>" id="submit">Upload exam</a>
+                                    <!-- <a class="btn btn-info mr-3 text-white" href="/admin/exam/edit?id=<?php echo $exam['id']; ?>">Edit</a> -->
                             <?php
+                                }
                             }
                             ?>
                         </div>
                     </div>
                 </div>
-                <div class="white_card_body">
-                    <div class="card-body ">
+                <div class="white_card_body ml-10">
+                    <div class="card-body d-flex ">
                         <?php
                         // echo "<pre>";
                         // var_dump($exam);
                         // die();
                         ?>
-                        <div class="mb-3 col-5 mr-12" style="">
+                        <div class="mb-3 col-4 mr-10" style="">
                             <b><label class="form-label" for="title">Title : </label></b>
                             <?php echo $exam['title'] ?>
+                            <br>
+                            <b><label class="form-label" for="author">Author : </label></b>
+                            <?php echo $user[0]['name'] ?>
+                            <br>
+                            <b><label class="form-label" for="description">Description : </label></b>
+                            <?php echo isset($exam['description']) ? $exam['description'] : "Chưa có mô tả"; ?>
+                            <br>
+                            <b><label class="form-label" for="status">Status : </label></b>
+                            <?php
 
+                            if ($currentTime < $startTime) {
+                            ?>
+                                <span style="color: #FF0000;">Not Started</span>
+                            <?php
+
+                            } elseif ($currentTime >= $startTime && $currentTime <= $endTime) { ?>
+                                <span style="color: #3c7cdb;">In Progress</span>
+                            <?php
+                            } else {
+                            ?>
+                                <span style="color: #008000;">Finished</span>
+                            <?php
+                            }
+                            ?>
                             <br>
-                            <b><label class="form-label" for="title">Description : </label></b>
-                            <?php echo isset($exam['description']) ? $exam['description'] : "" ?>
-                            <br>
-                            <b><label class="form-label" for="status">Status </label></b>
+
+                            <b><label class="form-label" for="status">Publish </label></b>
                             <?php echo $exam['published'] == 1 ? "Đã upload lên server" : " Chưa upload lên server" ?>
-                            <br>
-                            <b><label class="form-label" for="link_exam">Link exam </label></b>
-                            <?php echo $exam['published'] == 1 ? "Đã upload lên server" : " Chưa upload lên server" ?>
+
+                            <?php
+                            if ($exam['published'] == 1) {
+                                // $directory['domain'] = "asd"; 
+                            ?>
+                                <br>
+                                <b><label class="form-label" for="link_exam">Link exam </label></b>
+                                <button onclick="copyLink('linkToCopy<?php echo $exam['id']; ?>')" class="linkToCopy text-primary-hover" id="linkToCopy<?php echo $exam['id']; ?>" href="<?php echo $directory['domain'] . $exam['id'] . '.html' ?>"><?php echo $directory['domain'] . $exam['id'] . '.html' ?> </button>
+
+                            <?php                                }
+
+                            ?>
                             <br>
                             <b><label class="form-label" for="time_start">Time start : </label></b>
-                            <?php echo isset($exam['time_start']) ? $exam['time_start'] : "" ?>
+                            <?php echo isset($exam['time_start']) ? $exam['time_start'] : "Chưa có thời gian làm bài!" ?>
                             <br>
                             <b><label class="form-label" for="time_end">Time end : </label></b>
-                            <?php echo isset($exam['time_end']) ? $exam['time_end'] : "" ?>
+                            <?php echo isset($exam['time_end']) ? $exam['time_end'] : "Chưa có thời gian làm bài!" ?>
                             <br>
-                            <b><label class="form-label" for="email">Email : </label></b>
+                            <!-- <b><label class="form-label" for="email">Email : </label></b> -->
                         </div>
-                        <div class="col-4 mr-7">
+                        <div class="col-5 ml-15">
+                            <b><label class="form-label" for="email">Email : </label></b>
                             <table class="table table-striped table-bordered table-responsive">
                                 <thead>
                                     <tr class="text-center">
@@ -134,48 +178,39 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <div class="overflow-auto" >
-                                                    <?php
-                                                    $stt = 1;
-
-                                                    foreach ($answers as $answer) {
-                                                        $answer = explode('-', $answer);
-
-                                                        if ($answer['1'] == 1) {
-                                                    ?>
-                                                            <span style="font-weight:bold;color:blue ;border: 1px solid; margin-right: 10px; padding: 1px; border-radius:2px"><?php echo  $answer[0] ?> </span>
-
+                                                <!-- <div class="overflow-auto"> -->
+                                                <div class="answer-container">
+                                                    <ul>
                                                         <?php
-                                                        } else { ?>
-                                                            <span style="border: 1px solid; margin-right: 10px; padding: 1px; border-radius:2px"><?php echo  $answer[0] ?> </span>
-                                                    <?php
+                                                        $stt = 1;
+
+                                                        foreach ($answers as $answer) {
+                                                            $answer = explode('-', $answer);
+
+                                                            if ($answer['1'] == 1) {
+                                                        ?>
+                                                                <li class="text-ellipsis" style="font-weight:bold;color:blue ;border: 1px solid; padding: 1px; border-radius:2px; margin-bottom: 7px;"><?php echo  $answer[0] ?> </li>
+
+                                                            <?php
+                                                            } else { ?>
+                                                                <li class="text-ellipsis" style="border: 1px solid; padding: 1px; border-radius:2px;margin-bottom: 7px;"><?php echo  $answer[0] ?> </li>
+                                                        <?php
+                                                            }
                                                         }
-                                                    }
-                                                    ?>
+                                                        ?>
+                                                    </ul>
                                                 </div>
                                             </td>
                                             <?php
                                             if ($cur_user['role_id'] != 3) {
+                                                if ($check_status) {
                                             ?>
-                                                <td>
-                                                    <!-- <button type="button" data-path="exam" data-id="<?php echo $exam['id']; ?>" class="btn btn-danger text-white btn-delete-question ">Delete</button> -->
-                                                    <button data-question_id="<?php echo $exam_detail['question_id']; ?>" data-exam_id="<?php echo $exam['id']; ?>" type="button" class=" btn btn-danger text-white btn-delete-exam-detail">Delete</button>
-
-                                                    <!-- <div class="dropdown">
-                                                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            Action
-                                                        </button>
-                                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-
-                                                            <li>
-                                                                <button data-question_id="<?php echo $exam_detail['question_id']; ?>" data-exam_id="<?php echo $exam['id']; ?>" type="button" class=" btn-delete-exam-detail dropdown-item">Delete</button>
-                                                            </li>
-
-                                                        </ul>
-                                                    </div> -->
-
-                                                </td>
+                                                    <td class="col-2">
+                                                        <a href="/admin/question/edit?question_id=<?php echo $exam_detail['question_id']; ?>"><button type="button" class="btn btn-info text-white">Edit</button></a>
+                                                        <button data-question_id="<?php echo $exam_detail['question_id']; ?>" data-exam_id="<?php echo $exam['id']; ?>" type="button" class=" btn btn-danger text-white btn-delete-exam-detail">Delete</button>
+                                                    </td>
                                             <?php
+                                                }
                                             }
                                             ?>
                                         </tr>

@@ -95,13 +95,24 @@
 <!-- exam participants -->
 <?php
 $participants = "";
+$link_exam_random = "";
+$current_time = (new \DateTime())->format('Y-m-d H:i:s');
+
 if (count($exam_participants) > 0) {
     foreach ($exam_participants as $exam_participant) {
         $participants .= $exam_participant['email'] . "," . $exam_participant['is_login'] . "," . $exam_participant['is_submit'] . "\n";
+
+        //link random
+        $str_random = $current_time . $exam_participant['id'];
+        $hash = hash('sha256', $str_random);
+        $randomChars = substr($hash, 0, 10);
+        $link_exam_random .= $randomChars . "\n";
     }
 }
+
 ?>
 <div class="hidden" id="csv_exam_participants"><?php echo $participants; ?></div>
+<div class="hidden" id="csv_exam_link_random"><?php echo $link_exam_random; ?></div>
 <script>
     const submitBtn = document.querySelector('#submit')
 

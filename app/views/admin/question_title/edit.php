@@ -9,7 +9,7 @@
         </div>
         <div class="white_card_body">
             <div class="card-body">
-                <form id="form_update_question" class=" col-12" action="/admin/question-title/update" method="POST">
+                <form id="form_update_question" class="ml-10 col-12" action="/admin/question-title/update" method="POST">
                     <input type="hidden" class="form-control" rows="3" value="<?php echo $question_title['id']; ?>" name="id" id="id" placeholder="Title..." />
 
                     <div class="mb-3 col-6" style="">
@@ -18,7 +18,7 @@
                     </div>
                     <div class="mb-3 col-6">
                         <label class="form-label" for="title">Description</label>
-                        <input class="form-control" rows="3" value="<?php echo isset($question_title['description']) ? $question_title['description'] : ''; ?>" name="description" id="description" placeholder="Description..." />
+                        <textarea class="form-control" rows="10" value="" name="description" id="description" placeholder="Description..."><?php echo isset($question_title['description']) ? $question_title['description'] : ''; ?></textarea>
                     </div>
                     <button id="submit" type="submit" class="btn btn-primary">Save</button>
                 </form>

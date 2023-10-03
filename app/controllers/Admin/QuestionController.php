@@ -82,7 +82,7 @@ class QuestionController extends  AppController
     public function check_length_answer($answers)
     {
         foreach ($answers as $answer) {
-            if (strlen($answer) > 255) {
+            if (strlen($answer) > 2000) {
                 return false;
             }
         }
@@ -115,7 +115,7 @@ class QuestionController extends  AppController
         }
 
         if (!$this->check_length_answer($answers)) {
-            return $this->errorResponse("Answer length is limited to 255 characters.");
+            return $this->errorResponse("Answer length is limited to 2000 characters.");
         }
         $is_corrects = $result_vali_ary['is_correct'];
         $question_check_ary = $this->obj_model->getBy('content', '=', $content);

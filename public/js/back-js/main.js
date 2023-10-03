@@ -961,6 +961,7 @@ function alertUploadFileExam() {
         var content = document.getElementById('content_exam');
         var csv_content = document.getElementById('csv_answer');
         var csv_exam_participants = document.getElementById('csv_exam_participants');
+        var csv_link_exam_radom = document.getElementById('csv_exam_link_random');
 
         if (csv_content) {
             csv_content = csv_content.innerHTML;
@@ -971,7 +972,10 @@ function alertUploadFileExam() {
         if (csv_exam_participants) {
             csv_exam_participants = csv_exam_participants.innerHTML;
         }
-
+        if (csv_link_exam_radom) {
+            csv_link_exam_radom = csv_link_exam_radom.innerHTML;
+        }
+        // console.log(csv_answer);
         var html_content = `
         <!DOCTYPE html>
         <html lang="en">
@@ -1032,11 +1036,12 @@ function alertUploadFileExam() {
                     data: {
                         html_content: html_content,
                         csv_content: csv_content,
-                        csv_exam_participants: csv_exam_participants
+                        csv_exam_participants: csv_exam_participants,
+                        csv_link_exam_radom: csv_link_exam_radom
                     },
                     success: function (response) {
-                        // console.log(response);
-                        window.history.back()
+                        console.log(response);
+                        // window.history.back()
 
                     },
                     error: function (E) {
@@ -1280,11 +1285,11 @@ function getQuestion(question_title_id) {
                     var answerHTML = '';
                     if (splitArray[0] == 1) {
                         answerHTML += `
-                        <li style="font-weight:bold;color:blue">${splitArray[1]}</li>
+                        <li class="" style="font-weight:bold;color:blue">${splitArray[1]}</li>
                     `;
                     } else {
                         answerHTML += `
-                        <li>${splitArray[1]}</li>
+                        <li class="">${splitArray[1]}</li>
                     `;
                     }
 
@@ -1296,16 +1301,17 @@ function getQuestion(question_title_id) {
                     bg_question = "selected"
                 }
                 const content = result.question_content;
-                const questionHTML = `<div class="col-12 d-flex mb-10 ques_exam ${bg_question}" onclick="select_ques_to_exam('${question_id}')" id="select_ques${question_id}" data-question_id="${question_id}" >
-                                            <div class="col-8 not-selected">
-                                                ${content}
-                                            </div>
-                                            <div class="col-4 not-selected">
-                                                <ul  id="answerList">
-                                                    ${answerListHTML}
-                                                </ul>
-                                            </div>
-                                        </div>`;
+                const questionHTML =
+                    `<div class="col-12 d-flex mb-10 ques_exam ${bg_question}" onclick="select_ques_to_exam('${question_id}')" id="select_ques${question_id}" data-question_id="${question_id}" >
+                        <div class="col-8 not-selected">
+                            ${content}
+                        </div>
+                        <div class="col-4 not-selected">
+                            <ul  id="answerList">
+                                ${answerListHTML}
+                            </ul>
+                        </div>
+                    </div>`;
                 questionListHTML += questionHTML;
             });
             console.log(data)

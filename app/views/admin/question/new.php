@@ -9,7 +9,7 @@
         </div>
         <div class="white_card_body" style="margin-left: 15px;">
             <div class="card-body d-flex">
-                <div class="mb-3 col-5 mr-12" style="">
+                <div class="mb-3 col-10 mr-12" style="">
                     <?php 
                     // echo "<pre>";
                     // var_dump($question_title);

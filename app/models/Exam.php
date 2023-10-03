@@ -182,11 +182,12 @@ class Exam extends Model
         $rules_ary = array(
             'title' => array(
                 'required',
-                'name',
                 'filled',
-                'max:255',
+                'maxLen:255',
             ),
-            'description' => array(),
+            'description' => array(
+                'maxLen:5000'
+            ),
         );
         switch ($change) {
             case 'add':
