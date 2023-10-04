@@ -18,13 +18,17 @@ my $email = $cgi->param("email");
 my $name = $cgi->param("name");
 my $code = $cgi->param("code");
 my $random = $cgi->param("random");
+my $check = $cgi->param("check");
 
 # The answer file of the test that the user is doing.
 my $file_csv = $cgi->param("id");
 # Results of user's work.
 my $exam_results_json = $cgi->param("exam_results");
 
-my $exam_results = decode_json($exam_results_json);
+my $exam_results;
+if ($check == 1) {
+    my $exam_results = decode_json($exam_results_json);
+}
 
 my $time_path = our $TIME;
 my $file_to_create = "$time_path$code-$file_csv.csv";
@@ -33,7 +37,7 @@ my %correct_answers;
 
 my $folder_to_check = our $CSV;
 
-if(!$email || !looks_like_number($file_csv) || !$name || !$code || !$exam_results_json){
+if(!$email || !looks_like_number($file_csv) || !$name || !$code){
     print "Content-Type: text/html\n\n";
     print 0;
     exit(0);
@@ -119,99 +123,104 @@ if ($found) {
     exit(0);
 }
 #####################################
-$file_csv = "$file_csv.csv";
+if($check == 1) {
 
-unless (-d $folder_to_check) {
+    $file_csv = "$file_csv.csv";
+
+    unless (-d $folder_to_check) {
+        eval {
+            mkpath($folder_to_check);
+        };
+        if ($@) {
+            die "Unable to create directory: $@";
+        }
+    }
+
+    my $file_path = "$folder_to_check/$file_csv";
+
     eval {
-        mkpath($folder_to_check);
-    };
-    if ($@) {
-        die "Unable to create directory: $@";
-    }
-}
+        open my $file_handle, '<', $file_path or die "Can not open file $file_path: $!";
+        my $csv_f = Text::CSV->new({ binary => 1 });
 
-my $file_path = "$folder_to_check/$file_csv";
-
-eval {
-    open my $file_handle, '<', $file_path or die "Can not open file $file_path: $!";
-    my $csv_f = Text::CSV->new({ binary => 1 });
-
-    while (my $row = $csv_f->getline($file_handle)) {
-        my ($question_id, $answer) = @$row;
-        push @{$correct_answers{$question_id}}, $answer;
-    }
-
-    close $file_handle;
-
-    # Mark.
-    my $total_mark = 0;
-    my $total_question = 0;
-    while (my ($key, $value) = each %correct_answers) {
-        $total_question++;
-    }
-
-    foreach my $question_id (keys %$exam_results) {
-        my $user_answers = $exam_results->{$question_id};
-        my $correct_answer = $correct_answers{$question_id};
-        my $mark = 0;
-        my $count_ua = 0;
-        my $count_ca = 0;
-
-        foreach my $ele (@$user_answers) {
-            $count_ua++;
+        while (my $row = $csv_f->getline($file_handle)) {
+            my ($question_id, $answer) = @$row;
+            push @{$correct_answers{$question_id}}, $answer;
         }
-        foreach my $ele (@$correct_answer) {
-            $count_ca++;
-        }
-        
-        if ($count_ua == $count_ca) {
-            $mark = 1;
 
-            foreach my $user_answer (@$user_answers) {
-                unless (grep { $_ eq $user_answer } @$correct_answer) {
-                    $mark = 0;
-                    last;
-                }
+        close $file_handle;
+
+        # Mark.
+        my $total_mark = 0;
+        my $total_question = 0;
+        while (my ($key, $value) = each %correct_answers) {
+            $total_question++;
+        }
+
+        foreach my $question_id (keys %$exam_results) {
+            my $user_answers = $exam_results->{$question_id};
+            my $correct_answer = $correct_answers{$question_id};
+            my $mark = 0;
+            my $count_ua = 0;
+            my $count_ca = 0;
+
+            foreach my $ele (@$user_answers) {
+                $count_ua++;
             }
+            foreach my $ele (@$correct_answer) {
+                $count_ca++;
+            }
+            
+            if ($count_ua == $count_ca) {
+                $mark = 1;
 
-        } else {
-            $mark = 0;
+                foreach my $user_answer (@$user_answers) {
+                    unless (grep { $_ eq $user_answer } @$correct_answer) {
+                        $mark = 0;
+                        last;
+                    }
+                }
+
+            } else {
+                $mark = 0;
+            }
+            $total_mark += $mark;
         }
-        $total_mark += $mark;
-    }
 
-    # Email the results to the user.
-    sub send_mail {
-        print CGI::header();
-        my ($to) = @_;
-        my $from = our $EMAIL_FROM;
-        my $subject = our $EMAIL_SUBJECT;
-        my $message = "Dear $name\n";
-        $message .= our $EMAIL_CONTENT;
-        $message .= "Results: $total_mark / $total_question";
-        open(MAIL, "|/usr/local/bin/catchmail --smtp-ip 192.168.1.208 -f $from");
-        
-        # Email Header
-        print MAIL "To: $to\n";
-        print MAIL "From: $from\n";
-        print MAIL "Subject: $subject\n\n";
-        # Email Body
-        print MAIL $message;
+        # Email the results to the user.
+        sub send_mail {
+            print CGI::header();
+            my ($to) = @_;
+            my $from = our $EMAIL_FROM;
+            my $subject = our $EMAIL_SUBJECT;
+            my $message = "Dear $name\n";
+            $message .= our $EMAIL_CONTENT;
+            $message .= "Results: $total_mark / $total_question";
+            open(MAIL, "|/usr/local/bin/catchmail --smtp-ip 192.168.1.208 -f $from");
+            
+            # Email Header
+            print MAIL "To: $to\n";
+            print MAIL "From: $from\n";
+            print MAIL "Subject: $subject\n\n";
+            # Email Body
+            print MAIL $message;
 
-        close(MAIL);
-        
+            close(MAIL);
+            
+            print "Content-Type: text/html\n\n";
+            print 1;
+        }
+
+        # Send mail for user
+        send_mail($email);
+
+        # Send mail for admin
+        send_mail('hoangcongtruong10102001@gmail.com');
+    };
+
+    if ($@) {
         print "Content-Type: text/html\n\n";
-        print 1;
+        print "false";
     }
-
-    # Send mail for user
-    send_mail($email);
-
-    # Send mail for admin
-    send_mail('hoangcongtruong10102001@gmail.com');
-};
-
-if ($@) {
-    print "Content-Type: text/html\n\n";
-    print "false";
 }
+print "Content-Type: text/html\n\n";
+

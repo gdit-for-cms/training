@@ -48,7 +48,7 @@ let stored_minutes = localStorage.getItem('countdown_minutes')
 let stored_seconds = localStorage.getItem('countdown_seconds')
 
 // If there is no local time, set a fixed number
-let minutes = stored_minutes ? parseInt(stored_minutes) : 10
+let minutes = stored_minutes ? parseInt(stored_minutes) : 1
 let seconds = stored_seconds ? parseInt(stored_seconds) : 0
 //////////////////////////////////////////////////////
 
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (show_name && show_name) {
             show_email.innerHTML = user_email
             show_name.innerHTML = user_name
-    
+
             exam_id = localStorage.getItem('id')
             code = user_email.match(/([^@]*)@/)
             var data = {
@@ -106,6 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
             })
+            setInterval(save_time, 1000)
         }
     }
  
@@ -231,12 +232,37 @@ function modal_login(mes, off) {
 
     // 1: hidden button yes; 2: remove hidden button yes
     if(off == 1) {
-        btn_yes.setAttribute("hidden", true)
-        btn_accept_submit.setAttribute("hidden", true)
+        if (btn_yes) {
+            btn_yes.setAttribute("hidden", true)
+        }
+        if (btn_accept_submit) {
+            btn_accept_submit.setAttribute("hidden", true)
+        }
     } else {
-        btn_yes.removeAttribute("hidden")
-        btn_accept_submit.removeAttribute("hidden")
+        if (btn_yes) {
+            btn_yes.removeAttribute("hidden")
+        }
+        if (btn_accept_submit) {        
+            btn_accept_submit.removeAttribute("hidden")
+        }
     }
+}
+
+function save_time() {
+    var data_to_send = {
+        minutes : minutes,
+        seconds : seconds,
+        email   : user_email.match(/([^@]*)@/),
+        id      : localStorage.getItem('id')
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "/cgi/save_time.cgi",
+        data: data_to_send,
+        success: function (response) {
+        }
+    })
 }
 
 function error_login(number) {
@@ -305,7 +331,8 @@ function after_submit() {
         id: id,
         code: code[1],
         random: localStorage.getItem('code'),
-        exam_results: JSON.stringify(exam_results)
+        exam_results: JSON.stringify(exam_results),
+        check: 1
     }
 
     // Switch to the handle folder to process the scoring and email the results.
@@ -361,7 +388,7 @@ function updateCountdown() {
         localStorage.setItem('countdown_seconds', seconds.toString())
     }
 
-    if (minutes == 1 && seconds == 59) {
+    if (minutes == 0 && seconds == 59) {
         modal_accept_submit.style.display = 'none'
         btn_close_accept_submit.removeAttribute("hidden")
 
@@ -392,9 +419,31 @@ function check_time() {
             } else {
                 var message = `<h5>You cheated by interfering in the calculation of exam time. You cannot submit this test!</h5>`
                 modal_login(message, 1)
-                remove_data()
+                
+                var id = localStorage.getItem('id')
+                code = user_email.match(/([^@]*)@/)
 
-                setTimeout(window.location.href = '/view/login.html', 5000)
+                var data_to_send = {
+                    email       : user_email,
+                    name        : user_name,
+                    id          : id,
+                    code        : code[1],
+                    random      : localStorage.getItem('code'),
+                    exam_results: [],
+                    check       : 0
+                }
+
+                // Switch to the handle folder to process the scoring and email the results.
+                $.ajax({
+                    type: "POST",
+                    url: "/cgi/handle.cgi",
+                    data: data_to_send,
+                    success: function (response) {
+                        remove_data()
+                        
+                        setTimeout(window.location.href = '/view/login.html', 5000)
+                    }
+                })
             }
         }
     })

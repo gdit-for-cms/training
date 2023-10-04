@@ -4,17 +4,20 @@ our $HTML = '/htdocs/training2/training/server_public';
 # Path to a file containing a valid email list
 our $EMAIL = 'email/email';
 
-# Path to file containing times
-our $RANDOM = 'random/';
+# Path to file containing random
+our $RANDOM = 'random/ran';
 
 # Path to file containing times
 our $TIME = 'time/';
 
-# Path to file containing time die
-our $TIME_DIE = 'time_die/';
+# Path to time storage file
+our $SAVE_TIME = 'save_time/';
 
 # Path to the file containing the answer
 our $CSV = 'csv';
+
+# Time to take the test
+our $TIME_TEST = 1;
 
 # Setting SEND EMAIL
 our $EMAIL_FROM     = 'truong.hc@globaldesignit.vn';
