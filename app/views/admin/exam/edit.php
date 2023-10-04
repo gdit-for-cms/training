@@ -114,23 +114,27 @@
                                     </td>
                                     <td>
                                         <div class="overflow-auto">
-                                            <?php
-                                            $stt = 1;
-
-                                            foreach ($answers as $answer) {
-                                                $answer = explode('-', $answer);
-
-                                                if ($answer['1'] == 1) {
-                                            ?>
-                                                    <span style="font-weight:bold;color:blue ;border: 1px solid; margin-right: 10px; padding: 1px; border-radius:2px"><?php echo  $answer[0] ?> </span>
-
+                                            <ul>
                                                 <?php
-                                                } else { ?>
-                                                    <span style="border: 1px solid; margin-right: 10px; padding: 1px; border-radius:2px"><?php echo  $answer[0] ?> </span>
-                                            <?php
+                                                $stt = 1;
+                                                $alphabet = range('A', 'Z');
+                                                $answerIndex = 0;
+                                                foreach ($answers as $answer) {
+                                                    $answer = explode('-', $answer);
+
+                                                    if ($answer['1'] == 1) {
+                                                ?>
+                                                        <li class="text-ellipsis" style="color:#008000 "><?php echo  $alphabet[$answerIndex] . ". " . $answer[0] ?> </li>
+
+                                                    <?php
+                                                    } else { ?>
+                                                        <li class="text-ellipsis" style=""><?php echo   $alphabet[$answerIndex] . ". " . $answer[0] ?> </li>
+                                                <?php
+                                                    }
+                                                    $answerIndex++;
                                                 }
-                                            }
-                                            ?>
+                                                ?>
+                                            </ul>
                                         </div>
                                     </td>
                                     <?php

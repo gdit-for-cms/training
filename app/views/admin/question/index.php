@@ -22,36 +22,28 @@
               </th>
               <th>#</th>
               <th>TITLE</th>
-              <!-- <th>
-                TYPE
-                <select class="role_select select_option w-26 text-medium border " name="role_id" aria-label="Default select example">
-                  <option value="0" selected="">All Status</option>
-                  <option value="1">PHP</option>
-                  <option value="2">AI</option>
-                  <option value="3">BO</option>
-                </select>
-              </th> -->
-              <!-- <th>DESCIPTION</th> -->
               <th>UPDATE_AT</th>
               <th>ACTION</th>
             </tr>
           </thead>
           <tbody class="body_table_main" id="table_result">
             <tr>
-              <th class="text-center"><input type="checkbox" value="" disabled class="checkbox" id=""></th>
+              <th class="text-center">
+                <!-- <input type="checkbox" value="" disabled class="checkbox" id=""> -->
+                
+              </th>
 
-              <td class="">#</td>
-              <td class="text-ellipsis">
+              <th class="">#</th>
+              <th class="text-ellipsis">
                 Other
-              </td>
+              </th>
               <td class="text-ellipsis">
-                2023-10-03 08:38:56
+                <!-- 2023-10-03 08:38:56 -->
               </td>
               <td>
-                <a href="/admin/question/detail?question_id=69"><button type="button" class="btn btn-success">Detail</button></a>
-                <a href="/admin/question-title/edit?ques-title=69"><button type="button" class="btn btn-info text-white">Edit</button></a>
-                <button type="button" data-path="question-title" data-id="69" class="btn btn-danger text-white btn-delete-question ">Delete</button>
-
+                <a href="/admin/question/detail?question_id=other"><button type="button" class="btn btn-success">Detail</button></a>
+                <!-- <a href="/admin/question-title/edit?ques-title=other"><button type="button" class="btn btn-info text-white">Edit</button></a> -->
+                <button type="button" data-path="question-title" data-id="null" class="btn btn-danger text-white btn-delete-question ">Delete</button>
               </td>
             </tr>
             <?php
@@ -79,19 +71,6 @@
                   <a href="/admin/question/detail?question_id=<?php echo $question_title['question_id']; ?>"><button type="button" class="btn btn-success">Detail</button></a>
                   <a href="/admin/question-title/edit?ques-title=<?php echo $question_title['question_id']; ?>"><button type="button" class="btn btn-info text-white">Edit</button></a>
                   <button type="button" data-path="question-title" data-id="<?php echo $question_title['question_id']; ?>" class="btn btn-danger text-white btn-delete-question ">Delete</button>
-
-                  <!-- <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                      Action
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                      <li><a class="dropdown-item" href="/admin/question/detail?question_id=<?php echo $question_title['question_id']; ?>">Detail</a></li>
-                      <li><a class="dropdown-item" href="/admin/question-title/edit?ques-title=<?php echo $question_title['question_id']; ?>">Edit</a></li>
-                      <li>
-                        <button type="button" data-id="<?php echo $question_title['question_id']; ?>" class="dropdown-item btn-delete-question ">Delete</button>
-                      </li>
-                    </ul>
-                  </div> -->
                 </td>
               </tr>
             <?php

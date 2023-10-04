@@ -14,7 +14,7 @@
                             $check_status = false;
                             $currentTime = time();
 
-                            if ($currentTime < $startTime) {
+                            if ($currentTime < $startTime || empty($startTime)) {
                                 $check_status = true; ?>
                                 <?php
 
@@ -183,19 +183,21 @@
                                                     <ul>
                                                         <?php
                                                         $stt = 1;
-
+                                                        $alphabet = range('A', 'Z');
+                                                        $answerIndex = 0;
                                                         foreach ($answers as $answer) {
                                                             $answer = explode('-', $answer);
 
                                                             if ($answer['1'] == 1) {
                                                         ?>
-                                                                <li class="text-ellipsis" style="font-weight:bold;color:blue ;border: 1px solid; padding: 1px; border-radius:2px; margin-bottom: 7px;"><?php echo  $answer[0] ?> </li>
+                                                                <li class="text-ellipsis" style="color:#008000 "><?php echo  $alphabet[$answerIndex] .". ". $answer[0] ?> </li>
 
                                                             <?php
                                                             } else { ?>
-                                                                <li class="text-ellipsis" style="border: 1px solid; padding: 1px; border-radius:2px;margin-bottom: 7px;"><?php echo  $answer[0] ?> </li>
+                                                                <li class="text-ellipsis" style=""><?php echo   $alphabet[$answerIndex] .". ". $answer[0] ?> </li>
                                                         <?php
                                                             }
+                                                            $answerIndex++;
                                                         }
                                                         ?>
                                                     </ul>

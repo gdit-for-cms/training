@@ -62,8 +62,11 @@
                                     $startTime = strtotime($exam['time_start']);
                                     $endTime = strtotime($exam['time_end']);
                                     $currentTime = time();
-
-                                    if ($currentTime < $startTime) {
+                                    // $timezone = date_default_timezone_get();
+                                    // echo "Múi giờ hiện tại: " . $timezone;
+                                    // var_dump($currentTime);
+                                    // die();
+                                    if ($currentTime < $startTime || empty($startTime)) {
                                         $check_status = true; ?>
                                         <span style="color: #FF0000;">Not Started</span>
                                     <?php
@@ -71,7 +74,7 @@
                                     } elseif ($currentTime >= $startTime && $currentTime <= $endTime) { ?>
                                         <span style="color: #3c7cdb;">In Progress</span>
                                     <?php
-                                    } else {
+                                    } elseif ($endTime < $currentTime) {
                                     ?>
                                         <span style="color: #008000;">Finished</span>
                                     <?php

@@ -352,6 +352,35 @@ class ExamController extends AppController
         $this->deleteFTP($file_answer_csv);
         $this->deleteFTP($file_email_csv);
     }
+
+    // public function uploadFileToFTP($fileContent, $remoteDirectory, $fileName)
+    // {
+    //     $ftpConnection = $this->configFTP();
+
+    //     if (!$ftpConnection) {
+    //         return false;
+    //     }
+
+    //     $remotePath = $remoteDirectory . basename($fileName);
+
+    //     // Ghi nội dung tệp vào một tệp tạm trên server
+    //     $tempFilePath = 'path_to_temp_file'; // Điều chỉnh đường dẫn tệp tạm
+    //     file_put_contents($tempFilePath, $fileContent);
+
+    //     // Tải tệp tạm lên FTP
+    //     $uploadResult = ftp_put($ftpConnection, $remotePath, $tempFilePath, FTP_BINARY);
+
+    //     // Đặt quyền truy cập cho tệp đã tải lên
+    //     if ($uploadResult) {
+    //         ftp_chmod($ftpConnection, 0777, $remotePath);
+    //     }
+
+    //     // Xóa tệp tạm trên server
+    //     unlink($tempFilePath);
+
+    //     return $uploadResult;
+    // }
+
     public function uploadAction(Request $request)
     {
         $check_config = $this->configFTP();
@@ -371,7 +400,7 @@ class ExamController extends AppController
         $file_name = $exam_id;
         //file email exam participant
         $file_exam_participant = "email" . $exam_id;
-        $file_link_random_exam = "rand".$exam_id;
+        $file_link_random_exam = "rand" . $exam_id;
 
         $full_new_directory = $your_server_directory . $file_name;
         $full_new_directory_exam = $your_server_directory . $file_exam_participant;
@@ -400,13 +429,13 @@ class ExamController extends AppController
                 $chmod_html = ftp_chmod($check_config, 0777, $html_directory . basename($your_server_directory_html));
                 $chmod_csv = ftp_chmod($check_config, 0777, $csv_directory . basename($your_server_directory_csv));
                 $chmod_email = ftp_chmod($check_config, 0777, $email_directory . basename($your_server_directory_email));
-                // $chmod_link_random = ftp_chmod($check_config, 0777, $exam_random_derectory . basename($your_server_directory_link_exam));
+                $chmod_link_random = ftp_chmod($check_config, 0777, $exam_random_derectory . basename($your_server_directory_link_exam));
 
                 unlink($your_server_directory_html);
                 unlink($your_server_directory_csv);
                 unlink($your_server_directory_email);
                 unlink($your_server_directory_link_exam);
-                if (!$upload_html && !$upload_csv && !$upload_email) {
+                if (!$upload_html && !$upload_csv && !$upload_email && !$upload_link_exam_random) {
                     die("Cann't upload");
                 }
             } else {
@@ -564,13 +593,14 @@ class ExamController extends AppController
         // $this->deleteFileFTPExam($exam_id);
     }
 
-    // public function detailDeleteAction(Request $request)
-    // {
-    //     $question_id = $request->getGet()->get('question_id');
-    //     $exam_id = $request->getGet()->get('exam_id');
+    //xóa question trong exam
+    public function detailDeleteAction(Request $request)
+    {
+        $question_id = $request->getGet()->get('question_id');
+        $exam_id = $request->getGet()->get('exam_id');
 
-    //     $this->obj_model_exam_question->destroyBy("question_id = $question_id and exam_id = $exam_id");
-    // }
+        $this->obj_model_exam_question->destroyBy("question_id = $question_id and exam_id = $exam_id");
+    }
 
     // public function detailEditAction(Request $request)
     // {

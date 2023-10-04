@@ -6,6 +6,7 @@ use App\Controllers\Admin\AppController;
 use Core\Http\Request;
 use App\models\Question;
 use App\models\Answer;
+use App\Models\ExamQuestion;
 use App\Models\QuestionTitle;
 use App\Requests\AppRequest;
 use Core\Http\ResponseTrait;
@@ -26,12 +27,15 @@ class QuestionController extends  AppController
 
     public object $obj_model_question_title;
 
+    public object $obj_model_exam_question;
+
     public function __construct()
     {
         $this->obj_model = new Question;
         $this->obj_model_answer = new Answer;
         $this->obj_model_question_title = new QuestionTitle;
         $this->app_request = new AppRequest;
+        $this->obj_model_exam_question = new ExamQuestion;
     }
 
     public function indexAction(Request $request)
@@ -55,9 +59,9 @@ class QuestionController extends  AppController
         $question_title_id = $req_method_ary['ques-title'];
         $question_title = $this->obj_model_question_title->getById($question_title_id, 'id, title, description');
         $this->data_ary['question_title'] = $question_title;
-        // echo "<pre>";
-        // var_dump($this->data_ary['question_title']);
-        // die();
+        if (isset($req_method_ary['exam_id'])) {
+            $this->data_ary['exam_id'] = $req_method_ary['exam_id'];
+        }
         $this->data_ary['content'] = 'question/new';
     }
 
@@ -101,8 +105,12 @@ class QuestionController extends  AppController
         if (isset($result_vali_ary['question_title_id'])) {
             $question_title_id = $result_vali_ary['question_title_id'];
         }
-        $answers =  $result_vali_ary['answer'];
-
+        if (isset($result_vali_ary['answer'])) {
+            $answers =  $result_vali_ary['answer'];
+        }
+        if (isset($result_vali_ary['exam_id'])) {
+            $exam_id =  $result_vali_ary['exam_id'];
+        }
         if (!$this->check_enter_answer($answers)) {
             return $this->errorResponse("You need to enter the answer.");
         }
@@ -141,6 +149,14 @@ class QuestionController extends  AppController
                 }
 
                 $question = $this->obj_model->getBy("content", "=", $content);
+                if (isset($exam_id)) {
+                    $this->obj_model_exam_question->create(
+                        [
+                            'question_id' => $question[0]['id'],
+                            'exam_id' => $exam_id,
+                        ]
+                    );
+                }
                 foreach ($answers as $index => $answerContent) {
                     $isCorrect = in_array($index, $is_corrects) ? 1 : 0;
                     $this->obj_model_answer->create(
@@ -170,7 +186,8 @@ class QuestionController extends  AppController
 
     public function deleteAction(Request $request)
     {
-        $question_id = $request->getGet()->get('id');
+        $question_id = $request->getGet()->get('id');echo $question_id;
+        die();
         $this->obj_model->destroyBy("id = $question_id");
     }
 
@@ -239,15 +256,22 @@ class QuestionController extends  AppController
     {
         $req_method_ary = $request->getGet()->all();
         $results_per_page = 5;
-        $results_ary = $this->obj_model->getAllRelation($req_method_ary, $results_per_page);
+        if ($req_method_ary['question_id'] == "other") {
+            $results_ary = $this->obj_model->getQuestionOther($req_method_ary, $results_per_page);
+        } else {
+            $results_ary = $this->obj_model->getAllRelation($req_method_ary, $results_per_page);
+            $question_title_id = $req_method_ary['question_id'];
+            $this->data_ary['question_title'] = $this->obj_model_question_title->getById($question_title_id, "title,description");
+        }
         $this->data_ary['question_titles'] = $results_ary['results'];
         $numbers_of_result = $results_ary['numbers_of_page'];
         $numbers_of_page = ceil($numbers_of_result / $results_per_page);
         $this->data_ary['numbers_of_page'] = $numbers_of_page;
         $this->data_ary['page'] = (float)$results_ary['page'];
-        $question_title_id = $req_method_ary['question_id'];
-        $this->data_ary['question_title'] = $this->obj_model_question_title->getById($question_title_id, "title,description");
 
+        // echo "<pre>";
+        // var_dump($this->data_ary['question_titles']);
+        // die();
         $this->data_ary['content'] = 'question/detail';
     }
 

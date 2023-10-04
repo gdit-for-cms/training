@@ -104,7 +104,7 @@ function checkPathName() {
     }
     else if (pathName.includes('/admin/exam')) {
         const selectElement = document.getElementById('questionSelect');
-        var selectedOption = selectElement.options[selectElement.selectedIndex];
+        let selectedOption = selectElement.options[selectElement.selectedIndex];
 
         content = `
                     <div class="d-flex justify-content-center align-items-center w-full">
@@ -160,7 +160,7 @@ function submitForm(formId) {
                         setTimeout(() => {
                             document.location.reload(true);
                         }, "1600");
-                        // window.history.back()
+                        window.history.back()
 
                     },
                     error: function (response) {
@@ -343,7 +343,8 @@ function alertDeleteQuestion() {
     $('.btn-delete-question').click(function (e) {
         let deleteID = $(this).data('id');
         let path = $(this).data('path');
-
+        // console.log(path)
+        // console.log(deleteID)
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -1041,7 +1042,7 @@ function alertUploadFileExam() {
                     },
                     success: function (response) {
                         console.log(response);
-                        // window.history.back()
+                        window.history.back()
 
                     },
                     error: function (E) {
@@ -1183,74 +1184,75 @@ function alertEditDetailExam(formId) {
     })
 }
 
-function searchInputs() {
-    // Lưu trạng thái ban đầu của phân trang
-    const searchInput = document.getElementById("searchInput");
-    const paginationContainer = document.getElementById("paginations");
-    searchInput.addEventListener("input", function () {
+// function searchInputs() {
+//     alert("a");
+//     // Lưu trạng thái ban đầu của phân trang
+//     const searchInput = document.getElementById("searchInput");
+//     const paginationContainer = document.getElementById("paginations");
+//     searchInput.addEventListener("input", function () {
 
-        var keyword = searchInput.value;
-        const pathName = "question";
-        const method = "POST";
-        const url = `/admin/${pathName}/search`;
+//         var keyword = searchInput.value;
+//         const pathName = "question";
+//         const method = "POST";
+//         const url = `/admin/${pathName}/search`;
 
-        if (keyword.trim() == "") {
-            paginationContainer.style.display = "flex";
-        } else {
-            paginationContainer.style.display = "none";
-        }
-        const xhr = new XMLHttpRequest();
-        xhr.open(method, url, true);
+//         if (keyword.trim() == "") {
+//             paginationContainer.style.display = "flex";
+//         } else {
+//             paginationContainer.style.display = "none";
+//         }
+//         const xhr = new XMLHttpRequest();
+//         xhr.open(method, url, true);
 
-        // Xác định dữ liệu bạn muốn gửi dưới dạng form data
-        const formData = new FormData();
-        formData.append("keyword", keyword);
+//         // Xác định dữ liệu bạn muốn gửi dưới dạng form data
+//         const formData = new FormData();
+//         formData.append("keyword", keyword);
 
-        // Gửi yêu cầu AJAX đi
-        xhr.send(formData);
+//         // Gửi yêu cầu AJAX đi
+//         xhr.send(formData);
 
-        // Xử lý sự kiện khi yêu cầu hoàn thành
-        xhr.onload = function () {
-            // Xử lý phản hồi từ controller
-            const response = JSON.parse(xhr.responseText);
-            const table_result = document.getElementById("table_result");
-            console.log(response)
+//         // Xử lý sự kiện khi yêu cầu hoàn thành
+//         xhr.onload = function () {
+//             // Xử lý phản hồi từ controller
+//             const response = JSON.parse(xhr.responseText);
+//             const table_result = document.getElementById("table_result");
+//             console.log(response)
 
-            if (response.success == 200) {
-                let result = response.result.results;
-                let resultHTML = '';
-                let stt = 1;
+//             if (response.success == 200) {
+//                 let result = response.result.results;
+//                 let resultHTML = '';
+//                 let stt = 1;
 
-                for (let i = 0; i < result.length; i++) {
-                    // console.log(result[i]['question_title']);
+//                 for (let i = 0; i < result.length; i++) {
+//                     // console.log(result[i]['question_title']);
 
-                    resultHTML += `<tr>
-                <td class="col-1">${stt++}</td>
-                <td class="col-2 text-ellipsis">${result[i]['question_title']}</td>
-                <td class="col-3 text-ellipsis">${result[i]['question_description']}</td>
-                <td class="col-1">2023-09-18 23:59:20</td>
-                <td class="col-1">
-                  <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                      Action
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                      <li><a class="dropdown-item" href="/admin/question/new?ques-title=${result[i]['question_id']}">Add Question</a></li>
-                      <li><a class="dropdown-item" href="/admin/question/detail?question_id=${result[i]['question_id']}">Detail</a></li>
-                      <li><a class="dropdown-item" href="/admin/question-title/edit?ques-title=${result[i]['question_id']}">Edit</a></li>
-                      <li>
-                        <button type="button" data-id="${result[i]['question_id']}" class="dropdown-item btn-delete-question">Delete</button>
-                      </li>
-                    </ul>
-                  </div>
-                </td>
-              </tr>`;
-                }
-                table_result.innerHTML = resultHTML;
-            };
-        };
-    });
-}
+//                     resultHTML += `<tr>
+//                 <td class="col-1">${stt++}</td>
+//                 <td class="col-2 text-ellipsis">${result[i]['question_title']}</td>
+//                 <td class="col-3 text-ellipsis">${result[i]['question_description']}</td>
+//                 <td class="col-1">2023-09-18 23:59:20</td>
+//                 <td class="col-1">
+//                   <div class="dropdown">
+//                     <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+//                       Action
+//                     </button>
+//                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+//                       <li><a class="dropdown-item" href="/admin/question/new?ques-title=${result[i]['question_id']}">Add Question</a></li>
+//                       <li><a class="dropdown-item" href="/admin/question/detail?question_id=${result[i]['question_id']}">Detail</a></li>
+//                       <li><a class="dropdown-item" href="/admin/question-title/edit?ques-title=${result[i]['question_id']}">Edit</a></li>
+//                       <li>
+//                         <button type="button" data-id="${result[i]['question_id']}" class="dropdown-item btn-delete-question">Delete</button>
+//                       </li>
+//                     </ul>
+//                   </div>
+//                 </td>
+//               </tr>`;
+//                 }
+//                 table_result.innerHTML = resultHTML;
+//             };
+//         };
+//     });
+// }
 
 function getQuestion(question_title_id) {
     // Gọi AJAX để lấy danh sách câu hỏi từ server
@@ -1412,67 +1414,91 @@ function searchAjax() {
                 let stt = 1;
 
                 for (let i = 0; i < result.length; i++) {
-                    console.log(result[i]['title']);
+                    // console.log(result[i]['title']);
 
                     if (pathName == "exam") {
-                        let status = '';
+                        let punlish = '';
                         let check = result[i]['published']
                         if (check == 1) {
-                            status = "Đã xuất bản"
+                            punlish = "Đã xuất bản" + "<br>" + result[i]['uploaded_at']
                         } else {
-                            status = "Chưa xuất bản"
+                            punlish = "Chưa xuất bản"
                         }
                         let linkExam = '';
                         if (result[i]['published'] == 1) {
                             linkExam = `<button onclick="copyLink('linkToCopy${result[i]['id']}')" class="linkToCopy text-primary-hover" id="linkToCopy${result[i]['id']}" href="${directory['domain']}${result[i]['id']}.html">${directory['domain']}${result[i]['id']}.html</button>`
                         }
+                        let btn_edit = '';
+                        let status = ''; // Biến để lưu trạng thái
+                        let startTime = result[i]['time_start'];
+                        let endTime = result[i]['time_end'];
+                        let currentTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' });
+
+                        if (startTime !== null) {
+                            startTime = new Date(startTime);
+                            endTime = new Date(endTime);
+                        } else {
+                            result[i]['time_start'] = "";
+                            result[i]['time_end'] = "";
+                        }
+                        currentTime = new Date(currentTime);
+
+                        if (startTime === null || currentTime < startTime) {
+                            status = '<span style="color: #FF0000;">Not Started</span>';
+                            //btn-edit
+                            btn_edit = `<a href="/admin/exam/edit?id=${result[i]['id']}"><button type="button" class="btn btn-info text-white mr-2">Edit</button></a>`
+
+                        } else if (currentTime >= startTime && currentTime <= endTime) {
+                            status = '<span style="color: #3c7cdb;">In Progress</span>';
+                        } else if (endTime < currentTime) {
+                            status = '<span style="color: #008000;">Finished</span>';
+                        }
+
 
                         resultHTML += `
       
                         <tr>
-                        <th class="text-center"><input type="checkbox" value=${result[i]['id']}" name="item[]" class="checkbox" id=""></th>
-
-                            <td class="">${stt++}</td>
+                            <th class="text-center">
+                                <input type="checkbox" value=${result[i]['id']}" name="item[]" class="checkbox" id="">
+                            </th>
+                            <th scope="row" class="">${stt++}</th>
                             <td class="text-ellipsis">
                             ${result[i]['title']}
                             </td>
-                           
                             <td>
-                                    In Progress
-                                </td>
-
+                                ${status}
+                            </td>
                             <td class="">
                                 <div class="overflow-auto">
-                                   ${status}<br>
-                                   __ngày/tháng/năm giờ/phút__
+                                   ${punlish}
                                 </div>
                             </td>
                             <td class="">
-                                ${result[i]['updated_at']}
-                          
-                                ${result[i]['updated_at']}
+                                ${result[i]['time_start']}
+                            <br>
+                                ${result[i]['time_end']}
                             </td>
                             <td class="">
-                            <a href="/admin/exam/examDetail?exam_id=${result[i]['id']}"><button type="button" class="btn btn-success">Detail</button></a>
-                            <a href="/admin/exam/edit?id=${result[i]['id']}"><button type="button" class="btn btn-info text-white">Edit</button></a>
-                            <button type="button" data-path="exam" data-id="${result[i]['id']}" class="btn btn-danger text-white btn-delete-question ">Delete</button>
-                            
+                                <div style="display:flex">
+                                    <a href="/admin/exam/examDetail?exam_id=${result[i]['id']}"><button type="button" class="btn btn-success mr-2">Detail</button></a>
+                                    ${btn_edit}
+                                    <button type="button" data-path="exam" data-id="${result[i]['id']}" class="btn btn-danger text-white btn-delete-question mr-2">Delete</button>
+                                </div>                            
                             </td>
                         </tr>
-      `;
+                         `;
                     } else if (pathName == "question") {
                         resultHTML += `<tr>
-            <th class="text-center"><input type="checkbox" value="${result[i]['question_id']}" name="item[]" class="checkbox" id=""></th>
-            <td class="">${stt++}</td>
-            <td class="text-ellipsis">${result[i]['question_title']}</td>
-            <td class="">2023-09-18 23:59:20</td>
-            <td class="">
-            <a href="/admin/question/detail?question_id=${result[i]['question_id']}"><button type="button" class="btn btn-success">Detail</button></a>
-            <a href="/admin/question-title/edit?ques-title=${result[i]['question_id']}"><button type="button" class="btn btn-info text-white">Edit</button></a>
-            <button type="button" data-path="exam" data-id="${result[i]['question_id']}" class="btn btn-danger text-white btn-delete-question ">Delete</button>
-
-            </td>
-          </tr>`;
+                                            <th class="text-center"><input type="checkbox" value="${result[i]['question_id']}" name="item[]" class="checkbox" id=""></th>
+                                            <th class="">${stt++}</th>
+                                            <td class="text-ellipsis">${result[i]['question_title']}</td>
+                                            <td class="">${result[i]['question_updated_at']}</td>
+                                            <td class="">
+                                                <a href="/admin/question/detail?question_id=${result[i]['question_id']}"><button type="button" class="btn btn-success">Detail</button></a>
+                                                <a href="/admin/question-title/edit?ques-title=${result[i]['question_id']}"><button type="button" class="btn btn-info text-white">Edit</button></a>
+                                                <button type="button" data-path="question-title" data-id="${result[i]['question_id']}" class="btn btn-danger text-white btn-delete-question ">Delete</button>
+                                            </td>
+                                        </tr>`;
                     }
                 }
                 table_result.innerHTML = resultHTML;

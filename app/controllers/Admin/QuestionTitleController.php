@@ -73,7 +73,11 @@ class QuestionTitleController extends  AppController
     public function deleteAction(Request $request)
     {
         $question_id = $request->getGet()->get('id');
-        $this->obj_model->destroyBy("id = $question_id");
+        if ($question_id == "null") {
+            $this->obj_model_question->destroyBy("question_title_id is $question_id");
+        } else {
+            $this->obj_model->destroyBy("id = $question_id");
+        }
     }
 
     public function editAction(Request $request)
@@ -91,7 +95,7 @@ class QuestionTitleController extends  AppController
         $this->data_ary['numbers_of_page'] = $numbers_of_page;
         $this->data_ary['page'] = (float)$results_ary['page'];
         $this->data_ary['question_title'] = $this->obj_model->getById($id, "id,title,description");
-        
+
         $this->data_ary['content'] = 'question_title/edit';
     }
 
@@ -119,7 +123,7 @@ class QuestionTitleController extends  AppController
         }
         $title = $result_vali_ary['title'];
         $description = $result_vali_ary['description'];
-        
+
         $ques_title_check_ary = $this->obj_model->getBy('title', '=', $post_ary['title']);
         $num_rows = count($ques_title_check_ary);
         $id = $post_ary['id'];

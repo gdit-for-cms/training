@@ -112,18 +112,14 @@ class Question extends Model
         ORDER BY
             question_title_id DESC";
 
-
         if (!isset($req_method_ary['page'])) {
             $req_method_ary['page'] = '1';
         }
         if ($req_method_ary['page'] < 1) {
             $req_method_ary['page'] = '1';
         }
-
-
         $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
         $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
-
         $stmt_count = $db->query($query);
         $numbers_of_page = count($stmt_count->fetchAll(PDO::FETCH_ASSOC));
         $stmt = $db->query($query . " " . $limit_query);
@@ -132,6 +128,42 @@ class Question extends Model
         return $results_ary;
     }
 
+    public function getQuestionOther($req_method_ary, $results_per_page = 5)
+    {
+        $db = static::getDB();
+        $query = "SELECT
+            q.content AS question_content,
+            a.is_correct AS answer_correct,
+            q.id AS question_id,
+            GROUP_CONCAT(CONCAT(a.is_correct, ' - ', a.content)) AS answers
+        FROM
+            question AS q 
+        LEFT JOIN
+            answer AS a ON q.id = a.question_id
+        WHERE 
+            q.question_title_id is null
+        GROUP BY
+             q.content
+        ORDER BY
+            q.id DESC";
+        if (!isset($req_method_ary['page'])) {
+            $req_method_ary['page'] = '1';
+        }
+        if ($req_method_ary['page'] < 1) {
+            $req_method_ary['page'] = '1';
+        }
+        $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
+        $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
+        $stmt_count = $db->query($query);
+        $numbers_of_page = count($stmt_count->fetchAll(PDO::FETCH_ASSOC));
+        $stmt = $db->query($query . " " . $limit_query);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results, 'page' => $req_method_ary['page']);
+        // echo "<pre>";
+        // var_dump($results_ary);
+        // die();
+        return $results_ary;
+    }
     public function getQuestionAnswer($req_method_ary, $results_per_page = 5)
     {
         $exam_id = $req_method_ary['exam_id'];

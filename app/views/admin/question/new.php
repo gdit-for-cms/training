@@ -10,7 +10,7 @@
         <div class="white_card_body" style="margin-left: 15px;">
             <div class="card-body d-flex">
                 <div class="mb-3 col-10 mr-12" style="">
-                    <?php 
+                    <?php
                     // echo "<pre>";
                     // var_dump($question_title);
                     // die();
@@ -41,6 +41,11 @@
         <div class="white_card_body">
             <div class="card-body">
                 <form id="form_new_question" class="" action="create" method="POST">
+                    <?php if (isset($exam_id)) {
+                    ?>
+                        <input type="hidden" name="exam_id" value="<?php echo $exam_id; ?>">
+                    <?php
+                    } ?>
                     <?php if ($question_title != false) { ?>
                         <input type="hidden" name="question_title_id" value="<?php echo $question_title['id']; ?>">
                     <?php } ?>
