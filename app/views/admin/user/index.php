@@ -253,4 +253,4 @@
       document.location.search = `?${data}`
     })
   }
-</script>
+  </script>

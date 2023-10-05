@@ -24,8 +24,6 @@ function checkName(objName) {
 function checkPathName() {
     var pathName = window.location.pathname
     const name = document.getElementById('name');
-    const title = document.getElementById('title');
-    const question = document.getElementById('quesion_id');
     var content = ''
     if (pathName.includes('/admin/user')) {
         const email = document.getElementById('email');
@@ -62,67 +60,11 @@ function checkPathName() {
                             </span>
                         </div>
                     </div>`
-    } else if (pathName.includes('/admin/exam')) {
-        content = `
-                    <div class="d-flex justify-content-center align-items-center w-full">
-                        <div class="d-flex flex-col justify-content-center align-items-start">
-                        </div>
-                    </div>`
-    } else if (pathName.includes('/admin/room')) {
-        content = `
-                    <div class="d-flex justify-content-center align-items-center w-full">
-                        <div class="d-flex flex-col justify-content-center align-items-start">
-                        </div>
-                    </div>`
-    } else if (pathName.includes('/admin/position')) {
-        content = `
-                    <div class="d-flex justify-content-center align-items-center w-full">
-                        <div class="d-flex flex-col justify-content-center align-items-start">
-                        </div>
-                    </div>`
-    } else if (pathName.includes('/admin/question')) {
-        content = `
-                    <div class="d-flex justify-content-center align-items-center w-full">
-                        <div class="d-flex flex-col justify-content-center align-items-start">
-                        </div>
-                    </div>`
-    } else if (pathName.includes('/admin/exam/detail-edit')) {
-        content = `
-                    <div class="d-flex justify-content-center align-items-center w-full">
-                        <div class="d-flex flex-col justify-content-center align-items-start">
-                            <span class="mb-2">
-                                <span class="font-bold">Quesion: </span>
-                               ${question.value}
-                            </span>
-                            <span class="mb-2">
-                                <span class="font-bold">Answer: </span>
-                              
-                            </span>
-                          
-                        </div>
-                    </div>`
-    }
-    else if (pathName.includes('/admin/exam')) {
-        const selectElement = document.getElementById('questionSelect');
-        let selectedOption = selectElement.options[selectElement.selectedIndex];
-
-        content = `
-                    <div class="d-flex justify-content-center align-items-center w-full">
-                        <div class="d-flex flex-col justify-content-center align-items-start">
-                            <span class="mb-2">
-                                
-                            </span>
-                        </div>
-                    </div>`
-    }
+    } 
     else {
         content = `
                     <div class="d-flex justify-content-center align-items-center w-full">
                         <div class="d-flex flex-col justify-content-center align-items-start">
-                            <span class="mb-2">
-                                <span class="font-bold">Title: </span>
-                                ${title.value}
-                            </span>
                         </div>
                     </div>`
     }
@@ -1507,35 +1449,3 @@ function selectAll() {
         });
     });
 }
-
-// function updateSelectedValues() {
-//     selectedValues = [];
-//     checkboxesArray.forEach(function (checkbox) {
-//         if (checkbox.checked) {
-//             selectedValues.push(checkbox.value);
-//         }
-//     });
-//     console.log(selectedValues);
-//     if (selectedValues.length > 0) {
-//         deleteButton.style.display = "block";
-//     } else {
-//         deleteButton.style.display = "none";
-//     }
-// }
-
-// function selectAll() {
-//     // Sự kiện click cho checkbox "Select All"
-//     selectAllCheckbox.addEventListener("click", function () {
-//         checkboxesArray.forEach(function (checkbox) {
-//             checkbox.checked = selectAllCheckbox.checked;
-//         });
-//         updateSelectedValues();
-//     });
-
-//     // Sự kiện click cho các input con
-//     checkboxesArray.forEach(function (checkbox) {
-//         checkbox.addEventListener("click", function () {
-//             updateSelectedValues();
-//         });
-//     });
-// }
