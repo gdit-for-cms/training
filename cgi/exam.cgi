@@ -12,6 +12,7 @@ use Time::Piece;
 
 my $setting_file = './Setting.pm';
 require $setting_file;
+our $HTML;
 
 my $cgi = CGI->new;
 
@@ -30,8 +31,19 @@ my $email_session = $session->param('email');
 my $id_form = $cgi->param('id');
 my $email_form = $cgi->param('email');
 
-my $id = $id_form || $id_session || $id_cookie; # Nếu không có id thì đá ra lại login, rồi khi người dùng nhập thông tin thì thông báo truy cập lại link đã gửi.
+my $id = $id_form || $id_session || $id_cookie;
 my $email = $email_form || $email_session || $email_cookie;
+
+if(!looks_like_number($id) || !$email){
+    my $file_path = "$HTML/view/error.html";
+    open my $fh_l, '<', $file_path or die "Cannot open file $file_path: $!";
+    print "Content-Type: text/html\r\n\r\n";
+    while (my $line = <$fh_l>) {
+        print $line;
+    }
+    close $fh_l;
+    exit;
+}
 
 # Save data to sessions and cookies
 # Save id
@@ -54,16 +66,6 @@ my $cookie_email = CGI::Cookie->new(
 print $cgi->header(-cookie => [$cookie_id, $cookie_email]);
 
 $session->flush();
-
-# if(!looks_like_number($id) || !$email || !$code){
-#     $id_last = $session->param('id');
-#     $email_last = $session->param('email');
-#     $code_last = $session->param('code');
-# } else {
-#     $id_last = $id;
-#     $email_last = $email;
-#     $code_last = $code;
-# }
 
 #########################################
 my $email_path = our $EMAIL;
@@ -101,9 +103,9 @@ if (exists $csv_data{$email}) {
 } else {
     print "Content-Type: text/html\n\n";
     print 2;
+    exit(0);
 }
 ##########################################
-our $HTML;
 # Path to the HTML file
 my $html_file = "$HTML/$id.html";
 

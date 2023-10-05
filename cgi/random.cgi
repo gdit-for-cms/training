@@ -9,11 +9,11 @@ require $setting_file;
 
 my $cgi = CGI->new;
 my $id = $cgi->param("id");
-my $code = $cgi->param("code");
+my $random = $cgi->param("random");
 
 our $RANDOM;
 
-if(!looks_like_number($id) || !$code){
+if(!looks_like_number($id) || !$random){
     print "Content-Type: text/html\n\n";
     print -1;
     exit(0);
@@ -33,7 +33,7 @@ while (my $line = <$fh>) {
 close($fh);
 
 # Checks if $a exists in the array
-if (grep { $_ eq $code } @data) {
+if (grep { $_ eq $random } @data) {
     print "Content-Type: text/html\n\n";
     print 1;
 } else {

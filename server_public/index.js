@@ -7,6 +7,9 @@ var key = 1
 var count = 0
 var file_html = ''
 var code = ''
+var random = ''
+var id = 0
+var save_interval = null
 
 const current_date = new Date();
 var start_time_in_seconds = Math.floor(current_date.getTime() / 1000);
@@ -20,7 +23,7 @@ const btn_submit = document.getElementById('btn_submit')
 
 const id_exam = document.getElementById('exam')
 const email_login = document.getElementById('email_login')
-const random = document.getElementById('random')
+// const random = document.getElementById('random')
 
 const form_exam = document.getElementById('form_exam')
 
@@ -33,6 +36,11 @@ const btn_accept_change = document.getElementById('btn_accept_change')
 const btn_close_accept_submit = document.getElementById('btn_close_accept_submit')
 const message = document.getElementById('message')
 const noti = document.getElementById('noti')
+
+const modal_error = document.getElementById('modal_error')
+const btn_error = document.getElementById('btn_error')
+const btn_close_modal_error = document.getElementById('btn_close_modal_error')
+const message_error = document.getElementById('message_error')
 
 const countdown_element = document.getElementById('countdown')
 
@@ -47,7 +55,6 @@ const show_name = document.getElementById('show_name')
 let stored_minutes = localStorage.getItem('countdown_minutes')
 let stored_seconds = localStorage.getItem('countdown_seconds')
 
-// If there is no local time, set a fixed number
 let minutes = stored_minutes ? parseInt(stored_minutes) : 1
 let seconds = stored_seconds ? parseInt(stored_seconds) : 0
 //////////////////////////////////////////////////////
@@ -62,10 +69,12 @@ document.addEventListener('DOMContentLoaded', function () {
     var location = current_url.indexOf('/', 25)
     if (current_url.slice(24, current_url.length) != '/view/login.html' && current_url.slice(24, current_url.length) != '/view/thanks.html' && current_url.slice(24, current_url.length) != '/cgi/exam.cgi') {
         localStorage.setItem('id', current_url.slice(25, location))
-        localStorage.setItem('code', current_url.slice(location + 1, current_url.length))
+        localStorage.setItem('random', current_url.slice(location + 1, current_url.length))
+        id = localStorage.getItem('id')
+        random = localStorage.getItem('random')
         var data = {
-            id      : localStorage.getItem('id'),
-            code    : localStorage.getItem('code')
+            id      : id,
+            random  : random
         }
 
         $.ajax({
@@ -85,10 +94,12 @@ document.addEventListener('DOMContentLoaded', function () {
             show_email.innerHTML = user_email
             show_name.innerHTML = user_name
 
-            exam_id = localStorage.getItem('id')
+            id = localStorage.getItem('id')
             code = user_email.match(/([^@]*)@/)
+            random = localStorage.getItem('random')
+
             var data = {
-                id : exam_id,
+                id : id,
                 code : code[1]
             }
             $.ajax({
@@ -97,16 +108,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 data: data,
                 success: function (response) {
                     if(response == -1) {
-                        console.log(1);
-                        var message = '<h5>You cheated by interfering in the calculation of exam time. You cannot submit this test!</h5>'
-                        modal_login(message, 1)
+                        var message = '<h5>Your total exam time has exceeded the allotted time. You cannot submit this test!</h5>'
+                        modal_errors(message)
+                        handle_error()
                         remove_data()
+                    } else if(response != 0){
+                        var arr = response.split(',')
 
-                        setTimeout(window.location.href = '/view/login.html', 5000)
+                        minutes = parseInt(arr[0])
+                        seconds = parseInt(arr[1])
                     }
                 }
             })
-            setInterval(save_time, 1000)
+            save_interval = setInterval(save_time, 1000)
         }
     }
  
@@ -120,10 +134,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     exam_id = localStorage.getItem('id')
-    var ran = localStorage.getItem('code')
-    if (id_exam && random) {
+    if (id_exam) {
         id_exam.value = exam_id
-        random.value = ran
     }
 })
 
@@ -209,10 +221,25 @@ if (btn_close_accept_submit) {
     })
 }
 
+if (btn_close_modal_error) {
+    btn_close_modal_error.addEventListener('click', function (e) {
+        e.preventDefault()
+        modal_error.style.display = 'none'
+    })
+}
+
+if (btn_error) {
+    btn_error.addEventListener('click', function (e) {
+        e.preventDefault()
+        window.location.href = '/view/login.html'
+    })
+}
+
 // When you click the submit button agree to submit
 if (btn_accept_submit) {
     btn_accept_submit.addEventListener('click', function (e) {
         e.preventDefault()
+        clearInterval(save_interval)
         btn_accept_submit.disabled = true
         btn_close_accept_submit.disabled = true
 
@@ -223,7 +250,7 @@ if (btn_accept_submit) {
 // Time to take the test
 if (countdown_element) {
     updateCountdown()
-    var countdownInterval = setInterval(updateCountdown, 1000)
+    var countdown_interval = setInterval(updateCountdown, 1000)
 }
 
 function modal_login(mes, off) {
@@ -248,12 +275,17 @@ function modal_login(mes, off) {
     }
 }
 
+function modal_errors(mes) {
+    message_error.innerHTML = mes
+    modal_error.style.display = 'block'
+}
+
 function save_time() {
     var data_to_send = {
         minutes : minutes,
         seconds : seconds,
-        email   : user_email.match(/([^@]*)@/),
-        id      : localStorage.getItem('id')
+        email   : code[1],
+        id      : id
     }
 
     $.ajax({
@@ -322,15 +354,13 @@ function after_submit() {
     exam_results[question] = array_ans
 
     // Get the answer file name
-    var id = localStorage.getItem('id')
-    code = user_email.match(/([^@]*)@/)
 
     var data_to_send = {
         email: user_email,
         name: user_name,
         id: id,
         code: code[1],
-        random: localStorage.getItem('code'),
+        random: random,
         exam_results: JSON.stringify(exam_results),
         check: 1
     }
@@ -345,9 +375,9 @@ function after_submit() {
             if (response == 'false') {
                 window.location.href = '/view/error.html'
             } else if(response == 0){
-                error_login(response)
+                var message = `<h6>Something is wrong, Please access the LINK we sent you again!</h6>`
+                modal_errors(message)
                 remove_data()
-                setTimeout(window.location.href = '/view/login.html', 5000)
             } else {
                 window.location.href = '/view/thanks.html'
             }
@@ -366,7 +396,8 @@ function updateCountdown() {
     if (minutes <= 0 && seconds <= 0) {
         if (countdown_element) {
             countdown_element.innerHTML = "Time's up"
-            clearInterval(countdownInterval)
+            clearInterval(countdown_interval)
+            clearInterval(save_interval)
             
             check_time()
         }
@@ -402,8 +433,6 @@ function updateCountdown() {
 }
 
 function check_time() {
-    var id = localStorage.getItem('id')
-    code = user_email.match(/([^@]*)@/)
     var data = {
         id : id,
         code : code[1]
@@ -417,33 +446,40 @@ function check_time() {
             if (response == 1) {
                 after_submit()
             } else {
-                var message = `<h5>You cheated by interfering in the calculation of exam time. You cannot submit this test!</h5>`
-                modal_login(message, 1)
+                var message = `<h5>Your total exam time has exceeded the allotted time. You cannot submit this test!</h5>`
+                modal_errors(message)
                 
-                var id = localStorage.getItem('id')
-                code = user_email.match(/([^@]*)@/)
+                handle_error()
+            }
+        }
+    })
+}
 
-                var data_to_send = {
-                    email       : user_email,
-                    name        : user_name,
-                    id          : id,
-                    code        : code[1],
-                    random      : localStorage.getItem('code'),
-                    exam_results: [],
-                    check       : 0
-                }
+function handle_error() {
+    var data_to_send = {
+        email       : user_email,
+        name        : user_name,
+        id          : id,
+        code        : code[1],
+        random      : random,
+        exam_results: [],
+        check       : 0
+    }
 
-                // Switch to the handle folder to process the scoring and email the results.
-                $.ajax({
-                    type: "POST",
-                    url: "/cgi/handle.cgi",
-                    data: data_to_send,
-                    success: function (response) {
-                        remove_data()
-                        
-                        setTimeout(window.location.href = '/view/login.html', 5000)
-                    }
-                })
+    // Switch to the handle folder to process the scoring and email the results.
+    $.ajax({
+        type: "POST",
+        url: "/cgi/handle.cgi",
+        data: data_to_send,
+        success: function (response) {
+            remove_data()
+
+            if (response == 'false') {
+                window.location.href = '/view/error.html'
+            } else if(response == 0){
+                var message = `<h6>Something is wrong, Please access the LINK we sent you again!</h6>`
+                modal_errors(message)
+                remove_data()
             }
         }
     })

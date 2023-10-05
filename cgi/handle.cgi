@@ -21,7 +21,7 @@ my $random = $cgi->param("random");
 my $check = $cgi->param("check");
 
 # The answer file of the test that the user is doing.
-my $file_csv = $cgi->param("id");
+my $id = $cgi->param("id");
 # Results of user's work.
 my $exam_results_json = $cgi->param("exam_results");
 
@@ -31,13 +31,17 @@ if ($check == 1) {
 }
 
 my $time_path = our $TIME;
-my $file_to_create = "$time_path$code-$file_csv.csv";
+my $file_to_create = "$time_path$code-$id.csv";
+
+our $SAVE_TIME;
+my $file_save_time = "$SAVE_TIME$code-$id.csv";
+
 # Read data from the answer file.
 my %correct_answers;
 
 my $folder_to_check = our $CSV;
 
-if(!$email || !looks_like_number($file_csv) || !$name || !$code){
+if(!$email || !looks_like_number($id) || !$name || !$code){
     print "Content-Type: text/html\n\n";
     print 0;
     exit(0);
@@ -46,7 +50,7 @@ if(!$email || !looks_like_number($file_csv) || !$name || !$code){
 ##########################################
 # Check the email you are logging in and whether this email has been submitted
 my $email_path = our $EMAIL;
-my $csv_file = "$email_path$file_csv.csv";
+my $csv_file = "$email_path$id.csv";
 
 # Read CSV file and create object variable
 my %csv_data;
@@ -93,10 +97,18 @@ if (-e $file_to_create) {
     print 0;
     exit(0);
 }
+
+if (-e $file_save_time) {
+    unlink $file_save_time or die "Cannot delete file: $!";
+} else {
+    print "Content-Type: text/html\n\n";
+    print 0;
+    exit(0);
+}
 ##########################################
 our $RANDOM;
 
-my $random_file = "$RANDOM$file_csv.csv";
+my $random_file = "$RANDOM$id.csv";
 
 open my $fh_random, '<', $random_file or die "Cannot open file $random_file: $!";
 my @data = <$fh_random>;
@@ -125,7 +137,7 @@ if ($found) {
 #####################################
 if($check == 1) {
 
-    $file_csv = "$file_csv.csv";
+    $id = "$id.csv";
 
     unless (-d $folder_to_check) {
         eval {
@@ -136,7 +148,7 @@ if($check == 1) {
         }
     }
 
-    my $file_path = "$folder_to_check/$file_csv";
+    my $file_path = "$folder_to_check/$id";
 
     eval {
         open my $file_handle, '<', $file_path or die "Can not open file $file_path: $!";

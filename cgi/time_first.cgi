@@ -20,8 +20,10 @@ if(!$code || !looks_like_number($id)){
 }
 
 my $time_path = our $TIME;
+our $SAVE_TIME;
 
 my $file_to_create = "$time_path$code-$id.csv";
+my $file_save_time = "$SAVE_TIME$code-$id.csv";
 
 unless (-e $file_to_create) {
     
@@ -37,7 +39,19 @@ unless (-e $file_to_create) {
     print $fh "$formatted_time\n";
     
     close $fh;
+}
+
+if (-e $file_save_time){
+    # Create a new file and add the current timestamp
+    open my $file_handle, '<', $file_save_time or die "Cannot create file: $!";
+
+    my $line = <$file_handle>;
+
+    close $file_handle;
 
     print "Content-Type: text/html\n\n";
+    print $line;
+} else {
+    print "Content-Type: text/html\n\n";
+    print 0;
 }
-print "Content-Type: text/html\n\n";
