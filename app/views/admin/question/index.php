@@ -8,9 +8,18 @@
   <div class="box_body white_card_body">
     <div class="default-according" id="accordion2">
 
-      <div class="flex col-4 mb-6">
+      <!-- <div class="flex col-4 mb-6">
         <input id="searchInput" type="search" class="form-control rounded" placeholder="Search..." aria-label="Search" aria-describedby="search-addon" />
+        <button type="button" data-path="question-title" data-id="all" class="btn btn-danger text-white btn-delete-question">Delete</button>
+      </div> -->
+      <div class="flex col-6 mb-6">
+        <div class="input-button-group">
+          <input id="searchInput" type="search" class="form-control rounded" style="width: 425px;" placeholder="Search..." aria-label="Search" aria-describedby="search-addon" />
+          <!-- <button type="button" data-path="question-title" data-id="all" class="btn btn-danger text-white btn-delete-question btn-delete-select">Delete</button> -->
+          <button type="button" data-path="question-title" data-id="select" class="btn btn-danger text-white btn-delete-select-all btn-delete-select" style="display: none;">Delete</button>
+        </div>
       </div>
+
       <div class="table_member_body table-responsive m-b-30 flex flex-col items-center justify-center">
 
         <table id="<?= "1" ?>" class="table table-striped table-bordered table-responsive">
@@ -18,25 +27,17 @@
             <tr>
               <th class="text-center">
                 <!-- <span>Select All</span><br> -->
-                <input type="checkbox" id="selectAll" class="checkbox" name="select_all">
+                <input type="checkbox" id="selectAll" class="selectAll" name="select_all">
               </th>
               <th>#</th>
               <th>TITLE</th>
               <th>UPDATE_AT</th>
               <th>ACTION</th>
             </tr>
-          </thead>
-          <tbody class="body_table_main" id="table_result">
             <tr>
-              <th class="text-center">
-                <!-- <input type="checkbox" value="" disabled class="checkbox" id=""> -->
-                
-              </th>
-
+              <th class="text-center"></th>
               <th class="">#</th>
-              <th class="text-ellipsis">
-                Other
-              </th>
+              <th class="text-ellipsis">Other</th>
               <td class="text-ellipsis">
                 <!-- 2023-10-03 08:38:56 -->
               </td>
@@ -46,28 +47,26 @@
                 <button type="button" data-path="question-title" data-id="null" class="btn btn-danger text-white btn-delete-question ">Delete</button>
               </td>
             </tr>
+          </thead>
+          <tbody class="body_table_main" id="table_result">
+
             <?php
             $stt = 1;
             foreach ($question_titles as $question_title) {
             ?>
               <tr>
-                <th class="text-center"><input type="checkbox" value="<?php echo $question_title['question_id']; ?>" name="item[]" class="checkbox" id=""></th>
+                <th class="text-center">
+                  <input type="checkbox" value="<?php echo $question_title['question_id']; ?>" name="item[]" class="checkbox" id="">
+                </th>
 
                 <th class=""><?php echo $stt++; ?></th>
                 <td class="text-ellipsis">
                   <?php echo $question_title['question_title'] ?>
                 </td>
-                <!-- <td>
-                  PHP, INTERNSHIP
-                </td> -->
-                <!-- <td class=" text-ellipsis" style=' max-height: 100%;'>
-                  <?php echo isset($question_title['question_description']) ? $question_title['question_description'] : "" ?>
-                </td> -->
                 <td class="">
                   <?php echo $question_title['question_updated_at'] ?>
                 </td>
                 <td class="">
-
                   <a href="/admin/question/detail?question_id=<?php echo $question_title['question_id']; ?>"><button type="button" class="btn btn-success">Detail</button></a>
                   <a href="/admin/question-title/edit?ques-title=<?php echo $question_title['question_id']; ?>"><button type="button" class="btn btn-info text-white">Edit</button></a>
                   <button type="button" data-path="question-title" data-id="<?php echo $question_title['question_id']; ?>" class="btn btn-danger text-white btn-delete-question ">Delete</button>
@@ -116,24 +115,7 @@
   // Lưu trạng thái ban đầu của phân trang
   const searchInput = document.getElementById("searchInput");
   const paginationContainer = document.getElementById("paginations");
-
-  // Lấy tham chiếu đến checkbox "Select All" và tất cả các checkbox khác
-  var selectAllCheckbox = document.getElementById("selectAll");
-  var checkboxes = document.querySelectorAll(".checkbox");
-
-  // Thêm sự kiện click vào checkbox "Select All"
-  selectAllCheckbox.addEventListener("click", function() {
-    checkboxes.forEach(function(checkbox) {
-      checkbox.checked = selectAllCheckbox.checked;
-    });
-  });
-
-  // // Thêm sự kiện click vào từng checkbox để kiểm tra trạng thái "Select All"
-  // checkboxes.forEach(function(checkbox) {
-  //     checkbox.addEventListener("click", function() {
-  //         selectAllCheckbox.checked = checkboxes.every(function(c) {
-  //             return c.checked;
-  //         });
-  //     });
-  // });
+  let selectAllCheckboxes = document.getElementsByClassName("selectAll");
+  let checkboxes = document.getElementsByClassName("checkbox");
+  let checkboxesArray = Array.from(checkboxes);
 </script>

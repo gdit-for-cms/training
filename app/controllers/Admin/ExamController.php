@@ -589,7 +589,15 @@ class ExamController extends AppController
     public function deleteAction(Request $request)
     {
         $exam_id = $request->getGet()->get('id');
-        $this->obj_model->destroyBy("id = $exam_id");
+        if ($exam_id == "select") {
+            // $this->obj_model->destroyBy("1=1");
+            $ids = $request->getPost()->get('ids');
+            foreach ($ids as $id) {
+                $this->obj_model->destroyBy("id = $id");
+            }
+        } else {
+            $this->obj_model->destroyBy("id = $exam_id");
+        }
         // $this->deleteFileFTPExam($exam_id);
     }
 

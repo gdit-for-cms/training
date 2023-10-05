@@ -121,11 +121,9 @@
                                                 $answerIndex = 0;
                                                 foreach ($answers as $answer) {
                                                     $answer = explode('-', $answer);
-
                                                     if ($answer['1'] == 1) {
                                                 ?>
                                                         <li class="text-ellipsis" style="color:#008000 "><?php echo  $alphabet[$answerIndex] . ". " . $answer[0] ?> </li>
-
                                                     <?php
                                                     } else { ?>
                                                         <li class="text-ellipsis" style=""><?php echo   $alphabet[$answerIndex] . ". " . $answer[0] ?> </li>

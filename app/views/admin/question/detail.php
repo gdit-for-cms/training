@@ -1,31 +1,32 @@
 <?php
-if (isset($question_title)) {
+// if (isset($question_title)) {
 ?>
-    <div class="col-lg-12">
-        <div class="white_card card_height_100 mb_30">
-            <div class="white_card_header">
-                <div class="box_header m-0">
-                    <div class="main-title">
-                        <h3 class="m-0 fs-2">Collection question</h3>
-                    </div>
+<div class="col-lg-12">
+    <div class="white_card card_height_100 mb_30">
+        <div class="white_card_header">
+            <div class="box_header m-0">
+                <div class="main-title">
+                    <h3 class="m-0 fs-2">Collection question</h3>
                 </div>
             </div>
-            <div class="white_card_body" style="margin-left: 15px;">
-                <div class="card-body d-flex">
-                    <div class="mb-3 col-10 mr-12" style="">
-                        <b><label class="form-label" for="title">Title : </label></b>
-                        <?php echo $question_title['title']; ?>
-                        <!-- </div>
+        </div>
+        <div class="white_card_body" style="margin-left: 15px;">
+            <div class="card-body d-flex">
+                <div class="mb-3 col-10 mr-12" style="">
+                    <b><label class="form-label" for="title">Title : </label></b>
+                    <?php echo isset($question_title) ? $question_title['title'] : "Other question"; ?>
+                    <!-- </div>
                 <div class="mb-3 col-5"> -->
-                        <br>
-                        <b><label class="form-label" for="title">Description : </label></b>
-                        <?php echo isset($question_title['description']) ? $question_title['description'] : "" ?>
-                    </div>
+                    <br>
+                    <b><label class="form-label" for="title">Description : </label></b>
+                    <?php echo isset($question_title['description']) ? $question_title['description'] : "These are general questions that do not belong to any collection" ?>
                 </div>
             </div>
         </div>
     </div>
-<?php }
+</div>
+<?php
+// }
 ?>
 <div class="card_box box_shadow position-relative mb_30">
     <div class="white_box_tittle ">
@@ -35,8 +36,11 @@ if (isset($question_title)) {
     </div>
 
     <div class="box_body white_card_body">
-        <a href='/admin/question/new?ques-title=<?php echo isset($question_titles[0]['question_title_id']) ? $question_titles[0]['question_title_id'] : "other"; ?>'><button type="button" class="btn btn-success mb-3">Add question</button></a>
-
+        <div class="input-button-group">
+            <a href='/admin/question/new?ques-title=<?php echo isset($question_titles[0]['question_title_id']) ? $question_titles[0]['question_title_id'] : "other"; ?>'><button type="button" class="btn btn-success mb-3">Add question</button></a>
+            <!-- <button type="button" data-path="question-title" data-id="all" class="btn btn-danger text-white btn-delete-question btn-delete-select">Delete</button> -->
+            <button type="button" data-path="question" data-id="select" class="btn btn-danger text-white btn-delete-select-all btn-delete-select" style="display: none;">Delete</button>
+        </div>
         <div class="default-according" id="accordion2">
 
             <div class="table_member_body table-responsive m-b-30 flex flex-col items-center justify-center">
@@ -44,6 +48,12 @@ if (isset($question_title)) {
                 <table id="<?= "1" ?>" class="table table-striped table-bordered table-responsive">
                     <thead>
                         <tr>
+                            <th class="text-center">
+                                <!-- <input type="checkbox" id="selectAll" class="checkbox1" name="select_all"> -->
+                                <!-- <input type="checkbox" id="selectAll1" class="checkbox1 selectAll" name="select_all"> -->
+                                <input type="checkbox" id="selectAll" class="selectAll" name="select_all">
+
+                            </th>
                             <th scope="col">#</th>
                             <th scope="col">CONTENT</th>
                             <th scope="col">ANSWER</th>
@@ -58,6 +68,12 @@ if (isset($question_title)) {
                             foreach ($question_titles as $question_title) {
                         ?>
                                 <tr>
+                                    <th class="text-center">
+                                        <!-- <input type="checkbox" value="<?php echo $question_title['question_id']; ?>" name="item[]" class="checkbox" id=""> -->
+                                        <!-- <input type="checkbox" value="<?php echo $question_title['question_id']; ?>" name="item[]" class="checkbox" id=""> -->
+                                        <input type="checkbox" value="<?php echo $question_title['question_id']; ?>" name="item[]" class="checkbox" id="">
+
+                                    </th>
                                     <td class=""><?php echo $stt++; ?></td>
                                     <td class="col-3 text-ellipsis ">
                                         <?php echo $question_title['question_content'] ?>
@@ -149,3 +165,84 @@ if (isset($question_title)) {
 
     </div>
 </div>
+<script>
+    // const searchInput = document.getElementById("searchInput");
+    // const paginationContainer = document.getElementById("paginations");
+    let selectAllCheckboxes = document.getElementsByClassName("selectAll");
+    let checkboxes = document.getElementsByClassName("checkbox");
+    let checkboxesArray = Array.from(checkboxes);
+    console.log(selectAllCheckboxes);
+    selectAll()
+    alertDeleteSelectAll()
+    function alertDeleteSelectAll() {
+        $('.btn-delete-select-all').click(function(e) {
+            let deleteID = $(this).data('id');
+            let path = $(this).data('path');
+            let ids = updateSelectedValues();
+            console.log(deleteID)
+            console.log(path)
+            console.log(ids)
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/admin/${path}/delete?id=${deleteID}`,
+                        method: "POST",
+                        data: {
+                            ids: ids
+                        },
+                        success: function(data) {
+                            console.log(data);
+                            document.location.reload(true);
+                        }
+                    });
+                }
+            })
+        });
+    }
+
+    function updateSelectedValues() {
+        let deleteButton = document.querySelector(".btn-delete-select");
+        let checkboxes = document.getElementsByClassName("checkbox");
+        let checkboxesArray = Array.from(checkboxes);
+        let selectedValues = [];
+        checkboxesArray.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                selectedValues.push(checkbox.value);
+            }
+        });
+        if (selectedValues.length > 0) {
+            deleteButton.style.display = "block";
+        } else {
+            deleteButton.style.display = "none";
+        }
+        return selectedValues;
+    }
+
+    function selectAll() {
+
+        // Sự kiện click cho checkbox "Select All"
+        for (let i = 0; i < selectAllCheckboxes.length; i++) {
+            selectAllCheckboxes[i].addEventListener("click", function() {
+                checkboxesArray.forEach(function(checkbox) {
+                    checkbox.checked = selectAllCheckboxes[i].checked;
+                });
+                updateSelectedValues();
+            });
+        }
+
+        // Sự kiện click cho các input con
+        checkboxesArray.forEach(function(checkbox) {
+            checkbox.addEventListener("click", function() {
+                updateSelectedValues();
+            });
+        });
+    }
+</script>

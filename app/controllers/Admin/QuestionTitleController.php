@@ -75,6 +75,11 @@ class QuestionTitleController extends  AppController
         $question_id = $request->getGet()->get('id');
         if ($question_id == "null") {
             $this->obj_model_question->destroyBy("question_title_id is $question_id");
+        } else if ($question_id == "select") {
+            $ids = $request->getPost()->get('ids');
+            foreach ($ids as $id) {
+                $this->obj_model->destroyBy("id = $id");
+            }
         } else {
             $this->obj_model->destroyBy("id = $question_id");
         }

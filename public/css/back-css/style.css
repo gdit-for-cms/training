@@ -917,3 +917,10 @@
         border-radius: 2px;
         margin-bottom: 10px;
       }
+
+      .input-button-group {
+        display: flex;
+        align-items: center; /* Căn giữa theo chiều dọc */
+        gap: 340px; /* Khoảng cách giữa ô nhập và nút */
+      }
+      

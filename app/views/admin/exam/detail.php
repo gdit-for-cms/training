@@ -17,15 +17,12 @@
                             if ($currentTime < $startTime || empty($startTime)) {
                                 $check_status = true; ?>
                                 <?php
-
                             }
                             if ($cur_user['role_id'] != 3) {
                                 if ($check_status) {
                                 ?>
-
                                     <a href="/admin/exam-question/new?exam_id=<?php echo $exam['id']; ?>"><button type=" button" class="btn btn-success float-end">Add Question</button></a>
                                     <a class="btn btn-primary mr-3" id="createFilesButton" href="/admin/exam/preview?exam_id=<?php echo $exam['id']; ?>" data-id="<?php echo $exam['id']; ?>" id="submit">Upload exam</a>
-                                    <!-- <a class="btn btn-info mr-3 text-white" href="/admin/exam/edit?id=<?php echo $exam['id']; ?>">Edit</a> -->
                             <?php
                                 }
                             }
@@ -35,11 +32,6 @@
                 </div>
                 <div class="white_card_body ml-10">
                     <div class="card-body d-flex ">
-                        <?php
-                        // echo "<pre>";
-                        // var_dump($exam);
-                        // die();
-                        ?>
                         <div class="mb-3 col-4 mr-10" style="">
                             <b><label class="form-label" for="title">Title : </label></b>
                             <?php echo $exam['title'] ?>
@@ -137,12 +129,9 @@
             <div class="white_card card_box card_height_100 mb_30">
                 <div class="px-4 pt-4">
                     <div class="main-title2 d-flex justify-content-between items-center ">
-
                         <div class="top-left d-flex">
                             <h4 class="mb-2 nowrap">List question</h4>
-
                         </div>
-
                     </div>
                 </div>
                 <div class="white_card_body">
@@ -190,11 +179,11 @@
 
                                                             if ($answer['1'] == 1) {
                                                         ?>
-                                                                <li class="text-ellipsis" style="color:#008000 "><?php echo  $alphabet[$answerIndex] .". ". $answer[0] ?> </li>
+                                                                <li class="text-ellipsis" style="color:#008000 "><?php echo  $alphabet[$answerIndex] . ". " . $answer[0] ?> </li>
 
                                                             <?php
                                                             } else { ?>
-                                                                <li class="text-ellipsis" style=""><?php echo   $alphabet[$answerIndex] .". ". $answer[0] ?> </li>
+                                                                <li class="text-ellipsis" style=""><?php echo   $alphabet[$answerIndex] . ". " . $answer[0] ?> </li>
                                                         <?php
                                                             }
                                                             $answerIndex++;

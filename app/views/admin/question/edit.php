@@ -12,13 +12,13 @@
                 <form id="form_update_question" class="" action="update" method="POST">
                     <input id="id" name="id" value="<?= $question['id'] ?>" type="hidden" class="form-control">
                     <div class="mb-3">
-                        <label for="content" class="form-label">Content*</label>
+                        <label for="content" class="form-label">Content<span class="text-danger">*</span></label>
                         <textarea id="editor-edit-note" class="form-control h-120px" name="content" rows="3"><?php  ?>
                             <?php echo $question['content']; ?>
                         </textarea>
                     </div>
                     <div class="mb-3">
-                        <p>* Note</p>
+                    <span style="color: #828bb2;">* Note</span>
                         <p class="" style="padding-left: 20px;">
                             Correct : Choose the correct answers<br>
                             Answer : Enter the answer to the question<br>
@@ -26,8 +26,8 @@
                         </p>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" style="margin-right: 30px;" for="correct">Correct*</label>
-                        <label class="form-label" for="answer">Answer*</label>
+                        <label class="form-label" style="margin-right: 30px;" for="correct">Correct<span class="text-danger">*</span></label>
+                        <label class="form-label" for="answer">Answer<span class="text-danger">*</span></label>
                         <div id="answerContainer">
                             <!-- Ô input mặc định -->
                             <?php

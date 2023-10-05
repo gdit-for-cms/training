@@ -15,12 +15,12 @@
                     // var_dump($question_title);
                     // die();
                     if ($question_title != false) { ?>
-                        <b><label class="form-label" for="title">Title collection : </label></b>
+                        <b><label class="form-label" for="title">Title : </label></b>
                         <?php echo $question_title['title']; ?>
                         <!-- </div>
                 <div class="mb-3 col-5"> -->
                         <br>
-                        <b><label class="form-label" for="title">Description collection : </label></b>
+                        <b><label class="form-label" for="title">Description : </label></b>
                         <?php echo isset($question_title['description']) ? $question_title['description'] : "" ?>
                     <?php } ?>
                 </div>
@@ -50,13 +50,13 @@
                         <input type="hidden" name="question_title_id" value="<?php echo $question_title['id']; ?>">
                     <?php } ?>
                     <div class="mb-3">
-                        <label for="content" class="form-label">Content <span style="color: red;">*</span></label>
+                        <label for="content" class="form-label">Content <span class="text-danger">*</span></label>
                         <textarea id="editor-edit-note" class="form-control" name="content" rows="3"><?php  ?></textarea>
                     </div>
 
 
                     <div class="mb-5">
-                        <p>* Note</p>
+                        <span style="color: #828bb2;">* Note</span>
                         <p class="" style="padding-left: 20px;">
                             Correct : Choose the correct answers<br>
                             Answer : Enter the answer to the question<br>
@@ -65,8 +65,8 @@
                     </div>
                     <div class="mb-3">
 
-                        <label class="form-label" for="correct" style="margin-right: 30px;">Correct <span style="color: red;">*</span></label>
-                        <label class="form-label" for="answer">Answer <span style="color: red;">*</span></label>
+                        <label class="form-label" for="correct" style="margin-right: 30px;">Correct <span class="text-danger">*</span></label>
+                        <label class="form-label" for="answer">Answer <span class="text-danger">*</span></label>
                         <div id="answerContainer">
                             <div class="form-check" style="padding-left: 45px;">
                                 <input class="form-check-input" style="margin-right: 50px;" name="is_correct[]" type="checkbox" value="0" onchange="updateCheckboxValue(this)">

@@ -186,9 +186,15 @@ class QuestionController extends  AppController
 
     public function deleteAction(Request $request)
     {
-        $question_id = $request->getGet()->get('id');echo $question_id;
-        die();
-        $this->obj_model->destroyBy("id = $question_id");
+        $question_id = $request->getGet()->get('id');
+        if ($question_id == "select") {
+            $ids = $request->getPost()->get('ids');
+            foreach ($ids as $id) {
+                $this->obj_model->destroyBy("id = $id");
+            }
+        } else {
+            $this->obj_model->destroyBy("id = $question_id");
+        }
     }
 
     public function update(Request $request)
@@ -269,9 +275,6 @@ class QuestionController extends  AppController
         $this->data_ary['numbers_of_page'] = $numbers_of_page;
         $this->data_ary['page'] = (float)$results_ary['page'];
 
-        // echo "<pre>";
-        // var_dump($this->data_ary['question_titles']);
-        // die();
         $this->data_ary['content'] = 'question/detail';
     }
 
