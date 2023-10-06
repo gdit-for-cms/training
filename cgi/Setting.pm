@@ -17,7 +17,7 @@ our $SAVE_TIME = 'save_time/';
 our $CSV = 'csv';
 
 # Time to take the test
-our $TIME_TEST = 1;
+our $TIME_TEST = 630; #seconds
 
 # Setting SEND EMAIL
 our $EMAIL_FROM     = 'truong.hc@globaldesignit.vn';

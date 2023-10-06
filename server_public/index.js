@@ -55,7 +55,7 @@ const show_name = document.getElementById('show_name')
 let stored_minutes = localStorage.getItem('countdown_minutes')
 let stored_seconds = localStorage.getItem('countdown_seconds')
 
-let minutes = stored_minutes ? parseInt(stored_minutes) : 1
+let minutes = stored_minutes ? parseInt(stored_minutes) : 10
 let seconds = stored_seconds ? parseInt(stored_seconds) : 0
 //////////////////////////////////////////////////////
 
@@ -63,6 +63,8 @@ let seconds = stored_seconds ? parseInt(stored_seconds) : 0
 document.addEventListener('DOMContentLoaded', function () {
     user_email = localStorage.getItem('user_email')
     user_name = localStorage.getItem('user_name')
+    id = localStorage.getItem('id')
+    random = localStorage.getItem('random')
     var current_url = window.location.href
     var exam_id = 0
 
@@ -144,6 +146,7 @@ if (btn_login) {
     btn_login.addEventListener('click', function (e) {
         var value_email = input_email.value
         var value_name = remove_diacritics(input_name.value)
+        code = value_email.match(/([^@]*)@/)
         var message = ''
         if (value_email == '' || value_name == '' || value_email == null || value_name == null) {
             message = `<h6>You must enter all the information!</h6>`
@@ -164,6 +167,7 @@ if (btn_login) {
             var data = {
                 email   : value_email,
                 id      : id,
+                code    : code[1],
             }
 
             $.ajax({
@@ -171,10 +175,9 @@ if (btn_login) {
                 url: "/cgi/login.cgi",
                 data: data,
                 success: function (response) {
+                    localStorage.setItem('user_email', value_email)
+                    localStorage.setItem('user_name', value_name)
                     if(response == 1){
-                        localStorage.setItem('user_email', value_email)
-                        localStorage.setItem('user_name', value_name)
-
                         var message = `
                             <h6>After you select "Yes"</h6>
                             <h6>You will begin the test and we will calculate the time.</h6>
@@ -182,9 +185,6 @@ if (btn_login) {
                         `
                         modal_login(message)
                     } else if(response == 3) {
-                        localStorage.setItem('user_email', value_email)
-                        localStorage.setItem('user_name', value_name)
-
                         var message = `
                             <h6>You have started the test before.</h6>
                             <h6>Make sure you are not cheating.</h6>
@@ -308,6 +308,14 @@ function error_login(number) {
         message = `<h6>Email does not exist in the system!</h6>`
     } else if (number == -1){
         message = `<h6>Something is wrong, Please access the LINK we sent you again!</h6>`
+    } else if (number == 4){
+        message = `
+            <h6>Your exam time is over.</h6>
+            <h6>We've noticed that you've left the test site and can't access it again.</h6>
+            <h6>Your test results will be canceled.</h6>
+            <h6>Wish you luck next time!</h6>
+        `
+        handle_error()
     }
 
     modal_login(message, 1)
@@ -478,7 +486,9 @@ function handle_error() {
                 window.location.href = '/view/error.html'
             } else if(response == 0){
                 var message = `<h6>Something is wrong, Please access the LINK we sent you again!</h6>`
-                modal_errors(message)
+                if(window.location.href != '/view/login.html') {
+                    modal_errors(message)
+                }
                 remove_data()
             }
         }
@@ -490,7 +500,7 @@ function remove_data() {
     localStorage.removeItem('user_name')
     
     localStorage.removeItem('id')
-    localStorage.removeItem('code')
+    localStorage.removeItem('random')
 
     // Delete time variables stored locally
     localStorage.removeItem('countdown_minutes')

@@ -36,7 +36,7 @@ my $file_to_create = "$time_path$code-$id.csv";
 our $SAVE_TIME;
 my $file_save_time = "$SAVE_TIME$code-$id.csv";
 
-# Read data from the answer file.
+# Read data from the answer file. 
 my %correct_answers;
 
 my $folder_to_check = our $CSV;
