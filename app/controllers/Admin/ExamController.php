@@ -383,18 +383,25 @@ class ExamController extends AppController
 
     public function uploadAction(Request $request)
     {
-        $check_config = $this->configFTP();
-        $html_directory =  Config::FTP_PUBLIC_DIRECTORY_HTML;
-        $csv_directory = Config::FTP_PUBLIC_DIRECTORY_CSV;
-        $your_server_directory = Config::YOUR_SERVER_DIRECTORY;
-        $email_directory = Config::FTP_PUBLIC_DIRECTORY_EMAIL;
-        $exam_random_derectory = Config::FTP_PUBLIC_DIRECTORY_LINK_EXAM;
 
         $html_content = $request->getPost()->get('html_content');
         $csv_content = $request->getPost()->get('csv_content');
         $csv_exam_participants = $request->getPost()->get('csv_exam_participants');
         $csv_link_exam_radom = $request->getPost()->get('csv_link_exam_radom');
         $exam_id = $request->getGet()->get('id');
+        $exam = $this->obj_model->getById($exam_id);
+        if ($exam['time_start'] == null || $exam['time_end'] == null) {
+            return $this->errorResponse("There is no start time and end time for the exam.");
+        }
+        // echo "<pre>";
+        // var_dump($exam);
+        // die();
+        $check_config = $this->configFTP();
+        $html_directory =  Config::FTP_PUBLIC_DIRECTORY_HTML;
+        $csv_directory = Config::FTP_PUBLIC_DIRECTORY_CSV;
+        $your_server_directory = Config::YOUR_SERVER_DIRECTORY;
+        $email_directory = Config::FTP_PUBLIC_DIRECTORY_EMAIL;
+        $exam_random_derectory = Config::FTP_PUBLIC_DIRECTORY_LINK_EXAM;
 
         // file name csv answer and question html
         $file_name = $exam_id;
@@ -448,6 +455,7 @@ class ExamController extends AppController
                 ],
                 "id = $exam_id"
             );
+            return $this->successResponse();
             ftp_close($check_config);
         }
     }

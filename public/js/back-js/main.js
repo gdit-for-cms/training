@@ -60,7 +60,7 @@ function checkPathName() {
                             </span>
                         </div>
                     </div>`
-    } 
+    }
     else {
         content = `
                     <div class="d-flex justify-content-center align-items-center w-full">
@@ -106,6 +106,7 @@ function submitForm(formId) {
 
                     },
                     error: function (response) {
+                        console.log(response.responseJSON)
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
@@ -116,38 +117,6 @@ function submitForm(formId) {
             }
         })
     })
-    // $('#submit_confirm_btn').click(function (e) {
-    //     var form = $(formId);
-    //     var actionUrl = form.attr('action');
-    //     console.log(form.serialize());
-    //     $.ajax({
-    //         type: "POST",
-    //         url: actionUrl,
-    //         data: form.serialize(),
-    //         dataType: 'json',
-    //         success: function (response) {
-    //             Swal.fire({
-    //                 icon: 'success',
-    //                 title: "Successfully",
-    //                 showConfirmButton: false,
-    //                 timer: 1500
-    //             });
-    //             setTimeout(() => {
-    //                 document.location.reload(true);
-    //             }, "1600");
-    //         },
-    //         error: function (response) {
-    //             Swal.fire({
-    //                 icon: 'error',
-    //                 title: 'Oops...',
-    //                 text: response.responseJSON.message,
-    //             });
-    //         }
-    //     });
-    // })
-    // $(formId).submit(function (e) {
-    //     e.preventDefault();
-    // });
 };
 
 function alertDelete() {
@@ -923,7 +892,7 @@ function removeAnswer(button, pathName) {
 
 function alertUploadFileExam() {
     $('.btn-upload-file-ftp').click(function (e) {
-
+        e.preventDefault()
         var btn_submit = document.getElementById('btn_submit');
         btn_submit.disabled = false;
         let uploadFileID = $(this).data('id');
@@ -1012,13 +981,30 @@ function alertUploadFileExam() {
                         csv_exam_participants: csv_exam_participants,
                         csv_link_exam_radom: csv_link_exam_radom
                     },
+                    // dataType: 'json',
                     success: function (response) {
-                        console.log(response);
+                        Swal.fire({
+                            icon: 'success',
+                            title: "Successfully",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        setTimeout(() => {
+                            document.location.reload(true);
+                        }, "1600");
                         window.history.back()
 
                     },
-                    error: function (E) {
-                        console.log(E)
+                    error: function (response) {
+                        let res = response.responseText;
+                        let jsonData = res.substring(0, res.indexOf('}') + 1);
+                        let responseObject = JSON.parse(jsonData);
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: responseObject.message,
+                        });
                     }
                 });
             }

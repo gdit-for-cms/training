@@ -53,7 +53,8 @@
                         <?php
                         $stt = 1;
                         foreach ($exams as $exam) {
-                            $check_status = false;
+                            $check_finished = false;
+                            $check_progress = false;
                         ?>
                             <tr>
                                 <th class="text-center">
@@ -79,11 +80,13 @@
                                     // var_dump($currentTime);
                                     // die();
                                     if ($currentTime < $startTime || empty($startTime)) {
-                                        $check_status = true; ?>
+                                        $check_finished = true; ?>
                                         <span style="color: #FF0000;">Not Started</span>
                                     <?php
 
-                                    } elseif ($currentTime >= $startTime && $currentTime <= $endTime) { ?>
+                                    } elseif ($currentTime >= $startTime && $currentTime <= $endTime) {
+                                        $check_progress = true;
+                                    ?>
                                         <span style="color: #3c7cdb;">In Progress</span>
                                     <?php
                                     } elseif ($endTime < $currentTime) {
@@ -116,10 +119,13 @@
                                 <td>
                                     <div style="display: flex;">
                                         <a href="/admin/exam/examDetail?exam_id=<?php echo $exam['id']; ?>"><button type="button" class="btn btn-success mr-2">Detail</button></a>
-                                        <?php if ($check_status) { ?>
+                                        <?php if ($check_finished) { ?>
                                             <a href="/admin/exam/edit?id=<?php echo $exam['id']; ?>"><button type="button" class="btn btn-info text-white mr-2">Edit</button></a>
                                         <?php } ?>
-                                        <button type="button" data-path="exam" data-id="<?php echo $exam['id']; ?>" class="btn btn-danger text-white btn-delete-question mr-2">Delete</button>
+                                        <?php if (!$check_progress) { ?>
+                                            <button type="button" data-path="exam" data-id="<?php echo $exam['id']; ?>" class="btn btn-danger text-white btn-delete-question mr-2">Delete</button>
+                                        <?php } ?>
+
                                     </div>
                                 </td>
                             </tr>

@@ -45,15 +45,17 @@
                             <b><label class="form-label" for="status">Status : </label></b>
                             <?php
 
-                            if ($currentTime < $startTime) {
-                            ?>
+                            if ($currentTime < $startTime || empty($startTime)) {
+                                $check_finished = true; ?>
                                 <span style="color: #FF0000;">Not Started</span>
                             <?php
 
-                            } elseif ($currentTime >= $startTime && $currentTime <= $endTime) { ?>
+                            } elseif ($currentTime >= $startTime && $currentTime <= $endTime) {
+                                $check_progress = true;
+                            ?>
                                 <span style="color: #3c7cdb;">In Progress</span>
                             <?php
-                            } else {
+                            } elseif ($endTime < $currentTime) {
                             ?>
                                 <span style="color: #008000;">Finished</span>
                             <?php
