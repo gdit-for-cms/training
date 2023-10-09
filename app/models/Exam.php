@@ -122,14 +122,43 @@ class Exam extends Model
 
     public function getExam($req_method_ary, $results_per_page = 5)
     {
-        $where = '';
+
+
+        // if ($currentTime < $startTime || empty($startTime)) {
+        //     $check_finished = true; 
+        // } elseif ($currentTime >= $startTime && $currentTime <= $endTime) {
+        //     $check_progress = true;
+        // } elseif ($endTime < $currentTime) {
+        // }
+        $where = array();
+
+        //filter status
+        if (isset($req_method_ary['status'])) {
+            $currentTime = time();
+            $dateTime = date("Y-m-d H:i:s", $currentTime);
+            if ($req_method_ary['status'] == 1) {
+                $where[] = "(e.time_start > '$dateTime' or e.time_start IS NULL)";
+            } else if ($req_method_ary['status'] == 2) {
+                $where[] = "(e.time_start <= '$dateTime' &&  e.time_end >= '$dateTime')";
+            } else if ($req_method_ary['status'] == 3) {
+                $where[] = "(e.time_end < '$dateTime')";
+            }
+        }
+        //filter publish
+        if (isset($req_method_ary['publish'])) {
+            if ($req_method_ary['publish'] == 1) {
+                $where[] = "(e.published = 1)";
+            } else if ($req_method_ary['publish'] == 0) {
+                $where[] = "(e.published = 0)";
+            }
+        }
+        //filter search keyword
         $keyword_search = "";
         if (isset($req_method_ary['keyword'])) {
-            $where = trim($req_method_ary['keyword']);
+            $keyword = trim($req_method_ary['keyword']);
 
-            $keywords = str_split($where);
+            $keywords = str_split($keyword);
             $specialChars = ["@", "#", "$", "%", "^", "&", "(", ")", "_", "+", "|", "~", "=", "`", "{", "}", "[", "]", ":", "\\", ";", "'", "<", ">", "?", ",", ".", "/", "\\", "-"];
-            $a = 1;
             foreach ($keywords as $keyword) {
                 if (in_array($keyword, $specialChars)) {
                     if ($keyword == "\\") {
@@ -137,29 +166,31 @@ class Exam extends Model
                     } else {
                         $keyword_search .= "\\" . $keyword;
                     }
-                    $a++;
                 } else {
                     $keyword_search .= $keyword;
                 }
             }
+
+            $where[] = ' e.title like ' . ' "%' . $keyword_search . '%" ESCAPE "\\\\"';
         }
+        if (count($where) == 0) {
+            $where[] = " 1=1";
+        }
+        $whereClause = implode(' AND ', $where);
         $db = static::getDB();
         $query = 'SELECT e.id, e.title, e.description, e.published, e.uploaded_at, e.time_start, e.time_end, e.updated_at 
                     FROM exam as e 
-                    where e.title like ' . ' "%' . $keyword_search . '%" ESCAPE "\\\\"
+                    where ' . $whereClause . '
                     ORDER BY e.id DESC';
-
         $req_method_ary['page'] = isset($req_method_ary['page']) && $req_method_ary['page'] >= 1 ? $req_method_ary['page'] : '1';
 
         $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
         $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
-
         $stmt_count = $db->query($query);
         $numbers_of_page = count($stmt_count->fetchAll(PDO::FETCH_ASSOC));
         $stmt = $db->query($query . " " . $limit_query);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results, 'page' => $req_method_ary['page']);
-
 
         return $results_ary;
     }

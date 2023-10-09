@@ -1273,11 +1273,16 @@ function searchAjax() {
         let pathName = window.location.pathname.split('/')[2]
         const method = "POST";
         const url = `/admin/${pathName}/search`;
+        // check status 
+        let currentURL = window.location.search;
+        const urlParams = new URLSearchParams(currentURL);
+        const status = urlParams.get('status');
+        const publish = urlParams.get('publish');
 
         if (keyword.trim() == "") {
             paginationContainer.style.display = "flex";
         } else {
-            paginationContainer.style.display = "none";
+            paginationContainer.style.display = "none"; 
         }
         const xhr = new XMLHttpRequest();
         xhr.open(method, url, true);
@@ -1286,11 +1291,15 @@ function searchAjax() {
         const formData = new FormData();
         formData.append("keyword", keyword);
 
-        // Gửi yêu cầu AJAX đi
+        if (publish != null) {
+            formData.append("publish", publish);
+        }
+        if (status != null) {
+            formData.append("status", status);
+        }
+
         xhr.send(formData);
-        // Xử lý sự kiện khi yêu cầu hoàn thành
         xhr.onload = function () {
-            // Xử lý phản hồi từ controller
             const response = JSON.parse(xhr.responseText);
             const table_result = document.getElementById("table_result");
             console.log(response)
@@ -1303,7 +1312,7 @@ function searchAjax() {
 
                 for (let i = 0; i < result.length; i++) {
                     // console.log(result[i]['title']);
-
+                    
                     if (pathName == "exam") {
                         let punlish = '';
                         let check = result[i]['published']

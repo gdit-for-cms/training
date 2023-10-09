@@ -3,7 +3,7 @@
         <div class="white_card_header">
             <div class="box_header m-0">
                 <div class="main-title">
-                    <h3 class="m-0 fs-2">Collection question</h3>
+                    <h3 class="m-0 ">Collection question</h3>
                 </div>
             </div>
         </div>
@@ -11,14 +11,9 @@
             <div class="card-body d-flex">
                 <div class="mb-3 col-10 mr-12" style="">
                     <?php
-                    // echo "<pre>";
-                    // var_dump($question_title);
-                    // die();
                     if ($question_title != false) { ?>
                         <b><label class="form-label" for="title">Title : </label></b>
                         <?php echo $question_title['title']; ?>
-                        <!-- </div>
-                <div class="mb-3 col-5"> -->
                         <br>
                         <b><label class="form-label" for="title">Description : </label></b>
                         <?php echo isset($question_title['description']) ? $question_title['description'] : "" ?>

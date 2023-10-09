@@ -918,9 +918,9 @@
         margin-bottom: 10px;
       }
 
-      .input-button-group {
+      .input-button-group { 
         display: flex;
-        align-items: center; /* Căn giữa theo chiều dọc */
-        gap: 340px; /* Khoảng cách giữa ô nhập và nút */
+        align-items: center;
+        justify-content: space-between;
       }
       

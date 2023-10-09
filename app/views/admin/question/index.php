@@ -8,14 +8,10 @@
   <div class="box_body white_card_body">
     <div class="default-according" id="accordion2">
 
-      <!-- <div class="flex col-4 mb-6">
-        <input id="searchInput" type="search" class="form-control rounded" placeholder="Search..." aria-label="Search" aria-describedby="search-addon" />
-        <button type="button" data-path="question-title" data-id="all" class="btn btn-danger text-white btn-delete-question">Delete</button>
-      </div> -->
-      <div class="flex col-6 mb-6">
-        <div class="input-button-group">
+
+      <div class="flex col-12 mb-6">
+        <div class="input-button-group col-12">
           <input id="searchInput" type="search" class="form-control rounded" style="width: 425px;" placeholder="Search..." aria-label="Search" aria-describedby="search-addon" />
-          <!-- <button type="button" data-path="question-title" data-id="all" class="btn btn-danger text-white btn-delete-question btn-delete-select">Delete</button> -->
           <button type="button" data-path="question-title" data-id="select" class="btn btn-danger text-white btn-delete-select-all btn-delete-select" style="display: none;">Delete</button>
         </div>
       </div>
@@ -26,7 +22,6 @@
           <thead>
             <tr>
               <th class="text-center">
-                <!-- <span>Select All</span><br> -->
                 <input type="checkbox" id="selectAll" class="selectAll" name="select_all">
               </th>
               <th>#</th>
@@ -39,11 +34,9 @@
               <th class="">#</th>
               <th class="text-ellipsis">Other</th>
               <td class="text-ellipsis">
-                <!-- 2023-10-03 08:38:56 -->
               </td>
               <td>
                 <a href="/admin/question/detail?question_id=other"><button type="button" class="btn btn-success">Detail</button></a>
-                <!-- <a href="/admin/question-title/edit?ques-title=other"><button type="button" class="btn btn-info text-white">Edit</button></a> -->
                 <button type="button" data-path="question-title" data-id="null" class="btn btn-danger text-white btn-delete-question ">Delete</button>
               </td>
             </tr>
@@ -112,7 +105,6 @@
   </div>
 </div>
 <script>
-  // Lưu trạng thái ban đầu của phân trang
   const searchInput = document.getElementById("searchInput");
   const paginationContainer = document.getElementById("paginations");
   let selectAllCheckboxes = document.getElementsByClassName("selectAll");

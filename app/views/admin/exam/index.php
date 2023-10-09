@@ -7,8 +7,8 @@
     </div>
     <div class="box_body white_card_body">
         <div class="default-according" id="accordion2">
-            <div class="flex col-6 mb-6">
-                <div class="input-button-group">
+            <div class="flex col-12 mb-6">
+                <div class="input-button-group col-12">
                     <input id="searchInput" type="search" class="form-control rounded" style="width: 425px;" placeholder="Search..." aria-label="Search" aria-describedby="search-addon" />
                     <!-- <button type="button" data-path="question-title" data-id="all" class="btn btn-danger text-white btn-delete-question btn-delete-select">Delete</button> -->
                     <button type="button" data-path="exam" data-id="select" class="btn btn-danger text-white btn-delete-select-all btn-delete-select" style="display: none;">Delete</button>
@@ -28,7 +28,7 @@
                             <th>TITLE</th>
                             <th>
                                 STATUS
-                                <select class="role_select select_option w-26 text-medium border " name="role_id" aria-label="Default select example">
+                                <select class="w-26 text-medium border" id="selectStatus" name="" aria-label="Default select example">
                                     <option value="0" selected="">All</option>
                                     <option value="1">Not Started</option>
                                     <option value="2">In Progress</option>
@@ -39,10 +39,10 @@
                             <!-- <th>AUTHOR</th> -->
                             <th>
                                 PUBLISH
-                                <select class="role_select select_option w-26 text-medium border " name="role_id" aria-label="Default select example">
-                                    <option value="0" selected="">All</option>
+                                <select class="  w-26 text-medium border " id="selectPublish" name="" aria-label="Default select example">
+                                    <option value="2" selected="">All</option>
                                     <option value="1">Published</option>
-                                    <option value="2">Unpublished</option>
+                                    <option value="0">Unpublished</option>
                                 </select>
                             </th>
                             <th>TIME</th>
@@ -55,10 +55,19 @@
                         foreach ($exams as $exam) {
                             $check_finished = false;
                             $check_progress = false;
+                            $startTime = strtotime($exam['time_start']);
+                            $endTime = strtotime($exam['time_end']);
+                            $currentTime = time();
                         ?>
                             <tr>
                                 <th class="text-center">
-                                    <input type="checkbox" value="<?php echo $exam['id']; ?>" name="item[]" class="checkbox" id="">
+                                    <?php
+                                    if (!($currentTime >= $startTime && $currentTime <= $endTime)) {
+                                    ?>
+                                        <input type="checkbox" value="<?php echo $exam['id']; ?>" name="item[]" class="checkbox" id="">
+                                    <?php
+                                    }
+                                    ?>
                                 </th>
                                 <th scope="row"><?php echo $stt++; ?></th>
                                 <td class="text-ellipsis">
@@ -66,19 +75,6 @@
                                 </td>
                                 <td>
                                     <?php
-                                    // date_default_timezone_set('Asia/Tokyo');
-                                    $startTime = strtotime($exam['time_start']);
-                                    $endTime = strtotime($exam['time_end']);
-                                    $currentTime = time();
-
-                                    // Lấy thời gian hiện tại của Tokyo
-
-                                    // $timezone = date_default_timezone_get();
-                                    // echo "Múi giờ hiện tại: " . $timezone;
-                                    // echo date('Y-m-d H:i:s');
-                                    // var_dump($endTime);
-                                    // var_dump($currentTime);
-                                    // die();
                                     if ($currentTime < $startTime || empty($startTime)) {
                                         $check_finished = true; ?>
                                         <span style="color: #FF0000;">Not Started</span>
@@ -109,11 +105,7 @@
                                         <?php echo $exam['time_start'] ?><br>
 
                                         <?php echo $exam['time_end'] ?>
-                                    <?php } else {
-                                    ?>
-                                        <!-- Thời gian làm bài exam chưa có -->
-                                    <?php
-                                    } ?>
+                                    <?php } ?>
                                 </td>
 
                                 <td>
@@ -179,14 +171,60 @@
     let checkboxesArray = Array.from(checkboxes);
 
 
-    // var selectAllCheckbox = document.getElementById("selectAll");
-    // var checkboxes = document.querySelectorAll(".checkbox");
+    //--------------------- searh status-----------------------
+    const status_id = "selectStatus";
+    const paramNameStatus = "status";
 
-    // // Thêm sự kiện click vào checkbox "Select All"
-    // selectAllCheckbox.addEventListener("click", function() {
-    //     alert("a");
-    //     checkboxes.forEach(function(checkbox) {
-    //         checkbox.checked = selectAllCheckbox.checked;
-    //     });
+    const publish_id = "selectPublish";
+    const paramNamePublish = "publish";
+
+    searchSelect(status_id, paramNameStatus);
+    searchSelect(publish_id, paramNamePublish);
+
+    function searchSelect(select, paramName) {
+        var selectBox = document.getElementById(select);
+        var currentURL = window.location.href;
+        // var match = currentURL.match(/[\?&]status=([^&]*)/);
+        var match = currentURL.match(new RegExp("[\\?&]" + paramName + "=([^&]*)"));
+        if (match) {
+            var selectedValue = decodeURIComponent(match[1]);
+            selectBox.value = selectedValue;
+        }
+
+        selectBox.addEventListener("change", function() {
+            var newValue = this.value;
+            var newURL;
+
+            if (match) {
+                newURL = currentURL.replace(new RegExp(paramName + "=[^&]*"), paramName + "=" + encodeURIComponent(newValue));
+            } else {
+                newURL = currentURL + (currentURL.includes("?") ? "&" : "?") + paramName + "=" + encodeURIComponent(newValue);
+            }
+            window.location.href = newURL;
+        });
+
+    }
+    // var selectBox = document.getElementById("selectStatus");
+    // var currentURL = window.location.href;
+    // var match = currentURL.match(/[\?&]status=([^&]*)/);
+    // if (match) {
+    //     var selectedValue = decodeURIComponent(match[1]);
+    //     selectBox.value = selectedValue;
+    // }
+
+    // selectBox.addEventListener("change", function() {
+    //     var newValue = this.value;
+    //     var newURL;
+    //     if (match) {
+    //         newURL = currentURL.replace(/status=[^&]*/, "status=" + encodeURIComponent(newValue));
+    //     } else {
+    //         newURL = currentURL + (currentURL.includes("?") ? "&" : "?") + "status=" + encodeURIComponent(newValue);
+    //     }
+    //     window.location.href = newURL;
     // });
+    //--------------------end search status------------------
+
+    //-------------------- search publish---------------------
+
+    //-------------------- end search publish-----------------
 </script>
