@@ -10,7 +10,6 @@
             <div class="flex col-12 mb-6">
                 <div class="input-button-group col-12">
                     <input id="searchInput" type="search" class="form-control rounded" style="width: 425px;" placeholder="Search..." aria-label="Search" aria-describedby="search-addon" />
-                    <!-- <button type="button" data-path="question-title" data-id="all" class="btn btn-danger text-white btn-delete-question btn-delete-select">Delete</button> -->
                     <button type="button" data-path="exam" data-id="select" class="btn btn-danger text-white btn-delete-select-all btn-delete-select" style="display: none;">Delete</button>
                 </div>
             </div>
@@ -20,10 +19,8 @@
                     <thead>
                         <tr>
                             <th class="text-center">
-                                <!-- <span>Select All</span><br> -->
                                 <input type="checkbox" id="selectAll" class=" selectAll" name="select_all">
                             </th>
-
                             <th>#</th>
                             <th>TITLE</th>
                             <th>
@@ -35,8 +32,6 @@
                                     <option value="3">Completed</option>
                                 </select>
                             </th>
-
-                            <!-- <th>AUTHOR</th> -->
                             <th>
                                 PUBLISH
                                 <select class="  w-26 text-medium border " id="selectPublish" name="" aria-label="Default select example">
@@ -164,17 +159,14 @@
 </div>
 <script>
     //search
-    // const searchInput = document.getElementById("searchInput");
     const paginationContainer = document.getElementById("paginations");
     let selectAllCheckboxes = document.getElementsByClassName("selectAll");
     let checkboxes = document.getElementsByClassName("checkbox");
     let checkboxesArray = Array.from(checkboxes);
 
-
     //--------------------- searh status-----------------------
     const status_id = "selectStatus";
     const paramNameStatus = "status";
-
     const publish_id = "selectPublish";
     const paramNamePublish = "publish";
 
@@ -184,7 +176,6 @@
     function searchSelect(select, paramName) {
         var selectBox = document.getElementById(select);
         var currentURL = window.location.href;
-        // var match = currentURL.match(/[\?&]status=([^&]*)/);
         var match = currentURL.match(new RegExp("[\\?&]" + paramName + "=([^&]*)"));
         if (match) {
             var selectedValue = decodeURIComponent(match[1]);
@@ -204,27 +195,4 @@
         });
 
     }
-    // var selectBox = document.getElementById("selectStatus");
-    // var currentURL = window.location.href;
-    // var match = currentURL.match(/[\?&]status=([^&]*)/);
-    // if (match) {
-    //     var selectedValue = decodeURIComponent(match[1]);
-    //     selectBox.value = selectedValue;
-    // }
-
-    // selectBox.addEventListener("change", function() {
-    //     var newValue = this.value;
-    //     var newURL;
-    //     if (match) {
-    //         newURL = currentURL.replace(/status=[^&]*/, "status=" + encodeURIComponent(newValue));
-    //     } else {
-    //         newURL = currentURL + (currentURL.includes("?") ? "&" : "?") + "status=" + encodeURIComponent(newValue);
-    //     }
-    //     window.location.href = newURL;
-    // });
-    //--------------------end search status------------------
-
-    //-------------------- search publish---------------------
-
-    //-------------------- end search publish-----------------
 </script>

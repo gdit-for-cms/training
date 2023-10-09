@@ -83,6 +83,7 @@ class Question extends Model
                 break;
         }
     }
+
     public function destroyBy($condition)
     {
         return $this->destroy($condition);
@@ -159,9 +160,7 @@ class Question extends Model
         $stmt = $db->query($query . " " . $limit_query);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results, 'page' => $req_method_ary['page']);
-        // echo "<pre>";
-        // var_dump($results_ary);
-        // die();
+      
         return $results_ary;
     }
     public function getQuestionAnswer($req_method_ary, $results_per_page = 5)
@@ -172,8 +171,6 @@ class Question extends Model
         if ($req_method_ary['id'] == "orther") {
             $where = "WHERE q.question_title_id is null";
         }
-        // echo $req_method_ary['id'];
-        // die();
         $db = static::getDB();
         $query = "SELECT
         

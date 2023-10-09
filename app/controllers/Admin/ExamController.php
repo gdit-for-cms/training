@@ -265,23 +265,6 @@ class ExamController extends AppController
         return true;
     }
 
-    // public function store(Request $request)
-    // {
-    //     $exam_id = $request->getGet()->get('exam_id');
-    //     $question_answers = $request->getPost();
-    //     $question_id = $question_answers->get('question_id');
-    //     $answer_ids = $question_answers->get('selected_answers');
-
-    //     foreach ($answer_ids as $answer_id) {
-    //         $this->obj_model_exam_question->insert([
-    //             'exam_id' => $exam_id,
-    //             'answer_id' => $answer_id,
-    //             'question_id' => $question_id
-    //         ]);
-    //     }
-    //     return $this->successResponse();
-    // }
-
     public function previewAction(Request $request)
     {
         $exam_id = $request->getGet()->get('exam_id');
@@ -318,10 +301,8 @@ class ExamController extends AppController
         $ftp_server = Config::FTP_SERVER;
         $ftp_username = Config::FTP_USERNAME;
         $ftp_password = Config::FTP_PASSWORD;
-
         $ftp_connection = ftp_connect($ftp_server);
         $login = ftp_login($ftp_connection, $ftp_username, $ftp_password);
-
         if (!$ftp_connection || !$login) {
             return false;
         }
@@ -335,7 +316,6 @@ class ExamController extends AppController
         } else {
             echo "could not delete $file\n";
         }
-        // close the connection
         ftp_close($this->configFTP());
     }
 
@@ -354,34 +334,6 @@ class ExamController extends AppController
         $this->deleteFTP($file_email_csv);
     }
 
-    // public function uploadFileToFTP($fileContent, $remoteDirectory, $fileName)
-    // {
-    //     $ftpConnection = $this->configFTP();
-
-    //     if (!$ftpConnection) {
-    //         return false;
-    //     }
-
-    //     $remotePath = $remoteDirectory . basename($fileName);
-
-    //     // Ghi nội dung tệp vào một tệp tạm trên server
-    //     $tempFilePath = 'path_to_temp_file'; // Điều chỉnh đường dẫn tệp tạm
-    //     file_put_contents($tempFilePath, $fileContent);
-
-    //     // Tải tệp tạm lên FTP
-    //     $uploadResult = ftp_put($ftpConnection, $remotePath, $tempFilePath, FTP_BINARY);
-
-    //     // Đặt quyền truy cập cho tệp đã tải lên
-    //     if ($uploadResult) {
-    //         ftp_chmod($ftpConnection, 0777, $remotePath);
-    //     }
-
-    //     // Xóa tệp tạm trên server
-    //     unlink($tempFilePath);
-
-    //     return $uploadResult;
-    // }
-
     public function uploadAction(Request $request)
     {
 
@@ -394,9 +346,7 @@ class ExamController extends AppController
         if ($exam['time_start'] == null || $exam['time_end'] == null) {
             return $this->errorResponse("There is no start time and end time for the exam.");
         }
-        // echo "<pre>";
-        // var_dump($exam);
-        // die();
+
         $check_config = $this->configFTP();
         $html_directory =  Config::FTP_PUBLIC_DIRECTORY_HTML;
         $csv_directory = Config::FTP_PUBLIC_DIRECTORY_CSV;
@@ -404,9 +354,7 @@ class ExamController extends AppController
         $email_directory = Config::FTP_PUBLIC_DIRECTORY_EMAIL;
         $exam_random_derectory = Config::FTP_PUBLIC_DIRECTORY_LINK_EXAM;
 
-        // file name csv answer and question html
         $file_name = $exam_id;
-        //file email exam participant
         $file_exam_participant = "email" . $exam_id;
         $file_link_random_exam = "rand" . $exam_id;
 
@@ -481,17 +429,14 @@ class ExamController extends AppController
         $this->data_ary['numbers_of_page'] = $numbers_of_page;
         $this->data_ary['page'] = (float)$results_ary['page'];
 
-        //start add question
         $results_ary = $this->obj_model_question_title->getAll("edit");
         $this->data_ary['question_titles'] = $results_ary;
-        //end add question
 
         $this->data_ary['content'] = "exam/edit";
     }
 
     public function update(Request $request)
     {
-
         $result_vali_ary = $this->app_request->validate($this->obj_model->rules(), $request, 'post');
         if (in_array('error', $result_vali_ary)) {
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
@@ -507,7 +452,6 @@ class ExamController extends AppController
         $description = $post_ary['description'];
         $date_start = $post_ary['date_start'];
         $date_end = $post_ary['date_end'];
-
         $check_time = false;
         if ((!empty($date_start) && empty($date_end)) || (empty($date_start) && !empty($date_end))) {
             return $this->errorResponse("Please fil out this field time");
@@ -522,24 +466,20 @@ class ExamController extends AppController
             }
             $check_time = true;
         }
-
         if ($num_rows > 0 && $exam_check_ary[0]['id'] != $id) {
             return $this->errorResponse('Exam has been exist');
         }
         try {
             $this->obj_model->beginTransaction();
-
             $data = [
                 'title' => $title,
                 'description' => $description,
                 'uploaded_at' => (new \DateTime())->format('Y-m-d H:i:s')
             ];
-
             if ($check_time) {
                 $data['time_start'] = $date_start;
                 $data['time_end'] = $date_end;
             }
-
             $this->obj_model->updateOne(
                 $data,
                 "id = $id"
@@ -549,7 +489,6 @@ class ExamController extends AppController
                 $email_arrays = $post_ary['email'];
                 $stt_email = 1;
                 $arr_check_email = array();
-
                 foreach ($email_arrays as $email) {
                     $email = trim($email);
                     if ($email == "") {
@@ -561,7 +500,6 @@ class ExamController extends AppController
                     if (in_array($email, $arr_check_email)) {
                         return $this->errorResponse("email số " . $stt_email . " đã trùng lặp");
                     }
-
                     $this->obj_model_exam_participant->create([
                         'exam_id' => $id,
                         'email' => $email,
@@ -569,7 +507,6 @@ class ExamController extends AppController
                         'is_submit' => 2
                     ]);
                     array_push($arr_check_email, trim($email));
-
                     $stt_email++;
                 }
             }
@@ -607,32 +544,14 @@ class ExamController extends AppController
         } else {
             $this->obj_model->destroyBy("id = $exam_id");
         }
-        // $this->deleteFileFTPExam($exam_id);
     }
 
-    //xóa question trong exam
     public function detailDeleteAction(Request $request)
     {
         $question_id = $request->getGet()->get('question_id');
         $exam_id = $request->getGet()->get('exam_id');
-
         $this->obj_model_exam_question->destroyBy("question_id = $question_id and exam_id = $exam_id");
     }
-
-    // public function detailEditAction(Request $request)
-    // {
-    //     $question_id = $request->getGet()->get('question_id');
-    //     $exam_id =  $request->getGet()->get('exam_id');
-    //     $exam_questions = $this->obj_model_exam_question->getExamQuestionByIds($exam_id, $question_id, '*');
-    //     $question = $this->obj_model_question->getById($question_id);
-    //     $answers = $this->obj_modal_answer->getBy('question_id', '=', $question_id, '*');
-
-    //     $this->data_ary['exam_questions'] = $exam_questions;
-    //     $this->data_ary['question'] = $question;
-    //     $this->data_ary['answers'] = $answers;
-    //     $this->data_ary['exam_id'] = $exam_id;
-    //     $this->data_ary['content'] = "exam/detail_edit";
-    // }
 
     public function editDetailExamAction(Request $request)
     {

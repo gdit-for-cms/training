@@ -29,10 +29,6 @@
                             <label class="form-label" for="title">Description</label>
                             <textarea class="form-control" rows="7" name="description" id="description" placeholder="Description..."><?= isset($exam['description']) ? $exam['description'] : "" ?></textarea>
                         </div>
-                        <!-- <div class="mb-3 col-8 mr-7">
-                            <label class="form-label" for="minutes">Duration (minutes)<span style="color: red;">*</span></label>
-                            <input class="form-control" type="number" name="duration" id="duration" placeholder="Duration..." min="0" />
-                        </div> -->
                         <div class="mb-3 col-8 mr-7">
                             <label class="form-label" for="date start">Time start</label>
                             <input class="form-control" type="datetime-local" name="date_start" id="date_start" value="<?= isset($exam['time_start']) ? $exam['time_start'] : '' ?>" />
@@ -41,12 +37,9 @@
                             <label class="form-label" for="date end">Time end</label>
                             <input class="form-control" type="datetime-local" name="date_end" id="date_end" value="<?= isset($exam['time_end']) ? $exam['time_end'] : '' ?>" />
                         </div>
-
                     </div>
                     <div id="answerContainer">
                         <label class="form-label" for="email">Email participant</label>
-                        <!-- Ô input mặc định -->
-
                         <?php if (count($emails) > 0) {
                             foreach ($emails as $email) { ?>
                                 <div class="form-check" style="padding-left: 45px;">
@@ -62,7 +55,6 @@
                         <button type="button" class="btn btn-info m-2 text-white" onclick="addAnswer()">Add</button>
                     </div>
                     <button id="submit" type="submit" class="btn btn-primary">Save</button>
-                    <!-- <button id="submit" type="submit" class="btn btn-primary">Create</button> -->
                 </form>
             </div>
         </div>
@@ -72,12 +64,9 @@
     <div class="white_card card_box card_height_100 mb_30">
         <div class="px-4 pt-4">
             <div class="main-title2 d-flex justify-content-between items-center ">
-
                 <div class="top-left d-flex">
                     <h4 class="mb-2 nowrap">List question</h4>
-
                 </div>
-
             </div>
         </div>
         <div class="white_card_body">
@@ -88,7 +77,6 @@
                             <th scope="col">#</th>
                             <th scope="col">Content</th>
                             <th scope="col">Answer</th>
-
                             <?php
                             if ($cur_user['role_id'] != 3) {
                             ?>
@@ -164,7 +152,6 @@
                             $next = $page;
                             if ($page <= $numbers_of_page) {
                             ?>
-
                                 <?php
                                 if ($page > 1) {
                                 ?>

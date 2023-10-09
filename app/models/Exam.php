@@ -122,16 +122,7 @@ class Exam extends Model
 
     public function getExam($req_method_ary, $results_per_page = 5)
     {
-
-
-        // if ($currentTime < $startTime || empty($startTime)) {
-        //     $check_finished = true; 
-        // } elseif ($currentTime >= $startTime && $currentTime <= $endTime) {
-        //     $check_progress = true;
-        // } elseif ($endTime < $currentTime) {
-        // }
         $where = array();
-
         //filter status
         if (isset($req_method_ary['status'])) {
             $currentTime = time();
@@ -206,6 +197,7 @@ class Exam extends Model
 
         $stmt = $db->query($query);
         $results_ary = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
         return $results_ary;
     }
     public function rules($change = '', $value = array())

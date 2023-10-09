@@ -535,10 +535,6 @@ $(document).ready(function () {
     submitForm('#form_edit_detail_exam');
     submitForm('#form_new_question_title');
 
-
-    // submitForm('#btn-edit-detail-exam');
-
-    // submitForm('#form_upload_avatar');
     alertUploadFileExam()
     alertDeleteQuestion()
     alertDeleteExamDetail()
@@ -546,12 +542,10 @@ $(document).ready(function () {
     searchAjax()
     selectAll()
     alertDeleteSelectAll()
-    // alertEditDetailExam('edit-detail-exam')
-    //show answer
     loadAnswers()
     addAnswer()
     removeAnswer()
-    // searchInputs()
+    
     //Ngo Duy Hung
     alertDeleteListRule();
     alertDeleteRule();
@@ -1282,7 +1276,7 @@ function searchAjax() {
         if (keyword.trim() == "") {
             paginationContainer.style.display = "flex";
         } else {
-            paginationContainer.style.display = "none"; 
+            paginationContainer.style.display = "none";
         }
         const xhr = new XMLHttpRequest();
         xhr.open(method, url, true);
@@ -1312,7 +1306,7 @@ function searchAjax() {
 
                 for (let i = 0; i < result.length; i++) {
                     // console.log(result[i]['title']);
-                    
+
                     if (pathName == "exam") {
                         let punlish = '';
                         let check = result[i]['published']

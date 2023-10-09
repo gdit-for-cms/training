@@ -11,14 +11,11 @@
                         <span>3</span>
                     </li>
                 <?php } ?>
-
                 <li class="border has-arrow mb-1 collection_hover" style="" onclick="getQuestion('orther')">
                     <button class="" style="" type="button" class=" dropdown-item ">
                         Orther
                     </button>
                 </li>
-                <!-- <a style="" data-exam_id="<?php echo $exam_id; ?>" id="select" type="submit" class=" btn btn-edit btn-add_question_exam ">Add quick question</a> -->
-
             </ul>
             <div style=" padding-bottom: 10px;">
                 <span style="margin-left: 20px; margin-right: 20px;">Số câu đã chọn : <span id="total_select">0</span> </span><br>
@@ -32,7 +29,6 @@
     <div class="col-9 d-flex">
         <div id="questionList" class="col-12">
             <!-- Nơi để hiển thị danh sách câu hỏi sau khi AJAX được gọi -->
-
 
         </div>
     </div>

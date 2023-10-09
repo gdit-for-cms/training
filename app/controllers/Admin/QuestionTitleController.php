@@ -89,7 +89,6 @@ class QuestionTitleController extends  AppController
     {
         $id = $request->getGet()->get('ques-title');
         $this->data_ary['question_title'] =  $this->obj_model_question->getById($id, 'id, content');
-
         $req_method_ary = $request->getGet()->all();
         $req_method_ary['question_id'] = $id;
         $results_per_page = 10;
@@ -100,7 +99,6 @@ class QuestionTitleController extends  AppController
         $this->data_ary['numbers_of_page'] = $numbers_of_page;
         $this->data_ary['page'] = (float)$results_ary['page'];
         $this->data_ary['question_title'] = $this->obj_model->getById($id, "id,title,description");
-
         $this->data_ary['content'] = 'question_title/edit';
     }
 
@@ -119,9 +117,7 @@ class QuestionTitleController extends  AppController
         if (!$change_data_flg) {
             return $this->errorResponse('Nothing to update');
         }
-
         $result_vali_ary = $this->app_request->validate($this->obj_model->rules(), $request, 'post');
-
         if (in_array('error', $result_vali_ary)) {
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
             return $this->errorResponse($message_error);

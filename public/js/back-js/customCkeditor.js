@@ -1,25 +1,25 @@
 // import Editor from "../../ckeditor5custom/src/ckeditor";
 
 document.addEventListener('DOMContentLoaded', function() {
-    var inputElement = document.querySelector('#editor-edit-note')
+    var inputElement = document.querySelector('#editor-edit-note') 
     if (inputElement) {
         ClassicEditor
-            .create(inputElement,
-                {
-                    htmlSupport: {
-                        allow: [
-                            {
-                                name: /.*/,
-                                attributes: true,
-                                classes: true,
-                                styles: true
-                            }
-                        ]
-                    }
-                })
-            .catch(error => {
-                console.error('Error when create CKEditor instance:', error);
-            });
+        .create(inputElement,
+            {
+                htmlSupport: {
+                    allow: [
+                        {
+                            name: /.*/,
+                            attributes: true,
+                            classes: true,
+                            styles: true
+                        }
+                    ]
+                } 
+            })
+        .catch(error => {
+            console.error('Error when create CKEditor instance:', error);
+        });
     }
 });
 
@@ -32,7 +32,6 @@ $(document).ready(() => {
     var btnOpenPreviews = document.querySelectorAll('.btn-open-preview')
     var btnInsertImages = document.querySelectorAll('.btn-insert-image')
     var btnDeleteImages = document.querySelectorAll('.btn-delete-image')
-
     const btnListImageTab = document.getElementById('btn-list-image-tab')
     const imgFileListUL = $('#images-file-list-ul')
     var selectLimitImage = document.getElementById('select-quantity')
@@ -63,16 +62,10 @@ $(document).ready(() => {
     const editorInstance = domEditableElement.ckeditorInstance;
     var arrImgInEditorElements = Array.from(editorInstance.editing.view.getDomRoot().querySelectorAll('img'))
 
-    const currentUrl = document.getElementById('url_current')
     addEventTabFormat()
     addEventTabUpload()
     addEventTabListImage()
-    get_current_url()
 
-    function get_current_url() {
-        var url = window.location.href;
-        currentUrl.value = url;
-    }
     function addEventTabUpload() {
         $.each($('.upload-photo'), (key, item) => {
             $(item).on('change', (e) => {
@@ -91,7 +84,6 @@ $(document).ready(() => {
                 }
             })
         })
-
         $.each($('.name-file'), (key, item) => {
             $(item).on('keyup', (e) => {
                 if ($(item).val() != null) {
@@ -100,13 +92,11 @@ $(document).ready(() => {
                 }
             })
         })
-
         $('#close-modal-notice').on('click', () => {
             if (modalNotice != null) {
                 modalNotice?.css('display', 'none')
             }
         })
-
         btnUploadTab.addEventListener('click', () => {
             btnListImageTab.classList.remove('active-interface')
         })
@@ -121,7 +111,6 @@ $(document).ready(() => {
             url: actionUrl,
             data: form_data,
             success: function(data) {
-               
                 if (data['success']) {
                     const newImages = Object.entries(data['result']['new_images'])
                     filterImageForm[0].reset()
@@ -134,7 +123,6 @@ $(document).ready(() => {
                         item.innerHTML = ""
                     })
                 } else {
-                  
                     modalNotice.find('#modal-notice-content').html(`<h5 class='text-center text-danger'>${data['message']}</h5>`)
                     modalNotice.css('display', "block");
                 }
@@ -142,13 +130,11 @@ $(document).ready(() => {
             cache: false,
             contentType: false,
             processData: false
-            
         }).fail(function() {
-            
-           
+            modalNotice.find('#modal-notice-content').html(`<h5 class='text-center text-danger'>Can not upload image. Please check again!</h5>`)
+            modalNotice.css('display', "block");
         });
     })
-
 
     function addEventTabListImage() {
         btnDeleteImages.forEach((btn) => {
@@ -195,7 +181,7 @@ $(document).ready(() => {
                 imgAltValue = imgAlt.value
             })
         })
-
+       
     }
 
 
@@ -228,24 +214,24 @@ $(document).ready(() => {
                     const images = Object.entries(data['result']['images'])
                     setListImage(images)
                     if (thumbnail=='no') {
-                        const thumnailElements = document.querySelectorAll('.img-thumbnail-item')
+                        const thumnailElements = document.querySelectorAll('.img-thumbnail-item') 
                         thumnailElements.forEach((item)=>{
                             item.classList.add('d-none')
                         })
                     }
                     else{
-                        const thumnailElements = document.querySelectorAll('.img-thumbnail-item')
+                        const thumnailElements = document.querySelectorAll('.img-thumbnail-item') 
                         thumnailElements.forEach((item)=>{
                             item.classList.remove('d-none')
                         })
                     }
-                }
+                } 
             },
             dataType: 'json',
             cache: false,
             contentType: false,
             processData: false
-        })
+       })
     })
 
     function addEventTabListFile() {
@@ -293,28 +279,26 @@ $(document).ready(() => {
                 imgAltValue = imgAlt.value
             })
         })
-
+       
     }
     // searchFileForm.on('submit',(e)=>{
-
+    
     selectLimitImage.addEventListener('change',()=>{
         btnSearchImg.click()
     })
-
     function updateSelectLimitValue(quantity){
         if (optionAllResult) {
             optionAllResult.value = quantity
             optionAllResult.innerText = `All (${quantity})`
         }
     }
-
     function addEventChangeImage(){
         arrImgInEditorElements = Array.from(editorInstance.editing.view.getDomRoot().querySelectorAll('img'))
         arrImgInEditorElements.forEach((img)=>{
             img.addEventListener('dblclick',()=>{
                 var imgParentElement = img.parentElement
                 imgClassStyle = ''
-                const arrClassStyle = ['img-align-unspecified','img-align-left','img-align-right', 'img-align-central', 'img-align-superior', 'img-align-under']
+                const arrClassStyle = ['img-align-unspecified','img-align-left','img-align-right','img-align-central','img-align-superior','img-align-under']
                 arrClassStyle.forEach((item)=>{
                     if (imgParentElement.classList.contains(item)) {
                         imgClassStyle = item
@@ -323,18 +307,18 @@ $(document).ready(() => {
                 if (!imgClassStyle) {
                     imgClassStyle = "img-align-unspecified"
                 }
-                let alignItemSelect = Array.from(alignRadios).find(item => {
+                let alignItemSelect = Array.from(alignRadios).find(item=>{
                     return imgClassStyle.includes(item.value)
                 })
                 if (alignItemSelect) {
                     alignItemSelect.checked = true
                 }
                 formatImage.src = img.src
-                if (img.alt != '') {
+                if (img.alt!='') {
                     imgAlt.value = img.alt
                     cbInputSetAlt.checked = false
                 }
-                else {
+                else{
                     imgAlt.value = ''
                     cbInputSetAlt.checked = true
                 }
@@ -354,12 +338,12 @@ $(document).ready(() => {
             switchToListTab()
         })
         addEventChangeFormatImage()
-        addEventChangeImage()
+        addEventChangeImage() 
         btnSettingImage.addEventListener('click', () => {
-            if (cbInputSetAlt.checked == true) {
+            if (cbInputSetAlt.checked==true) {
                 imgAltValue = ""
             }
-            else {
+            else{
                 imgAltValue = imgAlt.value
             }
             alignRadios = document.getElementsByName("alignment-type");
@@ -369,14 +353,14 @@ $(document).ready(() => {
             const viewFragment = htmlDP.toView(`<img class="img-align-${alignSelectedValue}" src="${imageUrl}" style="width:${imgWidth.value}px;" alt="${imgAltValue}" />`);
             const modelFragment = editorInstance.data.toModel(viewFragment);
             editorInstance.model.insertContent(modelFragment);
-            addEventChangeImage()
+            addEventChangeImage() 
             btnCloseImageSetting.click();
-        })
+        })  
     }
 
-    function addEventChangeFormatImage() {
+    function addEventChangeFormatImage(){
         imgAlt.addEventListener('change', () => {
-            imgAltValue = imgAlt.value
+                imgAltValue = imgAlt.value
         })
         cbInputSetAlt.addEventListener('change', () => {
             if (cbInputSetAlt.checked == true) {
@@ -390,37 +374,37 @@ $(document).ready(() => {
             imgHeight.value = realHeight
         })
         imgWidth.addEventListener('change', () => {
-            if (imgWidth.value > 0) {
-                imgHeight.value = (imgWidth.value * realHeight) / realWidth
-            } else {
+            if (imgWidth.value>0) {
+             imgHeight.value = (imgWidth.value*realHeight)/realWidth
+            }else{
                 imgWidth.value = 1
             }
-        })
-        imgHeight.addEventListener('change', () => {
-            if (imgHeight.value > 0) {
-                imgWidth.value = (imgHeight.value * realWidth) / realHeight
+         })
+         imgHeight.addEventListener('change', () => {
+            if (imgHeight.value>0) {
+             imgWidth.value = (imgHeight.value*realWidth)/realHeight
             }
-            else {
+            else{
                 imgHeight.value = 1
             }
-        })
-        imgWidth.addEventListener('keyup', () => {
-            if (imgWidth.value > 0) {
-                imgHeight.value = (imgWidth.value * realHeight) / realWidth
-            }
-            else {
-                imgWidth.value = 1
-            }
-        })
-        imgHeight.addEventListener('keyup', () => {
-            if (imgHeight.value > 0) {
-                imgWidth.value = (imgHeight.value * realWidth) / realHeight
-            }
-            else {
+         })
+         imgWidth.addEventListener('keyup', () => {
+             if (imgWidth.value>0) {
+              imgHeight.value = (imgWidth.value*realHeight)/realWidth
+             }
+             else{
+                imgWidth.value=1
+             }
+          })
+          imgHeight.addEventListener('keyup', () => {
+             if (imgHeight.value>0) {
+              imgWidth.value = (imgHeight.value*realWidth)/realHeight
+             }
+             else{
                 imgHeight.value = 1
-            }
-        })
-
+             }
+          })
+          
     }
 
     function addNewImageToList(newImages) {
@@ -434,15 +418,15 @@ $(document).ready(() => {
     }
 
 
-    function setListImage(images) {
+    function setListImage(images){
         var htmls = ""
-        if (images.length > 0) {
+        if (images.length>0) {
             images.forEach(item => {
                 let image = item[1]
                 htmls += createLiTagImgHtml(image)
-            });
+             });
         }
-        else {
+        else{
             htmls += '<div className="d-flex justify-content-center align-items-center" style="margin-top:170px"><p>Empty result!</p></div>'
         }
         imgFileListUL.empty()
@@ -450,7 +434,7 @@ $(document).ready(() => {
         updateDomElements()
     }
 
-    function createLiTagImgHtml(image) {
+    function createLiTagImgHtml(image){
         return `<li class="list-group-item d-flex col-12 ">
         <div class="col-2 d-flex justify-content-center align-items-center">
             <img class="img-thumbnail-item img-thumbnail " src="/${image['path']}" alt="">
@@ -475,45 +459,40 @@ $(document).ready(() => {
         </div>
     </li>`
     }
-
-
     function switchToListTab() {
         btnListImageTab.click()
         btnListImageTab.classList.remove('active-interface')
         btnListImageTab.classList.add('active')
     }
-
     function switchToFormatTab() {
         btnFormatTab.click()
         btnListImageTab.classList.add('active-interface')
     }
-
     function updateDomElements() {
         btnOpenPreviews = document.querySelectorAll('.btn-open-preview')
         btnInsertImages = document.querySelectorAll('.btn-insert-image')
         btnDeleteImages = document.querySelectorAll('.btn-delete-image')
         addEventTabListImage()
     }
-
     // function updatedDomElements() {
     //     btnOpenPreviews = document.querySelectorAll('.open-preview')
     //     btnInsertImages = document.querySelectorAll('.insert-file')
     //     btnDeleteImages = document.querySelectorAll('.delete-file')
     // }
 
-    function addEventModalImageSetting() {
+    function addEventModalImageSetting(){
         const btnPickImage = $('.ck-file-dialog-button')[0]
         if (btnPickImage) {
             btnPickImage.addEventListener('click', (e) => {
                 e.preventDefault()
                 modalImageSettings.style.display = 'block'
-                switchToListTab()
+                switchToListTab() 
             })
         }
-        btnCloseImageSetting.addEventListener('click', () => {
+        btnCloseImageSetting.addEventListener('click',()=>{
             modalImageSettings.style.display = 'none'
         })
-
+   
     }
 
 

@@ -60,7 +60,6 @@ class ExamQuestionController extends AppController
         $results_ary = $this->obj_model_question_title->getAll();
         $this->data_ary['question_titles'] = $results_ary;
         $this->data_ary['exam_id'] = $exam_id;
-
         $this->data_ary['content'] = 'exam_question/new';
     }
 
@@ -70,7 +69,6 @@ class ExamQuestionController extends AppController
             $req_method_ary = $request->getPost();
             $question_ids = $req_method_ary->get('array_select_question');
             $exam_id = $req_method_ary->get('exam_id');
-
             foreach ($question_ids as $question_id) {
                 $this->obj_model_exam_question->create([
                     'question_id' => $question_id,

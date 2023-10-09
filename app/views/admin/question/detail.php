@@ -1,6 +1,3 @@
-<?php
-// if (isset($question_title)) {
-?>
 <div class="col-lg-12">
     <div class="white_card card_height_100 mb_30">
         <div class="white_card_header">
@@ -15,8 +12,6 @@
                 <div class="mb-3 col-10 mr-12" style="">
                     <b><label class="form-label" for="title">Title : </label></b>
                     <?php echo isset($question_title) ? $question_title['title'] : "Other question"; ?>
-                    <!-- </div>
-                <div class="mb-3 col-5"> -->
                     <br>
                     <b><label class="form-label" for="title">Description : </label></b>
                     <?php echo isset($question_title['description']) ? $question_title['description'] : "These are general questions that do not belong to any collection" ?>
@@ -26,7 +21,6 @@
     </div>
 </div>
 <?php
-// }
 ?>
 <div class="card_box box_shadow position-relative mb_30">
     <div class="white_box_tittle ">
@@ -38,7 +32,6 @@
     <div class="box_body white_card_body">
         <div class="input-button-group">
             <a href='/admin/question/new?ques-title=<?php echo isset($question_titles[0]['question_title_id']) ? $question_titles[0]['question_title_id'] : "other"; ?>'><button type="button" class="btn btn-success mb-3">Add question</button></a>
-            <!-- <button type="button" data-path="question-title" data-id="all" class="btn btn-danger text-white btn-delete-question btn-delete-select">Delete</button> -->
             <button type="button" data-path="question" data-id="select" class="btn btn-danger text-white btn-delete-select-all btn-delete-select" style="display: none;">Delete</button>
         </div>
         <div class="default-according" id="accordion2">
@@ -49,10 +42,7 @@
                     <thead>
                         <tr>
                             <th class="text-center">
-                                <!-- <input type="checkbox" id="selectAll" class="checkbox1" name="select_all"> -->
-                                <!-- <input type="checkbox" id="selectAll1" class="checkbox1 selectAll" name="select_all"> -->
                                 <input type="checkbox" id="selectAll" class="selectAll" name="select_all">
-
                             </th>
                             <th scope="col">#</th>
                             <th scope="col">CONTENT</th>
@@ -69,10 +59,7 @@
                         ?>
                                 <tr>
                                     <th class="text-center">
-                                        <!-- <input type="checkbox" value="<?php echo $question_title['question_id']; ?>" name="item[]" class="checkbox" id=""> -->
-                                        <!-- <input type="checkbox" value="<?php echo $question_title['question_id']; ?>" name="item[]" class="checkbox" id=""> -->
                                         <input type="checkbox" value="<?php echo $question_title['question_id']; ?>" name="item[]" class="checkbox" id="">
-
                                     </th>
                                     <td class=""><?php echo $stt++; ?></td>
                                     <td class="col-3 text-ellipsis ">
@@ -90,13 +77,10 @@
                                                     $answer = explode('-', $answer);
                                                     if ($answer[0] == 1) {
                                                 ?>
-                                                        <!-- <li class="text-ellipsis answer" style="color: blue;"><?php echo  $answer[1] ?> </li> -->
                                                         <li class="text-ellipsis" style="color:#008000 "><?php echo  $alphabet[$answerIndex] . ". " . $answer[1] ?> </li>
-
                                                     <?php
                                                     } else { ?>
                                                         <li class="text-ellipsis" style=""><?php echo   $alphabet[$answerIndex] . ". " . $answer[1] ?> </li>
-                                                        <!-- <li class="text-ellipsis answer" style=""><?php echo  $answer[1] ?> </li> -->
                                                     <?php
                                                     }
                                                     ?>
@@ -152,7 +136,6 @@
                                 ?>
                                     <li class=" cursor-pointer"><a href="/admin/question/detail?question_id=<?php echo isset($question_titles[0]['question_title_id']) ? $question_titles[0]['question_title_id'] : "other";  ?>&page=<?php echo $next += 1; ?>">Next</a></li>
                                     <li class=" cursor-pointer"><a href="/admin/question/detail?question_id=<?php echo isset($question_titles[0]['question_title_id']) ? $question_titles[0]['question_title_id'] : "other";  ?>&page=<?php echo $numbers_of_page < 1 ? 1 : $numbers_of_page; ?>">>></a></li>
-
                                 <?php
                                 }
                                 ?>
@@ -166,8 +149,6 @@
     </div>
 </div>
 <script>
-    // const searchInput = document.getElementById("searchInput");
-    // const paginationContainer = document.getElementById("paginations");
     let selectAllCheckboxes = document.getElementsByClassName("selectAll");
     let checkboxes = document.getElementsByClassName("checkbox");
     let checkboxesArray = Array.from(checkboxes);

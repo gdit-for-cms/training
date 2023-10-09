@@ -29,11 +29,9 @@
                                 <label class="form-label" for="date end">Time end</label>
                                 <input class="form-control" type="datetime-local" name="date_end" id="date_end" />
                             </div>
-
                         </div>
                         <div id="answerContainer">
                             <label class="form-label" for="email">Email participant</label>
-                            <!-- Ô input mặc định -->
                             <div class="form-check" style="padding-left: 45px;">
                                 <div class="input-with-button">
                                     <input type="text" class="form-control input-answer" name="email[]" value="" placeholder="email...">

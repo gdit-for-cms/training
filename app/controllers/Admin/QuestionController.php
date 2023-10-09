@@ -40,7 +40,6 @@ class QuestionController extends  AppController
 
     public function indexAction(Request $request)
     {
-
         $req_method_ary = $request->getGet()->all();
         $results_per_page = 10;
         $results_ary = $this->obj_model_question_title->getAllHasPagination($req_method_ary, $results_per_page);
@@ -49,7 +48,6 @@ class QuestionController extends  AppController
         $numbers_of_page = ceil($numbers_of_result / $results_per_page);
         $this->data_ary['numbers_of_page'] = $numbers_of_page;
         $this->data_ary['page'] = (float)$results_ary['page'];
-
         $this->data_ary['content'] = 'question/index';
     }
 
@@ -180,7 +178,6 @@ class QuestionController extends  AppController
         $id = $request->getGet()->get('question_id');
         $this->data_ary['question'] = $this->obj_model->getById($id, 'id, content');
         $this->data_ary['answers'] = $this->obj_model_answer->getBy('question_id', '=', $id);
-
         $this->data_ary['content'] = 'question/edit';
     }
 
@@ -238,7 +235,6 @@ class QuestionController extends  AppController
                 );
 
                 $this->obj_model_answer->destroyBy("question_id = $question_id");
-                // Insert các answer dựa vào questionId và vị trí đúng
                 foreach ($answers as $index => $answerContent) {
                     $isCorrect = in_array($index, $is_corrects) ? 1 : 0;
                     $this->obj_model_answer->create(

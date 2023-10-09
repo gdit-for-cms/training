@@ -68,15 +68,12 @@
 
                             <?php
                             if ($exam['published'] == 1) {
-                                // $directory['domain'] = "asd"; 
                             ?>
                                 <br>
                                 <b><label class="form-label" for="link_exam">Link exam </label></b>
                                 <button onclick="copyLink('linkToCopy<?php echo $exam['id']; ?>')" class="linkToCopy text-primary-hover" id="linkToCopy<?php echo $exam['id']; ?>" href="<?php echo $directory['domain'] . $exam['id'] . '.html' ?>"><?php echo $directory['domain'] . $exam['id'] . '.html' ?> </button>
 
-                            <?php                                }
-
-                            ?>
+                            <?php } ?>
                             <br>
                             <b><label class="form-label" for="time_start">Time start : </label></b>
                             <?php echo isset($exam['time_start']) ? $exam['time_start'] : "Chưa có thời gian làm bài!" ?>
@@ -84,7 +81,6 @@
                             <b><label class="form-label" for="time_end">Time end : </label></b>
                             <?php echo isset($exam['time_end']) ? $exam['time_end'] : "Chưa có thời gian làm bài!" ?>
                             <br>
-                            <!-- <b><label class="form-label" for="email">Email : </label></b> -->
                         </div>
                         <div class="col-5 ml-15">
                             <b><label class="form-label" for="email">Email : </label></b>
@@ -119,8 +115,6 @@
                                     ?>
                                 </tbody>
                             </table>
-                            <!-- <a href="/admin/exam/edit?id=<?php echo $exam['id']; ?>"><button type=" button" class="btn btn-success float-end">Add email</button></a> -->
-
                         </div>
                     </div>
                 </div>
@@ -144,7 +138,6 @@
                                     <th scope="col">#</th>
                                     <th scope="col">Content</th>
                                     <th scope="col">Answer</th>
-
                                     <?php
                                     if ($cur_user['role_id'] != 3) {
                                     ?>
@@ -169,7 +162,6 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <!-- <div class="overflow-auto"> -->
                                                 <div class="answer-container">
                                                     <ul>
                                                         <?php

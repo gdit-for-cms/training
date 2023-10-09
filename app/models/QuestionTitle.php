@@ -43,7 +43,6 @@ class QuestionTitle extends Model
             ),
             'description' => array(),
         );
-
         switch ($change) {
             case 'add':
                 return array_merge($rules_ary, $value);
@@ -71,9 +70,7 @@ class QuestionTitle extends Model
         $keyword_search = "";
         if (isset($req_method_ary['keyword'])) {
             $where = trim($req_method_ary['keyword']);
-
             $keywords = str_split($where);
-
             $specialChars = ["@", "#", "$", "%", "^", "&", "(", ")", "_", "+", "|", "~", "=", "`", "{", "}", "[", "]", ":", "\\", ";", "'", "<", ">", "?", ",", ".", "/", "\\", "-"];
             $a = 1;
             foreach ($keywords as $keyword) {
@@ -98,14 +95,11 @@ class QuestionTitle extends Model
         FROM
         question_title where question_title.title like ' . ' "%' . $keyword_search . '%" ESCAPE "\\\\"
         ORDER BY question_title.id DESC';
-
         if (!isset($req_method_ary['page']) || $req_method_ary['page'] < 1) {
             $req_method_ary['page'] = '1';
         }
-       
         $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
         $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
-
         $stmt_count = $db->query($query);
         $numbers_of_page = count($stmt_count->fetchAll(PDO::FETCH_ASSOC));
         $stmt = $db->query($query . " " . $limit_query);
