@@ -32,7 +32,7 @@
                 </div>
                 <div class="white_card_body ml-10">
                     <div class="card-body d-flex ">
-                        <div class="mb-3 col-4 mr-10" style="">
+                        <div class="mb-3 col-4 mr-10">
                             <b><label class="form-label" for="title">Title : </label></b>
                             <?php echo $exam['title'] ?>
                             <br>
@@ -135,13 +135,13 @@
                         <table class="table table-striped table-bordered table-responsive">
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Content</th>
-                                    <th scope="col">Answer</th>
+                                    <th class="col-1" scope="col">#</th>
+                                    <th class="col-5" scope="col">Content</th>
+                                    <th class="col-4" scope="col">Answer</th>
                                     <?php
                                     if ($cur_user['role_id'] != 3) {
                                     ?>
-                                        <th scope="col">Option</th>
+                                        <th class="col-2" scope="col">Option</th>
                                     <?php
                                     }
                                     ?>
@@ -173,11 +173,11 @@
 
                                                             if ($answer['1'] == 1) {
                                                         ?>
-                                                                <li class="text-ellipsis" style="color:#008000 "><?php echo  $alphabet[$answerIndex] . ". " . $answer[0] ?> </li>
+                                                                <li class="text-ellipsis" style="color:#008000;"><?php echo  $alphabet[$answerIndex] . ". " . $answer[0] ?> </li>
 
                                                             <?php
                                                             } else { ?>
-                                                                <li class="text-ellipsis" style=""><?php echo   $alphabet[$answerIndex] . ". " . $answer[0] ?> </li>
+                                                                <li class="text-ellipsis"><?php echo $alphabet[$answerIndex] . ". " . $answer[0] ?> </li>
                                                         <?php
                                                             }
                                                             $answerIndex++;

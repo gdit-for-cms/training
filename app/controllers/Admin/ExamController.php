@@ -53,18 +53,14 @@ class ExamController extends AppController
 
     public function indexAction(Request $request)
     {
-
-        // pagination
         $req_method_ary = $request->getGet()->all();
         $results_per_page = 10;
-      
         $results_ary = $this->obj_model->getExam($req_method_ary, $results_per_page);
         $numbers_of_result = $results_ary['numbers_of_page'];
         $numbers_of_page = ceil($numbers_of_result / $results_per_page);
         $this->data_ary['numbers_of_page'] = $numbers_of_page;
         $this->data_ary['page'] = (float)$results_ary['page'];
         $this->data_ary['exams'] = $results_ary['results'];
-
         $this->data_ary['content'] = 'exam/index';
     }
 
@@ -72,38 +68,6 @@ class ExamController extends AppController
     {
         $this->data_ary['content'] = 'exam/new';
     }
-
-    // public function insert(Request $request)
-    // {
-    //     $result_vali_ary = $this->app_request->validate($this->obj_model->rules(), $request, 'post');
-    //     if (in_array('error', $result_vali_ary)) {
-    //         $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
-    //         return $this->errorResponse($message_error);
-    //     }
-    //     $exam_title = $result_vali_ary['title'];
-    //     $exam_description =  $result_vali_ary['description'];
-    //     $exam_duration = $result_vali_ary['duration'];
-    //     $exams = $this->obj_model->getAll();
-    //     foreach ($exams as $exam) {
-    //         $check_exam = strcasecmp($exam['title'], $exam_title);
-    //         if ($check_exam == 0) {
-    //             return $this->errorResponse('Exam has been exist');
-    //         }
-    //     }
-    //     try {
-    //         $this->obj_model->insert([
-    //             'title' => $exam_title,
-    //             'description' => $exam_description,
-    //             'published' => 0,
-    //             'duration' => $exam_duration,
-    //             'updated_at' => (new \DateTime())->format('Y-m-d H:i:s')
-    //         ]);
-
-    //         return $this->successResponse();
-    //     } catch (\Throwable $th) {
-    //         return $this->errorResponse($th->getMessage());
-    //     };
-    // }
 
     public function examDetailAction(Request $request)
     {
@@ -147,7 +111,6 @@ class ExamController extends AppController
 
     public function create(Request $request)
     {
-        // return $this->errorResponse('Exam collection has been exist');
         $result_vali_ary = $this->app_request->validate($this->obj_model->rules(), $request, 'post');
         //check has email
         $req_method_ary = $request->getPost()->all();
@@ -178,8 +141,6 @@ class ExamController extends AppController
             }
             $check_time = true;
         }
-
-
         $question_titles = $this->obj_model->getAll();
         foreach ($question_titles as $question_title) {
             $check_exam = strcasecmp($question_title['title'], $title);
@@ -346,7 +307,6 @@ class ExamController extends AppController
         if ($exam['time_start'] == null || $exam['time_end'] == null) {
             return $this->errorResponse("There is no start time and end time for the exam.");
         }
-
         $check_config = $this->configFTP();
         $html_directory =  Config::FTP_PUBLIC_DIRECTORY_HTML;
         $csv_directory = Config::FTP_PUBLIC_DIRECTORY_CSV;
@@ -536,7 +496,6 @@ class ExamController extends AppController
     {
         $exam_id = $request->getGet()->get('id');
         if ($exam_id == "select") {
-            // $this->obj_model->destroyBy("1=1");
             $ids = $request->getPost()->get('ids');
             foreach ($ids as $id) {
                 $this->obj_model->destroyBy("id = $id");
@@ -608,7 +567,6 @@ class ExamController extends AppController
         $directory['csv'] = $csv_directory . $file;
         $directory['domain'] = Config::FTP_DOMAIN  . $file;
         $this->data_ary['directory'] = $directory;
-
         // pagination
         $req_method_ary = $request->getPost()->all();
         $results_per_page = 10;

@@ -45,7 +45,6 @@ class ImageController extends AppController
             return $this->responseImageQuery(false, 'Delete images failed', []);
         }
     }
-
     public function storeAction(Request $request)
     {
         $post = $request->getPost()->all();
@@ -112,6 +111,7 @@ class ImageController extends AppController
         }
     }
 
+    
     public function addItemUpload($name, $file, $file_key, $add_item_result)
     {
         if (!empty($name) && ($file['size'] > 0)) {
@@ -128,7 +128,6 @@ class ImageController extends AppController
         }
         return $add_item_result;
     }
-    
     public function responseImageQuery($status, $message, $result = [])
     {
         $res = [

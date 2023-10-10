@@ -873,7 +873,7 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 450px;
+        max-width: 460px;
       }
 
       .height_ckeditor {
@@ -924,3 +924,16 @@
         justify-content: space-between;
       }
       
+      /* .text-ellipsis:hover {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: unset;
+        cursor: zoom-out;
+      } */
+
+      /* .text-ellipsis-content {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 460px;
+      } */

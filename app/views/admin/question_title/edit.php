@@ -12,7 +12,7 @@
                 <form id="form_update_question" class="ml-10 col-12" action="/admin/question-title/update" method="POST">
                     <input type="hidden" class="form-control" rows="3" value="<?php echo $question_title['id']; ?>" name="id" id="id" placeholder="Title..." />
 
-                    <div class="mb-3 col-6" style="">
+                    <div class="mb-3 col-6">
                         <label class="form-label" for="title">Title<span style="color: red;">*</span></label>
                         <input class="form-control" rows="3" value="<?php echo $question_title['title']; ?>" name="title" id="title" placeholder="Title..." />
                     </div>

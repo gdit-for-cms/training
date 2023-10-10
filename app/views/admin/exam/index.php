@@ -90,7 +90,7 @@
                                 <td>
                                     <div class="overflow-auto">
                                         <?php echo $exam['published'] == 1 ? 'Đã xuất bản' : 'Chưa xuất bản'; ?><br>
-                                        <?php echo $exam['uploaded_at'] ?>
+                                        <?php echo $exam['published'] == 1 ? $exam['uploaded_at']:"" ?>
                                     </div>
                                 </td>
                                 <td>

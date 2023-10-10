@@ -9,7 +9,7 @@
         </div>
         <div class="white_card_body" style="margin-left: 15px;">
             <div class="card-body">
-                <div class="mb-3 col-10 mr-12" style="">
+                <div class="mb-3 col-10 mr-12">
                     <form id="form_create_exam" class="" action="create" method="POST">
                         <input type="hidden" value="<?= $cur_user['user_id'] ?>" name="user_id">
                         <div class="">

@@ -114,7 +114,7 @@
                                                         <li class="text-ellipsis" style="color:#008000 "><?php echo  $alphabet[$answerIndex] . ". " . $answer[0] ?> </li>
                                                     <?php
                                                     } else { ?>
-                                                        <li class="text-ellipsis" style=""><?php echo   $alphabet[$answerIndex] . ". " . $answer[0] ?> </li>
+                                                        <li class="text-ellipsis"  ><?php echo   $alphabet[$answerIndex] . ". " . $answer[0] ?> </li>
                                                 <?php
                                                     }
                                                     $answerIndex++;

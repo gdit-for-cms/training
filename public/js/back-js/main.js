@@ -545,7 +545,7 @@ $(document).ready(function () {
     loadAnswers()
     addAnswer()
     removeAnswer()
-    
+
     //Ngo Duy Hung
     alertDeleteListRule();
     alertDeleteRule();
@@ -1136,112 +1136,33 @@ function alertEditDetailExam(formId) {
     })
 }
 
-function getQuestion(question_title_id) {
-    // Gọi AJAX để lấy danh sách câu hỏi từ server
-    const exam = document.getElementById("select");
-    const exam_id = exam.getAttribute("data-exam_id")
-    $.ajax({
-        type: "GET",
-        url: `/admin/question-title/show?id=${question_title_id}&exam_id=${exam_id}`,
-        success: function (data) {
+// function select_ques_exam(e) {
+//     const quesExams = document.querySelectorAll(".ques_exam");
+//     quesExams.forEach((element) => {
+//         const questionID = element.getAttribute("data-question_id")
+//         select_ques_to_exam(questionID);
+//     });
+//     const select_total = document.getElementById("total_select")
+//     select_total.textContent = select
+// }
 
-            const results = data.result;
-            const questionList = document.getElementById('questionList');
-            let questionListHTML = '';
-            results.forEach(result => {
-                const question_id = result.question_id;
-                const answers = result.answers;
-                const myArray = answers.split(", ");
-                const resultArrayAnswer = [];
+// function select_ques_to_exam(questionID) {
+//     get_question_id = 'select_ques' + questionID;
+//     const questionContainer = document.getElementById(get_question_id)
+//     if (!array_select_question.includes(questionID)) {
+//         array_select_question.push(questionID);
+//         // questionContainer.classList.remove("not-selected")
 
-                myArray.forEach(subArray => {
-                    const subArrayElements = subArray.split(',');
-
-                    resultArrayAnswer.push(subArrayElements);
-                });
-
-                let answerListHTML = '';
-                console.log(resultArrayAnswer);
-                for (let i = 0; i < resultArrayAnswer['0'].length; i++) {
-                    const item = resultArrayAnswer[0][i];
-                    const splitArray = item.split(' - ');
-
-                    var answerHTML = '';
-                    if (splitArray[0] == 1) {
-                        answerHTML += `
-                        <li class="" style="font-weight:bold;color:blue">${splitArray[1]}</li>
-                    `;
-                    } else {
-                        answerHTML += `
-                        <li class="">${splitArray[1]}</li>
-                    `;
-                    }
-
-                    answerListHTML += answerHTML
-                }
-                let bg_question = "";
-
-                if (array_select_question.includes(question_id)) {
-                    bg_question = "selected"
-                }
-                const content = result.question_content;
-                const questionHTML =
-                    `<div class="col-12 d-flex mb-10 ques_exam ${bg_question}" onclick="select_ques_to_exam('${question_id}')" id="select_ques${question_id}" data-question_id="${question_id}" >
-                        <div class="col-8 not-selected">
-                            ${content}
-                        </div>
-                        <div class="col-4 not-selected">
-                            <ul  id="answerList">
-                                ${answerListHTML}
-                            </ul>
-                        </div>
-                    </div>`;
-                questionListHTML += questionHTML;
-            });
-            console.log(data)
-            var select_all = `<button class="btn-select" onclick="select_ques_exam()">Select all</button>`;
-            // questionListHTML.innerHTML = select_all;
-            select_all += questionListHTML
-            questionList.innerHTML = select_all;
-
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            console.error("AJAX request failed:", textStatus, errorThrown);
-        }
-    });
-}
-// $('.btn_sort').click(function (e) {
-function select_ques_exam(e) {
-
-    const quesExams = document.querySelectorAll(".ques_exam");
-    quesExams.forEach((element) => {
-        const questionID = element.getAttribute("data-question_id")
-        select_ques_to_exam(questionID);
-    });
-    const select_total = document.getElementById("total_select")
-    select_total.textContent = select
-}
-
-function select_ques_to_exam(questionID) {
-
-    get_question_id = 'select_ques' + questionID;
-    const questionContainer = document.getElementById(get_question_id)
-
-    if (!array_select_question.includes(questionID)) {
-        array_select_question.push(questionID);
-        // questionContainer.classList.remove("not-selected")
-
-        questionContainer.classList.add("selected")
-        select++;
-
-    } else {
-        array_select_question = array_select_question.filter(item => item !== questionID);
-        questionContainer.classList.remove("selected")
-        select--
-    }
-    const select_total = document.getElementById("total_select")
-    select_total.textContent = select
-}
+//         questionContainer.classList.add("selected")
+//         select++;
+//     } else {
+//         array_select_question = array_select_question.filter(item => item !== questionID);
+//         questionContainer.classList.remove("selected")
+//         select--
+//     }
+//     const select_total = document.getElementById("total_select")
+//     select_total.textContent = select
+// }
 
 //index detail
 function copyLink(linkToCopy) {
@@ -1352,24 +1273,24 @@ function searchAjax() {
                             <th class="text-center">
                                 <input type="checkbox" value=${result[i]['id']}" name="item[]" class="checkbox" id="">
                             </th>
-                            <th scope="row" class="">${stt++}</th>
+                            <th scope="row">${stt++}</th>
                             <td class="text-ellipsis">
                             ${result[i]['title']}
                             </td>
                             <td>
                                 ${status}
                             </td>
-                            <td class="">
+                            <td>
                                 <div class="overflow-auto">
                                    ${punlish}
                                 </div>
                             </td>
-                            <td class="">
+                            <td>
                                 ${result[i]['time_start']}
                             <br>
                                 ${result[i]['time_end']}
                             </td>
-                            <td class="">
+                            <td>
                                 <div style="display:flex">
                                     <a href="/admin/exam/examDetail?exam_id=${result[i]['id']}"><button type="button" class="btn btn-success mr-2">Detail</button></a>
                                     ${btn_edit}
@@ -1381,10 +1302,10 @@ function searchAjax() {
                     } else if (pathName == "question") {
                         resultHTML += `<tr>
                                             <th class="text-center"><input type="checkbox" value="${result[i]['question_id']}" name="item[]" class="checkbox" id=""></th>
-                                            <th class="">${stt++}</th>
+                                            <th>${stt++}</th>
                                             <td class="text-ellipsis">${result[i]['question_title']}</td>
-                                            <td class="">${result[i]['question_updated_at']}</td>
-                                            <td class="">
+                                            <td>${result[i]['question_updated_at']}</td>
+                                            <td>
                                                 <a href="/admin/question/detail?question_id=${result[i]['question_id']}"><button type="button" class="btn btn-success">Detail</button></a>
                                                 <a href="/admin/question-title/edit?ques-title=${result[i]['question_id']}"><button type="button" class="btn btn-info text-white">Edit</button></a>
                                                 <button type="button" data-path="question-title" data-id="${result[i]['question_id']}" class="btn btn-danger text-white btn-delete-question ">Delete</button>

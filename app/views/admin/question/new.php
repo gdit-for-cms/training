@@ -9,7 +9,7 @@
         </div>
         <div class="white_card_body" style="margin-left: 15px;">
             <div class="card-body d-flex">
-                <div class="mb-3 col-10 mr-12" style="">
+                <div class="mb-3 col-10 mr-12">
                     <?php
                     if ($question_title != false) { ?>
                         <b><label class="form-label" for="title">Title : </label></b>
