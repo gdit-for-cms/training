@@ -59,7 +59,7 @@
                         ?>
                                 <tr>
                                     <th class="text-center">
-                                        <input type="checkbox" value="<?php echo $question_title['question_id']; ?>" name="item[]" class="checkbox" id="">
+                                        <input type="checkbox" value="<?php echo $question_title['question_id']; ?>" name="item[]" class="checkbox">
                                     </th>
                                     <td class=""><?php echo $stt++; ?></td>
                                     <td class="col-3 text-ellipsis ">
@@ -149,81 +149,45 @@
     </div>
 </div>
 <script>
+selectAll()
+function updateSelectedValues() {
+    let checkboxes = document.getElementsByClassName("checkbox");
+    let checkboxesArray = Array.from(checkboxes);
+    let deleteButton = document.querySelector(".btn-delete-select");
+    let selectedValues = [];
+    checkboxesArray.forEach(function (checkbox) {
+        if (checkbox.checked) {
+            selectedValues.push(checkbox.value);
+        }
+    });
+    if (selectedValues.length > 0) {
+        deleteButton.style.display = "block";
+    } else {
+        deleteButton.style.display = "none";
+    }
+    console.log(selectedValues);
+    return selectedValues;
+}
+
+function selectAll() {
     let selectAllCheckboxes = document.getElementsByClassName("selectAll");
     let checkboxes = document.getElementsByClassName("checkbox");
     let checkboxesArray = Array.from(checkboxes);
-    console.log(selectAllCheckboxes);
-    selectAll()
-    alertDeleteSelectAll()
-    function alertDeleteSelectAll() {
-        $('.btn-delete-select-all').click(function(e) {
-            let deleteID = $(this).data('id');
-            let path = $(this).data('path');
-            let ids = updateSelectedValues();
-            console.log(deleteID)
-            console.log(path)
-            console.log(ids)
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: `/admin/${path}/delete?id=${deleteID}`,
-                        method: "POST",
-                        data: {
-                            ids: ids
-                        },
-                        success: function(data) {
-                            console.log(data);
-                            document.location.reload(true);
-                        }
-                    });
-                }
-            })
-        });
-    }
 
-    function updateSelectedValues() {
-        let deleteButton = document.querySelector(".btn-delete-select");
-        let checkboxes = document.getElementsByClassName("checkbox");
-        let checkboxesArray = Array.from(checkboxes);
-        let selectedValues = [];
-        checkboxesArray.forEach(function(checkbox) {
-            if (checkbox.checked) {
-                selectedValues.push(checkbox.value);
-            }
-        });
-        if (selectedValues.length > 0) {
-            deleteButton.style.display = "block";
-        } else {
-            deleteButton.style.display = "none";
-        }
-        return selectedValues;
-    }
-
-    function selectAll() {
-
-        // Sự kiện click cho checkbox "Select All"
-        for (let i = 0; i < selectAllCheckboxes.length; i++) {
-            selectAllCheckboxes[i].addEventListener("click", function() {
-                checkboxesArray.forEach(function(checkbox) {
-                    checkbox.checked = selectAllCheckboxes[i].checked;
-                });
-                updateSelectedValues();
+    // Sự kiện click cho checkbox "Select All"
+    for (let i = 0; i < selectAllCheckboxes.length; i++) {
+        selectAllCheckboxes[i].addEventListener("click", function () {
+            checkboxesArray.forEach(function (checkbox) {
+                checkbox.checked = selectAllCheckboxes[i].checked;
             });
-        }
-
-        // Sự kiện click cho các input con
-        checkboxesArray.forEach(function(checkbox) {
-            checkbox.addEventListener("click", function() {
-                updateSelectedValues();
-            });
+            updateSelectedValues();
         });
     }
+    // Sự kiện click cho các input con
+    checkboxesArray.forEach(function (checkbox) {
+        checkbox.addEventListener("click", function () {
+            updateSelectedValues();
+        });
+    });
+}
 </script>

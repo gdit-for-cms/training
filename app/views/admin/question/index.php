@@ -31,7 +31,7 @@
             </tr>
             <tr>
               <th class="text-center"></th>
-              <th class="">#</th>
+              <th>#</th>
               <th class="text-ellipsis">Other</th>
               <td class="text-ellipsis">
               </td>
@@ -49,17 +49,16 @@
             ?>
               <tr>
                 <th class="text-center">
-                  <input type="checkbox" value="<?php echo $question_title['question_id']; ?>" name="item[]" class="checkbox" id="">
+                  <input type="checkbox" value="<?php echo $question_title['question_id']; ?>" name="item[]" class="checkbox">
                 </th>
-
-                <th class=""><?php echo $stt++; ?></th>
+                <th><?php echo $stt++; ?></th>
                 <td class="text-ellipsis">
                   <?php echo $question_title['question_title'] ?>
                 </td>
-                <td class="">
+                <td>
                   <?php echo $question_title['question_updated_at'] ?>
                 </td>
-                <td class="">
+                <td>
                   <a href="/admin/question/detail?question_id=<?php echo $question_title['question_id']; ?>"><button type="button" class="btn btn-success">Detail</button></a>
                   <a href="/admin/question-title/edit?ques-title=<?php echo $question_title['question_id']; ?>"><button type="button" class="btn btn-info text-white">Edit</button></a>
                   <button type="button" data-path="question-title" data-id="<?php echo $question_title['question_id']; ?>" class="btn btn-danger text-white btn-delete-question ">Delete</button>
@@ -105,9 +104,5 @@
   </div>
 </div>
 <script>
-  const searchInput = document.getElementById("searchInput");
   const paginationContainer = document.getElementById("paginations");
-  let selectAllCheckboxes = document.getElementsByClassName("selectAll");
-  let checkboxes = document.getElementsByClassName("checkbox");
-  let checkboxesArray = Array.from(checkboxes);
 </script>

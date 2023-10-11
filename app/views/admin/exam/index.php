@@ -59,7 +59,7 @@
                                     <?php
                                     if (!($currentTime >= $startTime && $currentTime <= $endTime)) {
                                     ?>
-                                        <input type="checkbox" value="<?php echo $exam['id']; ?>" name="item[]" class="checkbox" id="">
+                                        <input type="checkbox" value="<?php echo $exam['id']; ?>" name="item[]" class="checkbox">
                                     <?php
                                     }
                                     ?>
@@ -90,7 +90,7 @@
                                 <td>
                                     <div class="overflow-auto">
                                         <?php echo $exam['published'] == 1 ? 'Đã xuất bản' : 'Chưa xuất bản'; ?><br>
-                                        <?php echo $exam['published'] == 1 ? $exam['uploaded_at']:"" ?>
+                                        <?php echo $exam['published'] == 1 ? $exam['uploaded_at'] : "" ?>
                                     </div>
                                 </td>
                                 <td>
@@ -158,12 +158,7 @@
     </div>
 </div>
 <script>
-    //search
     const paginationContainer = document.getElementById("paginations");
-    let selectAllCheckboxes = document.getElementsByClassName("selectAll");
-    let checkboxes = document.getElementsByClassName("checkbox");
-    let checkboxesArray = Array.from(checkboxes);
-
     //--------------------- searh status-----------------------
     const status_id = "selectStatus";
     const paramNameStatus = "status";
@@ -172,7 +167,6 @@
 
     searchSelect(status_id, paramNameStatus);
     searchSelect(publish_id, paramNamePublish);
-
     function searchSelect(select, paramName) {
         var selectBox = document.getElementById(select);
         var currentURL = window.location.href;
@@ -181,11 +175,9 @@
             var selectedValue = decodeURIComponent(match[1]);
             selectBox.value = selectedValue;
         }
-
         selectBox.addEventListener("change", function() {
             var newValue = this.value;
             var newURL;
-
             if (match) {
                 newURL = currentURL.replace(new RegExp(paramName + "=[^&]*"), paramName + "=" + encodeURIComponent(newValue));
             } else {
@@ -193,6 +185,5 @@
             }
             window.location.href = newURL;
         });
-
     }
 </script>

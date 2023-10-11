@@ -539,12 +539,11 @@ $(document).ready(function () {
     alertDeleteQuestion()
     alertDeleteExamDetail()
     alertAddQuestionToExam()
+    // removeAnswer()
+    alertDeleteSelectAll()
     searchAjax()
     selectAll()
-    alertDeleteSelectAll()
-    loadAnswers()
-    addAnswer()
-    removeAnswer()
+    // addAnswer()
 
     //Ngo Duy Hung
     alertDeleteListRule();
@@ -810,7 +809,7 @@ function heightCkeditor() {
 }
 
 function addAnswer() {
-    pathName = window.location.pathname.split('/')[2];
+    let pathName = window.location.pathname.split('/')[2];
     let content = "email"
     if (pathName == 'question') {
         content = "answer"
@@ -821,13 +820,11 @@ function addAnswer() {
         answerCheckbox.type = "checkbox";
         answerCheckbox.name = "is_correct[]";
         if (pathName == "question") {
-            answerCheckbox.value = currentAnswerIndex; // Gán giá trị của ô input hiện tại
+            answerCheckbox.value = currentAnswerIndex; 
         }
         answerCheckbox.addEventListener("change", function () {
             updateCheckboxValue(this);
         });
-        //nếu là add question thì có thêm column đáp án đúng
-
     }
 
 
@@ -880,8 +877,6 @@ function removeAnswer(button, pathName) {
     else {
         answerContainer.removeChild(button.parentElement.parentElement);
     }
-    updateCheckboxValues(); // Cập nhật lại giá trị của các checkbox sau khi xóa
-    // updateCheckboxValues(); // Cập nhật lại giá trị của các checkbox sau khi xóa
 }
 
 function alertUploadFileExam() {
@@ -1004,85 +999,6 @@ function alertUploadFileExam() {
             }
         })
     })
-}
-
-function loadAnswers() {
-    var questionId = document.getElementById("questionSelect").value;
-
-    $.ajax({
-        type: "GET",
-        url: `/admin/answer/show?question_id=${questionId}`,
-
-        success: function (data) {
-            result = data['result']
-            answerList.innerHTML = ''; // Xóa nội dung hiện tại của answerList
-
-            // Tạo bảng
-            var table = document.createElement('table');
-            table.classList.add('table', 'table-bordered'); // Thêm class để định dạng bảng (sử dụng Bootstrap)
-
-            // Tạo hàng tiêu đề của bảng
-            var headerRow = document.createElement('tr');
-            var headerCheckboxCell = document.createElement('th');
-            headerCheckboxCell.textContent = 'Select';
-            headerRow.appendChild(headerCheckboxCell);
-
-            var headerContentCell = document.createElement('th');
-            headerContentCell.textContent = 'Content';
-            headerRow.appendChild(headerContentCell);
-
-            var headerIsCorrectCell = document.createElement('th');
-            headerIsCorrectCell.textContent = 'Is Correct';
-            headerRow.appendChild(headerIsCorrectCell);
-
-            table.appendChild(headerRow);
-
-            // Tạo hàng cho mỗi câu trả lời
-            for (var i = 0; i < result.length; i++) {
-                var object = result[i];
-
-                var id = object.id;
-                var content = object.content;
-                var isCorrect = object.is_correct;
-
-                var row = document.createElement('tr');
-
-                // Tạo ô chứa checkbox
-                var checkboxCell = document.createElement('td');
-                var checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.value = id;
-                checkbox.name = 'selected_answers[]';
-                checkboxCell.appendChild(checkbox);
-                row.appendChild(checkboxCell);
-
-                // Tạo ô chứa nội dung của câu trả lời
-                var contentCell = document.createElement('td');
-                contentCell.textContent = content;
-                row.appendChild(contentCell);
-
-                // Tạo ô chứa is_correct
-                var isCorrectCell = document.createElement('td');
-
-                if (isCorrect == 1) {
-                    isCorrectCell.textContent = true;
-                } else {
-                    isCorrectCell.textContent = false;
-                }
-                row.appendChild(isCorrectCell);
-
-                table.appendChild(row);
-            }
-
-            // Thêm bảng vào answerList
-            answerList.appendChild(table);
-        },
-        cache: false,
-        contentType: false,
-        processData: false
-    }).fail(function (jqXHR, textStatus, errorThrown) {
-        console.error("AJAX request failed:", textStatus, errorThrown);
-    });
 }
 
 function alertEditDetailExam(formId) {
@@ -1236,7 +1152,6 @@ function searchAjax() {
                         } else {
                             punlish = "Chưa xuất bản"
                         }
-                        let linkExam = '';
                         if (result[i]['published'] == 1) {
                             linkExam = `<button onclick="copyLink('linkToCopy${result[i]['id']}')" class="linkToCopy text-primary-hover" id="linkToCopy${result[i]['id']}" href="${directory['domain']}${result[i]['id']}.html">${directory['domain']}${result[i]['id']}.html</button>`
                         }
@@ -1257,7 +1172,6 @@ function searchAjax() {
 
                         if (startTime === null || currentTime < startTime) {
                             status = '<span style="color: #FF0000;">Not Started</span>';
-                            //btn-edit
                             btn_edit = `<a href="/admin/exam/edit?id=${result[i]['id']}"><button type="button" class="btn btn-info text-white mr-2">Edit</button></a>`
 
                         } else if (currentTime >= startTime && currentTime <= endTime) {
@@ -1266,42 +1180,47 @@ function searchAjax() {
                             status = '<span style="color: #008000;">Finished</span>';
                         }
 
+                        let input_checkbox = '';
+                        if (!(currentTime >= startTime && currentTime <= endTime)) {
+                            input_checkbox = `<input type="checkbox" value="${result[i]['id']}" name="item[]" class="checkbox">`
+                        }
 
                         resultHTML += `
-      
-                        <tr>
-                            <th class="text-center">
-                                <input type="checkbox" value=${result[i]['id']}" name="item[]" class="checkbox" id="">
-                            </th>
-                            <th scope="row">${stt++}</th>
-                            <td class="text-ellipsis">
-                            ${result[i]['title']}
-                            </td>
-                            <td>
-                                ${status}
-                            </td>
-                            <td>
-                                <div class="overflow-auto">
-                                   ${punlish}
-                                </div>
-                            </td>
-                            <td>
-                                ${result[i]['time_start']}
-                            <br>
-                                ${result[i]['time_end']}
-                            </td>
-                            <td>
-                                <div style="display:flex">
-                                    <a href="/admin/exam/examDetail?exam_id=${result[i]['id']}"><button type="button" class="btn btn-success mr-2">Detail</button></a>
-                                    ${btn_edit}
-                                    <button type="button" data-path="exam" data-id="${result[i]['id']}" class="btn btn-danger text-white btn-delete-question mr-2">Delete</button>
-                                </div>                            
-                            </td>
-                        </tr>
-                         `;
+                                <tr>
+                                    <th class="text-center">
+                                        ${input_checkbox}
+                                    </th>
+                                    <th scope="row">${stt++}</th>
+                                    <td class="text-ellipsis">
+                                        ${result[i]['title']}
+                                    </td>
+                                    <td>
+                                        ${status}
+                                    </td>
+                                    <td>
+                                        <div class="overflow-auto">
+                                            ${punlish}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        ${result[i]['time_start']}
+                                        <br>
+                                            ${result[i]['time_end']}
+                                    </td>
+                                    <td>
+                                        <div style="display:flex">
+                                            <a href="/admin/exam/examDetail?exam_id=${result[i]['id']}"><button type="button" class="btn btn-success mr-2">Detail</button></a>
+                                            ${btn_edit}
+                                            <button type="button" data-path="exam" data-id="${result[i]['id']}" class="btn btn-danger text-white btn-delete-question mr-2">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                `;
                     } else if (pathName == "question") {
                         resultHTML += `<tr>
-                                            <th class="text-center"><input type="checkbox" value="${result[i]['question_id']}" name="item[]" class="checkbox" id=""></th>
+                                            <th class="text-center">
+                                                <input type="checkbox" value="${result[i]['question_id']}" name="item[]" class="checkbox">
+                                            </th>
                                             <th>${stt++}</th>
                                             <td class="text-ellipsis">${result[i]['question_title']}</td>
                                             <td>${result[i]['question_updated_at']}</td>
@@ -1313,19 +1232,23 @@ function searchAjax() {
                                         </tr>`;
                     }
                 }
+                //loại bỏ checkbox khi search
+                let selectAllCheckboxes = document.getElementsByClassName("selectAll");
+                for (let i = 0; i < selectAllCheckboxes.length; i++) {
+                    selectAllCheckboxes[i].checked = false;
+                }
                 table_result.innerHTML = resultHTML;
-                alertDeleteQuestion();
                 selectAll()
+                updateSelectedValues();
             };
         };
     });
 }
 
-
 function updateSelectedValues() {
-    let deleteButton = document.querySelector(".btn-delete-select");
     let checkboxes = document.getElementsByClassName("checkbox");
     let checkboxesArray = Array.from(checkboxes);
+    let deleteButton = document.querySelector(".btn-delete-select");
     let selectedValues = [];
     checkboxesArray.forEach(function (checkbox) {
         if (checkbox.checked) {
@@ -1337,10 +1260,14 @@ function updateSelectedValues() {
     } else {
         deleteButton.style.display = "none";
     }
+    console.log(selectedValues);
     return selectedValues;
 }
 
 function selectAll() {
+    let selectAllCheckboxes = document.getElementsByClassName("selectAll");
+    let checkboxes = document.getElementsByClassName("checkbox");
+    let checkboxesArray = Array.from(checkboxes);
 
     // Sự kiện click cho checkbox "Select All"
     for (let i = 0; i < selectAllCheckboxes.length; i++) {
@@ -1351,7 +1278,6 @@ function selectAll() {
             updateSelectedValues();
         });
     }
-
     // Sự kiện click cho các input con
     checkboxesArray.forEach(function (checkbox) {
         checkbox.addEventListener("click", function () {
