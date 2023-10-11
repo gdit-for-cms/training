@@ -131,8 +131,9 @@ class ExamController extends AppController
         if ((!empty($date_start) && empty($date_end)) || (empty($date_start) && !empty($date_end))) {
             return $this->errorResponse("Please fil out this field time");
         }
+        $current_time = time();
+
         if (!empty($date_start) && !empty($date_end)) {
-            $current_time = time();
             if (strtotime($date_start) < $current_time) {
                 return $this->errorResponse("Time start must be greater than or equal to the current time");
             }
@@ -182,9 +183,16 @@ class ExamController extends AppController
                     if (in_array($email, $arr_check_email)) {
                         return $this->errorResponse("Email number " . $stt_email . " was duplicated");
                     }
+
+                    //link random
+                    $str_random = $current_time . $email;
+                    $hash = hash('sha256', $str_random);
+                    $randomChars = substr($hash, 0, 10);
+
                     $this->obj_model_exam_participant->create([
                         'exam_id' => $exam_id,
                         'email' => $email,
+                        'random' => $randomChars,
                         'is_login' => 1,
                         'is_submit' => 2
                     ]);
@@ -307,6 +315,10 @@ class ExamController extends AppController
         if ($exam['time_start'] == null || $exam['time_end'] == null) {
             return $this->errorResponse("There is no start time and end time for the exam.");
         }
+        $current_time = time();
+        if (strtotime($exam['time_start']) < $current_time) {
+            return $this->errorResponse("The exam time is not appropriate");
+        }
         $check_config = $this->configFTP();
         $html_directory =  Config::FTP_PUBLIC_DIRECTORY_HTML;
         $csv_directory = Config::FTP_PUBLIC_DIRECTORY_CSV;
@@ -316,7 +328,7 @@ class ExamController extends AppController
 
         $file_name = $exam_id;
         $file_exam_participant = "email" . $exam_id;
-        $file_link_random_exam = "rand" . $exam_id;
+        $file_link_random_exam = "ran" . $exam_id;
 
         $full_new_directory = $your_server_directory . $file_name;
         $full_new_directory_exam = $your_server_directory . $file_exam_participant;
@@ -416,8 +428,8 @@ class ExamController extends AppController
         if ((!empty($date_start) && empty($date_end)) || (empty($date_start) && !empty($date_end))) {
             return $this->errorResponse("Please fil out this field time");
         }
+        $current_time = time();
         if (!empty($date_start) && !empty($date_end)) {
-            $current_time = time();
             if (strtotime($date_start) < $current_time) {
                 return $this->errorResponse("Time start must be greater than or equal to the current time");
             }
@@ -460,9 +472,14 @@ class ExamController extends AppController
                     if (in_array($email, $arr_check_email)) {
                         return $this->errorResponse("email số " . $stt_email . " đã trùng lặp");
                     }
+                    //link random
+                    $str_random = $current_time . $email;
+                    $hash = hash('sha256', $str_random);
+                    $randomChars = substr($hash, 0, 10);
                     $this->obj_model_exam_participant->create([
                         'exam_id' => $id,
                         'email' => $email,
+                        'random' => $randomChars,
                         'is_login' => 1,
                         'is_submit' => 2
                     ]);

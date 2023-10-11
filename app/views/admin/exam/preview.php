@@ -72,15 +72,17 @@
                 </div>
             </div>
         </div>
-        <div class="modal" id="accept_submit" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="anchor-nameLabel" aria-hidden="true">
+
+        <div class="modal" id="accept_submit" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="anchor-nameLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content modal-accept-submit">
                     <div class="modal-header" style="margin-top: -18px;">
                         <h5 class="modal-title">Warning</h5>
                         <button type="button" class="btn-close" id="btn_close_accept_submit"></button>
                     </div>
-                    <div class="modal-body text-center">
-                        <h5 id="message">Are you sure to submit?</h5>
+                    <div class="modal-body text-center" id="message">
+                        <h5>Are you sure to submit?</h5>
                     </div>
                     <div class="modal-footer" style="margin-bottom: -18px;">
                         <button id="btn_accept_submit" class="btn btn-danger">Yes</button>
@@ -88,6 +90,25 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal" id="modal_error" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="anchor-nameLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content modal-accept-submit">
+                    <div class="modal-header" style="margin-top: -18px;">
+                        <h5 class="modal-title">Warning</h5>
+                        <button type="button" class="btn-close" id="btn_close_modal_error"></button>
+                    </div>
+                    <div class="modal-body text-center" id="message_error">
+                        <h5>Something's wrong?</h5>
+                    </div>
+                    <div class="modal-footer" style="margin-bottom: -18px;">
+                        <button id="btn_error" class="btn btn-danger">Accept</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
 </div>
 <div class="hidden" id="csv_answer"><?php echo $csv_answer; ?></div>
@@ -95,17 +116,12 @@
 <?php
 $participants = "";
 $link_exam_random = "";
-$current_time = (new \DateTime())->format('Y-m-d H:i:s');
 
 if (count($exam_participants) > 0) {
     foreach ($exam_participants as $exam_participant) {
         $participants .= $exam_participant['email'] . "," . $exam_participant['is_login'] . "," . $exam_participant['is_submit'] . "\n";
-
         //link random
-        $str_random = $current_time . $exam_participant['id'];
-        $hash = hash('sha256', $str_random);
-        $randomChars = substr($hash, 0, 10);
-        $link_exam_random .= $randomChars . "\n";
+        $link_exam_random .= $exam_participant['random'] . "\n";
     }
 }
 ?>

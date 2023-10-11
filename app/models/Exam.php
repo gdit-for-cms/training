@@ -54,7 +54,7 @@ class Exam extends Model
         q.id AS question_id, 
         q.content AS question_content, 
         q.title as question_title,
-        GROUP_CONCAT(CONCAT(q.title, " - ", q.content)) AS questions
+        GROUP_CONCAT(CONCAT(q.title, " - ", q.content) SEPARATOR "|<@>|") AS questions
         FROM exam AS e
         LEFT JOIN exam_questions AS qe ON e.id = qe.exam_id
         LEFT JOIN question AS q ON qe.question_id = q.id
@@ -90,7 +90,7 @@ class Exam extends Model
         qt.description AS question_title_description,
         q.id AS question_id,
         q.content AS question_content,
-        GROUP_CONCAT(CONCAT(a.content, ' - ', a.is_correct)) AS answers
+        GROUP_CONCAT(CONCAT(a.content, ' - ', a.is_correct) SEPARATOR '|<@>|') AS answers
         FROM
             exam_questions as eq
         LEFT JOIN
@@ -128,9 +128,9 @@ class Exam extends Model
             $currentTime = time();
             $dateTime = date("Y-m-d H:i:s", $currentTime);
             if ($req_method_ary['status'] == 1) {
-                $where[] = "(e.time_start > '$dateTime' or e.time_start IS NULL)";
+                $where[] = "(e.time_start > '$dateTime' or e.time_start IS NULL or e.published != 1)";
             } else if ($req_method_ary['status'] == 2) {
-                $where[] = "(e.time_start <= '$dateTime' &&  e.time_end >= '$dateTime')";
+                $where[] = "(e.time_start <= '$dateTime' and e.time_end >= '$dateTime' and e.published = 1)";
             } else if ($req_method_ary['status'] == 3) {
                 $where[] = "(e.time_end < '$dateTime')";
             }

@@ -14,7 +14,7 @@
                             $check_status = false;
                             $currentTime = time();
 
-                            if ($currentTime < $startTime || empty($startTime)) {
+                            if ($currentTime < $startTime || empty($startTime) || $exam['published'] != 1) {
                                 $check_status = true; ?>
                                 <?php
                             }
@@ -32,24 +32,19 @@
                 </div>
                 <div class="white_card_body ml-10">
                     <div class="card-body d-flex ">
-                        <div class="mb-3 col-4 mr-10">
+                        <div class="mb-3 col-4 mr-11" style="border-right: 1px solid #dee2e6;">
                             <b><label class="form-label" for="title">Title : </label></b>
                             <?php echo $exam['title'] ?>
                             <br>
                             <b><label class="form-label" for="author">Author : </label></b>
                             <?php echo $user[0]['name'] ?>
                             <br>
-                            <b><label class="form-label" for="description">Description : </label></b>
-                            <?php echo isset($exam['description']) ? $exam['description'] : "Chưa có mô tả"; ?>
-                            <br>
                             <b><label class="form-label" for="status">Status : </label></b>
                             <?php
-
-                            if ($currentTime < $startTime || empty($startTime)) {
+                            if ($currentTime < $startTime || empty($startTime)  || $exam['published'] != 1) {
                                 $check_finished = true; ?>
                                 <span style="color: #FF0000;">Not Started</span>
                             <?php
-
                             } elseif ($currentTime >= $startTime && $currentTime <= $endTime) {
                                 $check_progress = true;
                             ?>
@@ -62,18 +57,8 @@
                             }
                             ?>
                             <br>
-
-                            <b><label class="form-label" for="status">Publish </label></b>
+                            <b><label class="form-label" for="status">Publish : </label></b>
                             <?php echo $exam['published'] == 1 ? "Đã upload lên server" : " Chưa upload lên server" ?>
-
-                            <?php
-                            if ($exam['published'] == 1) {
-                            ?>
-                                <br>
-                                <b><label class="form-label" for="link_exam">Link exam </label></b>
-                                <button onclick="copyLink('linkToCopy<?php echo $exam['id']; ?>')" class="linkToCopy text-primary-hover" id="linkToCopy<?php echo $exam['id']; ?>" href="<?php echo $directory['domain'] . $exam['id'] . '.html' ?>"><?php echo $directory['domain'] . $exam['id'] . '.html' ?> </button>
-
-                            <?php } ?>
                             <br>
                             <b><label class="form-label" for="time_start">Time start : </label></b>
                             <?php echo isset($exam['time_start']) ? $exam['time_start'] : "Chưa có thời gian làm bài!" ?>
@@ -81,15 +66,19 @@
                             <b><label class="form-label" for="time_end">Time end : </label></b>
                             <?php echo isset($exam['time_end']) ? $exam['time_end'] : "Chưa có thời gian làm bài!" ?>
                             <br>
+                            <b><label class="form-label" for="description">Description : </label></b>
+                            <?php echo isset($exam['description']) ? $exam['description'] : "Chưa có mô tả"; ?>
+                            <br>
                         </div>
-                        <div class="col-5 ml-15">
-                            <b><label class="form-label" for="email">Email : </label></b>
+                        <div class="col-7 ml-15">
+                            <b><label class="form-label" for="email">Participants : </label></b>
                             <table class="table table-striped table-bordered table-responsive">
                                 <thead>
                                     <tr class="text-center">
                                         <th scope="col">#</th>
                                         <th scope="col">Email</th>
                                         <th scope="col">Status</th>
+                                        <th scope="col">Link Exam</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-rule-body">
@@ -102,13 +91,19 @@
                                                 <td><?php echo $stt++; ?></td>
                                                 <td><?php echo $email['email'] ?></td>
                                                 <td><?php echo $email['is_submit'] == 2 ? "Chưa nộp bài" : "Đã nộp bài"; ?></td>
+                                                <td class="text-left" style="color:#5d7cc1">
+                                                    <?php if ($exam['published'] == 1) {
+                                                    ?>
+                                                        <button onclick="copyLink('linkToCopy<?php echo $exam['id']; ?>')" class="ml-4 linkToCopy text-primary-hover" id="linkToCopy<?php echo $exam['id']; ?>" href="<?php echo $directory['domain'] . $exam['id'] . "/" . $email['random'] ?>"><?php echo $directory['domain'] . $exam['id'] . "/" . $email['random'] ?> </button>
+                                                    <?php } ?>
+                                                </td>
                                             </tr>
                                         <?php
                                         }
                                     } else {
                                         ?>
                                         <tr class="text-center">
-                                            <td colspan="3">Empty</td>
+                                            <td colspan="4">Empty</td>
                                         </tr>
                                     <?php
                                     }
@@ -152,7 +147,7 @@
                                 if (!empty($exam_details)) {
                                     $st = 1;
                                     foreach ($exam_details as $exam_detail) {
-                                        $answers = explode(',', $exam_detail['answers']);
+                                        $answers = explode('|<@>|', $exam_detail['answers']);
                                 ?>
                                         <tr>
                                             <th scope="row"><?php echo $st++; ?></th>

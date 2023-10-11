@@ -118,10 +118,8 @@
                     const answers = result.answers;
                     const myArray = answers.split(", ");
                     const resultArrayAnswer = [];
-
                     myArray.forEach(subArray => {
-                        const subArrayElements = subArray.split(',');
-
+                        const subArrayElements = subArray.split('|<@>|');
                         resultArrayAnswer.push(subArrayElements);
                     });
                     let answerListHTML = '';

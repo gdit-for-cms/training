@@ -539,11 +539,11 @@ $(document).ready(function () {
     alertDeleteQuestion()
     alertDeleteExamDetail()
     alertAddQuestionToExam()
-    // removeAnswer()
     alertDeleteSelectAll()
     searchAjax()
     selectAll()
-    // addAnswer()
+    addAnswer()
+    removeAnswer()
 
     //Ngo Duy Hung
     alertDeleteListRule();
@@ -820,7 +820,7 @@ function addAnswer() {
         answerCheckbox.type = "checkbox";
         answerCheckbox.name = "is_correct[]";
         if (pathName == "question") {
-            answerCheckbox.value = currentAnswerIndex; 
+            answerCheckbox.value = currentAnswerIndex;
         }
         answerCheckbox.addEventListener("change", function () {
             updateCheckboxValue(this);
@@ -920,7 +920,6 @@ function alertUploadFileExam() {
     
         <!-- Bootstrap core CSS -->
         <link href="/css/bootstrap.min.css" rel="stylesheet">
-    
         <style>
             .bd-placeholder-img {
                 font-size: 1.125rem;
@@ -936,18 +935,14 @@ function alertUploadFileExam() {
                 }
             }
         </style>
-    
-    
         <!-- Custom styles for this template -->
         <link href="/css/offcanvas.css" rel="stylesheet">
         <link href="/css/modal.css" rel="stylesheet">
         </head>
-        <body>
+        <body class="bg-light">
             ${content}
-
             <script src="/index.js"></script>
             <script src="/js/ajax.js"></script>
-
         </body>
         </html>    
         `;
@@ -970,7 +965,6 @@ function alertUploadFileExam() {
                         csv_exam_participants: csv_exam_participants,
                         csv_link_exam_radom: csv_link_exam_radom
                     },
-                    // dataType: 'json',
                     success: function (response) {
                         Swal.fire({
                             icon: 'success',
@@ -982,7 +976,6 @@ function alertUploadFileExam() {
                             document.location.reload(true);
                         }, "1600");
                         window.history.back()
-
                     },
                     error: function (response) {
                         let res = response.responseText;
@@ -1001,56 +994,56 @@ function alertUploadFileExam() {
     })
 }
 
-function alertEditDetailExam(formId) {
-    $(formId).submit(function (e) {
-        var content = `<div class="d-flex justify-content-center align-items-center w-full">
-        <div class="d-flex flex-col justify-content-center align-items-start">
-            <span class="mb-2">
-                
-            </span>
-        </div>
-    </div>`
-        e.preventDefault()
-        Swal.fire({
-            title: 'Are you sure?',
-            html: content,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                var form = $(this);
-                var actionUrl = form.attr('action');
-                $.ajax({
-                    type: "POST",
-                    url: actionUrl,
-                    data: form.serialize(),
-                    dataType: 'json',
-                    success: function (response) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: "Successfully",
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                        setTimeout(() => {
-                            document.location.reload(true);
-                        }, "1600");
-                    },
-                    error: function (response) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: response.responseJSON.message,
-                        });
-                    }
-                });
-            }
-        })
-    })
-}
+// function alertEditDetailExam(formId) {
+//     $(formId).submit(function (e) {
+//         var content = `<div class="d-flex justify-content-center align-items-center w-full">
+//         <div class="d-flex flex-col justify-content-center align-items-start">
+//             <span class="mb-2">
+
+//             </span>
+//         </div>
+//     </div>`
+//         e.preventDefault()
+//         Swal.fire({
+//             title: 'Are you sure?',
+//             html: content,
+//             icon: 'warning',
+//             showCancelButton: true,
+//             confirmButtonColor: '#d33',
+//             cancelButtonColor: '#3085d6',
+//             confirmButtonText: 'Yes'
+//         }).then((result) => {
+//             if (result.isConfirmed) {
+//                 var form = $(this);
+//                 var actionUrl = form.attr('action');
+//                 $.ajax({
+//                     type: "POST",
+//                     url: actionUrl,
+//                     data: form.serialize(),
+//                     dataType: 'json',
+//                     success: function (response) {
+//                         Swal.fire({
+//                             icon: 'success',
+//                             title: "Successfully",
+//                             showConfirmButton: false,
+//                             timer: 1500
+//                         });
+//                         setTimeout(() => {
+//                             document.location.reload(true);
+//                         }, "1600");
+//                     },
+//                     error: function (response) {
+//                         Swal.fire({
+//                             icon: 'error',
+//                             title: 'Oops...',
+//                             text: response.responseJSON.message,
+//                         });
+//                     }
+//                 });
+//             }
+//         })
+//     })
+// }
 
 // function select_ques_exam(e) {
 //     const quesExams = document.querySelectorAll(".ques_exam");
@@ -1082,11 +1075,8 @@ function alertEditDetailExam(formId) {
 
 //index detail
 function copyLink(linkToCopy) {
-    // Lấy thẻ <a> bằng cách sử dụng id hoặc bất kỳ phương thức nào khác
     var linkElement = document.getElementById(linkToCopy);
-    // Lấy giá trị của thuộc tính href
     var linkHref = linkElement.getAttribute("href");
-    // Sao chép giá trị href vào clipboard
     var tempInput = document.createElement("input");
     tempInput.value = linkHref;
     document.body.appendChild(tempInput);
@@ -1152,10 +1142,9 @@ function searchAjax() {
                         } else {
                             punlish = "Chưa xuất bản"
                         }
-                        if (result[i]['published'] == 1) {
-                            linkExam = `<button onclick="copyLink('linkToCopy${result[i]['id']}')" class="linkToCopy text-primary-hover" id="linkToCopy${result[i]['id']}" href="${directory['domain']}${result[i]['id']}.html">${directory['domain']}${result[i]['id']}.html</button>`
-                        }
+                       
                         let btn_edit = '';
+                        let btn_delete = `<button type="button" data-path="exam" data-id="${result[i]['id']}" class="btn btn-danger text-white btn-delete-question mr-2">Delete</button>`;
                         let status = '';
                         let startTime = result[i]['time_start'];
                         let endTime = result[i]['time_end'];
@@ -1170,18 +1159,19 @@ function searchAjax() {
                         }
                         currentTime = new Date(currentTime);
 
-                        if (startTime === null || currentTime < startTime) {
+                        if (startTime === null || currentTime < startTime  || result[i]['published'] != 1) {
                             status = '<span style="color: #FF0000;">Not Started</span>';
                             btn_edit = `<a href="/admin/exam/edit?id=${result[i]['id']}"><button type="button" class="btn btn-info text-white mr-2">Edit</button></a>`
 
                         } else if (currentTime >= startTime && currentTime <= endTime) {
+                            btn_delete = '';
                             status = '<span style="color: #3c7cdb;">In Progress</span>';
                         } else if (endTime < currentTime) {
                             status = '<span style="color: #008000;">Finished</span>';
                         }
 
                         let input_checkbox = '';
-                        if (!(currentTime >= startTime && currentTime <= endTime)) {
+                        if (!(currentTime >= startTime && currentTime <= endTime && result[i]['published'] == 1)) {
                             input_checkbox = `<input type="checkbox" value="${result[i]['id']}" name="item[]" class="checkbox">`
                         }
 
@@ -1211,7 +1201,7 @@ function searchAjax() {
                                         <div style="display:flex">
                                             <a href="/admin/exam/examDetail?exam_id=${result[i]['id']}"><button type="button" class="btn btn-success mr-2">Detail</button></a>
                                             ${btn_edit}
-                                            <button type="button" data-path="exam" data-id="${result[i]['id']}" class="btn btn-danger text-white btn-delete-question mr-2">Delete</button>
+                                            ${btn_delete}
                                         </div>
                                     </td>
                                 </tr>
@@ -1240,6 +1230,7 @@ function searchAjax() {
                 table_result.innerHTML = resultHTML;
                 selectAll()
                 updateSelectedValues();
+                alertDeleteQuestion();
             };
         };
     });

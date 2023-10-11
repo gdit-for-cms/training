@@ -91,7 +91,7 @@
                         if (!empty($exam_details)) {
                             $st = 1;
                             foreach ($exam_details as $exam_detail) {
-                                $answers = explode(',', $exam_detail['answers']);
+                                $answers = explode('|<@>|', $exam_detail['answers']);
                         ?>
                                 <tr>
                                     <th scope="row"><?php echo $st++; ?></th>

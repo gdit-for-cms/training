@@ -57,7 +57,7 @@
                             <tr>
                                 <th class="text-center">
                                     <?php
-                                    if (!($currentTime >= $startTime && $currentTime <= $endTime)) {
+                                    if (!($currentTime >= $startTime && $currentTime <= $endTime && $exam['published'] == 1)) {
                                     ?>
                                         <input type="checkbox" value="<?php echo $exam['id']; ?>" name="item[]" class="checkbox">
                                     <?php
@@ -70,12 +70,11 @@
                                 </td>
                                 <td>
                                     <?php
-                                    if ($currentTime < $startTime || empty($startTime)) {
+                                    if ($currentTime < $startTime || empty($startTime) || $exam['published'] != 1) {
                                         $check_finished = true; ?>
                                         <span style="color: #FF0000;">Not Started</span>
                                     <?php
-
-                                    } elseif ($currentTime >= $startTime && $currentTime <= $endTime) {
+                                    } elseif ($currentTime >= $startTime && $currentTime <= $endTime ) {
                                         $check_progress = true;
                                     ?>
                                         <span style="color: #3c7cdb;">In Progress</span>
@@ -167,6 +166,7 @@
 
     searchSelect(status_id, paramNameStatus);
     searchSelect(publish_id, paramNamePublish);
+
     function searchSelect(select, paramName) {
         var selectBox = document.getElementById(select);
         var currentURL = window.location.href;

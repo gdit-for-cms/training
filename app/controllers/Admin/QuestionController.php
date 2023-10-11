@@ -270,7 +270,6 @@ class QuestionController extends  AppController
         $numbers_of_page = ceil($numbers_of_result / $results_per_page);
         $this->data_ary['numbers_of_page'] = $numbers_of_page;
         $this->data_ary['page'] = (float)$results_ary['page'];
-
         $this->data_ary['content'] = 'question/detail';
     }
 

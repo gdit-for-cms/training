@@ -99,7 +99,8 @@ class Question extends Model
         q.content AS question_content,
         a.is_correct AS answer_correct,
         q.id AS question_id,
-        GROUP_CONCAT(CONCAT(a.is_correct, ' - ', a.content)) AS answers
+        -- GROUP_CONCAT(CONCAT(a.is_correct, ' - ', a.content)) AS answers
+        GROUP_CONCAT(CONCAT(a.is_correct, ' - ', a.content) SEPARATOR '|<@>|') AS answers
         FROM
             question_title AS qt
         LEFT JOIN
@@ -136,7 +137,7 @@ class Question extends Model
             q.content AS question_content,
             a.is_correct AS answer_correct,
             q.id AS question_id,
-            GROUP_CONCAT(CONCAT(a.is_correct, ' - ', a.content)) AS answers
+            GROUP_CONCAT(CONCAT(a.is_correct, ' - ', a.content) SEPARATOR '|<@>|') AS answers
         FROM
             question AS q 
         LEFT JOIN
@@ -160,7 +161,7 @@ class Question extends Model
         $stmt = $db->query($query . " " . $limit_query);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results, 'page' => $req_method_ary['page']);
-      
+
         return $results_ary;
     }
     public function getQuestionAnswer($req_method_ary, $results_per_page = 5)
@@ -177,7 +178,7 @@ class Question extends Model
         q.id AS question_id,
         q.content AS question_content,
         a.is_correct AS answer_correct,
-        GROUP_CONCAT(CONCAT(a.is_correct, ' - ', a.content, ' - ', a.id)) AS answers
+        GROUP_CONCAT(CONCAT(a.is_correct, ' - ', a.content, ' - ', a.id) SEPARATOR '|<@>|') AS answers
         FROM
             question AS q
         LEFT JOIN
