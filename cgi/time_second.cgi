@@ -65,6 +65,12 @@ if (-e $file_to_create) {
         my ($hour1, $min1, $sec1) = split(":", $times[0]);
         my ($hour2, $min2, $sec2) = split(":", $times[1]);
 
+        $hour1 = substr($hour1, length($hour1) - 2, 2);
+        $hour2 = substr($hour2, length($hour2) - 2, 2);
+
+        $sec1 = substr($sec1, 0, 2);
+        $sec2 = substr($sec2, 0, 2);
+
         my $total_sec_1 = $hour1*3600 + $min1*60 + $sec1;
         my $total_sec_2 = $hour2*3600 + $min2*60 + $sec2;
         
