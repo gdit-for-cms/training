@@ -46,6 +46,12 @@ class ExamParticipant extends Model
         return $this->insert($data);
     }
 
+    public function getColumn($column, $operator, $value, $get_columns = "*")
+    {
+        return $this->where($column, $operator, $value)->get($get_columns);
+    }
+
+
     public function rules($change = '', $value = array())
     {
         $rules_ary = array(

@@ -197,7 +197,7 @@ class Exam extends Model
 
         $stmt = $db->query($query);
         $results_ary = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
+
         return $results_ary;
     }
     public function rules($change = '', $value = array())

@@ -389,5 +389,25 @@ Trait QueryBuilder
         }
         return false;
     }
+
+        /**
+     * Add an "and where" clause to the query.
+     *
+     * @param  string|array  $column
+     * @param  mixed  $value
+     * @param  string  $compare
+     * @return $this
+     */
+    public function andWhere($column, $compare, $value)
+    {
+        if (empty($this->where)) {
+            $this->operator = ' WHERE ';
+        } else {
+            $this->operator = ' AND ';
+        }
+        $value = addslashes($value);
+        $this->where .= "$this->operator $column $compare $value";
+        return $this;
+    }
 }
 

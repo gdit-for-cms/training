@@ -49,12 +49,9 @@ class QuestionTitleController extends  AppController
         }
         $title = $result_vali_ary['title'];
         $description = $result_vali_ary['description'];
-        $question_titles = $this->obj_model->getAll();
-        foreach ($question_titles as $question_title) {
-            $check_exam = strcasecmp($question_title['title'], $title);
-            if ($check_exam == 0) {
-                return $this->errorResponse('Question collection has been exist');
-            }
+        $question_titles = $this->obj_model->getBy('title', '=', $title);
+        if (count($question_titles) > 0) {
+            return $this->errorResponse('Question collection has been exist');
         }
         try {
             $this->obj_model->create(
@@ -124,13 +121,11 @@ class QuestionTitleController extends  AppController
         }
         $title = $result_vali_ary['title'];
         $description = $result_vali_ary['description'];
-
         $ques_title_check_ary = $this->obj_model->getBy('title', '=', $post_ary['title']);
-        $num_rows = count($ques_title_check_ary);
         $id = $post_ary['id'];
         $title = $post_ary['title'];
         $description = $post_ary['description'];
-        if ($num_rows > 0 && $ques_title_check_ary[0]['id'] != $id) {
+        if (count($ques_title_check_ary) > 0 && $ques_title_check_ary[0]['id'] != $id) {
             return $this->errorResponse('Exam has been exist');
         }
 

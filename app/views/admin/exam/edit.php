@@ -67,6 +67,9 @@
                 <div class="top-left d-flex">
                     <h4 class="mb-2 nowrap">List question</h4>
                 </div>
+                <div class="input-button-group mr-2">
+                    <button type="button" data-exam_id="<?php echo $exam['id']; ?>" data-path="exam-question/delete-question-all" data-id="select" class="btn btn-danger text-white btn-delete-select-all btn-delete-select" style="display: none;">Delete</button>
+                </div>
             </div>
         </div>
         <div class="white_card_body">
@@ -74,6 +77,9 @@
                 <table class="table table-striped table-bordered table-responsive">
                     <thead>
                         <tr>
+                            <th class="text-center">
+                                <input type="checkbox" id="selectAll" class="selectAll" name="select_all">
+                            </th>
                             <th scope="col">#</th>
                             <th scope="col">Content</th>
                             <th scope="col">Answer</th>
@@ -94,6 +100,9 @@
                                 $answers = explode('|<@>|', $exam_detail['answers']);
                         ?>
                                 <tr>
+                                    <th class="text-center">
+                                        <input type="checkbox" value="<?php echo $exam_detail['question_id']; ?>" name="item[]" class="checkbox">
+                                    </th>
                                     <th scope="row"><?php echo $st++; ?></th>
                                     <td>
                                         <div class="overflow-auto">
@@ -114,7 +123,7 @@
                                                         <li class="text-ellipsis" style="color:#008000 "><?php echo  $alphabet[$answerIndex] . ". " . $answer[0] ?> </li>
                                                     <?php
                                                     } else { ?>
-                                                        <li class="text-ellipsis"  ><?php echo   $alphabet[$answerIndex] . ". " . $answer[0] ?> </li>
+                                                        <li class="text-ellipsis"><?php echo   $alphabet[$answerIndex] . ". " . $answer[0] ?> </li>
                                                 <?php
                                                     }
                                                     $answerIndex++;
@@ -183,4 +192,64 @@
 </div>
 <script>
     const paginationContainer = document.getElementById("paginations");
+
+    //copy link
+    var copyLinkButtons = document.querySelectorAll(".copyLink");
+
+    copyLinkButtons.forEach(function(button) {
+        button.addEventListener("click", function() {
+            var linkToCopy = button.getAttribute("data-link");
+            var inputElement = document.createElement("input");
+            inputElement.value = linkToCopy;
+            document.body.appendChild(inputElement);
+            inputElement.select();
+            inputElement.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+            document.body.removeChild(inputElement);
+            alert("Liên kết đã được sao chép: " + linkToCopy);
+        });
+    });
+    //end coply link
+    selectAll()
+
+    function updateSelectedValues() {
+        let checkboxes = document.getElementsByClassName("checkbox");
+        let checkboxesArray = Array.from(checkboxes);
+        let deleteButton = document.querySelector(".btn-delete-select");
+        let selectedValues = [];
+        checkboxesArray.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                selectedValues.push(checkbox.value);
+            }
+        });
+        if (selectedValues.length > 0) {
+            deleteButton.style.display = "block";
+        } else {
+            deleteButton.style.display = "none";
+        }
+        console.log(selectedValues);
+        return selectedValues;
+    }
+
+    function selectAll() {
+        let selectAllCheckboxes = document.getElementsByClassName("selectAll");
+        let checkboxes = document.getElementsByClassName("checkbox");
+        let checkboxesArray = Array.from(checkboxes);
+
+        // Sự kiện click cho checkbox "Select All"
+        for (let i = 0; i < selectAllCheckboxes.length; i++) {
+            selectAllCheckboxes[i].addEventListener("click", function() {
+                checkboxesArray.forEach(function(checkbox) {
+                    checkbox.checked = selectAllCheckboxes[i].checked;
+                });
+                updateSelectedValues();
+            });
+        }
+        // Sự kiện click cho các input con
+        checkboxesArray.forEach(function(checkbox) {
+            checkbox.addEventListener("click", function() {
+                updateSelectedValues();
+            });
+        });
+    }
 </script>

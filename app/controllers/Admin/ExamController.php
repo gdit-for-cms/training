@@ -54,6 +54,7 @@ class ExamController extends AppController
     public function indexAction(Request $request)
     {
         $req_method_ary = $request->getGet()->all();
+        //pagination
         $results_per_page = 10;
         $results_ary = $this->obj_model->getExam($req_method_ary, $results_per_page);
         $numbers_of_result = $results_ary['numbers_of_page'];
@@ -126,13 +127,13 @@ class ExamController extends AppController
         $description = $result_vali_ary['description'];
         $date_start = $result_vali_ary['date_start'];
         $date_end = $result_vali_ary['date_end'];
-        //so sanh datetime
+
+        //check time start and time end
         $check_time = false;
         if ((!empty($date_start) && empty($date_end)) || (empty($date_start) && !empty($date_end))) {
             return $this->errorResponse("Please fil out this field time");
         }
         $current_time = time();
-
         if (!empty($date_start) && !empty($date_end)) {
             if (strtotime($date_start) < $current_time) {
                 return $this->errorResponse("Time start must be greater than or equal to the current time");
@@ -142,6 +143,7 @@ class ExamController extends AppController
             }
             $check_time = true;
         }
+        //end check time start and time end
         $question_titles = $this->obj_model->getAll();
         foreach ($question_titles as $question_title) {
             $check_exam = strcasecmp($question_title['title'], $title);
@@ -149,7 +151,6 @@ class ExamController extends AppController
                 return $this->errorResponse('Exam collection has been exist');
             }
         }
-
         try {
             $this->obj_model->beginTransaction();
             $data = [
@@ -171,10 +172,11 @@ class ExamController extends AppController
                 $exam_id = $exam[0]['id'];
                 $stt_email = 1;
                 $arr_check_email = array();
+                //check email
                 foreach ($email_arrays as $email) {
                     $email = trim($email);
                     if ($email == "") {
-                        return $this->errorResponse("Email fields must be filled out");
+                        return $this->errorResponse("Email field must be filled out");
                     }
                     if (!email($email)) {
                         return $this->errorResponse("
@@ -183,12 +185,10 @@ class ExamController extends AppController
                     if (in_array($email, $arr_check_email)) {
                         return $this->errorResponse("Email number " . $stt_email . " was duplicated");
                     }
-
                     //link random
                     $str_random = $current_time . $email;
                     $hash = hash('sha256', $str_random);
                     $randomChars = substr($hash, 0, 10);
-
                     $this->obj_model_exam_participant->create([
                         'exam_id' => $exam_id,
                         'email' => $email,
@@ -425,6 +425,11 @@ class ExamController extends AppController
         $date_start = $post_ary['date_start'];
         $date_end = $post_ary['date_end'];
         $check_time = false;
+
+
+
+        // $question_check_ary = $this->obj_model->whereMultiple($condition);
+
         if ((!empty($date_start) && empty($date_end)) || (empty($date_start) && !empty($date_end))) {
             return $this->errorResponse("Please fil out this field time");
         }
@@ -456,12 +461,15 @@ class ExamController extends AppController
                 $data,
                 "id = $id"
             );
-            $this->obj_model_exam_participant->destroyBy("exam_id = " . $id);
             if ($check_has_mail) {
+                $emails_db = $this->obj_model_exam_participant->getBy('exam_id', '=', $id);
                 $email_arrays = $post_ary['email'];
                 $stt_email = 1;
                 $arr_check_email = array();
+                $email_array_rq = array();
+
                 foreach ($email_arrays as $email) {
+                    //check email
                     $email = trim($email);
                     if ($email == "") {
                         return $this->errorResponse("phải điền vào các ô email");
@@ -472,21 +480,41 @@ class ExamController extends AppController
                     if (in_array($email, $arr_check_email)) {
                         return $this->errorResponse("email số " . $stt_email . " đã trùng lặp");
                     }
-                    //link random
-                    $str_random = $current_time . $email;
-                    $hash = hash('sha256', $str_random);
-                    $randomChars = substr($hash, 0, 10);
-                    $this->obj_model_exam_participant->create([
-                        'exam_id' => $id,
-                        'email' => $email,
-                        'random' => $randomChars,
-                        'is_login' => 1,
-                        'is_submit' => 2
-                    ]);
+                    //end check email
+                    $check = false;
+                    foreach ($emails_db as $email_db) {
+                        if ($email == $email_db['email']) {
+                            $check = true;
+                            array_push($email_array_rq, $email_db['id']);
+                        }
+                    }
+                    if (!$check) {
+                        //link random
+                        $str_random = $current_time . $email;
+                        $hash = hash('sha256', $str_random);
+                        $randomChars = substr($hash, 0, 10);
+                        $this->obj_model_exam_participant->create([
+                            'exam_id' => $id,
+                            'email' => $email,
+                            'random' => $randomChars,
+                            'is_login' => 1,
+                            'is_submit' => 2
+                        ]);
+                    }
                     array_push($arr_check_email, trim($email));
                     $stt_email++;
                 }
+                $email_array_db = array();
+                foreach ($emails_db as $email_db) {
+                    array_push($email_array_db, $email_db['id']);
+                }
+                $array_delete_ids = array_diff($email_array_db, $email_array_rq);
+
+                foreach ($array_delete_ids as $id) {
+                    $this->obj_model_exam_participant->destroyBy("id = $id");
+                }
             }
+
             $this->obj_model->commitTransaction();
 
             return $this->successResponse();

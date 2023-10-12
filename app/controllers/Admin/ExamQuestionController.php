@@ -96,4 +96,13 @@ class ExamQuestionController extends AppController
     {
         $this->data_ary['content'] = "exam/new_question";
     }
+
+    public function deleteQuestionAllAction(Request $request)
+    {
+        $question_ids = $request->getPost()->get('ids');
+        $exam_id = $request->getGet()->get('exam_id');
+        foreach ($question_ids as $question_id) {
+            $this->obj_model_exam_question->destroyBy("question_id = $question_id and exam_id = $exam_id");
+        }
+    }
 }

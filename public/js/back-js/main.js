@@ -280,6 +280,11 @@ function alertDeleteSelectAll() {
         let deleteID = $(this).data('id');
         let path = $(this).data('path');
         let ids = updateSelectedValues();
+        let url = `/admin/${path}/delete?id=${deleteID}`
+        if (path == 'exam-question/delete-question-all') {
+            let examID = $(this).data('exam_id');
+            url = `/admin/${path}?exam_id=${examID}`
+        }
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -291,7 +296,7 @@ function alertDeleteSelectAll() {
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: `/admin/${path}/delete?id=${deleteID}`,
+                    url: url,
                     method: "POST",
                     data: { ids: ids },
                     success: function (data) {
@@ -1074,18 +1079,22 @@ function alertUploadFileExam() {
 // }
 
 //index detail
-function copyLink(linkToCopy) {
-    var linkElement = document.getElementById(linkToCopy);
-    var linkHref = linkElement.getAttribute("href");
-    var tempInput = document.createElement("input");
-    tempInput.value = linkHref;
-    document.body.appendChild(tempInput);
-    tempInput.select();
-    document.execCommand("copy");
-    document.body.removeChild(tempInput);
+function copyLink() {
+    var copyLinkButtons = document.querySelectorAll(".copyLink");
 
-    // Thông báo cho người dùng
-    alert("Link has been copied to clipboard: " + linkHref);
+    copyLinkButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            var linkToCopy = button.getAttribute("data-link");
+            var inputElement = document.createElement("input");
+            inputElement.value = linkToCopy;
+            document.body.appendChild(inputElement);
+            inputElement.select();
+            inputElement.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+            document.body.removeChild(inputElement);
+            alert("Liên kết đã được sao chép: " + linkToCopy);
+        });
+    });
 }
 
 function searchAjax() {
@@ -1142,7 +1151,7 @@ function searchAjax() {
                         } else {
                             punlish = "Chưa xuất bản"
                         }
-                       
+
                         let btn_edit = '';
                         let btn_delete = `<button type="button" data-path="exam" data-id="${result[i]['id']}" class="btn btn-danger text-white btn-delete-question mr-2">Delete</button>`;
                         let status = '';
@@ -1159,7 +1168,7 @@ function searchAjax() {
                         }
                         currentTime = new Date(currentTime);
 
-                        if (startTime === null || currentTime < startTime  || result[i]['published'] != 1) {
+                        if (startTime === null || currentTime < startTime || result[i]['published'] != 1) {
                             status = '<span style="color: #FF0000;">Not Started</span>';
                             btn_edit = `<a href="/admin/exam/edit?id=${result[i]['id']}"><button type="button" class="btn btn-info text-white mr-2">Edit</button></a>`
 

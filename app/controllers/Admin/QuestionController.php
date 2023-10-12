@@ -98,11 +98,7 @@ class QuestionController extends  AppController
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
             return $this->errorResponse($message_error);
         }
-        $content = $result_vali_ary['content'];
-        $question_title_id = "";
-        if (isset($result_vali_ary['question_title_id'])) {
-            $question_title_id = $result_vali_ary['question_title_id'];
-        }
+        //check answers
         if (isset($result_vali_ary['answer'])) {
             $answers =  $result_vali_ary['answer'];
         }
@@ -124,53 +120,64 @@ class QuestionController extends  AppController
             return $this->errorResponse("Answer length is limited to 2000 characters.");
         }
         $is_corrects = $result_vali_ary['is_correct'];
-        $question_check_ary = $this->obj_model->getBy('content', '=', $content);
-        $num_rows = count($question_check_ary);
-        if ($num_rows > 0) {
-            return $this->errorResponse('Question has been exist');
-        } else {
-            try {
-                // $this->obj_model->beginTransaction();
-                if (isset($result_vali_ary['question_title_id'])) {
-                    $questionId = $this->obj_model->create(
-                        [
-                            'content' => $content,
-                            'question_title_id' => $question_title_id
-                        ]
-                    );
-                } else {
-                    $questionId = $this->obj_model->create(
-                        [
-                            'content' => $content,
-                        ]
-                    );
-                }
 
-                $question = $this->obj_model->getBy("content", "=", $content);
-                if (isset($exam_id)) {
-                    $this->obj_model_exam_question->create(
-                        [
-                            'question_id' => $question[0]['id'],
-                            'exam_id' => $exam_id,
-                        ]
-                    );
-                }
-                foreach ($answers as $index => $answerContent) {
-                    $isCorrect = in_array($index, $is_corrects) ? 1 : 0;
-                    $this->obj_model_answer->create(
-                        [
-                            'question_id' => $question[0]['id'],
-                            'content' => $answerContent,
-                            'is_correct' => $isCorrect,
-                        ]
-                    );
-                }
-                // $this->obj_model->commitTransaction();
-                return $this->successResponse();
-            } catch (\Throwable $th) {
-                return $this->errorResponse($th->getMessage());
-            };
+        //check question content
+        $content = $result_vali_ary['content'];
+        $question_title_id = null;
+        $condition = array();
+        array_push($condition, ['content', '=', $content]);
+        if (isset($result_vali_ary['question_title_id'])) {
+            $question_title_id = $result_vali_ary['question_title_id'];
+            array_push($condition, [' question_title_id ', ' = ', $question_title_id]);
+        } else {
+            array_push($condition, [' question_title_id ', ' is ', ' null ']);
         }
+        $question_check_ary = $this->obj_model->whereMultiple($condition);
+        if (count($question_check_ary) > 0) {
+            return $this->errorResponse('Question has been exist');
+        }
+
+        try {
+            // $this->obj_model->beginTransaction();
+            if (isset($result_vali_ary['question_title_id'])) {
+                $questionId = $this->obj_model->create(
+                    [
+                        'content' => $content,
+                        'question_title_id' => $question_title_id
+                    ]
+                );
+            } else {
+                $questionId = $this->obj_model->create(
+                    [
+                        'content' => $content,
+                    ]
+                );
+            }
+
+            $question = $this->obj_model->whereMultiple($condition);
+            if (isset($exam_id)) {
+                $this->obj_model_exam_question->create(
+                    [
+                        'question_id' => $question[0]['id'],
+                        'exam_id' => $exam_id,
+                    ]
+                );
+            }
+            foreach ($answers as $index => $answerContent) {
+                $isCorrect = in_array($index, $is_corrects) ? 1 : 0;
+                $this->obj_model_answer->create(
+                    [
+                        'question_id' => $question[0]['id'],
+                        'content' => $answerContent,
+                        'is_correct' => $isCorrect,
+                    ]
+                );
+            }
+            // $this->obj_model->commitTransaction();
+            return $this->successResponse();
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        };
     }
 
     public function editAction(Request $request)
@@ -201,7 +208,8 @@ class QuestionController extends  AppController
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
             return $this->errorResponse($message_error);
         }
-        $content = $result_vali_ary['content'];
+
+        //check answer
         $answers =  $result_vali_ary['answer'];
         $question_id = $request->getPost()->get('id');
 
@@ -217,41 +225,53 @@ class QuestionController extends  AppController
         if (!$this->check_length_answer($answers)) {
             return $this->errorResponse("Answer length is limited to 255 characters.");
         }
+        //end check answer
+
         $is_corrects = $result_vali_ary['is_correct'];
-        $question_check_ary = $this->obj_model->getBy('content', '=', $content);
-        $num_rows = count($question_check_ary);
 
-        if ($num_rows > 0 && $question_check_ary[0]['id'] != $question_id) {
-            return $this->errorResponse('Question has been exist');
+        //check question content
+        $content = $result_vali_ary['content'];
+        $question_title_id = null;
+        $condition = array();
+        array_push($condition, ['content', '=', $content]);
+        if (isset($result_vali_ary['question_title_id'])) {
+            $question_title_id = $result_vali_ary['question_title_id'];
+            array_push($condition, [' question_title_id ', ' = ', $question_title_id]);
         } else {
-
-            try {
-                // $this->obj_model->beginTransaction();
-                $this->obj_model->updateOne(
-                    [
-                        'content' => $content
-                    ],
-                    "id = $question_id"
-                );
-
-                $this->obj_model_answer->destroyBy("question_id = $question_id");
-                foreach ($answers as $index => $answerContent) {
-                    $isCorrect = in_array($index, $is_corrects) ? 1 : 0;
-                    $this->obj_model_answer->create(
-                        [
-                            'question_id' => $question_id,
-                            'content' => $answerContent,
-                            'is_correct' => $isCorrect,
-                        ]
-                    );
-                }
-                // $this->obj_model->commitTransaction();
-                return $this->successResponse();
-            } catch (\Throwable $th) {
-
-                return $this->errorResponse($th->getMessage());
-            };
+            array_push($condition, [' question_title_id ', ' is ', ' null ']);
         }
+        $question_check_ary = $this->obj_model->whereMultiple($condition);
+        if (count($question_check_ary) > 0 && $question_check_ary[0]['id'] != $question_id) {
+            return $this->errorResponse('Question has been exist');
+        }
+        //end check question content
+
+        try {
+            // $this->obj_model->beginTransaction();
+            $this->obj_model->updateOne(
+                [
+                    'content' => $content
+                ],
+                "id = $question_id"
+            );
+
+            $this->obj_model_answer->destroyBy("question_id = $question_id");
+            foreach ($answers as $index => $answerContent) {
+                $isCorrect = in_array($index, $is_corrects) ? 1 : 0;
+                $this->obj_model_answer->create(
+                    [
+                        'question_id' => $question_id,
+                        'content' => $answerContent,
+                        'is_correct' => $isCorrect,
+                    ]
+                );
+            }
+            // $this->obj_model->commitTransaction();
+            return $this->successResponse();
+        } catch (\Throwable $th) {
+
+            return $this->errorResponse($th->getMessage());
+        };
     }
 
     public function detailAction(Request $request)

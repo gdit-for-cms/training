@@ -33,6 +33,24 @@ class Question extends Model
         return $this->where($column, $operator, $value)->get();
     }
 
+    public function whereMultiple(array $conditions)
+    {
+        $query = "";
+
+        foreach ($conditions as $condition) {
+            [$column, $operator, $value] = $condition;
+            $value = addslashes($value);
+
+            if (empty($query)) {
+                $query = $this->where($column, $operator, $value);
+            } else {
+                $query = $this->andWhere($column, $operator, $value);
+            }
+        }
+
+        return $query->get();
+    }
+
     public function getById($id, $column = '*')
     {
         return $this->find($id, $column);
@@ -164,6 +182,7 @@ class Question extends Model
 
         return $results_ary;
     }
+
     public function getQuestionAnswer($req_method_ary, $results_per_page = 5)
     {
         $exam_id = $req_method_ary['exam_id'];

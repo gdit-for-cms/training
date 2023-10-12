@@ -12,15 +12,21 @@
                 <?php } ?>
                 <li class="border has-arrow mb-1 collection_hover cursor-pointer" onclick="getQuestion('orther')">
                     <button type="button" class="text-left">
-                        Orther
+                        Other
                     </button>
                 </li>
             </ul>
+            <div class="ml-4">
+                <span style="color: #828bb2;">* Note</span>
+                <p class="" style="padding-left: 20px;">
+                    Select the button on the questions to add questions to the exam
+                </p>
+            </div>
             <div style=" padding-bottom: 10px;">
                 <span style="margin-left: 20px; margin-right: 20px;">Số câu đã chọn : <span id="total_select">0</span> </span><br>
                 <div style=" display: flex;justify-content: center;align-items: center;">
-                    <a href='/admin/question/new?ques-title=other&exam_id=<?= $exam_id; ?>'><button type="button" class="btn btn-primary ">Add quick question</button></a>
-                    <button style="width: 80px; margin: 15px;" data-exam_id="<?php echo $exam_id; ?>" id="select" type="submit" class=" btn btn btn-success btn-add_question_exam">Select</button>
+                    <a href='/admin/question/new?ques-title=other&exam_id=<?= $exam_id; ?>'><button type="button" class="btn btn-primary ">Quick add question</button></a>
+                    <button style="width: 80px; margin: 15px;" data-exam_id="<?php echo $exam_id; ?>" id="select" type="submit" class=" btn btn btn-success btn-add_question_exam">Save</button>
                 </div>
             </div>
         </div>

@@ -21,10 +21,14 @@
                             if ($cur_user['role_id'] != 3) {
                                 if ($check_status) {
                                 ?>
+                                    <a href="/admin/exam/edit?id=<?php echo $exam['id']; ?>"><button type="button" class="btn btn-info text-white mr-4">Edit</button></a>
                                     <a href="/admin/exam-question/new?exam_id=<?php echo $exam['id']; ?>"><button type=" button" class="btn btn-success float-end">Add Question</button></a>
-                                    <a class="btn btn-primary mr-3" id="createFilesButton" href="/admin/exam/preview?exam_id=<?php echo $exam['id']; ?>" data-id="<?php echo $exam['id']; ?>" id="submit">Upload exam</a>
-                            <?php
-                                }
+                                    <a class="btn btn-primary mr-3" id="createFilesButton" href="/admin/exam/preview?exam_id=<?php echo $exam['id']; ?>" data-id="<?php echo $exam['id']; ?>" id="submit">Upload</a>
+                                <?php
+                                } elseif ($exam['published'] == 1 && !($currentTime >= $startTime && $currentTime <= $endTime)) {
+                                ?>
+                                    <a href="/admin/exam/unpublish?exam_id=<?php echo $exam['id']; ?>" data-id="<?php echo $exam['id']; ?>" id="submit" class="btn btn-info text-white">UnPublish</a>
+                            <?php }
                             }
                             ?>
                         </div>
@@ -91,10 +95,11 @@
                                                 <td><?php echo $stt++; ?></td>
                                                 <td><?php echo $email['email'] ?></td>
                                                 <td><?php echo $email['is_submit'] == 2 ? "Chưa nộp bài" : "Đã nộp bài"; ?></td>
-                                                <td class="text-left" style="color:#5d7cc1">
+                                                <td class="text-left">
                                                     <?php if ($exam['published'] == 1) {
                                                     ?>
-                                                        <button onclick="copyLink('linkToCopy<?php echo $exam['id']; ?>')" class="ml-4 linkToCopy text-primary-hover" id="linkToCopy<?php echo $exam['id']; ?>" href="<?php echo $directory['domain'] . $exam['id'] . "/" . $email['random'] ?>"><?php echo $directory['domain'] . $exam['id'] . "/" . $email['random'] ?> </button>
+                                                        <a style="color:#5d7cc1" href="#" class="copyLink ml-4 linkToCopy text-primary-hover" data-link="<?php echo $directory['domain'] . $exam['id'] . "/" . $email['random'] ?> "><?php echo $directory['domain'] . $exam['id'] . "/" . $email['random'] ?> </a>
+                                                        <!-- <button onclick="copyLink('linkToCopy<?php echo $exam['id']; ?>')" class="ml-4 linkToCopy text-primary-hover copyLink" id="linkToCopy<?php echo $exam['id']; ?>" href="<?php echo $directory['domain'] . $exam['id'] . "/" . $email['random'] ?>"><?php echo $directory['domain'] . $exam['id'] . "/" . $email['random'] ?> </button> -->
                                                     <?php } ?>
                                                 </td>
                                             </tr>
@@ -123,13 +128,20 @@
                         <div class="top-left d-flex">
                             <h4 class="mb-2 nowrap">List question</h4>
                         </div>
+                        <div class="input-button-group mr-2">
+                            <button type="button" data-exam_id="<?php echo $exam['id']; ?>" data-path="exam-question/delete-question-all" data-id="select" class="btn btn-danger text-white btn-delete-select-all btn-delete-select" style="display: none;">Delete</button>
+                        </div>
                     </div>
                 </div>
                 <div class="white_card_body">
+
                     <div class="table-responsive m-b-30">
                         <table class="table table-striped table-bordered table-responsive">
                             <thead>
                                 <tr>
+                                    <th class="text-center">
+                                        <input type="checkbox" id="selectAll" class="selectAll" name="select_all">
+                                    </th>
                                     <th class="col-1" scope="col">#</th>
                                     <th class="col-5" scope="col">Content</th>
                                     <th class="col-4" scope="col">Answer</th>
@@ -150,6 +162,9 @@
                                         $answers = explode('|<@>|', $exam_detail['answers']);
                                 ?>
                                         <tr>
+                                            <th class="text-center">
+                                                <input type="checkbox" value="<?php echo $exam_detail['question_id']; ?>" name="item[]" class="checkbox">
+                                            </th>
                                             <th scope="row"><?php echo $st++; ?></th>
                                             <td>
                                                 <div class="overflow-auto">
@@ -246,5 +261,64 @@
     </div>
 </div>
 <script>
+    //copy link
+    var copyLinkButtons = document.querySelectorAll(".copyLink");
+
+    copyLinkButtons.forEach(function(button) {
+        button.addEventListener("click", function() {
+            var linkToCopy = button.getAttribute("data-link");
+            var inputElement = document.createElement("input");
+            inputElement.value = linkToCopy;
+            document.body.appendChild(inputElement);
+            inputElement.select();
+            inputElement.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+            document.body.removeChild(inputElement);
+            alert("Liên kết đã được sao chép: " + linkToCopy);
+        });
+    });
+    //end coply link
     const paginationContainer = document.getElementById("paginations");
+    selectAll()
+
+    function updateSelectedValues() {
+        let checkboxes = document.getElementsByClassName("checkbox");
+        let checkboxesArray = Array.from(checkboxes);
+        let deleteButton = document.querySelector(".btn-delete-select");
+        let selectedValues = [];
+        checkboxesArray.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                selectedValues.push(checkbox.value);
+            }
+        });
+        if (selectedValues.length > 0) {
+            deleteButton.style.display = "block";
+        } else {
+            deleteButton.style.display = "none";
+        }
+        console.log(selectedValues);
+        return selectedValues;
+    }
+
+    function selectAll() {
+        let selectAllCheckboxes = document.getElementsByClassName("selectAll");
+        let checkboxes = document.getElementsByClassName("checkbox");
+        let checkboxesArray = Array.from(checkboxes);
+
+        // Sự kiện click cho checkbox "Select All"
+        for (let i = 0; i < selectAllCheckboxes.length; i++) {
+            selectAllCheckboxes[i].addEventListener("click", function() {
+                checkboxesArray.forEach(function(checkbox) {
+                    checkbox.checked = selectAllCheckboxes[i].checked;
+                });
+                updateSelectedValues();
+            });
+        }
+        // Sự kiện click cho các input con
+        checkboxesArray.forEach(function(checkbox) {
+            checkbox.addEventListener("click", function() {
+                updateSelectedValues();
+            });
+        });
+    }
 </script>
