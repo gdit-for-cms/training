@@ -22,7 +22,7 @@
                                 if ($check_status) {
                                 ?>
                                     <a href="/admin/exam/edit?id=<?php echo $exam['id']; ?>"><button type="button" class="btn btn-info text-white mr-4">Edit</button></a>
-                                    <a href="/admin/exam-question/new?exam_id=<?php echo $exam['id']; ?>"><button type=" button" class="btn btn-success float-end">Add Question</button></a>
+
                                     <a class="btn btn-primary mr-3" id="createFilesButton" href="/admin/exam/preview?exam_id=<?php echo $exam['id']; ?>" data-id="<?php echo $exam['id']; ?>" id="submit">Upload</a>
                                 <?php
                                 } elseif ($exam['published'] == 1 && !($currentTime >= $startTime && $currentTime <= $endTime)) {
@@ -127,6 +127,7 @@
                     <div class="main-title2 d-flex justify-content-between items-center ">
                         <div class="top-left d-flex">
                             <h4 class="mb-2 nowrap">List question</h4>
+
                         </div>
                         <div class="input-button-group mr-2">
                             <button type="button" data-exam_id="<?php echo $exam['id']; ?>" data-path="exam-question/delete-question-all" data-id="select" class="btn btn-danger text-white btn-delete-select-all btn-delete-select" style="display: none;">Delete</button>
@@ -134,7 +135,13 @@
                     </div>
                 </div>
                 <div class="white_card_body">
-
+                    <div class="input-button-group mb-3">
+                        <?php if ($check_status) {
+                        ?>
+                            <a href="/admin/exam-question/new?exam_id=<?php echo $exam['id']; ?>"><button type=" button" class="btn btn-success float-end">Add Question</button></a>
+                        <?php
+                        } ?>
+                    </div>
                     <div class="table-responsive m-b-30">
                         <table class="table table-striped table-bordered table-responsive">
                             <thead>

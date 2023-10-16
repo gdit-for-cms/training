@@ -7,10 +7,35 @@
     </div>
     <div class="box_body white_card_body">
         <div class="default-according" id="accordion2">
+
             <div class="flex col-12 mb-6">
                 <div class="input-button-group col-12">
-                    <input id="searchInput" type="search" class="form-control rounded" style="width: 425px;" placeholder="Search..." aria-label="Search" aria-describedby="search-addon" />
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="search_block">
+                                <input id="searchInput" type="search" class="form-control rounded" style="width: 425px;" placeholder="Search..." aria-label="Search" aria-describedby="search-addon" />
+                                <div class="ml-7">
+                                    <label for="selectStatus">STATUS</label>
+                                    <select style="height: -webkit-fill-available;" class="text-medium border" id="selectStatus" name="" aria-label="Default select example">
+                                        <option value="0">All</option>
+                                        <option value="1">Not Started</option>
+                                        <option value="2">In Progress</option>
+                                        <option value="3">Completed</option>
+                                    </select>
+                                </div>
+                                <div class="ml-7">
+                                    <label for="selectPublish">PUBLISH</label>
+                                    <select style="height: -webkit-fill-available;" class="text-medium border " id="selectPublish" name="" aria-label="Default select example">
+                                        <option value="2" selected="">All</option>
+                                        <option value="1">Published</option>
+                                        <option value="0">Unpublished</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <button type="button" data-path="exam" data-id="select" class="btn btn-danger text-white btn-delete-select-all btn-delete-select" style="display: none;">Delete</button>
+
                 </div>
             </div>
             <div class="table_member_body table-responsive m-b-30 flex flex-col items-center justify-center">
@@ -25,20 +50,9 @@
                             <th>TITLE</th>
                             <th>
                                 STATUS
-                                <select class="w-26 text-medium border" id="selectStatus" name="" aria-label="Default select example">
-                                    <option value="0" selected="">All</option>
-                                    <option value="1">Not Started</option>
-                                    <option value="2">In Progress</option>
-                                    <option value="3">Completed</option>
-                                </select>
                             </th>
                             <th>
                                 PUBLISH
-                                <select class="  w-26 text-medium border " id="selectPublish" name="" aria-label="Default select example">
-                                    <option value="2" selected="">All</option>
-                                    <option value="1">Published</option>
-                                    <option value="0">Unpublished</option>
-                                </select>
                             </th>
                             <th>TIME</th>
                             <th>ACTION</th>
@@ -74,7 +88,7 @@
                                         $check_finished = true; ?>
                                         <span style="color: #FF0000;">Not Started</span>
                                     <?php
-                                    } elseif ($currentTime >= $startTime && $currentTime <= $endTime ) {
+                                    } elseif ($currentTime >= $startTime && $currentTime <= $endTime) {
                                         $check_progress = true;
                                     ?>
                                         <span style="color: #3c7cdb;">In Progress</span>

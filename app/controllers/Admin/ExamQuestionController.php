@@ -47,11 +47,11 @@ class ExamQuestionController extends AppController
         View::render('admin/back-layouts/master.php', $this->data_ary);
     }
 
-    public function indexAction()
-    {
-        $this->data_ary['examsWithQuestions'] = $this->obj_model->getExamsWithQuestions();
-        $this->data_ary['content'] = 'exam/index';
-    }
+    // public function indexAction()
+    // {
+        // $this->data_ary['examsWithQuestions'] = $this->obj_model->getExamsWithQuestions();
+        // $this->data_ary['content'] = 'exam/index';
+    // }
 
     public function newAction(Request $request)
     {

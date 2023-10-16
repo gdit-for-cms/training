@@ -37,30 +37,32 @@ class AnswerController extends  AppController
 
     public function create(Request $request)
     {
+        //validation
         $app_request = new AppRequest;
         $result_vali_ary = $app_request->validate($this->obj_model->rules(), $request, 'post');
         if (in_array('error', $result_vali_ary)) {
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
             return $this->errorResponse($message_error);
         }
+        //get data
         $content = $result_vali_ary['content'];
         $title = $result_vali_ary['title'];
         $question_check_ary = $this->obj_model->getBy('content', '=', $content);
         $num_rows = count($question_check_ary);
+
         if ($num_rows == 1) {
             return $this->errorResponse('Question has been exist');
-        } else {
-            try {
-                $this->obj_model->create(
-                    [
-                        'title' => $title,
-                        'content' => $content,
-                    ]
-                );
-                return $this->successResponse();
-            } catch (\Throwable $th) {
-                return $this->errorResponse($th->getMessage());
-            };
         }
+        try {
+            $this->obj_model->create(
+                [
+                    'title' => $title,
+                    'content' => $content,
+                ]
+            );
+            return $this->successResponse();
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        };
     }
 }

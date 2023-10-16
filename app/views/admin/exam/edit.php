@@ -6,13 +6,7 @@
                     <h3 class="m-0">Edit collection</h3>
                 </div>
                 <div class="top-right">
-                    <?php
-                    if ($cur_user['role_id'] != 3) {
-                    ?>
-                        <a href="/admin/exam-question/new?exam_id=<?php echo $exam['id']; ?>"><button type=" button" class="btn btn-success float-end">Add Question</button></a>
-                    <?php
-                    }
-                    ?>
+
                 </div>
             </div>
         </div>
@@ -73,6 +67,15 @@
             </div>
         </div>
         <div class="white_card_body">
+            <div class="input-button-group mb-3">
+                <?php
+                if ($cur_user['role_id'] != 3) {
+                ?>
+                    <a href="/admin/exam-question/new?exam_id=<?php echo $exam['id']; ?>"><button type=" button" class="btn btn-success float-end">Add Question</button></a>
+                <?php
+                }
+                ?>
+            </div>
             <div class="table-responsive m-b-30">
                 <table class="table table-striped table-bordered table-responsive">
                     <thead>

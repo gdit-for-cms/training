@@ -73,8 +73,7 @@
             </div>
         </div>
 
-        <div class="modal" id="accept_submit" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1"
-            aria-labelledby="anchor-nameLabel" aria-hidden="true">
+        <div class="modal" id="accept_submit" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="anchor-nameLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content modal-accept-submit">
                     <div class="modal-header" style="margin-top: -18px;">
@@ -91,8 +90,7 @@
             </div>
         </div>
 
-        <div class="modal" id="modal_error" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1"
-            aria-labelledby="anchor-nameLabel" aria-hidden="true">
+        <div class="modal" id="modal_error" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="anchor-nameLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content modal-accept-submit">
                     <div class="modal-header" style="margin-top: -18px;">
@@ -119,7 +117,9 @@ $link_exam_random = "";
 
 if (count($exam_participants) > 0) {
     foreach ($exam_participants as $exam_participant) {
-        $participants .= $exam_participant['email'] . "," . $exam_participant['is_login'] . "," . $exam_participant['is_submit'] . "\n";
+        // list participants
+        //email, link random, is login, is submit, answer correct
+        $participants .= $exam_participant['email'] . "," . $exam_participant['random'] . "," . $exam_participant['is_login'] . "," . $exam_participant['is_submit'] . "," . "0" . "\n";
         //link random
         $link_exam_random .= $exam_participant['random'] . "\n";
     }
@@ -129,6 +129,7 @@ if (count($exam_participants) > 0) {
 <div class="hidden" id="csv_exam_link_random"><?php echo $link_exam_random; ?></div>
 <script>
     const submitBtn = document.querySelector('#submit')
+
     function validate() {
         if (titleInput.value == '') {
             submitBtn.disabled = true;

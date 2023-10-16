@@ -17,7 +17,9 @@
       </div>
 
       <div class="table_member_body table-responsive m-b-30 flex flex-col items-center justify-center">
-
+        <?php
+        $stt = 1;
+        ?>
         <table id="<?= "1" ?>" class="table table-striped table-bordered table-responsive">
           <thead>
             <tr>
@@ -31,9 +33,9 @@
             </tr>
             <tr>
               <th class="text-center"></th>
-              <th>#</th>
-              <th class="text-ellipsis">Other</th>
-              <td class="text-ellipsis">
+              <th><?php echo $stt++; ?></th>
+              <td class="text-ellipsis">Default</td>
+              <td class="text-ellipsis">2023-10-11 11:08:39
               </td>
               <td>
                 <a href="/admin/question/detail?question_id=other"><button type="button" class="btn btn-success">Detail</button></a>
@@ -44,7 +46,6 @@
           <tbody class="body_table_main" id="table_result">
 
             <?php
-            $stt = 1;
             foreach ($question_titles as $question_title) {
             ?>
               <tr>

@@ -42,112 +42,80 @@ class Exam extends Model
         return $this->where($column, $operator, $value)->get();
     }
 
-    public function getAllRelation($req_method_ary, $results_per_page = 1)
+    // public function getAllRelation($req_method_ary, $results_per_page = 1)
+    // {
+    //     $db = static::getDB();
+
+    //     $query = 'SELECT 
+    //     e.id AS exam_id, 
+    //     e.title AS exam_title, 
+    //     e.description AS exam_description,
+    //     e.published AS exam_published,
+    //     q.id AS question_id, 
+    //     q.content AS question_content, 
+    //     q.title as question_title,
+    //     GROUP_CONCAT(CONCAT(q.title, " - ", q.content) SEPARATOR "|<@>|") AS questions
+    //     FROM exam AS e
+    //     LEFT JOIN exam_questions AS qe ON e.id = qe.exam_id
+    //     LEFT JOIN question AS q ON qe.question_id = q.id
+    //     GROUP BY
+    //     e.id
+    //     ORDER BY e.id DESC';
+
+    //     if (!isset($req_method_ary['page'])) {
+    //         $req_method_ary['page'] = '1';
+    //     }
+    //     $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
+    //     $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
+
+    //     $stmt_count = $db->query($query);
+    //     $numbers_of_page = count($stmt_count->fetchAll(PDO::FETCH_ASSOC));
+    //     $stmt = $db->query($query . " " . $limit_query);
+    //     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    //     $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results, 'page' => $req_method_ary['page']);
+    //     return $results_ary;
+    // }
+
+    public function getExam($req_method_ary, $results_per_page)
     {
-        $db = static::getDB();
 
-        $query = 'SELECT 
-        e.id AS exam_id, 
-        e.title AS exam_title, 
-        e.description AS exam_description,
-        e.published AS exam_published,
-        q.id AS question_id, 
-        q.content AS question_content, 
-        q.title as question_title,
-        GROUP_CONCAT(CONCAT(q.title, " - ", q.content) SEPARATOR "|<@>|") AS questions
-        FROM exam AS e
-        LEFT JOIN exam_questions AS qe ON e.id = qe.exam_id
-        LEFT JOIN question AS q ON qe.question_id = q.id
-        GROUP BY
-        e.id
-        ORDER BY e.id DESC';
-
-        if (!isset($req_method_ary['page'])) {
+        // echo "<pre>";
+        // var_dump($req_method_ary);
+        // die();
+        if (!isset($req_method_ary['page']) || ($req_method_ary['page'] <= 1)) {
             $req_method_ary['page'] = '1';
         }
         $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
-        $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
+        $results_per_page *= (int)$req_method_ary['page'];
 
-        $stmt_count = $db->query($query);
-        $numbers_of_page = count($stmt_count->fetchAll(PDO::FETCH_ASSOC));
-        $stmt = $db->query($query . " " . $limit_query);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results, 'page' => $req_method_ary['page']);
-        return $results_ary;
-    }
-
-    public function getDetailExams($req_method_ary, $results_per_page = 5)
-    {
-        $exam_id = $req_method_ary['exam_id'];
-        if (isset($req_method_ary['exam_id'])) {
-            $exam_id = $req_method_ary['exam_id'];
-        }
-
-        $db = static::getDB();
-        $query = "SELECT
-        qt.id AS question_title_id,
-        qt.title AS question_title_tile,
-        qt.description AS question_title_description,
-        q.id AS question_id,
-        q.content AS question_content,
-        GROUP_CONCAT(CONCAT(a.content, ' - ', a.is_correct) SEPARATOR '|<@>|') AS answers
-        FROM
-            exam_questions as eq
-        LEFT JOIN
-            question as q ON eq.question_id = q.id
-        LEFT JOIN
-            answer AS a ON q.id = a.question_id
-        LEFT JOIN
-            question_title as qt ON q.question_title_id = qt.id
-        WHERE 
-            eq.exam_id = $exam_id 
-        GROUP BY
-            q.id
-        ORDER BY q.id DESC ";
-
-        if (!isset($req_method_ary['page'])) {
-            $req_method_ary['page'] = '1';
-        }
-        $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
-        $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
-
-        $stmt_count = $db->query($query);
-        $numbers_of_page = count($stmt_count->fetchAll(PDO::FETCH_ASSOC));
-        $stmt = $db->query($query . " " . $limit_query);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results, 'page' => $req_method_ary['page']);
-
-        return $results_ary;
-    }
-
-    public function getExam($req_method_ary, $results_per_page = 5)
-    {
-        $where = array();
         //filter status
         if (isset($req_method_ary['status'])) {
             $currentTime = time();
             $dateTime = date("Y-m-d H:i:s", $currentTime);
             if ($req_method_ary['status'] == 1) {
-                $where[] = "(e.time_start > '$dateTime' or e.time_start IS NULL or e.published != 1)";
+                $this->where("exam.time_start", ">", $dateTime)
+                    ->orWhereNull("exam.time_start")
+                    ->orWhere("exam.published", "!=", 1);
             } else if ($req_method_ary['status'] == 2) {
-                $where[] = "(e.time_start <= '$dateTime' and e.time_end >= '$dateTime' and e.published = 1)";
+                $this->where("exam.time_start", "<=", "$dateTime")
+                    ->Where("exam.time_end", ">=", $dateTime)
+                    ->Where("exam.published", "=", 1);
             } else if ($req_method_ary['status'] == 3) {
-                $where[] = "(e.time_end < '$dateTime')";
+                $this->where("exam.time_end ", "<", $dateTime);
             }
         }
         //filter publish
         if (isset($req_method_ary['publish'])) {
             if ($req_method_ary['publish'] == 1) {
-                $where[] = "(e.published = 1)";
+                $this->where("exam.published", "=", 1);
             } else if ($req_method_ary['publish'] == 0) {
-                $where[] = "(e.published = 0)";
+                $this->where("exam.published", "=", 0);
             }
         }
         //filter search keyword
         $keyword_search = "";
         if (isset($req_method_ary['keyword'])) {
             $keyword = trim($req_method_ary['keyword']);
-
             $keywords = str_split($keyword);
             $specialChars = ["@", "#", "$", "%", "^", "&", "(", ")", "_", "+", "|", "~", "=", "`", "{", "}", "[", "]", ":", "\\", ";", "'", "<", ">", "?", ",", ".", "/", "\\", "-"];
             foreach ($keywords as $keyword) {
@@ -161,45 +129,38 @@ class Exam extends Model
                     $keyword_search .= $keyword;
                 }
             }
-
-            $where[] = ' e.title like ' . ' "%' . $keyword_search . '%" ESCAPE "\\\\"';
+            $this->whereLike("exam.title", $keyword_search);
         }
-        if (count($where) == 0) {
-            $where[] = " 1=1";
+        $this->orderBy("exam.id", "desc");
+        if (!isset($req_method_ary['status'])) {
+            $this->limit($results_per_page, $page_first_result);
         }
-        $whereClause = implode(' AND ', $where);
-        $db = static::getDB();
-        $query = 'SELECT e.id, e.title, e.description, e.published, e.uploaded_at, e.time_start, e.time_end, e.updated_at 
-                    FROM exam as e 
-                    where ' . $whereClause . '
-                    ORDER BY e.id DESC';
+        // echo "<pre>";
+        // var_dump($this);
+        // die();
+        $results = $this->get("exam.id, exam.title, exam.description, exam.published, exam.uploaded_at, exam.time_start, exam.time_end, exam.updated_at");
         $req_method_ary['page'] = isset($req_method_ary['page']) && $req_method_ary['page'] >= 1 ? $req_method_ary['page'] : '1';
-
-        $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
-        $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
-        $stmt_count = $db->query($query);
-        $numbers_of_page = count($stmt_count->fetchAll(PDO::FETCH_ASSOC));
-        $stmt = $db->query($query . " " . $limit_query);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $numbers_of_page = count($this->get());
         $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results, 'page' => $req_method_ary['page']);
 
         return $results_ary;
     }
 
-    public function getExamsWithQuestions($id = '')
-    {
-        $db = static::getDB();
-        $query = "SELECT e.id AS exam_id, e.title AS exam_title, e.description AS exam_description,
-        e.published AS exam_published,q.id AS question_id, q.content AS question_content, q.title as question_title
-                  FROM exam AS e
-                  LEFT JOIN exam_questions AS qe ON e.id = qe.exam_id
-                  LEFT JOIN question AS q ON qe.question_id = q.id";
+    // public function getExamsWithQuestions($id = '')
+    // {
+    // $db = static::getDB();
+    // $query = "SELECT e.id AS exam_id, e.title AS exam_title, e.description AS exam_description,
+    // e.published AS exam_published,q.id AS question_id, q.content AS question_content, q.title as question_title
+    //           FROM exam AS e
+    //           LEFT JOIN exam_questions AS qe ON e.id = qe.exam_id
+    //           LEFT JOIN question AS q ON qe.question_id = q.id";
 
-        $stmt = $db->query($query);
-        $results_ary = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // $stmt = $db->query($query);
+    // $results_ary = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        return $results_ary;
-    }
+    // return $results_ary;
+    // }
+
     public function rules($change = '', $value = array())
     {
         $rules_ary = array(

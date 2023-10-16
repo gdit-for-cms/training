@@ -848,7 +848,7 @@
       }
 
       .input-add-answer {
-        margin-left: 200px;
+        /* margin-left: 200px; */
       }
 
       .table-bordered {
@@ -924,6 +924,9 @@
         justify-content: space-between;
       }
       
+      .search_block{
+        display: flex;
+      }
       /* .text-ellipsis:hover {
         white-space: normal;
         overflow: visible;

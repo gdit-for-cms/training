@@ -1,9 +1,10 @@
-<?php 
+<?php
+
 namespace Core;
 
 use PDO;
 
-Trait QueryBuilder
+trait QueryBuilder
 {
     public $tableName = '';
     public $where = '';
@@ -12,7 +13,8 @@ Trait QueryBuilder
     public $limit = '';
     public $orderBy = '';
     public $innerJoin = '';
-    
+    public $groupBy = '';
+
     /**
      *
      * @param  string  $tableName
@@ -34,9 +36,9 @@ Trait QueryBuilder
      */
     public function where($column, $compare, $value)
     {
-        if(empty($this->where)){
+        if (empty($this->where)) {
             $this->operator = ' WHERE ';
-        }else {
+        } else {
             $this->operator = ' AND ';
         }
         $value = addslashes($value);
@@ -54,9 +56,9 @@ Trait QueryBuilder
      */
     public function orWhere($column, $compare, $value)
     {
-        if(empty($this->where)){
+        if (empty($this->where)) {
             $this->operator = ' WHERE ';
-        }else {
+        } else {
             $this->operator = ' OR ';
         }
         $this->where .= "$this->operator $column $compare '$value'";
@@ -72,9 +74,9 @@ Trait QueryBuilder
      */
     public function whereLike($column, $value)
     {
-        if(empty($this->where)){
+        if (empty($this->where)) {
             $this->operator = ' WHERE ';
-        }else {
+        } else {
             $this->operator = ' AND ';
         }
         $value = addslashes($value);
@@ -84,9 +86,9 @@ Trait QueryBuilder
 
     public function whereLikeWithOr($column, $value)
     {
-        if(empty($this->where)){
+        if (empty($this->where)) {
             $this->operator = ' WHERE ';
-        }else {
+        } else {
             $this->operator = ' OR ';
         }
         $value = addslashes($value);
@@ -128,9 +130,9 @@ Trait QueryBuilder
     public function orderBy($column, $direction = 'asc')
     {
         $arrColumns = array_filter(explode(',', $column));
-        if(!empty($arrColumns) && count($arrColumns) >= 2 ){
-            $this->orderBy = "ORDER BY". implode(', ', $arrColumns);
-        }else {
+        if (!empty($arrColumns) && count($arrColumns) >= 2) {
+            $this->orderBy = "ORDER BY" . implode(', ', $arrColumns);
+        } else {
             $this->orderBy = "ORDER BY" . " " . $column . " " . $direction;
         }
         return $this;
@@ -166,19 +168,20 @@ Trait QueryBuilder
     {
         $db = static::getDB();
         $this->selectColumn = $column;
-        $sqlQuery = 
-        "SELECT " . $this->selectColumn . 
-        " FROM " . $this->_table . " " .
-        $this->innerJoin . " " . 
-        $this->where . " " . 
-        $this->orderBy . " " . 
-        $this->limit;
+        $sqlQuery =
+            "SELECT " . $this->selectColumn .
+            " FROM " . $this->_table . " " .
+            $this->innerJoin . " " .
+            $this->where . " " .
+            $this->groupBy . " " .
+            $this->orderBy . " " .
+            $this->limit;
         $sqlQuery = trim($sqlQuery);
         $result = $db->query($sqlQuery);
         // Reset field
         $this->resetQuery();
 
-        if($result){
+        if ($result) {
             return $result->fetchAll(PDO::FETCH_ASSOC);
         }
         return false;
@@ -198,7 +201,7 @@ Trait QueryBuilder
         // Reset field
         $this->resetQuery();
 
-        if($result){
+        if ($result) {
             return $result->fetchAll(PDO::FETCH_ASSOC);
         }
         return false;
@@ -232,7 +235,7 @@ Trait QueryBuilder
         // Reset field
         $this->resetQuery();
 
-        if($result){
+        if ($result) {
             return $result->fetch(PDO::FETCH_ASSOC);
         }
         return false;
@@ -258,10 +261,10 @@ Trait QueryBuilder
      */
     public function join($tableName, $relationship)
     {
-        $this->innerJoin = "INNER JOIN" .$tableName. " ON " .$relationship." ";
+        $this->innerJoin .= "INNER JOIN" . $tableName . " ON " . $relationship . " ";
         return $this;
     }
-    
+
     /**
      * Execute the insert query .
      *
@@ -272,26 +275,26 @@ Trait QueryBuilder
     {
         $db = static::getDB();
         $tableName = $this->_table;
-        if(!empty($data)){
+        if (!empty($data)) {
             $columnStr = '';
             $valueStr = '';
-            foreach($data as $key => $value){
+            foreach ($data as $key => $value) {
                 $key = addslashes($key);
                 $value = addslashes($value);
-                $columnStr.= $key.',';
-                $valueStr.= "'".$value."',";
+                $columnStr .= $key . ',';
+                $valueStr .= "'" . $value . "',";
             }
             $columnStr = rtrim($columnStr, ',');
             $valueStr = rtrim($valueStr, ',');
 
-            $sqlQuery = "INSERT INTO " . $tableName . " (" . $columnStr . ")" . " VALUES " . "(" . $valueStr . ") " ;
+            $sqlQuery = "INSERT INTO " . $tableName . " (" . $columnStr . ")" . " VALUES " . "(" . $valueStr . ") ";
             $result = $db->query($sqlQuery);
 
-            if($result){
+            if ($result) {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -302,34 +305,34 @@ Trait QueryBuilder
      * @param  array|mixed  $conditions
      * @return boolean
      */
-    public function update($data , $conditions = '')
+    public function update($data, $conditions = '')
     {
         $db = static::getDB();
-        $tableName = $this->_table; 
+        $tableName = $this->_table;
 
-        if(!empty($data)){
+        if (!empty($data)) {
             $updateStr = '';
-            foreach($data as $key => $value){
+            foreach ($data as $key => $value) {
                 $key = addslashes($key);
                 $value = addslashes($value);
-                $updateStr.= "$key = '$value',";
+                $updateStr .= "$key = '$value',";
             }
             $updateStr = rtrim($updateStr, ',');
-            
-            if(!empty($conditions)){
+
+            if (!empty($conditions)) {
                 $sqlQuery = "UPDATE " . $tableName . " SET " . $updateStr . " WHERE " . $conditions;
-            }else {
-                $sqlQuery = "UPDATE " . $tableName . " SET " . $updateStr ;
+            } else {
+                $sqlQuery = "UPDATE " . $tableName . " SET " . $updateStr;
             }
             // echo $sqlQuery;
             // exit;
             $result = $db->query($sqlQuery);
 
-            if($result){
+            if ($result) {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -339,7 +342,8 @@ Trait QueryBuilder
      * @param  array|mixed  $conditions
      * @return boolean
      */
-    public function destroy($conditions){
+    public function destroy($conditions)
+    {
         $db = static::getDB();
         $tableName = $this->_table;
 
@@ -350,7 +354,7 @@ Trait QueryBuilder
         return !!$result;
     }
 
-     /**
+    /**
      * Execute the delete query (delete table).
      *
      * @return boolean
@@ -366,7 +370,7 @@ Trait QueryBuilder
 
         return !!$result;
     }
-    
+
     /**
      * Execute the query and get the last result.
      *
@@ -390,7 +394,7 @@ Trait QueryBuilder
         return false;
     }
 
-        /**
+    /**
      * Add an "and where" clause to the query.
      *
      * @param  string|array  $column
@@ -409,5 +413,36 @@ Trait QueryBuilder
         $this->where .= "$this->operator $column $compare $value";
         return $this;
     }
-}
 
+    /**
+     * Add an "group by" clause to the query.
+     *
+     * @param  string  $column
+     * @return $this
+     */
+    public function groupBy($column = 'id')
+    {
+        $this->groupBy = " GROUP BY " . $column . " ";
+        return $this;
+    }
+
+
+    /**
+     * Add an "or where null" clause to the query.
+     *
+     * @param  string|array  $column
+     * @param  mixed  $value
+     * @param  string  $compare
+     * @return $this
+     */
+    public function orWhereNull($column)
+    {
+        if (empty($this->where)) {
+            $this->operator = ' WHERE ';
+        } else {
+            $this->operator = ' OR ';
+        }
+        $this->where .= "$this->operator $column IS NULL";
+        return $this;
+    }
+}

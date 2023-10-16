@@ -42,4 +42,27 @@ class ExamQuestion extends Model
     {
         return $this->insert($data);
     }
+
+    public function getDetailExams($req_method_ary, $results_per_page = 5)
+    {
+        $exam_id = $req_method_ary['exam_id'];
+        if (!isset($req_method_ary['page'])) {
+            $req_method_ary['page'] = '1';
+        }
+        $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
+        $results = $this->join(" question as q", $this->_table . ".question_id = q.id")
+            ->join(" answer as a", "q.id = a.question_id")
+            ->join(" question_title as qt", "qt.id = q.question_title_id")
+            ->where("exam_questions.exam_id", " = ", "$exam_id")
+            ->groupBy("q.id")
+            ->orderBy("q.id")
+            ->limit($results_per_page, $page_first_result)
+            ->get("qt.id AS question_title_id, qt.title AS question_title_tile, qt.description AS question_title_description,
+                   q.id AS question_id, q.content AS question_content, GROUP_CONCAT(CONCAT(a.content, ' - ', a.is_correct) SEPARATOR '|<@>|') AS answers");
+
+        $numbers_of_page = count($results);
+        $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results, 'page' => $req_method_ary['page']);
+
+        return $results_ary;
+    }
 }

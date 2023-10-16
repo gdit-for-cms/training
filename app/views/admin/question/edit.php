@@ -45,7 +45,6 @@
                             <?php
                             }
                             ?>
-
                         </div>
                         <div class="input-add-answer">
                             <button type="button" class="btn btn-info m-2 text-white" onclick="addAnswer()">Add</button>
