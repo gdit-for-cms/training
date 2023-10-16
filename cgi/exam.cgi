@@ -79,8 +79,8 @@ my $csv = Text::CSV->new({ binary => 1 }) or die "Unable to create object CSV: "
 open my $fh_login, '<', $csv_file or die "Cannot open file $csv_file: $!";
 
 while (my $row = $csv->getline($fh_login)) {
-    my ($csv_email, $value1, $value2) = @$row;
-    $csv_data{$csv_email} = [$value1, $value2];
+    my ($csv_email, $value_random, $value1, $value2, $value_mark) = @$row;
+    $csv_data{$csv_email} = [$value_random, $value1, $value2, $value_mark];
 }
 
 $csv->eof or $csv->error_diag();
@@ -88,9 +88,9 @@ close $fh_login;
 
 # Check if $email exists in the object and make changes if necessary
 if (exists $csv_data{$email}) {
-    if ($csv_data{$email}[0] == 1 && $csv_data{$email}[1] == 2) {
-        $csv_data{$email}[0] = 0;
-        $csv_data{$email}[1] = 2;
+    if ($csv_data{$email}[1] == 1 && $csv_data{$email}[2] == 2) {
+        $csv_data{$email}[1] = 0;
+        $csv_data{$email}[2] = 2;
         
         # Record data to a CSV file
         open my $output_fh, '>', $csv_file or die "Cannot open file $csv_file: $!";

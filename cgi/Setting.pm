@@ -16,6 +16,9 @@ our $SAVE_TIME = 'save_time/';
 # Path to the file containing the answer
 our $CSV = 'csv';
 
+# Path to the file containing the answer
+our $LOAD_EXAM = 'load_exam/';
+
 # Time to take the test
 our $TIME_TEST = 630; #seconds
 

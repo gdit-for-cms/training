@@ -163,11 +163,11 @@ if (btn_login) {
         } else {
             var id = localStorage.getItem('id')
             email_login.value = value_email
-
             var data = {
                 email   : value_email,
                 id      : id,
                 code    : code[1],
+                random  : random,
             }
 
             $.ajax({
@@ -304,11 +304,11 @@ function error_login(number) {
             <h6>You have completed the test.</h6>
             <h6>Please check your email to see the results.</h6>
         `
-    } else if (number == 2){
+    } else if (number == 2) {
         message = `<h6>Email does not exist in the system!</h6>`
-    } else if (number == -1){
+    } else if (number == -1) {
         message = `<h6>Something is wrong, Please access the LINK we sent you again!</h6>`
-    } else if (number == 4){
+    } else if (number == 4) {
         message = `
             <h6>Your exam time is over.</h6>
             <h6>We've noticed that you've left the test site and can't access it again.</h6>
@@ -316,6 +316,11 @@ function error_login(number) {
             <h6>Wish you luck next time!</h6>
         `
         handle_error()
+    } else if (number == 5) {
+        message = `
+            <h6>The link you have accessed is incorrect.</h6?
+            <h6> Please access the correct link we sent you!</h6?
+        `
     }
 
     modal_login(message, 1)
