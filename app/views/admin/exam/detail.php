@@ -232,28 +232,27 @@
                                 <ul class="paginations">
                                     <?php
                                     $next = $page;
-                                    if ($page <= $numbers_of_page) {
+                                    if ($page <= $numbers_of_page  && isset($exam_details[0]['question_content'])) {
                                     ?>
 
                                         <?php
                                         if ($page > 1) {
                                         ?>
-                                            <li class="page-item cursor-pointer"><a href="/admin/exam/examDetail?exam_id=<?php echo $exam['id']; ?>&page=1" class="page-link">
+                                            <li class=" cursor-pointer"><a href="/admin/exam/examDetail?exam_id=<?php echo $exam['id']; ?>&page=1" class="page-link">
                                                     << </a>
                                             </li>
-                                            <li class=" page-item cursor-pointer"><a href="/admin/exam/examDetail?exam_id=<?php echo $exam['id']; ?>&page=<?php $page--;
-                                                                                                                                                            echo $page; ?>" class="page-link">Previous</a></li>
+                                            <li class="  cursor-pointer"><a href="/admin/exam/examDetail?exam_id=<?php echo $exam['id']; ?>&page=<?php $page--;
+                                                                                                                                                    echo $page; ?>" class="page-link">Previous</a></li>
                                         <?php
                                         }
                                         ?>
                                         <?php for ($i = 1; $i <= $numbers_of_page; $i++) { ?>
-                                            <li class="page-item cursor-pointer"><a style="<?php if ($next == $i) { ?>background-color: rgb(197, 197, 197)<?php } ?>;" href="/admin/exam/examDetail?exam_id=<?php echo $exam['id']; ?>&page=<?php echo $i; ?>" class="page-link"><?= $i ?></a></li>
+                                            <li class=" cursor-pointer"><a style="<?php if ($next == $i) { ?>background-color: rgb(197, 197, 197)<?php } ?>;" href="/admin/exam/examDetail?exam_id=<?php echo $exam['id']; ?>&page=<?php echo $i; ?>" class="page-link"><?= $i ?></a></li>
                                         <?php }
                                         if ($next < $numbers_of_page) {
                                         ?>
-                                            <li class="page-item cursor-pointer"><a href="/admin/exam/examDetail?exam_id=<?php echo $exam['id']; ?>&page=<?php echo $next += 1; ?>" class="page-link">Next</a></li>
-                                            <li class="page-item cursor-pointer"><a href="/admin/exam/examDetail?exam_id=<?php echo $exam['id']; ?>&page=<?php echo $numbers_of_page < 1 ? 1 : $numbers_of_page; ?>" class="page-link">>></a></li>
-
+                                            <li class=" cursor-pointer"><a href="/admin/exam/examDetail?exam_id=<?php echo $exam['id']; ?>&page=<?php echo $next += 1; ?>" class="page-link">Next</a></li>
+                                            <li class=" cursor-pointer"><a href="/admin/exam/examDetail?exam_id=<?php echo $exam['id']; ?>&page=<?php echo $numbers_of_page < 1 ? 1 : $numbers_of_page; ?>" class="page-link">>></a></li>
                                         <?php
                                         }
                                         ?>
@@ -285,7 +284,7 @@
         });
     });
     //end coply link
-    const paginationContainer = document.getElementById("paginations");
+    // const paginationContainer = document.getElementById("paginations");
     selectAll()
 
     function updateSelectedValues() {

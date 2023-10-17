@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Core\Model;
 use Core\QueryBuilder;
-use PDO;
 
 /**
  * Example user model
@@ -42,46 +41,9 @@ class Exam extends Model
         return $this->where($column, $operator, $value)->get();
     }
 
-    // public function getAllRelation($req_method_ary, $results_per_page = 1)
-    // {
-    //     $db = static::getDB();
-
-    //     $query = 'SELECT 
-    //     e.id AS exam_id, 
-    //     e.title AS exam_title, 
-    //     e.description AS exam_description,
-    //     e.published AS exam_published,
-    //     q.id AS question_id, 
-    //     q.content AS question_content, 
-    //     q.title as question_title,
-    //     GROUP_CONCAT(CONCAT(q.title, " - ", q.content) SEPARATOR "|<@>|") AS questions
-    //     FROM exam AS e
-    //     LEFT JOIN exam_questions AS qe ON e.id = qe.exam_id
-    //     LEFT JOIN question AS q ON qe.question_id = q.id
-    //     GROUP BY
-    //     e.id
-    //     ORDER BY e.id DESC';
-
-    //     if (!isset($req_method_ary['page'])) {
-    //         $req_method_ary['page'] = '1';
-    //     }
-    //     $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
-    //     $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
-
-    //     $stmt_count = $db->query($query);
-    //     $numbers_of_page = count($stmt_count->fetchAll(PDO::FETCH_ASSOC));
-    //     $stmt = $db->query($query . " " . $limit_query);
-    //     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    //     $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results, 'page' => $req_method_ary['page']);
-    //     return $results_ary;
-    // }
-
     public function getExam($req_method_ary, $results_per_page)
     {
 
-        // echo "<pre>";
-        // var_dump($req_method_ary);
-        // die();
         if (!isset($req_method_ary['page']) || ($req_method_ary['page'] <= 1)) {
             $req_method_ary['page'] = '1';
         }
@@ -135,9 +97,6 @@ class Exam extends Model
         if (!isset($req_method_ary['status'])) {
             $this->limit($results_per_page, $page_first_result);
         }
-        // echo "<pre>";
-        // var_dump($this);
-        // die();
         $results = $this->get("exam.id, exam.title, exam.description, exam.published, exam.uploaded_at, exam.time_start, exam.time_end, exam.updated_at");
         $req_method_ary['page'] = isset($req_method_ary['page']) && $req_method_ary['page'] >= 1 ? $req_method_ary['page'] : '1';
         $numbers_of_page = count($this->get());
@@ -145,21 +104,6 @@ class Exam extends Model
 
         return $results_ary;
     }
-
-    // public function getExamsWithQuestions($id = '')
-    // {
-    // $db = static::getDB();
-    // $query = "SELECT e.id AS exam_id, e.title AS exam_title, e.description AS exam_description,
-    // e.published AS exam_published,q.id AS question_id, q.content AS question_content, q.title as question_title
-    //           FROM exam AS e
-    //           LEFT JOIN exam_questions AS qe ON e.id = qe.exam_id
-    //           LEFT JOIN question AS q ON qe.question_id = q.id";
-
-    // $stmt = $db->query($query);
-    // $results_ary = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // return $results_ary;
-    // }
 
     public function rules($change = '', $value = array())
     {

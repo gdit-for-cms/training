@@ -25,10 +25,9 @@
         <div class="main-title2 flex items-center justify-between">
             <h4 class="mb-2 nowrap">Question list</h4>
         </div>
-
         <div class="white_card_body">
             <div class="input-button-group">
-                <a href='/admin/question/new?ques-title=<?php echo isset($question_titles[0]['question_title_id']) ? $question_titles[0]['question_title_id'] : "other"; ?>'><button type="button" class="btn btn-success mb-3">Add question</button></a>
+                <a href='/admin/question/new?ques-title=<?php echo isset($question_title['id']) ? $question_title['id'] : "other"; ?>'><button type="button" class="btn btn-success mb-3">Add question</button></a>
                 <button type="button" data-path="question" data-id="select" class="btn btn-danger text-white btn-delete-select-all btn-delete-select" style="display: none;">Delete</button>
             </div>
             <div class="default-according" id="accordion2">

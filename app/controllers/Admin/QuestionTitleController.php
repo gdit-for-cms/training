@@ -85,16 +85,16 @@ class QuestionTitleController extends  AppController
     public function editAction(Request $request)
     {
         $id = $request->getGet()->get('ques-title');
-        $this->data_ary['question_title'] =  $this->obj_model_question->getById($id, 'id, content');
-        $req_method_ary = $request->getGet()->all();
-        $req_method_ary['question_id'] = $id;
-        $results_per_page = 10;
-        $results_ary = $this->obj_model_question->getAllRelation($req_method_ary, $results_per_page);
-        $this->data_ary['question_titles'] = $results_ary['results'];
-        $numbers_of_result = $results_ary['numbers_of_page'];
-        $numbers_of_page = ceil($numbers_of_result / $results_per_page);
-        $this->data_ary['numbers_of_page'] = $numbers_of_page;
-        $this->data_ary['page'] = (float)$results_ary['page'];
+        // $this->data_ary['question_title'] =  $this->obj_model_question->getById($id, 'id, content');
+        // $req_method_ary = $request->getGet()->all();
+        // $req_method_ary['question_id'] = $id;
+        // $results_per_page = 10;
+        // $results_ary = $this->obj_model->getAllRelation($req_method_ary, $results_per_page);
+        // $this->data_ary['question_titles'] = $results_ary['results'];
+        // $numbers_of_result = $results_ary['numbers_of_page'];
+        // $numbers_of_page = ceil($numbers_of_result / $results_per_page);
+        // $this->data_ary['numbers_of_page'] = $numbers_of_page;
+        // $this->data_ary['page'] = (float)$results_ary['page'];
         $this->data_ary['question_title'] = $this->obj_model->getById($id, "id,title,description");
         $this->data_ary['content'] = 'question_title/edit';
     }

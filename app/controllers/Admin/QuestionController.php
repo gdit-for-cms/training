@@ -278,12 +278,13 @@ class QuestionController extends  AppController
     {
         $req_method_ary = $request->getGet()->all();
         $results_per_page = 5;
+
         if ($req_method_ary['question_id'] == "other") {
             $results_ary = $this->obj_model->getQuestionOther($req_method_ary, $results_per_page);
         } else {
-            $results_ary = $this->obj_model->getAllRelation($req_method_ary, $results_per_page);
+            $results_ary = $this->obj_model_question_title->getAllRelation($req_method_ary, $results_per_page);
             $question_title_id = $req_method_ary['question_id'];
-            $this->data_ary['question_title'] = $this->obj_model_question_title->getById($question_title_id, "title,description");
+            $this->data_ary['question_title'] = $this->obj_model_question_title->getById($question_title_id, "id,title,description");
         }
         $this->data_ary['question_titles'] = $results_ary['results'];
         $numbers_of_result = $results_ary['numbers_of_page'];

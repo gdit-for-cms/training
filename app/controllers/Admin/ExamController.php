@@ -79,15 +79,17 @@ class ExamController extends AppController
         $req_method_ary = $request->getGet()->all();
         $req_method_ary['exam_id'] = $exam_id;
         $results_per_page = 5;
-        $results_ary = $this->obj_model_exam_question->getDetailExams($req_method_ary, $results_per_page);
+        $results_ary = $this->obj_model_exam_question->getExamQuestion($req_method_ary, $results_per_page);
         $this->data_ary['exam_details'] = $results_ary['results'];
         $this->data_ary['exam'] = $exam;
 
+        //pagination
         $numbers_of_result = $results_ary['numbers_of_page'];
         $numbers_of_page = ceil($numbers_of_result / $results_per_page);
         $this->data_ary['numbers_of_page'] = $numbers_of_page;
         $this->data_ary['page'] = (float)$results_ary['page'];
 
+        //get info user
         $emails = $this->obj_model_exam_participant->getBy("exam_id", '=', $exam_id);
         $this->data_ary['emails'] = $emails;
         $this->data_ary['user'] = $user;
@@ -152,7 +154,7 @@ class ExamController extends AppController
             }
         }
         try {
-            $this->obj_model->beginTransaction();
+            // $this->obj_model->beginTransaction();
             $data = [
                 'user_id' => $user_id,
                 'title' => $title,
@@ -200,7 +202,7 @@ class ExamController extends AppController
                     $stt_email++;
                 }
             }
-            $this->obj_model->commitTransaction();
+            // $this->obj_model->commitTransaction();
             return $this->successResponse();
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
@@ -393,7 +395,7 @@ class ExamController extends AppController
         $req_method_ary = $request->getGet()->all();
         $req_method_ary['exam_id'] = $exam_id;
         $results_per_page = 5;
-        $results_ary = $this->obj_model->getDetailExams($req_method_ary, $results_per_page);
+        $results_ary = $this->obj_model_exam_question->getExamQuestion($req_method_ary, $results_per_page);
         $this->data_ary['exam_details'] = $results_ary['results'];
 
         $numbers_of_result = $results_ary['numbers_of_page'];
@@ -426,10 +428,6 @@ class ExamController extends AppController
         $date_end = $post_ary['date_end'];
         $check_time = false;
 
-
-
-        // $question_check_ary = $this->obj_model->whereMultiple($condition);
-
         if ((!empty($date_start) && empty($date_end)) || (empty($date_start) && !empty($date_end))) {
             return $this->errorResponse("Please fil out this field time");
         }
@@ -447,7 +445,7 @@ class ExamController extends AppController
             return $this->errorResponse('Exam has been exist');
         }
         try {
-            $this->obj_model->beginTransaction();
+            // $this->obj_model->beginTransaction();
             $data = [
                 'title' => $title,
                 'description' => $description,
@@ -515,7 +513,7 @@ class ExamController extends AppController
                 }
             }
 
-            $this->obj_model->commitTransaction();
+            // $this->obj_model->commitTransaction();
 
             return $this->successResponse();
         } catch (\Throwable $th) {
@@ -537,6 +535,7 @@ class ExamController extends AppController
         header('Location:/admin/exam/index');
         exit;
     }
+
     public function deleteAction(Request $request)
     {
         $exam_id = $request->getGet()->get('id');
@@ -557,40 +556,40 @@ class ExamController extends AppController
         $this->obj_model_exam_question->destroyBy("question_id = $question_id and exam_id = $exam_id");
     }
 
-    public function editDetailExamAction(Request $request)
-    {
-        $post_ary = $request->getPost();
-        $exam_id =  $post_ary->get('exam_id');
-        $question_id =  $post_ary->get('question_id');
-        $answer_ids =  $post_ary->get('selected_answer');
-        $this->obj_model_exam_question->destroyBy('question_id' . '=' . $question_id . ' and ' . 'exam_id' . '=' . $exam_id);
-        try {
-            $this->obj_model->beginTransaction();
+    // public function editDetailExamAction(Request $request)
+    // {
+    //     $post_ary = $request->getPost();
+    //     $exam_id =  $post_ary->get('exam_id');
+    //     $question_id =  $post_ary->get('question_id');
+    //     $answer_ids =  $post_ary->get('selected_answer');
+    //     $this->obj_model_exam_question->destroyBy('question_id' . '=' . $question_id . ' and ' . 'exam_id' . '=' . $exam_id);
+    //     try {
+    //         $this->obj_model->beginTransaction();
 
-            foreach ($answer_ids as $answer_id) {
-                $this->obj_model_exam_question->insert([
-                    'exam_id' => $exam_id,
-                    'answer_id' => $answer_id,
-                    'question_id' => $question_id
-                ]);
-            }
-            $id = $post_ary['id'];
-            $title = $post_ary['title'];
-            $description = $post_ary['description'];
-            $this->obj_model->updateOne(
-                [
-                    'title' => $title,
-                    'description' => $description,
-                ],
-                "id = $id"
-            );
-            $this->obj_model->commitTransaction();
+    //         foreach ($answer_ids as $answer_id) {
+    //             $this->obj_model_exam_question->insert([
+    //                 'exam_id' => $exam_id,
+    //                 'answer_id' => $answer_id,
+    //                 'question_id' => $question_id
+    //             ]);
+    //         }
+    //         $id = $post_ary['id'];
+    //         $title = $post_ary['title'];
+    //         $description = $post_ary['description'];
+    //         $this->obj_model->updateOne(
+    //             [
+    //                 'title' => $title,
+    //                 'description' => $description,
+    //             ],
+    //             "id = $id"
+    //         );
+    //         $this->obj_model->commitTransaction();
 
-            return $this->successResponse();
-        } catch (\Throwable $th) {
-            return $this->errorResponse($th->getMessage());
-        };
-    }
+    //         return $this->successResponse();
+    //     } catch (\Throwable $th) {
+    //         return $this->errorResponse($th->getMessage());
+    //     };
+    // }
 
     public function responseShowRule($status, $result = [])
     {

@@ -426,7 +426,6 @@ trait QueryBuilder
         return $this;
     }
 
-
     /**
      * Add an "or where null" clause to the query.
      *
@@ -443,6 +442,60 @@ trait QueryBuilder
             $this->operator = ' OR ';
         }
         $this->where .= "$this->operator $column IS NULL";
+        return $this;
+    }
+
+    /**
+     * Add a "where not in subquery" clause to the query.
+     *
+     * @param string $column
+     * @param string $anotherTable
+     * @param string $subquery
+     * @return $this
+     */
+    public function whereNotInSubquery($column, $anotherTable, $anotherColumn, $subquery)
+    {
+        if (empty($this->where)) {
+            $this->operator = ' WHERE ';
+        } else {
+            $this->operator = ' AND ';
+        }
+
+        $this->where .= "$this->operator ($column) NOT IN (SELECT $anotherColumn FROM $anotherTable WHERE $subquery)";
+        return $this;
+    }
+
+    /**
+     * Add a "where like" clause to the query with special character escaping.
+     *
+     * @param  string|array  $column
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function whereLikeWithSpecialCharEscape($column, $value)
+    {
+        if (empty($this->where)) {
+            $this->operator = ' WHERE ';
+        } else {
+            $this->operator = ' AND ';
+        }
+
+        $keyword_search = "";
+        $keywords = str_split($value);
+        $specialChars = ["@", "#", "$", "%", "^", "&", "(", ")", "_", "+", "|", "~", "=", "`", "{", "}", "[", "]", ":", "\\", ";", "'", "<", ">", "?", ",", ".", "/", "\\", "-"];
+        foreach ($keywords as $keyword) {
+            if (in_array($keyword, $specialChars)) {
+                if ($keyword == "\\") {
+                    $keyword_search .= "\\\\" . $keyword;
+                } else {
+                    $keyword_search .= "\\" . $keyword;
+                }
+            } else {
+                $keyword_search .= $keyword;
+            }
+        }
+
+        $this->where .= "$this->operator $column LIKE '%$keyword_search%' ESCAPE '\\\\'";
         return $this;
     }
 }

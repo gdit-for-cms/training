@@ -107,114 +107,52 @@ class Question extends Model
         return $this->destroy($condition);
     }
 
-    public function getAllRelation($req_method_ary, $results_per_page = 5)
-    {
-        $db = static::getDB();
-        $query = "SELECT
-        qt.id AS question_title_id,
-        qt.title AS question_title_title,
-        qt.description AS question_title_description,
-        q.content AS question_content,
-        a.is_correct AS answer_correct,
-        q.id AS question_id,
-        -- GROUP_CONCAT(CONCAT(a.is_correct, ' - ', a.content)) AS answers
-        GROUP_CONCAT(CONCAT(a.is_correct, ' - ', a.content) SEPARATOR '|<@>|') AS answers
-        FROM
-            question_title AS qt
-        LEFT JOIN
-            question AS q ON qt.id = q.question_title_id
-        LEFT JOIN
-            answer AS a ON q.id = a.question_id
-        WHERE 
-            qt.id = $req_method_ary[question_id]
-        GROUP BY
-            qt.id, qt.title, qt.description, q.content
-        ORDER BY
-            question_title_id DESC";
-
-        if (!isset($req_method_ary['page'])) {
-            $req_method_ary['page'] = '1';
-        }
-        if ($req_method_ary['page'] < 1) {
-            $req_method_ary['page'] = '1';
-        }
-        $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
-        $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
-        $stmt_count = $db->query($query);
-        $numbers_of_page = count($stmt_count->fetchAll(PDO::FETCH_ASSOC));
-        $stmt = $db->query($query . " " . $limit_query);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results, 'page' => $req_method_ary['page']);
-        return $results_ary;
-    }
-
     public function getQuestionOther($req_method_ary, $results_per_page = 5)
     {
-        $db = static::getDB();
-        $query = "SELECT
-            q.content AS question_content,
-            a.is_correct AS answer_correct,
-            q.id AS question_id,
-            GROUP_CONCAT(CONCAT(a.is_correct, ' - ', a.content) SEPARATOR '|<@>|') AS answers
-        FROM
-            question AS q 
-        LEFT JOIN
-            answer AS a ON q.id = a.question_id
-        WHERE 
-            q.question_title_id is null
-        GROUP BY
-             q.content
-        ORDER BY
-            q.id DESC";
-        if (!isset($req_method_ary['page'])) {
-            $req_method_ary['page'] = '1';
-        }
-        if ($req_method_ary['page'] < 1) {
+        if (!isset($req_method_ary['page']) || $req_method_ary['page'] < 1) {
             $req_method_ary['page'] = '1';
         }
         $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
-        $limit_query = 'LIMIT ' . $page_first_result . ',' . $results_per_page;
-        $stmt_count = $db->query($query);
-        $numbers_of_page = count($stmt_count->fetchAll(PDO::FETCH_ASSOC));
-        $stmt = $db->query($query . " " . $limit_query);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results, 'page' => $req_method_ary['page']);
-
-        return $results_ary;
+        $results = $this->join(" answer AS a", "question.id = a.question_id")
+            ->orWhereNull(" question.question_title_id")
+            ->groupBy("question.content")
+            ->orderBy("question.id", "desc")
+            ->limit($results_per_page, $page_first_result)
+            ->get(
+                "question.content AS question_content,
+                     a.is_correct AS answer_correct,
+                     question.id AS question_id,
+                     GROUP_CONCAT(CONCAT(a.is_correct, ' - ', a.content) SEPARATOR '|<@>|') AS answers
+                "
+            );
+        $numbers_of_page = count($this->join(" answer AS a", "question.id = a.question_id")
+            ->orWhereNull(" question.question_title_id")
+            ->groupBy("question.content")->get("question.id"));
+        return array(
+            'numbers_of_page' => $numbers_of_page,
+            'results' => $results,
+            'page' => $req_method_ary['page']
+        );
     }
 
     public function getQuestionAnswer($req_method_ary, $results_per_page = 5)
     {
         $exam_id = $req_method_ary['exam_id'];
-
-        $where = "WHERE q.question_title_id = $req_method_ary[id]";
-        if ($req_method_ary['id'] == "orther") {
-            $where = "WHERE q.question_title_id is null";
+        if ($req_method_ary['id'] == "other") {
+            $this->orWhereNull("question.question_title_id");
+        } else {
+            $this->where("question.question_title_id", " = ", $req_method_ary['id']);
         }
-        $db = static::getDB();
-        $query = "SELECT
-        
-        q.id AS question_id,
-        q.content AS question_content,
-        a.is_correct AS answer_correct,
-        GROUP_CONCAT(CONCAT(a.is_correct, ' - ', a.content, ' - ', a.id) SEPARATOR '|<@>|') AS answers
-        FROM
-            question AS q
-        LEFT JOIN
-            answer AS a ON q.id = a.question_id
-       $where
-            AND (q.id, a.id) NOT IN (
-                SELECT question_id, answer_id
-                FROM exam_questions as eq
-                Where eq.exam_id = $exam_id
-            )
-        GROUP BY
-            q.content
-        ORDER BY
-            question_title_id DESC";
-
-        $stmt = $db->query($query);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results = $this->join(" answer AS a", "a.question_id = question.id")
+            ->whereNotInSubquery("question.id, a.id", "exam_questions as eq", "eq.question_id, eq.answer_id", "eq.exam_id = $exam_id")
+            ->groupBy("question.content")
+            ->orderBy("question.question_title_id", "DESC")
+            ->get("
+                    question.id AS question_id,
+                    question.content AS question_content,
+                    a.is_correct AS answer_correct,
+                    GROUP_CONCAT(CONCAT(a.is_correct, ' - ', a.content, ' - ', a.id) SEPARATOR '|<@>|') AS answers
+                ");
         return $results;
     }
 

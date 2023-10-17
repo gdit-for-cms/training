@@ -10,7 +10,7 @@
                         <!-- <span>3</span> -->
                     </li>
                 <?php } ?>
-                <li class="border has-arrow mb-1 collection_hover cursor-pointer" onclick="getQuestion('orther')">
+                <li class="border has-arrow mb-1 collection_hover cursor-pointer" onclick="getQuestion('other')">
                     <button type="button" class="text-left">
                         Other
                     </button>

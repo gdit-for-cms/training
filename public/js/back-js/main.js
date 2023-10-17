@@ -1138,7 +1138,7 @@ function searchAjax() {
                 let result = response.result.results;
                 const directory = response.result.directory;
                 let resultHTML = '';
-                let stt = 1;
+                let stt = 2;
 
                 for (let i = 0; i < result.length; i++) {
                     // console.log(result[i]['title']);
