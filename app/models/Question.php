@@ -33,22 +33,14 @@ class Question extends Model
         return $this->where($column, $operator, $value)->get();
     }
 
-    public function whereMultiple(array $conditions)
+    public function getQuestion($question_title_id, $content)
     {
-        $query = "";
-
-        foreach ($conditions as $condition) {
-            [$column, $operator, $value] = $condition;
-            $value = addslashes($value);
-
-            if (empty($query)) {
-                $query = $this->where($column, $operator, $value);
-            } else {
-                $query = $this->andWhere($column, $operator, $value);
-            }
+        if ($question_title_id == null) {
+            $this->orWhereNull("question_title_id");
+        } else {
+            $this->where("question_title_id", "=", $question_title_id);
         }
-
-        return $query->get();
+        return $this->whereLike("content", $content)->get();
     }
 
     public function getById($id, $column = '*')
@@ -158,11 +150,30 @@ class Question extends Model
 
     function beginTransaction()
     {
-        return $this->getDB()->beginTransaction();
+        $db = static::getDB();
+        return $db->beginTransaction();
     }
 
     function commitTransaction()
     {
-        return $this->getDB()->commit();
+        $db = static::getDB();
+        return $db->commit();
     }
+
+    function rollBackTransaction()
+    {
+        $db = static::getDB();
+        return $db->rollBack();
+    }
+    // function checkTransaction()
+    // {
+    //     $db = static::getDB();
+
+    //     // Kiểm tra xem giao dịch đang hoạt động
+    //     if ($db->inTransaction()) {
+    //         echo "Giao dịch đang hoạt động.";
+    //     } else {
+    //         echo "Không có giao dịch nào đang hoạt động.";
+    //     }
+    // }
 }

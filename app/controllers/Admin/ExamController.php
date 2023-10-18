@@ -29,7 +29,7 @@ class ExamController extends AppController
 
     public object $obj_model_exam_question;
 
-    public object $obj_modal_answer;
+    public object $obj_model_answer;
 
     public object $app_request;
 
@@ -44,7 +44,7 @@ class ExamController extends AppController
         $this->obj_model = new Exam;
         $this->obj_model_question = new Question;
         $this->obj_model_exam_question = new ExamQuestion;
-        $this->obj_modal_answer = new Answer;
+        $this->obj_model_answer = new Answer;
         $this->app_request = new AppRequest;
         $this->obj_model_exam_participant = new ExamParticipant;
         $this->obj_model_question_title = new QuestionTitle;
@@ -54,13 +54,13 @@ class ExamController extends AppController
     public function indexAction(Request $request)
     {
         $req_method_ary = $request->getGet()->all();
-        //pagination
-        // $results_per_page = 10;
         $results_ary = $this->obj_model->getExam($req_method_ary, $results_per_page = 10);
+        //pagination
         $numbers_of_result = $results_ary['numbers_of_page'];
         $numbers_of_page = ceil($numbers_of_result / $results_per_page);
         $this->data_ary['numbers_of_page'] = $numbers_of_page;
-        $this->data_ary['page'] = (float)$results_ary['page'];
+        $this->data_ary['page'] = $results_ary['page'];
+
         $this->data_ary['exams'] = $results_ary['results'];
         $this->data_ary['content'] = 'exam/index';
     }
@@ -72,14 +72,12 @@ class ExamController extends AppController
 
     public function examDetailAction(Request $request)
     {
-        $exam_id = $request->getGet()->get('exam_id');
-        $exam =  $this->obj_model->getById($exam_id);
-        $user = $this->obj_model_user->getById($exam['user_id']);
-
         $req_method_ary = $request->getGet()->all();
+
+        $exam_id = $req_method_ary['exam_id'];
+        $exam =  $this->obj_model->getById($exam_id);
         $req_method_ary['exam_id'] = $exam_id;
-        $results_per_page = 5;
-        $results_ary = $this->obj_model_exam_question->getExamQuestion($req_method_ary, $results_per_page);
+        $results_ary = $this->obj_model_exam_question->getExamQuestion($req_method_ary, $results_per_page = 5);
         $this->data_ary['exam_details'] = $results_ary['results'];
         $this->data_ary['exam'] = $exam;
 
@@ -89,11 +87,11 @@ class ExamController extends AppController
         $this->data_ary['numbers_of_page'] = $numbers_of_page;
         $this->data_ary['page'] = (float)$results_ary['page'];
 
-        //get info user
-        $emails = $this->obj_model_exam_participant->getBy("exam_id", '=', $exam_id);
-        $this->data_ary['emails'] = $emails;
-        $this->data_ary['user'] = $user;
+        //get info User and Participants
+        $this->data_ary['emails'] =  $this->obj_model_exam_participant->getBy("exam_id", '=', $exam_id);
+        $this->data_ary['user'] = $this->obj_model_user->getById($exam['user_id']);
 
+        //get link do exam for Participants 
         $file = '';
         $html_directory =  Config::FTP_PUBLIC_DIRECTORY_HTML;
         $csv_directory = Config::FTP_PUBLIC_DIRECTORY_CSV;
@@ -104,93 +102,140 @@ class ExamController extends AppController
 
         $this->data_ary['content'] = 'exam/detail';
     }
-    public function checkHasEmail($data)
+
+    public function checkEmail($emails)
     {
-        if (!isset($data['email'])) {
-            return false;
+        $stt_email = 1;
+        $arr_check_email = array();
+        $errors = "";
+        foreach ($emails as $email) {
+            $email = trim($email);
+            if ($email == "") {
+                $errors = "Email field must be filled out";
+                break;
+            }
+            if (!email($email)) {
+                $errors = "Email number " . $stt_email . " is not in the correct format";
+                break;
+            }
+            if (in_array($email, $arr_check_email)) {
+                $errors = "Email number " . $stt_email . " was duplicated";
+                break;
+            }
+            $stt_email++;
+            array_push($arr_check_email, trim($email));
         }
-        return true;
+        return $errors;
+    }
+
+    // //Check the start time and end time against the current time
+    // public function checkTimeExam($time_start, $time_end)
+    // {
+    //     $errors = array();
+    //     if ((!empty($time_start) && empty($time_end)) || (empty($time_start) && !empty($time_end))) {
+    //         $errors[] = "Please fil out this field time";
+    //     }
+    //     if (!empty($time_start) && !empty($time_end)) {
+    //         if (strtotime($time_start) < time()) {
+    //             $errors[] = "Time start must be greater than or equal to the current time";
+    //         }
+    //         if (strtotime($time_start) >= strtotime($time_end)) {
+    //             $errors[] = "Time start must be less than the end time!";
+    //         }
+    //     }
+    //     if (!empty($errors)) {
+    //         return array_shift($errors);
+    //     }
+    //     return false;
+    // }
+    public function checkTimeExam($time_start, $time_end)
+    {
+        $conditions = [
+            // Kiểm tra điều kiện 1: Không được bỏ trống cả hai trường hoặc không điền cả hai trường
+            'BothFieldsFilled' => !((empty($time_start) && empty($time_end)) || (!empty($time_start) && !empty($time_end))),
+
+            // Kiểm tra điều kiện 2: Thời gian bắt đầu phải lớn hơn hoặc bằng thời gian hiện tại
+            'StartTime' => empty($time_start) || strtotime($time_start) >= time(),
+
+            // Kiểm tra điều kiện 3: Thời gian bắt đầu phải nhỏ hơn thời gian kết thúc
+            'StartTimeEndTime' => empty($time_start) || empty($time_end) || strtotime($time_start) < strtotime($time_end)
+        ];
+
+        foreach ($conditions as $errorKey => $condition) {
+            if (!$condition) {
+                return $this->errorResponse($this->getErrorMessage($errorKey));
+            }
+        }
+
+        return null;
+    }
+
+    public function getErrorMessage($errorKey)
+    {
+        $errorMessages = [
+            'BothFieldsFilled' => "Please fill out both time fields",
+            'StartTime' => "Time start must be greater than or equal to the current time",
+            'StartTimeEndTime' => "Time start must be less than the end time"
+        ];
+
+        return $errorMessages[$errorKey] ?? "Unknown error";
     }
 
     public function create(Request $request)
     {
+        //validate
         $result_vali_ary = $this->app_request->validate($this->obj_model->rules(), $request, 'post');
-        //check has email
-        $req_method_ary = $request->getPost()->all();
-        $check_has_mail = $this->checkHasEmail($req_method_ary);
-
         if (in_array('error', $result_vali_ary)) {
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
+
             return $this->errorResponse($message_error);
+        }
+
+        $req_method_ary = $request->getPost()->all();
+        // check email 
+        if (isset($req_method_ary['email'])) {
+            return $this->errorResponse($this->checkEmail($req_method_ary['email']));
+        }
+        if (count($this->obj_model->getBy("title", "=", $result_vali_ary['title'])) > 0) {
+            return $this->errorResponse("Exam collection has been exist");
         }
 
         $user_id = $result_vali_ary['user_id'];
         $title = trim($result_vali_ary['title']);
         $description = $result_vali_ary['description'];
-        $date_start = $result_vali_ary['date_start'];
-        $date_end = $result_vali_ary['date_end'];
+        $time_start = $result_vali_ary['date_start'];
+        $time_end = $result_vali_ary['date_end'];
 
-        //check time start and time end
-        $check_time = false;
-        if ((!empty($date_start) && empty($date_end)) || (empty($date_start) && !empty($date_end))) {
-            return $this->errorResponse("Please fil out this field time");
+        //data exam
+        $data = [
+            'user_id' => $user_id,
+            'title' => $title,
+            'description' => $description,
+        ];
+        // echo time();
+        // $check_time = $this->checkTimeExam($time_start, $time_end);
+        $check_time = $this->checkTimeExam($time_start, $time_end);
+        
+        if ($this->checkTimeExam($time_start, $time_end) > 0) {
+            $data = [
+                'time_start' => $time_start,
+                'time_end' => $time_end
+            ];
         }
-        $current_time = time();
-        if (!empty($date_start) && !empty($date_end)) {
-            if (strtotime($date_start) < $current_time) {
-                return $this->errorResponse("Time start must be greater than or equal to the current time");
-            }
-            if (strtotime($date_start) >= strtotime($date_end)) {
-                return $this->errorResponse("Time start must be less than the end time!");
-            }
-            $check_time = true;
-        }
-        //end check time start and time end
-        $question_titles = $this->obj_model->getAll();
-        foreach ($question_titles as $question_title) {
-            $check_exam = strcasecmp($question_title['title'], $title);
-            if ($check_exam == 0) {
-                return $this->errorResponse('Exam collection has been exist');
-            }
-        }
+
         try {
             // $this->obj_model->beginTransaction();
-            $data = [
-                'user_id' => $user_id,
-                'title' => $title,
-                'description' => $description,
-            ];
-
-            if ($check_time) {
-                $data['time_start'] = $date_start;
-                $data['time_end'] = $date_end;
-            }
-
             $this->obj_model->create($data);
 
-            if ($check_has_mail) {
-                $email_arrays = $req_method_ary['email'];
+            if (isset($req_method_ary['email'])) {
                 $exam = $this->obj_model->getBy('title', '=', $title);
                 $exam_id = $exam[0]['id'];
-                $stt_email = 1;
-                $arr_check_email = array();
-                //check email
-                foreach ($email_arrays as $email) {
-                    $email = trim($email);
-                    if ($email == "") {
-                        return $this->errorResponse("Email field must be filled out");
-                    }
-                    if (!email($email)) {
-                        return $this->errorResponse("
-                        Email number " . $stt_email . " is not in the correct format");
-                    }
-                    if (in_array($email, $arr_check_email)) {
-                        return $this->errorResponse("Email number " . $stt_email . " was duplicated");
-                    }
+                foreach ($req_method_ary['email'] as $email) {
                     //link random
-                    $str_random = $current_time . $email;
+                    $str_random = time() . $email;
                     $hash = hash('sha256', $str_random);
                     $randomChars = substr($hash, 0, 10);
+                    //insert
                     $this->obj_model_exam_participant->create([
                         'exam_id' => $exam_id,
                         'email' => $email,
@@ -198,13 +243,12 @@ class ExamController extends AppController
                         'is_login' => 1,
                         'is_submit' => 2
                     ]);
-                    array_push($arr_check_email, trim($email));
-                    $stt_email++;
                 }
             }
             // $this->obj_model->commitTransaction();
             return $this->successResponse();
         } catch (\Throwable $th) {
+            // $this->obj_model->rollBackTransaction();
             return $this->errorResponse($th->getMessage());
         };
     }
@@ -252,7 +296,7 @@ class ExamController extends AppController
                     'answers' => array()
                 );
             }
-            $answer_info = $this->obj_modal_answer->getBy('question_id', '=', $exam_question['question_id']);
+            $answer_info = $this->obj_model_answer->getBy('question_id', '=', $exam_question['question_id']);
             $question_answers[$question_id]['answers'] = $answer_info;
         }
         $this->data_ary['question_answers'] = $question_answers;

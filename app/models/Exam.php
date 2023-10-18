@@ -23,7 +23,7 @@ class Exam extends Model
 
     public function getById($id)
     {
-        return $this->where('id', "=", $id)->get('*')[0];
+        return $this->where('id', "=", $id)->get()[0];
     }
 
     public function destroyBy($condition)
@@ -162,5 +162,11 @@ class Exam extends Model
     function commitTransaction()
     {
         return $this->getDB()->commit();
+    }
+
+    function rollBackTransaction()
+    {
+        $db = static::getDB();
+        return $db->rollBack();
     }
 }

@@ -7,6 +7,16 @@
                 </div>
             </div>
         </div>
+        <?php if (isset($_SESSION['msg'])) {
+            $msg =  $_SESSION['msg']['message'];
+            $type =  $_SESSION['msg']['type'];
+
+            echo " <div class='alert alert-$type' role='alert'>
+                                             $msg   
+                                           </div>";
+            unset($_SESSION['msg']);
+        }
+        ?>
         <div class="white_card_body" style="margin-left: 15px;">
             <div class="card-body">
                 <div class="mb-3 col-10 mr-12">

@@ -3,9 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\Admin\AppController;
-use Core\Http\Request;
 use App\models\Answer;
-use App\Requests\AppRequest;
 use Core\Http\ResponseTrait;
 
 class AnswerController extends  AppController
@@ -21,48 +19,5 @@ class AnswerController extends  AppController
     public function __construct()
     {
         $this->obj_model = new Answer;
-    }
-
-    public function indexAction()
-    {
-        $this->data_ary['questions'] = $this->obj_model->getAll();
-        $this->data_ary['answers'] = Answer::getAll();
-        $this->data_ary['content'] = 'question/index';
-    }
-
-    public function newAction()
-    {
-        $this->data_ary['content'] = 'question/new';
-    }
-
-    public function create(Request $request)
-    {
-        //validation
-        $app_request = new AppRequest;
-        $result_vali_ary = $app_request->validate($this->obj_model->rules(), $request, 'post');
-        if (in_array('error', $result_vali_ary)) {
-            $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
-            return $this->errorResponse($message_error);
-        }
-        //get data
-        $content = $result_vali_ary['content'];
-        $title = $result_vali_ary['title'];
-        $question_check_ary = $this->obj_model->getBy('content', '=', $content);
-        $num_rows = count($question_check_ary);
-
-        if ($num_rows == 1) {
-            return $this->errorResponse('Question has been exist');
-        }
-        try {
-            $this->obj_model->create(
-                [
-                    'title' => $title,
-                    'content' => $content,
-                ]
-            );
-            return $this->successResponse();
-        } catch (\Throwable $th) {
-            return $this->errorResponse($th->getMessage());
-        };
     }
 }

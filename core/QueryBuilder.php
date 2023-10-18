@@ -381,7 +381,7 @@ trait QueryBuilder
     {
         $db = static::getDB();
         $this->selectColumn = $column;
-        $this->orderBy = 'ORDER BY id DESC'; // Sắp xếp theo cột id theo thứ tự giảm dần
+        $this->orderBy = 'ORDER BY id DESC'; 
         $sqlQuery = "SELECT " . $this->selectColumn . " FROM " . $this->_table . " " . $this->where . " " . $this->orderBy . " " . $this->limit;
         $result = $db->query($sqlQuery);
 
@@ -430,8 +430,6 @@ trait QueryBuilder
      * Add an "or where null" clause to the query.
      *
      * @param  string|array  $column
-     * @param  mixed  $value
-     * @param  string  $compare
      * @return $this
      */
     public function orWhereNull($column)

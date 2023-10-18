@@ -91,8 +91,18 @@ class QuestionController extends  AppController
         return true;
     }
 
+    public function createMessage($type, $message)
+    {
+
+        $_SESSION['msg']  = [
+            'type' => "$type",
+            'message' => "$message"
+        ];
+    }
+
     public function create(Request $request)
     {
+       
         $result_vali_ary = $this->app_request->validate($this->obj_model->rules(), $request, 'post');
         if (in_array('error', $result_vali_ary)) {
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
@@ -121,44 +131,37 @@ class QuestionController extends  AppController
         }
         $is_corrects = $result_vali_ary['is_correct'];
 
-        //check question content
-        $content = $result_vali_ary['content'];
-        $question_title_id = null;
-        $condition = array();
-        array_push($condition, ['content', '=', $content]);
-        if (isset($result_vali_ary['question_title_id'])) {
-            $question_title_id = $result_vali_ary['question_title_id'];
-            array_push($condition, [' question_title_id ', ' = ', $question_title_id]);
-        } else {
-            array_push($condition, [' question_title_id ', ' is ', ' null ']);
+        if (!isset($result_vali_ary['question_title_id'])) {
+            $result_vali_ary['question_title_id'] = null;
         }
-        $question_check_ary = $this->obj_model->whereMultiple($condition);
-        if (count($question_check_ary) > 0) {
-            return $this->errorResponse('Question has been exist');
+        if (count($this->obj_model->getQuestion($result_vali_ary['question_title_id'], $result_vali_ary['content'])) > 0) {
+            return $this->errorResponse("Question content already exits");
         }
 
+        $content = $result_vali_ary['content'];
+        $question_title_id =  $result_vali_ary['question_title_id'];
+
         try {
-            // $this->obj_model->beginTransaction();
-            if (isset($result_vali_ary['question_title_id'])) {
-                $questionId = $this->obj_model->create(
+            $this->obj_model->beginTransaction();
+            if (isset($question_title_id)) {
+                $this->obj_model->create(
                     [
                         'content' => $content,
                         'question_title_id' => $question_title_id
                     ]
                 );
             } else {
-                $questionId = $this->obj_model->create(
+                $this->obj_model->create(
                     [
                         'content' => $content,
                     ]
                 );
             }
-
-            $question = $this->obj_model->whereMultiple($condition);
+            $question = $this->obj_model->getLatest();
             if (isset($exam_id)) {
                 $this->obj_model_exam_question->create(
                     [
-                        'question_id' => $question[0]['id'],
+                        'question_id' => $question['id'],
                         'exam_id' => $exam_id,
                     ]
                 );
@@ -167,15 +170,17 @@ class QuestionController extends  AppController
                 $isCorrect = in_array($index, $is_corrects) ? 1 : 0;
                 $this->obj_model_answer->create(
                     [
-                        'question_id' => $question[0]['id'],
+                        'question_id' => $question['id'],
                         'content' => $answerContent,
                         'is_correct' => $isCorrect,
                     ]
                 );
             }
-            // $this->obj_model->commitTransaction();
+
+            $this->obj_model->commitTransaction();
             return $this->successResponse();
         } catch (\Throwable $th) {
+            $this->obj_model->rollBackTransaction();
             return $this->errorResponse($th->getMessage());
         };
     }
