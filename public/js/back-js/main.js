@@ -965,10 +965,10 @@ function alertUploadFileExam() {
                     type: "POST",
                     url: `/admin/${pathName}/upload?id=${uploadFileID}`,
                     data: {
-                        html_content: html_content,
-                        csv_content: csv_content,
-                        csv_exam_participants: csv_exam_participants,
-                        csv_link_exam_radom: csv_link_exam_radom
+                        exam_content: html_content,
+                        answer: csv_content,
+                        email: csv_exam_participants,
+                        exam_random: csv_link_exam_radom
                     },
                     success: function (response) {
                         Swal.fire({

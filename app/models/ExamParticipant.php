@@ -36,9 +36,9 @@ class ExamParticipant extends Model
         return $this->update($data, $condition);
     }
 
-    public function getBy($column, $operator, $value)
+    public function getBy($column, $operator, $value, $selectColumn = '*')
     {
-        return $this->where($column, $operator, $value)->get();
+        return $this->where($column, $operator, $value)->get($selectColumn);
     }
 
     public function create($data)

@@ -34,7 +34,10 @@
                     </div>
                     <div id="answerContainer">
                         <label class="form-label" for="email">Email participant</label>
+                        <input type="hidden" name="total_email_db" value="<?php echo count($emails); ?>">
                         <?php if (count($emails) > 0) {
+                        ?>
+                            <?php
                             foreach ($emails as $email) { ?>
                                 <div class="form-check" style="padding-left: 45px;">
                                     <div class="input-with-button">

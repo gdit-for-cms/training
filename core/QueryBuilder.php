@@ -315,7 +315,11 @@ trait QueryBuilder
             foreach ($data as $key => $value) {
                 $key = addslashes($key);
                 $value = addslashes($value);
-                $updateStr .= "$key = '$value',";
+                if ($value == NULL) {
+                    $updateStr .= "$key = NULL,";
+                } else {
+                    $updateStr .= "$key = '$value',";
+                }
             }
             $updateStr = rtrim($updateStr, ',');
 
@@ -381,7 +385,7 @@ trait QueryBuilder
     {
         $db = static::getDB();
         $this->selectColumn = $column;
-        $this->orderBy = 'ORDER BY id DESC'; 
+        $this->orderBy = 'ORDER BY id DESC';
         $sqlQuery = "SELECT " . $this->selectColumn . " FROM " . $this->_table . " " . $this->where . " " . $this->orderBy . " " . $this->limit;
         $result = $db->query($sqlQuery);
 
