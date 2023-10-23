@@ -62,13 +62,16 @@
 
                         <label class="form-label" for="correct" style="margin-right: 30px;">Correct <span class="text-danger">*</span></label>
                         <label class="form-label" for="answer">Answer <span class="text-danger">*</span></label>
-                        <div id="answerContainer">
+                        <div id="answerContainer" style="display: flex;">
                             <div class="form-check" style="padding-left: 45px;">
                                 <input class="form-check-input" style="margin-right: 50px;" name="is_correct[]" type="checkbox" value="0" onchange="updateCheckboxValue(this)">
                                 <div class="input-with-button">
                                     <input type="text" class="form-control input-answer" name="answer[]" value="" placeholder="answer...">
                                     <button type="button" class="remove-button btn btn-danger delete-btn text-white" onclick="removeAnswer(this)">Delete</button>
                                 </div>
+                            </div>
+                            <div class="input-add-answer">
+                                <button type="button" class="btn btn-info m-2 text-white" onclick="addAnswer()">Add</button>
                             </div>
                         </div>
                         <div class="input-add-answer">

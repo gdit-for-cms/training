@@ -70,46 +70,96 @@ class ExamController extends AppController
         $this->data_ary['content'] = 'exam/new';
     }
 
+    public function fetchCsvDataFromFtp($file_remote_derectory)
+    {
+        $ftp = $this->configFTP();
+
+        // Đặt chế độ truyền dữ liệu sang chế độ ASCII (để đảm bảo đọc tệp CSV đúng cách)
+        ftp_pasv($ftp, true);
+
+        $fileList = ftp_nlist($ftp, dirname($file_remote_derectory));
+
+        // Tệp tồn tại trên máy chủ FTP
+        if (is_array($fileList) && in_array($file_remote_derectory, $fileList)) {
+
+            // Tạo một tệp tạm thời để lưu dữ liệu CSV
+            $local_csv_file = tempnam(sys_get_temp_dir(), 'csv_');
+
+            // Lấy tệp email.csv từ máy chủ FTP và lưu vào tệp tạm thời
+            $get = ftp_get($ftp, $local_csv_file, $file_remote_derectory, FTP_ASCII);
+            if ($get !== false) {
+
+                // Đọc dữ liệu từ tệp CSV tạm thời
+                $email_data = file_get_contents($local_csv_file);
+
+                // Xóa tệp CSV tạm thời
+                unlink($local_csv_file);
+
+                // close the connection and the file handler
+                ftp_close($ftp);
+            } else {
+                return 'Error: Could not retrieve the file from the FTP server.';
+            }
+            return $email_data;
+        } else {
+            // The file does not exist on the FTP server
+            return 'Error: Could not retrieve the file from the FTP server.';
+        }
+    }
+
     public function examDetailAction(Request $request)
     {
         $req_method_ary = $request->getGet()->all();
         $exam_id = $req_method_ary['exam_id'];
         $exam =  $this->obj_model->getById($exam_id);
+        $total_question_exam = count($this->obj_model_exam_question->getBy("exam_id", '=', $exam_id));
         $results_ary = $this->obj_model_exam_question->getExamQuestion($req_method_ary, $results_per_page = 5);
         $this->data_ary['exam_details'] = $results_ary['results'];
         $this->data_ary['exam'] = $exam;
 
-        //check status do exam of Participants
         // path to remote file
-        $your_server_directory = Config::YOUR_SERVER_DIRECTORY;
-        $csv_directory = Config::FTP_PUBLIC_DIRECTORY_CSV;
-        // echo $csv_directory . "337.csv";
-        $remote_file = $csv_directory . "337.csv";
-        $local_file = $your_server_directory . $exam_id . ".csv";
-        // open some file to write to
-        // $handle = fopen($local_file, 'w');
-        // echo "<pre>";
-        // var_dump($handle);
-        $ftp = $this->configFTP();
+        $email_directory = Config::FTP_PUBLIC_DIRECTORY_EMAIL;
+        $remote_file_name = "email" . $exam_id . ".csv";
+        $file_email_directoey = $email_directory . $remote_file_name;
 
-        // set up basic connection
-        $row = 1;
-        if (($handle = fopen("test.csv", "r")) !== FALSE) {
-            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                $num = count($data);
-                echo "<p> $num fields in line $row: <br /></p>\n";
-                $row++;
-                for ($c = 0; $c < $num; $c++) {
-                    echo $data[$c] . "<br />\n";
+        $result = $this->fetchCsvDataFromFtp($file_email_directoey);
+        $data = array();
+        if (strpos($result, 'Error') === 0) {
+            // echo $result;
+        } elseif (trim($result) != "") {
+            $array_result = explode("\n", trim($result));
+            foreach ($array_result as $participant) {
+                $participant = explode(",", $participant);
+                $data[] = array(
+                    "email" => $participant['0'],
+                    "random" => $participant['1'],
+                    "is_login" => $participant['2'],
+                    "is_submit" => $participant['3'],
+                    "score" => $participant['4']
+                );
+            }
+        }
+        // Update participant status on form submission
+        if (count($data) > 0) {
+            $exam_participants = $this->obj_model_exam_participant->getBy("exam_id", "=", $exam_id);
+
+            foreach ($exam_participants as $participant) {
+                foreach ($data as $email_remote) {
+                    if ($participant['email'] == $email_remote['email']) {
+
+                        $this->obj_model_exam_participant->updateOne(
+                            [
+                                'is_login' => $email_remote['is_login'],
+                                'is_submit' => $email_remote['is_submit'],
+                                'score' => $email_remote['score']
+                            ],
+                            "id = $participant[id]"
+                        );
+                        break;
+                    }
                 }
             }
-            fclose($handle);
         }
-        die();
-
-        // close the connection and the file handler
-        ftp_close($ftp);
-        // fclose($handle);
 
         //pagination
         $numbers_of_result = $results_ary['numbers_of_page'];
@@ -120,7 +170,7 @@ class ExamController extends AppController
         //get info User and Participants
         $this->data_ary['emails'] =  $this->obj_model_exam_participant->getBy("exam_id", '=', $exam_id);
         $this->data_ary['user'] = $this->obj_model_user->getById($exam['user_id']);
-
+        $this->data_ary['total_question_exam'] = $total_question_exam;
         //get link do exam of Participants 
         $file = '';
         $html_directory =  Config::FTP_PUBLIC_DIRECTORY_HTML;

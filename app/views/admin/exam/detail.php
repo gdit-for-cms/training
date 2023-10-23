@@ -82,6 +82,7 @@
                                         <th scope="col">#</th>
                                         <th scope="col">Email</th>
                                         <th scope="col">Status</th>
+                                        <th scope="col">Scores</th>
                                         <th scope="col">Link Exam</th>
                                     </tr>
                                 </thead>
@@ -90,11 +91,19 @@
                                     if (count($emails) > 0) {
                                         $stt = 1;
                                         foreach ($emails as $email) {
+                                            $score = 0;
+                                            if ($total_question_exam > 0) {
+                                                $score = (float)($email['score'] / $total_question_exam) * 100;
+                                                $score = round($score, 2);
+                                            }
+
                                     ?>
                                             <tr class="text-center">
                                                 <td><?php echo $stt++; ?></td>
                                                 <td><?php echo $email['email'] ?></td>
-                                                <td><?php echo $email['is_submit'] == 2 ? "Chưa nộp bài" : "Đã nộp bài"; ?></td>
+                                                <td><?php echo $email['is_submit'] == 2 ? "<span class='text-danger'>Chưa nộp bài</span>" : "<span class='text-success'>Đã nộp bài</span>"; ?></td>
+                                                <td><?php echo $score; ?></td>
+
                                                 <td class="text-left">
                                                     <?php if ($exam['published'] == 1) {
                                                     ?>
@@ -147,7 +156,9 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">
-                                        <input type="checkbox" id="selectAll" class="selectAll" name="select_all">
+                                        <?php if ($check_status) { ?>
+                                            <input type="checkbox" id="selectAll" class="selectAll" name="select_all">
+                                        <?php } ?>
                                     </th>
                                     <th class="col-1" scope="col">#</th>
                                     <th class="col-5" scope="col">Content</th>
@@ -170,7 +181,9 @@
                                 ?>
                                         <tr>
                                             <th class="text-center">
-                                                <input type="checkbox" value="<?php echo $exam_detail['question_id']; ?>" name="item[]" class="checkbox">
+                                                <?php if ($check_status) { ?>
+                                                    <input type="checkbox" value="<?php echo $exam_detail['question_id']; ?>" name="item[]" class="checkbox">
+                                                <?php } ?>
                                             </th>
                                             <th scope="row"><?php echo $st++; ?></th>
                                             <td>
