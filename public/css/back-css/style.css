@@ -835,7 +835,6 @@
       .input-with-button {
         display: flex;
         align-items: center;
-        margin-top: 10px;
       }
 
       .remove-button {
@@ -845,10 +844,6 @@
       .input-answer {
         width: 1000px;
         height: 45px;
-      }
-
-      .input-add-answer {
-        /* margin-left: 200px; */
       }
 
       .table-bordered {
@@ -911,32 +906,34 @@
 
       .answer {
         font-weight: bold;
-        
+
         border: 1px solid;
         padding: 1px;
         border-radius: 2px;
         margin-bottom: 10px;
       }
 
-      .input-button-group { 
+      .input-button-group {
         display: flex;
         align-items: center;
         justify-content: space-between;
       }
-      
-      .search_block{
+
+      .search_block {
         display: flex;
       }
-      /* .text-ellipsis:hover {
-        white-space: normal;
-        overflow: visible;
-        text-overflow: unset;
-        cursor: zoom-out;
-      } */
 
-      /* .text-ellipsis-content {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 460px;
-      } */
+      .text-th {
+        text-align: center;
+        vertical-align: middle;
+      }
+
+
+      .hide-note {
+        display: none;
+      }
+
+      .myDIV:hover+.hide-note {
+        display: block;
+        color: red;
+      }

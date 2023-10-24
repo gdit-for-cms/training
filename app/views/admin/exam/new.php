@@ -40,17 +40,20 @@
                                 <input class="form-control" type="datetime-local" name="date_end" id="date_end" />
                             </div>
                         </div>
-                        <div id="answerContainer">
-                            <label class="form-label" for="email">Email participant</label>
-                            <div class="form-check" style="padding-left: 45px;">
-                                <div class="input-with-button">
-                                    <input type="text" class="form-control input-answer" name="email[]" value="" placeholder="email...">
-                                    <button type="button" class="remove-button btn btn-danger delete-btn text-white" onclick="removeAnswer(this)">Delete</button>
+                        <label class="form-label" for="email">Email participant</label>
+
+                        <div class="col-12 d-flex">
+                            <div id="answerContainer">
+                                <div class="form-check mb-3" style="padding-left: 45px;">
+                                    <div class="input-with-button">
+                                        <input type="text" class="form-control input-answer" name="email[]" value="" placeholder="email...">
+                                        <button type="button" class="remove-button btn btn-danger delete-btn text-white" onclick="removeAnswer(this)">Delete</button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="input-add-answer">
-                            <button type="button" class="btn btn-info m-2 text-white" onclick="addAnswer()">Add</button>
+                            <div class="input-add-answer col-3">
+                                <button type="button" class="btn btn-info ml-3 text-white" style="margin-top: 3px;" onclick="addAnswer()">Add</button>
+                            </div>
                         </div>
                         <button id="submit" type="submit" class="btn btn-primary">Create</button>
                     </form>

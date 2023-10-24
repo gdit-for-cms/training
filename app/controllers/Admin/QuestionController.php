@@ -44,10 +44,12 @@ class QuestionController extends  AppController
         $results_per_page = 10;
         $results_ary = $this->obj_model_question_title->getAllHasPagination($req_method_ary, $results_per_page);
         $this->data_ary['question_titles'] = $results_ary['results'];
+        //pagiantionS
         $numbers_of_result = $results_ary['numbers_of_page'];
         $numbers_of_page = ceil($numbers_of_result / $results_per_page);
         $this->data_ary['numbers_of_page'] = $numbers_of_page;
         $this->data_ary['page'] = (float)$results_ary['page'];
+
         $this->data_ary['content'] = 'question/index';
     }
 
@@ -63,100 +65,74 @@ class QuestionController extends  AppController
         $this->data_ary['content'] = 'question/new';
     }
 
-    public function check_enter_answer($answers)
+    // check answer
+    public function check_answer($answers)
     {
+        $errors = array();
         foreach ($answers as $answer) {
             if (strlen(trim($answer)) == 0) {
-                return false;
+                $errors[] = 'You need to enter the answer.';
+                break;
             }
-        }
-        return true;
-    }
-
-    public function check_unique_answer($answers)
-    {
-        if (count($answers) > count(array_unique($answers))) {
-            return false;
-        }
-        return true;
-    }
-
-    public function check_length_answer($answers)
-    {
-        foreach ($answers as $answer) {
             if (strlen($answer) > 2000) {
-                return false;
+                $errors[] = "Answer length is limited to 2000 characters.";
+                break;
             }
         }
-        return true;
-    }
-
-    public function createMessage($type, $message)
-    {
-
-        $_SESSION['msg']  = [
-            'type' => "$type",
-            'message' => "$message"
-        ];
+        if (count($answers) > count(array_unique($answers))) {
+            $errors[] = "Answers cannot be duplicated.";
+        }
+        if (count($answers) > 0) {
+            return array_shift($errors);
+        }
+        return false;
     }
 
     public function create(Request $request)
     {
-       
+
         $result_vali_ary = $this->app_request->validate($this->obj_model->rules(), $request, 'post');
+        //Question data validation
         if (in_array('error', $result_vali_ary)) {
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
             return $this->errorResponse($message_error);
         }
-        //check answers
-        if (isset($result_vali_ary['answer'])) {
-            $answers =  $result_vali_ary['answer'];
+        //check answer
+        if ($this->check_answer($result_vali_ary['answer'])) {
+            return  $this->errorResponse($this->check_answer($result_vali_ary['answer']));
         }
-        if (isset($result_vali_ary['exam_id'])) {
-            $exam_id =  $result_vali_ary['exam_id'];
-        }
-        if (!$this->check_enter_answer($answers)) {
-            return $this->errorResponse("You need to enter the answer.");
-        }
-        if (!$this->check_unique_answer($answers)) {
-            return $this->errorResponse("Answers cannot be duplicated.");
-        }
-
+        //check correct answer
         if (!isset($result_vali_ary['is_correct'])) {
             return $this->errorResponse("You need to choose at least one correct answer.");
         }
-
-        if (!$this->check_length_answer($answers)) {
-            return $this->errorResponse("Answer length is limited to 2000 characters.");
+        //check has exam_id
+        if (isset($result_vali_ary['exam_id'])) {
+            $exam_id =  $result_vali_ary['exam_id'];
         }
-        $is_corrects = $result_vali_ary['is_correct'];
-
+        // check value question_title_id is null
         if (!isset($result_vali_ary['question_title_id'])) {
             $result_vali_ary['question_title_id'] = null;
         }
+        // check unique question
         if (count($this->obj_model->getQuestion($result_vali_ary['question_title_id'], $result_vali_ary['content'])) > 0) {
             return $this->errorResponse("Question content already exits");
         }
 
+        // get data request
         $content = $result_vali_ary['content'];
         $question_title_id =  $result_vali_ary['question_title_id'];
+        $is_corrects = $result_vali_ary['is_correct'];
+        $answers =  $result_vali_ary['answer'];
 
+        $data = [
+            'content' => $content,
+        ];
+        if (isset($question_title_id)) {
+            $data += ['question_title_id' => $question_title_id];
+        }
         try {
-            $this->obj_model->beginTransaction();
-            if (isset($question_title_id)) {
-                $this->obj_model->create(
-                    [
-                        'content' => $content,
-                        'question_title_id' => $question_title_id
-                    ]
-                );
-            } else {
-                $this->obj_model->create(
-                    [
-                        'content' => $content,
-                    ]
-                );
-            }
+            // $this->obj_model->beginTransaction();
+            $this->obj_model->create($data);
             $question = $this->obj_model->getLatest();
             if (isset($exam_id)) {
                 $this->obj_model_exam_question->create(
@@ -177,18 +153,19 @@ class QuestionController extends  AppController
                 );
             }
 
-            $this->obj_model->commitTransaction();
+            // $this->obj_model->commitTransaction();
             return $this->successResponse();
         } catch (\Throwable $th) {
-            $this->obj_model->rollBackTransaction();
+            // $this->obj_model->rollBackTransaction();
             return $this->errorResponse($th->getMessage());
         };
     }
 
     public function editAction(Request $request)
     {
-        $id = $request->getGet()->get('question_id');
-        $this->data_ary['question'] = $this->obj_model->getById($id, 'id, content');
+        $req_method_ary = $request->getGet();
+        $id = $req_method_ary->get('question_id');
+        $this->data_ary['question'] = $this->obj_model->getById($id, 'id, content, question_title_id');
         $this->data_ary['answers'] = $this->obj_model_answer->getBy('question_id', '=', $id);
         $this->data_ary['content'] = 'question/edit';
     }
@@ -213,53 +190,32 @@ class QuestionController extends  AppController
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
             return $this->errorResponse($message_error);
         }
-
-        //check answer
         $answers =  $result_vali_ary['answer'];
-        $question_id = $request->getPost()->get('id');
-
-        if (!$this->check_enter_answer($answers)) {
-            return $this->errorResponse("You need to enter the answer.");
-        }
-        if (!$this->check_unique_answer($answers)) {
-            return $this->errorResponse("Answers cannot be duplicated.");
-        }
-        if (!isset($result_vali_ary['is_correct'])) {
-            return $this->errorResponse("You need to choose at least one correct answer");
-        }
-        if (!$this->check_length_answer($answers)) {
-            return $this->errorResponse("Answer length is limited to 255 characters.");
-        }
-        //end check answer
-
+        $question_id = $result_vali_ary['id'];
         $is_corrects = $result_vali_ary['is_correct'];
-
-        //check question content
         $content = $result_vali_ary['content'];
-        $question_title_id = null;
-        $condition = array();
-        array_push($condition, ['content', '=', $content]);
-        if (isset($result_vali_ary['question_title_id'])) {
-            $question_title_id = $result_vali_ary['question_title_id'];
-            array_push($condition, [' question_title_id ', ' = ', $question_title_id]);
-        } else {
-            array_push($condition, [' question_title_id ', ' is ', ' null ']);
+        $question = $this->obj_model->getBy('id', '=', $question_id);
+        //check answer
+        if ($this->check_answer($result_vali_ary['answer'])) {
+            return  $this->errorResponse($this->check_answer($result_vali_ary['answer']));
         }
-        $question_check_ary = $this->obj_model->whereMultiple($condition);
-        if (count($question_check_ary) > 0 && $question_check_ary[0]['id'] != $question_id) {
-            return $this->errorResponse('Question has been exist');
+        //check correct answer
+        if (!isset($result_vali_ary['is_correct'])) {
+            return $this->errorResponse("You need to choose at least one correct answer.");
         }
-        //end check question content
+        // check unique question
+        if (count($this->obj_model->getQuestion($question[0]['question_title_id'], $content)) > 0 && strcasecmp($content, $question[0]['content']) != 0) {
+            return $this->errorResponse("Question content already exits");
+        }
 
         try {
             // $this->obj_model->beginTransaction();
             $this->obj_model->updateOne(
                 [
-                    'content' => $content
+                    'content' => $content,
                 ],
                 "id = $question_id"
             );
-
             $this->obj_model_answer->destroyBy("question_id = $question_id");
             foreach ($answers as $index => $answerContent) {
                 $isCorrect = in_array($index, $is_corrects) ? 1 : 0;

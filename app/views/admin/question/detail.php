@@ -37,7 +37,7 @@
                     <table id="<?= "1" ?>" class="table table-striped table-bordered table-responsive">
                         <thead>
                             <tr>
-                                <th class="text-center">
+                                <th class="text-center align-middle">
                                     <input type="checkbox" id="selectAll" class="selectAll" name="select_all">
                                 </th>
                                 <th scope="col">#</th>
@@ -54,15 +54,15 @@
                                 foreach ($question_titles as $question_title) {
                             ?>
                                     <tr>
-                                        <th class="text-center">
+                                        <th class="text-center align-middle">
                                             <input type="checkbox" value="<?php echo $question_title['question_id']; ?>" name="item[]" class="checkbox">
                                         </th>
-                                        <td class=""><?php echo $stt++; ?></td>
-                                        <td class="col-4">
+                                        <th class="align-middle"><?php echo $stt++; ?></th>
+                                        <td class="col-4 align-middle">
                                             <?php echo $question_title['question_content'] ?>
                                         </td>
                                         <td class="">
-                                            <div class="answer-container">
+                                            <div class="answer-container align-middle">
                                                 <ul>
                                                     <?php
                                                     $st = 1;
@@ -87,8 +87,8 @@
                                                 </ul>
                                             </div>
                                         </td>
-                                        <td class="col-2">
-                                            <a href="/admin/question/edit?question_id=<?php echo $question_title['question_id']; ?>"><button type="button" class="btn btn-info text-white">Edit</button></a>
+                                        <td class="col-2  align-middle">
+                                            <a href="/admin/question/edit?question_title_id=<?php echo isset($question_title['id']) ? $question_title['id'] : "other";  ?>&question_id=<?php echo $question_title['question_id']; ?>"><button type="button" class="btn btn-info text-white">Edit</button></a>
                                             <button type="button" data-path="question" data-id="<?php echo $question_title['question_id']; ?>" class="btn btn-danger text-white btn-delete-question ">Delete</button>
                                         </td>
                                     </tr>

@@ -41,14 +41,13 @@ class Exam extends Model
         return $this->where($column, $operator, $value)->get();
     }
 
-    public function getExam($req_method_ary, $results_per_page)
+    public function getExam($req_method_ary, $results_per_page = 10)
     {
 
-        if (!isset($req_method_ary['page']) || ($req_method_ary['page'] <= 1)) {
+        if (!isset($req_method_ary['page']) || ($req_method_ary['page'] < 1)) {
             $req_method_ary['page'] = '1';
         }
         $page_first_result = ((int)$req_method_ary['page'] - 1) * $results_per_page;
-        $results_per_page *= (int)$req_method_ary['page'];
 
         //filter status
         if (isset($req_method_ary['status'])) {
@@ -74,6 +73,7 @@ class Exam extends Model
                 $this->where("exam.published", "=", 0);
             }
         }
+       
         //filter search keyword
         $keyword_search = "";
         if (isset($req_method_ary['keyword'])) {
@@ -94,15 +94,15 @@ class Exam extends Model
             $this->whereLike("exam.title", $keyword_search);
         }
         $this->orderBy("exam.id", "desc");
-        if (!isset($req_method_ary['status'])) {
-            $this->limit($results_per_page, $page_first_result);
-        }
+        $this->limit($results_per_page, $page_first_result);
+       
         $results = $this->get("exam.id, exam.title, exam.description, exam.published, exam.uploaded_at, exam.time_start, exam.time_end, exam.updated_at");
-        $req_method_ary['page'] = isset($req_method_ary['page']) && $req_method_ary['page'] >= 1 ? $req_method_ary['page'] : '1';
-        $numbers_of_page = count($this->get());
-        $results_ary = array('numbers_of_page' => $numbers_of_page, 'results' => $results, 'page' => $req_method_ary['page']);
-
-        return $results_ary;
+        $numbers_of_page = count($this->getAll());
+        return array(
+            'numbers_of_page' => $numbers_of_page,
+            'results' => $results,
+            'page' => $req_method_ary['page']
+        );
     }
 
     public function rules($change = '', $value = array())

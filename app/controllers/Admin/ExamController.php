@@ -54,7 +54,8 @@ class ExamController extends AppController
     public function indexAction(Request $request)
     {
         $req_method_ary = $request->getGet()->all();
-        $results_ary = $this->obj_model->getExam($req_method_ary, $results_per_page = 10);
+        $results_per_page = 10;
+        $results_ary = $this->obj_model->getExam($req_method_ary, $results_per_page);
         //pagination
         $numbers_of_result = $results_ary['numbers_of_page'];
         $numbers_of_page = ceil($numbers_of_result / $results_per_page);
@@ -76,7 +77,7 @@ class ExamController extends AppController
 
         // Đặt chế độ truyền dữ liệu sang chế độ ASCII (để đảm bảo đọc tệp CSV đúng cách)
         ftp_pasv($ftp, true);
-
+        // kiểm tra file đã tồn tại hay chưa
         $fileList = ftp_nlist($ftp, dirname($file_remote_derectory));
 
         // Tệp tồn tại trên máy chủ FTP
@@ -139,6 +140,7 @@ class ExamController extends AppController
                 );
             }
         }
+
         // Update participant status on form submission
         if (count($data) > 0) {
             $exam_participants = $this->obj_model_exam_participant->getBy("exam_id", "=", $exam_id);
@@ -615,7 +617,9 @@ class ExamController extends AppController
         $this->obj_model->updateOne(
             [
                 'published' => 0,
-                'updated_at' => (new \DateTime())->format('Y-m-d H:i:s')
+                'updated_at' => (new \DateTime())->format('Y-m-d H:i:s'),
+                'time_start' => null,
+                'time_end' => null
             ],
             "id = $exam_id"
         );

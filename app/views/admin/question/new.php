@@ -51,32 +51,35 @@
 
 
                     <div class="mb-5">
-                        <span style="color: #828bb2;">* Note</span>
-                        <p class="" style="padding-left: 20px;">
-                            Correct : Choose the correct answers<br>
-                            Answer : Enter the answer to the question<br>
-                            Button Add : Click the "add" button to add an answer
-                        </p>
+                        <i class="bi bi-exclamation-circle"></i>
+                        <span class="myDIV text-danger">* Note</span>
+                        <div class="hide-note">
+                            <p class="" style="padding-left: 20px;">
+                                Correct : Choose the correct answers<br>
+                                Answer : Enter the answer to the question<br>
+                                Button Add : Click the "add" button to add an answer
+                            </p>
+                        </div>
                     </div>
                     <div class="mb-3">
 
                         <label class="form-label" for="correct" style="margin-right: 30px;">Correct <span class="text-danger">*</span></label>
                         <label class="form-label" for="answer">Answer <span class="text-danger">*</span></label>
-                        <div id="answerContainer" style="display: flex;">
-                            <div class="form-check" style="padding-left: 45px;">
-                                <input class="form-check-input" style="margin-right: 50px;" name="is_correct[]" type="checkbox" value="0" onchange="updateCheckboxValue(this)">
-                                <div class="input-with-button">
-                                    <input type="text" class="form-control input-answer" name="answer[]" value="" placeholder="answer...">
-                                    <button type="button" class="remove-button btn btn-danger delete-btn text-white" onclick="removeAnswer(this)">Delete</button>
+                        <div class="col-12 d-flex">
+                            <div id="answerContainer">
+                                <div class="form-check mb-3" style="padding-left: 45px;">
+                                    <input class="form-check-input col-1" style="margin-right: 50px; margin-top: 15px;" name="is_correct[]" type="checkbox" value="0" onchange="updateCheckboxValue(this)">
+                                    <div class="input-with-button">
+                                        <textarea type="text" class="form-control input-answer" name="answer[]" value="" placeholder="answer..."></textarea>
+                                        <button type="button" class="remove-button btn btn-danger delete-btn text-white" onclick="removeAnswer(this)">Delete</button>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="input-add-answer">
-                                <button type="button" class="btn btn-info m-2 text-white" onclick="addAnswer()">Add</button>
+                            <div class="input-add-answer col-3">
+                                <button type="button" class="btn btn-info ml-3 text-white" style="margin-top: 3px;" onclick="addAnswer()">Add</button>
                             </div>
                         </div>
-                        <div class="input-add-answer">
-                            <button type="button" class="btn btn-info m-2 text-white" onclick="addAnswer()">Add</button>
-                        </div>
+
                     </div>
                     <button id="submit" type="submit" class="btn btn-primary">Create</button>
                 </form>
@@ -84,7 +87,6 @@
         </div>
     </div>
 </div>
-
 
 <script>
     $(document).ready(function() {

@@ -96,6 +96,7 @@ class QuestionTitle extends Model
     public function getAllHasPagination($req_method_ary, $results_per_page = 5)
     {
         $where = '';
+        //filter 
         if (isset($req_method_ary['keyword'])) {
             $where = trim($req_method_ary['keyword']);
             $this->whereLikeWithSpecialCharEscape("question_title.title", $where);
@@ -111,6 +112,7 @@ class QuestionTitle extends Model
             question_title.title AS question_title,
             question_title.description AS question_description,
             question_title.updated_at AS question_updated_at");
+
         $numbers_of_page = count($this->getAll());
         return array(
             'numbers_of_page' => $numbers_of_page,

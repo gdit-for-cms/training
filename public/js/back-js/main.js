@@ -526,6 +526,11 @@ function sortAll(data, tableMain, pathName, paginationMain) {
 }
 
 $(document).ready(function () {
+    
+    submitForm('.add-form');
+    alertDelete();
+    submitChange();
+    
     submitForm('#form_new_position');
     submitForm('#form_update_position');
     submitForm('#form_new_user');
@@ -555,9 +560,6 @@ $(document).ready(function () {
     alertDeleteRule();
     //end Ngo Duy Hung
 
-    submitForm('.add-form');
-    alertDelete();
-    submitChange();
 
     $('.card-header').click(function (e) {
         sortPagination($(this))
@@ -821,7 +823,7 @@ function addAnswer() {
         console.log(pathName);
         var answerCheckbox = document.createElement("input");
         answerCheckbox.classList.add("form-check-input");
-        answerCheckbox.style = "margin-right: 50px;";
+        answerCheckbox.style = "margin-right: 50px;margin-top:15px";
         answerCheckbox.type = "checkbox";
         answerCheckbox.name = "is_correct[]";
         if (pathName == "question") {
@@ -836,7 +838,7 @@ function addAnswer() {
     var answerContainer = document.getElementById("answerContainer");
 
     var newAnswerDiv = document.createElement("div");
-    newAnswerDiv.classList.add("form-check");
+    newAnswerDiv.classList.add("form-check", "mb-3");
     newAnswerDiv.style = "padding-left: 45px;";
 
     var inputWithButton = document.createElement("div");
@@ -1144,12 +1146,12 @@ function searchAjax() {
                     // console.log(result[i]['title']);
 
                     if (pathName == "exam") {
-                        let punlish = '';
+                        let publish = '';
                         let check = result[i]['published']
                         if (check == 1) {
-                            punlish = "Đã xuất bản" + "<br>" + result[i]['uploaded_at']
+                            publish = "Đã xuất bản" + "<br>" + result[i]['uploaded_at']
                         } else {
-                            punlish = "Chưa xuất bản"
+                            publish = "Chưa xuất bản"
                         }
 
                         let btn_edit = '';
@@ -1186,11 +1188,11 @@ function searchAjax() {
 
                         resultHTML += `
                                 <tr>
-                                    <th class="text-center">
+                                    <th class="text-center align-middle">
                                         ${input_checkbox}
                                     </th>
-                                    <th scope="row">${stt++}</th>
-                                    <td class="text-ellipsis">
+                                    <th class="align-middle" scope="row">${stt++}</th>
+                                    <td class="text-ellipsis align-middle">
                                         ${result[i]['title']}
                                     </td>
                                     <td>
@@ -1198,15 +1200,15 @@ function searchAjax() {
                                     </td>
                                     <td>
                                         <div class="overflow-auto">
-                                            ${punlish}
+                                            ${publish}
                                         </div>
                                     </td>
-                                    <td>
+                                    <td class="align-middle">
                                         ${result[i]['time_start']}
                                         <br>
                                             ${result[i]['time_end']}
                                     </td>
-                                    <td>
+                                    <td class="align-middle">
                                         <div style="display:flex">
                                             <a href="/admin/exam/examDetail?exam_id=${result[i]['id']}"><button type="button" class="btn btn-success mr-2">Detail</button></a>
                                             ${btn_edit}
@@ -1217,13 +1219,13 @@ function searchAjax() {
                                 `;
                     } else if (pathName == "question") {
                         resultHTML += `<tr>
-                                            <th class="text-center">
+                                            <th class="align-middle text-th" class="text-center">
                                                 <input type="checkbox" value="${result[i]['question_id']}" name="item[]" class="checkbox">
                                             </th>
-                                            <th>${stt++}</th>
-                                            <td class="text-ellipsis">${result[i]['question_title']}</td>
-                                            <td>${result[i]['question_updated_at']}</td>
-                                            <td>
+                                            <th class="align-middle text-th">${stt++}</th>
+                                            <td class="text-ellipsis align-middle">${result[i]['question_title']}</td>
+                                            <td class="align-middle">${result[i]['question_updated_at']}</td>
+                                            <td class="align-middle">
                                                 <a href="/admin/question/detail?question_id=${result[i]['question_id']}"><button type="button" class="btn btn-success">Detail</button></a>
                                                 <a href="/admin/question-title/edit?ques-title=${result[i]['question_id']}"><button type="button" class="btn btn-info text-white">Edit</button></a>
                                                 <button type="button" data-path="question-title" data-id="${result[i]['question_id']}" class="btn btn-danger text-white btn-delete-question ">Delete</button>

@@ -79,7 +79,7 @@
                             <table class="table table-striped table-bordered table-responsive">
                                 <thead>
                                     <tr class="text-center">
-                                        <th scope="col">#</th>
+                                        <th scope="col" class="">#</th>
                                         <th scope="col">Email</th>
                                         <th scope="col">Status</th>
                                         <th scope="col">Scores</th>
@@ -117,7 +117,7 @@
                                     } else {
                                         ?>
                                         <tr class="text-center">
-                                            <td colspan="4">Empty</td>
+                                            <td colspan="5">Empty</td>
                                         </tr>
                                     <?php
                                     }
@@ -155,12 +155,12 @@
                         <table class="table table-striped table-bordered table-responsive">
                             <thead>
                                 <tr>
-                                    <th class="text-center">
+                                    <th class="text-center align-middle">
                                         <?php if ($check_status) { ?>
                                             <input type="checkbox" id="selectAll" class="selectAll" name="select_all">
                                         <?php } ?>
                                     </th>
-                                    <th class="col-1" scope="col">#</th>
+                                    <th class="col-1 align-middle" scope="col">#</th>
                                     <th class="col-5" scope="col">Content</th>
                                     <th class="col-4" scope="col">Answer</th>
                                     <?php
@@ -180,13 +180,13 @@
                                         $answers = explode('|<@>|', $exam_detail['answers']);
                                 ?>
                                         <tr>
-                                            <th class="text-center">
+                                            <th class="text-center align-middle">
                                                 <?php if ($check_status) { ?>
                                                     <input type="checkbox" value="<?php echo $exam_detail['question_id']; ?>" name="item[]" class="checkbox">
                                                 <?php } ?>
                                             </th>
-                                            <th scope="row"><?php echo $st++; ?></th>
-                                            <td>
+                                            <th scope="row" class="align-middle"><?php echo $st++; ?></th>
+                                            <td class="align-middle">
                                                 <div class="overflow-auto">
                                                     <?php echo $exam_detail['question_content'] ?>
                                                 </div>
@@ -220,7 +220,7 @@
                                             if ($cur_user['role_id'] != 3) {
                                                 if ($check_status) {
                                             ?>
-                                                    <td class="col-2">
+                                                    <td class="col-2 align-middle">
                                                         <a href="/admin/question/edit?question_id=<?php echo $exam_detail['question_id']; ?>"><button type="button" class="btn btn-info text-white">Edit</button></a>
                                                         <button data-question_id="<?php echo $exam_detail['question_id']; ?>" data-exam_id="<?php echo $exam['id']; ?>" type="button" class=" btn btn-danger text-white btn-delete-exam-detail">Delete</button>
                                                     </td>

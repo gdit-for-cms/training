@@ -23,18 +23,18 @@
         <table id="<?= "1" ?>" class="table table-striped table-bordered table-responsive">
           <thead>
             <tr>
-              <th class="text-center">
+              <th class="text-center align-middle">
                 <input type="checkbox" id="selectAll" class="selectAll" name="select_all">
               </th>
-              <th>#</th>
+              <th class="text-th">#</th>
               <th>TITLE</th>
               <th>UPDATE_AT</th>
               <th>ACTION</th>
             </tr>
             <tr>
               <th class="text-center"></th>
-              <th><?php echo $stt++; ?></th>
-              <td class="text-ellipsis">Default</td>
+              <th class="text-th align-middle"><?php echo $stt++; ?></th>
+              <td class="text-ellipsis align-middle">Default</td>
               <td class="text-ellipsis">2023-10-11 11:08:39
               </td>
               <td>
@@ -49,17 +49,17 @@
             foreach ($question_titles as $question_title) {
             ?>
               <tr>
-                <th class="text-center">
+                <th class="text-center align-middle">
                   <input type="checkbox" value="<?php echo $question_title['question_id']; ?>" name="item[]" class="checkbox">
                 </th>
-                <th><?php echo $stt++; ?></th>
-                <td class="text-ellipsis">
+                <th class="text-th align-middle"><?php echo $stt++; ?></th>
+                <td class="text-ellipsis align-middle">
                   <?php echo $question_title['question_title'] ?>
                 </td>
-                <td>
+                <td class="align-middle">
                   <?php echo $question_title['question_updated_at'] ?>
                 </td>
-                <td>
+                <td class="align-middle">
                   <a href="/admin/question/detail?question_id=<?php echo $question_title['question_id']; ?>"><button type="button" class="btn btn-success">Detail</button></a>
                   <a href="/admin/question-title/edit?ques-title=<?php echo $question_title['question_id']; ?>"><button type="button" class="btn btn-info text-white">Edit</button></a>
                   <button type="button" data-path="question-title" data-id="<?php echo $question_title['question_id']; ?>" class="btn btn-danger text-white btn-delete-question ">Delete</button>

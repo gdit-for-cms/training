@@ -43,10 +43,10 @@
                 <table id="<?= "1" ?>" class="table table-striped table-bordered table-responsive">
                     <thead>
                         <tr>
-                            <th class="text-center">
+                            <th class="text-center align-middle">
                                 <input type="checkbox" id="selectAll" class=" selectAll" name="select_all">
                             </th>
-                            <th>#</th>
+                            <th class="text-th">#</th>
                             <th>TITLE</th>
                             <th>
                                 STATUS
@@ -69,7 +69,7 @@
                             $currentTime = time();
                         ?>
                             <tr>
-                                <th class="text-center">
+                                <th class="text-center align-middle">
                                     <?php
                                     if (!($currentTime >= $startTime && $currentTime <= $endTime && $exam['published'] == 1)) {
                                     ?>
@@ -78,11 +78,11 @@
                                     }
                                     ?>
                                 </th>
-                                <th scope="row"><?php echo $stt++; ?></th>
-                                <td class="text-ellipsis">
+                                <th scope="row" class="text-th align-middle"><?php echo $stt++; ?></th>
+                                <td class="text-ellipsis align-middle">
                                     <?php echo $exam['title'] ?>
                                 </td>
-                                <td>
+                                <td class="align-middle">
                                     <?php
                                     if ($currentTime < $startTime || empty($startTime) || $exam['published'] != 1) {
                                         $check_finished = true; ?>
@@ -100,13 +100,13 @@
                                     }
                                     ?>
                                 </td>
-                                <td>
+                                <td class="align-middle">
                                     <div class="overflow-auto">
                                         <?php echo $exam['published'] == 1 ? 'Đã xuất bản' : 'Chưa xuất bản'; ?><br>
                                         <?php echo $exam['published'] == 1 ? $exam['uploaded_at'] : "" ?>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="align-middle">
                                     <?php
                                     if (isset($exam['time_start']) && isset($exam['time_end'])) {
                                     ?>
@@ -116,7 +116,7 @@
                                     <?php } ?>
                                 </td>
 
-                                <td>
+                                <td class="align-middle">
                                     <div style="display: flex;">
                                         <a href="/admin/exam/examDetail?exam_id=<?php echo $exam['id']; ?>"><button type="button" class="btn btn-success mr-2">Detail</button></a>
                                         <?php if ($check_finished) { ?>
