@@ -35,7 +35,7 @@
         </div>
         <div class="white_card_body">
             <div class="card-body">
-                <form id="form_new_question" class="" action="create" method="POST">
+                <form id="form_new_question" action="create" method="POST">
                     <?php if (isset($exam_id)) {
                     ?>
                         <input type="hidden" name="exam_id" value="<?php echo $exam_id; ?>">
@@ -54,7 +54,7 @@
                         <i class="bi bi-exclamation-circle"></i>
                         <span class="myDIV text-danger">* Note</span>
                         <div class="hide-note">
-                            <p class="" style="padding-left: 20px;">
+                            <p style="padding-left: 20px;">
                                 Correct : Choose the correct answers<br>
                                 Answer : Enter the answer to the question<br>
                                 Button Add : Click the "add" button to add an answer

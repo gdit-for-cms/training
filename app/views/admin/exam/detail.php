@@ -19,10 +19,14 @@
                                 <?php
                             }
                             if ($cur_user['role_id'] != 3) {
+                                if ($exam['published'] == 1 && ($startTime > $currentTime)) {
+                                ?>
+                                    <a href="/admin/exam/unpublish?exam_id=<?php echo $exam['id']; ?>" data-id="<?php echo $exam['id']; ?>" id="submit" class="btn btn-danger text-white mr-3">UnPublish</a>
+                                <?php
+                                }
                                 if ($check_status) {
                                 ?>
                                     <a href="/admin/exam/edit?id=<?php echo $exam['id']; ?>"><button type="button" class="btn btn-info text-white mr-4">Edit</button></a>
-
                                     <a class="btn btn-primary mr-3" id="createFilesButton" href="/admin/exam/preview?exam_id=<?php echo $exam['id']; ?>" data-id="<?php echo $exam['id']; ?>" id="submit">Upload</a>
                                 <?php
                                 } elseif ($exam['published'] == 1 && !($currentTime >= $startTime && $currentTime <= $endTime)) {
@@ -65,10 +69,10 @@
                             <?php echo $exam['published'] == 1 ? "Đã upload lên server" : " Chưa upload lên server" ?>
                             <br>
                             <b><label class="form-label" for="time_start">Time start : </label></b>
-                            <?php echo isset($exam['time_start']) ? $exam['time_start'] : "Chưa có thời gian làm bài!" ?>
+                            <?php echo isset($exam['time_start']) ? $exam['time_start'] : "Chưa có thời gian bắt đầu !" ?>
                             <br>
                             <b><label class="form-label" for="time_end">Time end : </label></b>
-                            <?php echo isset($exam['time_end']) ? $exam['time_end'] : "Chưa có thời gian làm bài!" ?>
+                            <?php echo isset($exam['time_end']) ? $exam['time_end'] : "Chưa có thời gian kết thúc !" ?>
                             <br>
                             <b><label class="form-label" for="description">Description : </label></b>
                             <?php echo isset($exam['description']) ? $exam['description'] : "Chưa có mô tả"; ?>
@@ -79,7 +83,7 @@
                             <table class="table table-striped table-bordered table-responsive">
                                 <thead>
                                     <tr class="text-center">
-                                        <th scope="col" class="">#</th>
+                                        <th scope="col">#</th>
                                         <th scope="col">Email</th>
                                         <th scope="col">Status</th>
                                         <th scope="col">Scores</th>

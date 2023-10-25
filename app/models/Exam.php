@@ -73,29 +73,19 @@ class Exam extends Model
                 $this->where("exam.published", "=", 0);
             }
         }
-       
+
         //filter search keyword
         $keyword_search = "";
         if (isset($req_method_ary['keyword'])) {
-            $keyword = trim($req_method_ary['keyword']);
-            $keywords = str_split($keyword);
-            $specialChars = ["@", "#", "$", "%", "^", "&", "(", ")", "_", "+", "|", "~", "=", "`", "{", "}", "[", "]", ":", "\\", ";", "'", "<", ">", "?", ",", ".", "/", "\\", "-"];
-            foreach ($keywords as $keyword) {
-                if (in_array($keyword, $specialChars)) {
-                    if ($keyword == "\\") {
-                        $keyword_search .= "\\\\" . $keyword;
-                    } else {
-                        $keyword_search .= "\\" . $keyword;
-                    }
-                } else {
-                    $keyword_search .= $keyword;
-                }
-            }
-            $this->whereLike("exam.title", $keyword_search);
+            $keyword_search = trim($req_method_ary['keyword']);
+            $this->whereLikeWithSpecialCharEscape("exam.title", $keyword_search);
         }
+
         $this->orderBy("exam.id", "desc");
-        $this->limit($results_per_page, $page_first_result);
-       
+        if ($keyword_search == "") {
+            $this->limit($results_per_page, $page_first_result);
+        }
+
         $results = $this->get("exam.id, exam.title, exam.description, exam.published, exam.uploaded_at, exam.time_start, exam.time_end, exam.updated_at");
         $numbers_of_page = count($this->getAll());
         return array(

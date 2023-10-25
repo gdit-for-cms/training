@@ -9,7 +9,7 @@
         </div>
         <div class="white_card_body">
             <div class="card-body">
-                <form id="form_update_question" class="" action="update" method="POST">
+                <form id="form_update_question" action="update" method="POST">
                     <input id="id" name="id" value="<?= $question['id'] ?>" type="hidden" class="form-control">
                     <input id="question_title_id" name="question_title_id" value="<?= $question['question_title_id'] ?>" type="hidden" class="form-control">
                     <div class="mb-3">
@@ -20,7 +20,7 @@
                     </div>
                     <div class="mb-3">
                         <span style="color: #828bb2;">* Note</span>
-                        <p class="" style="padding-left: 20px;">
+                        <p style="padding-left: 20px;">
                             Correct : Choose the correct answers<br>
                             Answer : Enter the answer to the question<br>
                             Button Add : Click the "add" button to add an answer

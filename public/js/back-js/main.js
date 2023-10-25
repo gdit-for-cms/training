@@ -526,11 +526,11 @@ function sortAll(data, tableMain, pathName, paginationMain) {
 }
 
 $(document).ready(function () {
-    
+
     submitForm('.add-form');
     alertDelete();
     submitChange();
-    
+
     submitForm('#form_new_position');
     submitForm('#form_update_position');
     submitForm('#form_new_user');
@@ -1140,8 +1140,10 @@ function searchAjax() {
                 let result = response.result.results;
                 const directory = response.result.directory;
                 let resultHTML = '';
-                let stt = 2;
-
+                let stt = 1;
+                if (pathName == "question") {
+                    stt = 2
+                }
                 for (let i = 0; i < result.length; i++) {
                     // console.log(result[i]['title']);
 
@@ -1185,20 +1187,19 @@ function searchAjax() {
                         if (!(currentTime >= startTime && currentTime <= endTime && result[i]['published'] == 1)) {
                             input_checkbox = `<input type="checkbox" value="${result[i]['id']}" name="item[]" class="checkbox">`
                         }
-
                         resultHTML += `
                                 <tr>
                                     <th class="text-center align-middle">
                                         ${input_checkbox}
                                     </th>
-                                    <th class="align-middle" scope="row">${stt++}</th>
+                                    <th class="text-th align-middle" scope="row">${stt++}</th>
                                     <td class="text-ellipsis align-middle">
                                         ${result[i]['title']}
                                     </td>
-                                    <td>
+                                    <td class="align-middle">
                                         ${status}
                                     </td>
-                                    <td>
+                                    <td class="align-middle">
                                         <div class="overflow-auto">
                                             ${publish}
                                         </div>
@@ -1218,11 +1219,12 @@ function searchAjax() {
                                 </tr>
                                 `;
                     } else if (pathName == "question") {
+
                         resultHTML += `<tr>
                                             <th class="align-middle text-th" class="text-center">
                                                 <input type="checkbox" value="${result[i]['question_id']}" name="item[]" class="checkbox">
                                             </th>
-                                            <th class="align-middle text-th">${stt++}</th>
+                                            <th class="text-th align-middle text-th">${stt++}</th>
                                             <td class="text-ellipsis align-middle">${result[i]['question_title']}</td>
                                             <td class="align-middle">${result[i]['question_updated_at']}</td>
                                             <td class="align-middle">

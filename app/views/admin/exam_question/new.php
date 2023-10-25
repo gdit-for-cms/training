@@ -18,7 +18,7 @@
             </ul>
             <div class="ml-4">
                 <span style="color: #828bb2;">* Note</span>
-                <p class="" style="padding-left: 20px;">
+                <p style="padding-left: 20px;">
                     Select the button on the questions to add questions to the exam
                 </p>
             </div>

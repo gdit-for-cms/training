@@ -9,7 +9,7 @@
         </div>
         <div class="white_card_body" style="margin-left: 15px;">
             <div class="card-body d-flex">
-                <div class="mb-3 col-10 mr-12" style="">
+                <div class="mb-3 col-10 mr-12">
                     <b><label class="form-label" for="title">Title : </label></b>
                     <?php echo isset($question_title) ? $question_title['title'] : "Other question"; ?>
                     <br>
@@ -61,7 +61,7 @@
                                         <td class="col-4 align-middle">
                                             <?php echo $question_title['question_content'] ?>
                                         </td>
-                                        <td class="">
+                                        <td>
                                             <div class="answer-container align-middle">
                                                 <ul>
                                                     <?php
@@ -76,7 +76,7 @@
                                                             <li class="text-ellipsis" style="color:#008000 "><?php echo  $alphabet[$answerIndex] . ". " . $answer[1] ?> </li>
                                                         <?php
                                                         } else { ?>
-                                                            <li class="text-ellipsis" style=""><?php echo   $alphabet[$answerIndex] . ". " . $answer[1] ?> </li>
+                                                            <li class="text-ellipsis"><?php echo   $alphabet[$answerIndex] . ". " . $answer[1] ?> </li>
                                                         <?php
                                                         }
                                                         ?>

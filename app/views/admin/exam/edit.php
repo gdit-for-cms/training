@@ -14,7 +14,7 @@
             <div class="card-body">
                 <form id="form_create_exam" class="ml-10" action="update" method="POST">
                     <input class="form-control" type="hidden" value="<?php echo $exam['id']; ?>" rows="3" name="id" />
-                    <div class="">
+                    <div>
                         <div class="mb-3 col-8 mr-7">
                             <label class="form-label" for="title">Title <span style="color: red;">*</span></label>
                             <input class="form-control" rows="3" name="title" value="<?= $exam['title'] ?>" id="title" placeholder="Title..." />

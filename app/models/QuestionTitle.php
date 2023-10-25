@@ -95,11 +95,11 @@ class QuestionTitle extends Model
 
     public function getAllHasPagination($req_method_ary, $results_per_page = 5)
     {
-        $where = '';
+        $key_word = '';
         //filter 
         if (isset($req_method_ary['keyword'])) {
-            $where = trim($req_method_ary['keyword']);
-            $this->whereLikeWithSpecialCharEscape("question_title.title", $where);
+            $key_word = trim($req_method_ary['keyword']);
+            $this->whereLikeWithSpecialCharEscape("question_title.title", $key_word);
         }
 
         if (!isset($req_method_ary['page']) || $req_method_ary['page'] < 1) {
