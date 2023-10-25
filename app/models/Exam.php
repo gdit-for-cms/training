@@ -43,7 +43,6 @@ class Exam extends Model
 
     public function getExam($req_method_ary, $results_per_page = 10)
     {
-
         if (!isset($req_method_ary['page']) || ($req_method_ary['page'] < 1)) {
             $req_method_ary['page'] = '1';
         }
@@ -73,21 +72,20 @@ class Exam extends Model
                 $this->where("exam.published", "=", 0);
             }
         }
-
         //filter search keyword
         $keyword_search = "";
         if (isset($req_method_ary['keyword'])) {
             $keyword_search = trim($req_method_ary['keyword']);
             $this->whereLikeWithSpecialCharEscape("exam.title", $keyword_search);
         }
-
+        // limit
         $this->orderBy("exam.id", "desc");
         if ($keyword_search == "") {
             $this->limit($results_per_page, $page_first_result);
         }
-
         $results = $this->get("exam.id, exam.title, exam.description, exam.published, exam.uploaded_at, exam.time_start, exam.time_end, exam.updated_at");
         $numbers_of_page = count($this->getAll());
+        
         return array(
             'numbers_of_page' => $numbers_of_page,
             'results' => $results,

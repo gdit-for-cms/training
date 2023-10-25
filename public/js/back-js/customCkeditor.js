@@ -32,6 +32,7 @@ $(document).ready(() => {
     var btnOpenPreviews = document.querySelectorAll('.btn-open-preview')
     var btnInsertImages = document.querySelectorAll('.btn-insert-image')
     var btnDeleteImages = document.querySelectorAll('.btn-delete-image')
+
     const btnListImageTab = document.getElementById('btn-list-image-tab')
     const imgFileListUL = $('#images-file-list-ul')
     var selectLimitImage = document.getElementById('select-quantity')
@@ -84,6 +85,7 @@ $(document).ready(() => {
                 }
             })
         })
+
         $.each($('.name-file'), (key, item) => {
             $(item).on('keyup', (e) => {
                 if ($(item).val() != null) {
@@ -92,11 +94,13 @@ $(document).ready(() => {
                 }
             })
         })
+
         $('#close-modal-notice').on('click', () => {
             if (modalNotice != null) {
                 modalNotice?.css('display', 'none')
             }
         })
+        
         btnUploadTab.addEventListener('click', () => {
             btnListImageTab.classList.remove('active-interface')
         })
@@ -286,6 +290,7 @@ $(document).ready(() => {
     selectLimitImage.addEventListener('change',()=>{
         btnSearchImg.click()
     })
+
     function updateSelectLimitValue(quantity){
         if (optionAllResult) {
             optionAllResult.value = quantity
@@ -464,10 +469,12 @@ $(document).ready(() => {
         btnListImageTab.classList.remove('active-interface')
         btnListImageTab.classList.add('active')
     }
+
     function switchToFormatTab() {
         btnFormatTab.click()
         btnListImageTab.classList.add('active-interface')
     }
+    
     function updateDomElements() {
         btnOpenPreviews = document.querySelectorAll('.btn-open-preview')
         btnInsertImages = document.querySelectorAll('.btn-insert-image')

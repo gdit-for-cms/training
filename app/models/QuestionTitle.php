@@ -86,6 +86,7 @@ class QuestionTitle extends Model
                 GROUP_CONCAT(CONCAT(a.is_correct, ' - ', a.content) SEPARATOR '|<@>|') AS answers
             ");
         $numbers_of_page = count($this->getAll());
+        
         return array(
             'numbers_of_page' => $numbers_of_page,
             'results' => $results,
@@ -112,8 +113,8 @@ class QuestionTitle extends Model
             question_title.title AS question_title,
             question_title.description AS question_description,
             question_title.updated_at AS question_updated_at");
-
         $numbers_of_page = count($this->getAll());
+
         return array(
             'numbers_of_page' => $numbers_of_page,
             'results' => $results,

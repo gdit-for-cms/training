@@ -120,6 +120,7 @@ class Question extends Model
         $numbers_of_page = count($this->join(" answer AS a", "question.id = a.question_id")
             ->orWhereNull(" question.question_title_id")
             ->groupBy("question.content")->get("question.id"));
+            
         return array(
             'numbers_of_page' => $numbers_of_page,
             'results' => $results,
@@ -145,6 +146,7 @@ class Question extends Model
                     a.is_correct AS answer_correct,
                     GROUP_CONCAT(CONCAT(a.is_correct, ' - ', a.content, ' - ', a.id) SEPARATOR '|<@>|') AS answers
                 ");
+
         return $results;
     }
 
@@ -165,15 +167,4 @@ class Question extends Model
         $db = static::getDB();
         return $db->rollBack();
     }
-    // function checkTransaction()
-    // {
-    //     $db = static::getDB();
-
-    //     // Kiểm tra xem giao dịch đang hoạt động
-    //     if ($db->inTransaction()) {
-    //         echo "Giao dịch đang hoạt động.";
-    //     } else {
-    //         echo "Không có giao dịch nào đang hoạt động.";
-    //     }
-    // }
 }

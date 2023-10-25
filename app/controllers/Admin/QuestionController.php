@@ -125,11 +125,13 @@ class QuestionController extends  AppController
         $answers =  $result_vali_ary['answer'];
 
         $data = [
-            'content' => $content,
+            'content' => htmlspecialchars($content),
         ];
+        
         if (isset($question_title_id)) {
             $data += ['question_title_id' => $question_title_id];
         }
+
         try {
             // $this->obj_model->beginTransaction();
             $this->obj_model->create($data);
@@ -147,7 +149,7 @@ class QuestionController extends  AppController
                 $this->obj_model_answer->create(
                     [
                         'question_id' => $question['id'],
-                        'content' => $answerContent,
+                        'content' => htmlspecialchars($answerContent),
                         'is_correct' => $isCorrect,
                     ]
                 );
@@ -190,11 +192,13 @@ class QuestionController extends  AppController
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
             return $this->errorResponse($message_error);
         }
+        //get data
         $answers =  $result_vali_ary['answer'];
         $question_id = $result_vali_ary['id'];
         $is_corrects = $result_vali_ary['is_correct'];
         $content = $result_vali_ary['content'];
         $question = $this->obj_model->getBy('id', '=', $question_id);
+        
         //check answer
         if ($this->check_answer($result_vali_ary['answer'])) {
             return  $this->errorResponse($this->check_answer($result_vali_ary['answer']));
@@ -247,6 +251,7 @@ class QuestionController extends  AppController
             $question_title_id = $req_method_ary['question_id'];
             $this->data_ary['question_title'] = $this->obj_model_question_title->getById($question_title_id, "id,title,description");
         }
+
         $this->data_ary['question_titles'] = $results_ary['results'];
         $numbers_of_result = $results_ary['numbers_of_page'];
         $numbers_of_page = ceil($numbers_of_result / $results_per_page);

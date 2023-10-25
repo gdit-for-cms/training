@@ -45,14 +45,16 @@ class QuestionTitleController extends  AppController
 
         if (in_array('error', $result_vali_ary)) {
             $message_error = showError($result_vali_ary[array_key_last($result_vali_ary)]) . " (" . array_key_last($result_vali_ary) . ")";
+
             return $this->errorResponse($message_error);
         }
-        $title = $result_vali_ary['title'];
-        $description = $result_vali_ary['description'];
+        $title = htmlspecialchars($result_vali_ary['title']);
+        $description = htmlspecialchars($result_vali_ary['description']);
         $question_titles = $this->obj_model->getBy('title', '=', $title);
         if (count($question_titles) > 0) {
             return $this->errorResponse('Question collection has been exist');
         }
+
         try {
             $this->obj_model->create(
                 [
@@ -85,23 +87,13 @@ class QuestionTitleController extends  AppController
     public function editAction(Request $request)
     {
         $id = $request->getGet()->get('ques-title');
-        // $this->data_ary['question_title'] =  $this->obj_model_question->getById($id, 'id, content');
-        // $req_method_ary = $request->getGet()->all();
-        // $req_method_ary['question_id'] = $id;
-        // $results_per_page = 10;
-        // $results_ary = $this->obj_model->getAllRelation($req_method_ary, $results_per_page);
-        // $this->data_ary['question_titles'] = $results_ary['results'];
-        // $numbers_of_result = $results_ary['numbers_of_page'];
-        // $numbers_of_page = ceil($numbers_of_result / $results_per_page);
-        // $this->data_ary['numbers_of_page'] = $numbers_of_page;
-        // $this->data_ary['page'] = (float)$results_ary['page'];
+
         $this->data_ary['question_title'] = $this->obj_model->getById($id, "id,title,description");
         $this->data_ary['content'] = 'question_title/edit';
     }
 
     public function update(Request $request)
     {
-
         $post_ary = $request->getPost()->all();
         $check_exam = $this->obj_model->getById($post_ary['id']);
         $change_data_flg = false;
@@ -121,10 +113,10 @@ class QuestionTitleController extends  AppController
         }
         $title = $result_vali_ary['title'];
         $description = $result_vali_ary['description'];
-        $ques_title_check_ary = $this->obj_model->getBy('title', '=', $post_ary['title']);
+        $ques_title_check_ary = $this->obj_model->getBy('title', '=', htmlspecialchars($post_ary['title']));
         $id = $post_ary['id'];
-        $title = $post_ary['title'];
-        $description = $post_ary['description'];
+        $title = htmlspecialchars($post_ary['title']);
+        $description = htmlspecialchars($post_ary['description']);
         if (count($ques_title_check_ary) > 0 && $ques_title_check_ary[0]['id'] != $id) {
             return $this->errorResponse('Exam has been exist');
         }

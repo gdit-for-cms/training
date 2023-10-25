@@ -60,8 +60,7 @@ function checkPathName() {
                             </span>
                         </div>
                     </div>`
-    }
-    else {
+    } else {
         content = `
                     <div class="d-flex justify-content-center align-items-center w-full">
                         <div class="d-flex flex-col justify-content-center align-items-start">
@@ -75,6 +74,9 @@ function submitForm(formId) {
     $(formId).submit(function (e) {
         var content = checkPathName()
         e.preventDefault()
+        // var form = $(this);
+        // data = form.serialize(),
+        // console.log(data);
         Swal.fire({
             title: 'Are you sure?',
             html: content,
@@ -250,6 +252,7 @@ function alertDeleteExamDetail() {
         })
     });
 }
+
 function alertDeleteQuestion() {
     $('.btn-delete-question').click(function (e) {
         let deleteID = $(this).data('id');
@@ -530,7 +533,6 @@ $(document).ready(function () {
     submitForm('.add-form');
     alertDelete();
     submitChange();
-
     submitForm('#form_new_position');
     submitForm('#form_update_position');
     submitForm('#form_new_user');
@@ -719,7 +721,6 @@ function alertDeleteListRule() {
         })
     });
 }
-
 function alertDeleteRule() {
     $('.btn-delete-rule').click(function (e) {
         let deleteID = $(this).data('id');
@@ -755,8 +756,6 @@ function alertAddQuestionToExam() {
 
         let total_select = document.getElementById("total_select");
         total_select = total_select.innerHTML;
-        // alert(total_select)
-        // console.log(array_select_question);
         Swal.fire({
             title: 'Are you sure?',
             text: "Add " + total_select + " Questions to Exam!",
@@ -775,9 +774,7 @@ function alertAddQuestionToExam() {
                         exam_id: exam_id,
                     },
                     success: function (response) {
-                        // console.log(response);
                         window.history.back()
-
                     },
                     error: function (E) {
                         console.log(E)
@@ -801,6 +798,7 @@ function updateCheckboxValue(checkbox) {
         }
     }
 }
+
 // Cập nhật giá trị is_correct trước khi gửi form
 function updateIsCorrectValues() {
     var checkboxes = document.querySelectorAll('input[name="is_correct[]"]');
@@ -826,6 +824,7 @@ function addAnswer() {
         answerCheckbox.style = "margin-right: 50px;margin-top:15px";
         answerCheckbox.type = "checkbox";
         answerCheckbox.name = "is_correct[]";
+
         if (pathName == "question") {
             answerCheckbox.value = currentAnswerIndex;
         }
@@ -834,9 +833,7 @@ function addAnswer() {
         });
     }
 
-
     var answerContainer = document.getElementById("answerContainer");
-
     var newAnswerDiv = document.createElement("div");
     newAnswerDiv.classList.add("form-check", "mb-3");
     newAnswerDiv.style = "padding-left: 45px;";
@@ -892,10 +889,8 @@ function alertUploadFileExam() {
         var btn_submit = document.getElementById('btn_submit');
         btn_submit.disabled = false;
         let uploadFileID = $(this).data('id');
-        // let pathName = window.location.pathname.split('/')[2];
         let pathName = 'exam';
 
-        // alert(pathName)    
         var content = document.getElementById('content_exam');
         var csv_content = document.getElementById('csv_answer');
         var csv_exam_participants = document.getElementById('csv_exam_participants');
@@ -1000,85 +995,6 @@ function alertUploadFileExam() {
         })
     })
 }
-
-// function alertEditDetailExam(formId) {
-//     $(formId).submit(function (e) {
-//         var content = `<div class="d-flex justify-content-center align-items-center w-full">
-//         <div class="d-flex flex-col justify-content-center align-items-start">
-//             <span class="mb-2">
-
-//             </span>
-//         </div>
-//     </div>`
-//         e.preventDefault()
-//         Swal.fire({
-//             title: 'Are you sure?',
-//             html: content,
-//             icon: 'warning',
-//             showCancelButton: true,
-//             confirmButtonColor: '#d33',
-//             cancelButtonColor: '#3085d6',
-//             confirmButtonText: 'Yes'
-//         }).then((result) => {
-//             if (result.isConfirmed) {
-//                 var form = $(this);
-//                 var actionUrl = form.attr('action');
-//                 $.ajax({
-//                     type: "POST",
-//                     url: actionUrl,
-//                     data: form.serialize(),
-//                     dataType: 'json',
-//                     success: function (response) {
-//                         Swal.fire({
-//                             icon: 'success',
-//                             title: "Successfully",
-//                             showConfirmButton: false,
-//                             timer: 1500
-//                         });
-//                         setTimeout(() => {
-//                             document.location.reload(true);
-//                         }, "1600");
-//                     },
-//                     error: function (response) {
-//                         Swal.fire({
-//                             icon: 'error',
-//                             title: 'Oops...',
-//                             text: response.responseJSON.message,
-//                         });
-//                     }
-//                 });
-//             }
-//         })
-//     })
-// }
-
-// function select_ques_exam(e) {
-//     const quesExams = document.querySelectorAll(".ques_exam");
-//     quesExams.forEach((element) => {
-//         const questionID = element.getAttribute("data-question_id")
-//         select_ques_to_exam(questionID);
-//     });
-//     const select_total = document.getElementById("total_select")
-//     select_total.textContent = select
-// }
-
-// function select_ques_to_exam(questionID) {
-//     get_question_id = 'select_ques' + questionID;
-//     const questionContainer = document.getElementById(get_question_id)
-//     if (!array_select_question.includes(questionID)) {
-//         array_select_question.push(questionID);
-//         // questionContainer.classList.remove("not-selected")
-
-//         questionContainer.classList.add("selected")
-//         select++;
-//     } else {
-//         array_select_question = array_select_question.filter(item => item !== questionID);
-//         questionContainer.classList.remove("selected")
-//         select--
-//     }
-//     const select_total = document.getElementById("total_select")
-//     select_total.textContent = select
-// }
 
 //index detail
 function copyLink() {

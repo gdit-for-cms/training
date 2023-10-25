@@ -75,25 +75,25 @@ class ExamController extends AppController
     {
         $ftp = $this->configFTP();
 
-        // Đặt chế độ truyền dữ liệu sang chế độ ASCII (để đảm bảo đọc tệp CSV đúng cách)
+        // Set data transfer mode to ASCII mode (to ensure proper reading of CSV files)
         ftp_pasv($ftp, true);
-        // kiểm tra file đã tồn tại hay chưa
+        // check if the file exists or not
         $fileList = ftp_nlist($ftp, dirname($file_remote_derectory));
 
-        // Tệp tồn tại trên máy chủ FTP
+        // File exists on FTP server
         if (is_array($fileList) && in_array($file_remote_derectory, $fileList)) {
 
-            // Tạo một tệp tạm thời để lưu dữ liệu CSV
+            // Create a temporary file to save CSV data
             $local_csv_file = tempnam(sys_get_temp_dir(), 'csv_');
 
-            // Lấy tệp email.csv từ máy chủ FTP và lưu vào tệp tạm thời
+            // Get the email.csv file from the FTP server and save it to a temporary file
             $get = ftp_get($ftp, $local_csv_file, $file_remote_derectory, FTP_ASCII);
             if ($get !== false) {
 
-                // Đọc dữ liệu từ tệp CSV tạm thời
+                // Read data from temporary CSV file
                 $email_data = file_get_contents($local_csv_file);
 
-                // Xóa tệp CSV tạm thời
+                // Delete temporary CSV file
                 unlink($local_csv_file);
 
                 // close the connection and the file handler
@@ -232,41 +232,8 @@ class ExamController extends AppController
         return array_shift($errors);
     }
 
-    // public function checkTimeExam($time_start, $time_end)
-    // {
-    //     $conditions = [
-    //         // Kiểm tra điều kiện 1: Không được bỏ trống cả hai trường hoặc không điền cả hai trường
-    //         'BothFieldsFilled' => !((empty($time_start) && empty($time_end)) || (!empty($time_start) && !empty($time_end))),
-
-    //         // Kiểm tra điều kiện 2: Thời gian bắt đầu phải lớn hơn hoặc bằng thời gian hiện tại
-    //         'StartTime' => empty($time_start) || strtotime($time_start) >= time(),
-
-    //         // Kiểm tra điều kiện 3: Thời gian bắt đầu phải nhỏ hơn thời gian kết thúc
-    //         'StartTimeEndTime' => empty($time_start) || empty($time_end) || strtotime($time_start) < strtotime($time_end)
-    //     ];
-
-    //     foreach ($conditions as $errorKey => $condition) {
-    //         if (!$condition) {
-    //             return $this->errorResponse($this->getErrorMessage($errorKey));
-    //         }
-    //     }
-
-    //     return null;
-    // }
-
-    // public function getErrorMessage($errorKey)
-    // {
-    //     $errorMessages = [
-    //         'BothFieldsFilled' => "Please fill out both time fields",
-    //         'StartTime' => "Time start must be greater than or equal to the current time",
-    //         'StartTimeEndTime' => "Time start must be less than the end time"
-    //     ];
-
-    //     return $errorMessages[$errorKey] ?? "Unknown error";
-    // }
-
     public function create(Request $request)
-    {
+    {  
         //validate
         $result_vali_ary = $this->app_request->validate($this->obj_model->rules(), $request, 'post');
         if (in_array('error', $result_vali_ary)) {
@@ -282,7 +249,7 @@ class ExamController extends AppController
             }
         }
         // Check exam collection has been exist
-        if (count($this->obj_model->getBy("title", "=", $result_vali_ary['title'])) > 0) {
+        if (count($this->obj_model->getBy("title", "=", htmlspecialchars($result_vali_ary['title']))) > 0) {
             return $this->errorResponse("Exam collection has been exist");
         }
 
@@ -292,7 +259,7 @@ class ExamController extends AppController
         }
 
         $user_id = $result_vali_ary['user_id'];
-        $title = trim($result_vali_ary['title']);
+        $title = htmlspecialchars(trim($result_vali_ary['title']));
         $description = $result_vali_ary['description'];
         $time_start = $result_vali_ary['date_start'];
         $time_end = $result_vali_ary['date_end'];
@@ -393,14 +360,17 @@ class ExamController extends AppController
         $html_directory =  Config::FTP_PUBLIC_DIRECTORY_HTML;
         $csv_directory = Config::FTP_PUBLIC_DIRECTORY_CSV;
         $email_directory = Config::FTP_PUBLIC_DIRECTORY_EMAIL;
+        $exam_random_derectory = Config::FTP_PUBLIC_DIRECTORY_LINK_EXAM;
 
         $file_exam_html = $html_directory . $exam_id . ".html";
         $file_answer_csv = $csv_directory . $exam_id . ".csv";
         $file_email_csv = $email_directory . "email" . $exam_id . ".csv";
+        $file_link_exam = $exam_random_derectory . "ran" . $exam_id . ".csv";
 
         $this->deleteFileFTP($file_exam_html);
         $this->deleteFileFTP($file_answer_csv);
         $this->deleteFileFTP($file_email_csv);
+        $this->deleteFileFTP($file_link_exam);
     }
 
     public function uploadAction(Request $request)
@@ -457,20 +427,16 @@ class ExamController extends AppController
         $check_config = $this->configFTP();
 
         if ($check_config) {
-
             // Write the file content to your server
             $check_put_file = file_put_contents($your_server_directory, $file_content);
 
             if ($check_put_file !== false) {
                 // Upload the file from your server to the FTP server
                 $upload_result = ftp_put($check_config, $ftp_directory . basename($your_server_directory), $your_server_directory, FTP_BINARY);
-
                 // Set permissions for the file after uploading
                 ftp_chmod($check_config, 0777, $ftp_directory . basename($your_server_directory));
-
                 // Delete the file on your server
                 unlink($your_server_directory);
-
                 if ($upload_result) {
                     return true;
                 } else {
@@ -579,7 +545,6 @@ class ExamController extends AppController
 
         try {
             // $this->obj_model->beginTransaction();
-
             $this->obj_model->updateOne(
                 $data,
                 "id = $id"
@@ -614,6 +579,7 @@ class ExamController extends AppController
     public function unpublishAction(Request $request)
     {
         $exam_id = $request->getGet()->get('exam_id');
+        //update exam
         $this->obj_model->updateOne(
             [
                 'published' => 0,
@@ -623,8 +589,18 @@ class ExamController extends AppController
             ],
             "id = $exam_id"
         );
+        //update participants
+        $this->obj_model_exam_participant->update(
+            [
+                'is_login' => 1,
+                'is_submit' => 2,
+                'score' => 0
+            ],
+            "exam_id = $exam_id"
+        );
+        // delete file exam on server
         $this->deleteFileFTPExam($exam_id);
-        header('Location:/admin/exam/index');
+        header("Location:/admin/exam/examDetail?exam_id=$exam_id");
         exit;
     }
 

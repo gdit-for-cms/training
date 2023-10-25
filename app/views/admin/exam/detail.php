@@ -40,7 +40,7 @@
                 </div>
                 <div class="white_card_body ml-10">
                     <div class="card-body d-flex ">
-                        <div class="mb-3 col-4 mr-11" style="border-right: 1px solid #dee2e6;">
+                        <div class="mb-3 col-4 mr-9" style="border-right: 1px solid #dee2e6;">
                             <b><label class="form-label" for="title">Title : </label></b>
                             <?php echo $exam['title'] ?>
                             <br>
@@ -88,6 +88,7 @@
                                         <th scope="col">Status</th>
                                         <th scope="col">Scores</th>
                                         <th scope="col">Link Exam</th>
+                                        <th scope="col">Option</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-rule-body">
@@ -95,12 +96,13 @@
                                     if (count($emails) > 0) {
                                         $stt = 1;
                                         foreach ($emails as $email) {
+                                            // echo "<pre>";
+                                            // var_dump($email);
+                                            // die();
                                             $score = 0;
                                             if ($total_question_exam > 0) {
-                                                $score = (float)($email['score'] / $total_question_exam) * 100;
-                                                $score = round($score, 2);
+                                                $score = $email['score'] . "/" . $total_question_exam;
                                             }
-
                                     ?>
                                             <tr class="text-center">
                                                 <td><?php echo $stt++; ?></td>
@@ -112,8 +114,10 @@
                                                     <?php if ($exam['published'] == 1) {
                                                     ?>
                                                         <a style="color:#5d7cc1" href="#" class="copyLink ml-4 linkToCopy text-primary-hover" data-link="<?php echo $directory['domain'] . $exam['id'] . "/" . $email['random'] ?> "><?php echo $directory['domain'] . $exam['id'] . "/" . $email['random'] ?> </a>
-                                                        <!-- <button onclick="copyLink('linkToCopy<?php echo $exam['id']; ?>')" class="ml-4 linkToCopy text-primary-hover copyLink" id="linkToCopy<?php echo $exam['id']; ?>" href="<?php echo $directory['domain'] . $exam['id'] . "/" . $email['random'] ?>"><?php echo $directory['domain'] . $exam['id'] . "/" . $email['random'] ?> </button> -->
                                                     <?php } ?>
+                                                </td>
+                                                <td>
+                                                    <button type="button" data-path="examParticipant" data-id="<?php echo $email['id']; ?>" class="btn btn-danger text-white btn-delete-question mr-2">Delete</button>
                                                 </td>
                                             </tr>
                                         <?php

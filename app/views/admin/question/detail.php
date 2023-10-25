@@ -59,7 +59,7 @@
                                         </th>
                                         <th class="align-middle"><?php echo $stt++; ?></th>
                                         <td class="col-4 align-middle">
-                                            <?php echo $question_title['question_content'] ?>
+                                            <?php echo html_entity_decode($question_title['question_content']); ?>
                                         </td>
                                         <td>
                                             <div class="answer-container align-middle">
