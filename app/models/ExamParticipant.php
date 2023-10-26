@@ -51,6 +51,11 @@ class ExamParticipant extends Model
         return $this->where($column, $operator, $value)->get($get_columns);
     }
 
+    public function getParticipant($column, $operator, $value, $order_column, $direction = "desc")
+    {
+        return $this->where($column, $operator, $value)->orderBy($order_column, $direction)->get();
+    }
+
     public function rules($change = '', $value = array())
     {
         $rules_ary = array(

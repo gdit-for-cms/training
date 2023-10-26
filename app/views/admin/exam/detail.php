@@ -27,7 +27,17 @@
                                 if ($check_status) {
                                 ?>
                                     <a href="/admin/exam/edit?id=<?php echo $exam['id']; ?>"><button type="button" class="btn btn-info text-white mr-4">Edit</button></a>
-                                    <a class="btn btn-primary mr-3" id="createFilesButton" href="/admin/exam/preview?exam_id=<?php echo $exam['id']; ?>" data-id="<?php echo $exam['id']; ?>" id="submit">Upload</a>
+                                    <?php if ($exam['published'] != 1) {
+                                    ?>
+                                        <a class="btn btn-primary mr-3" id="createFilesButton" href="/admin/exam/preview?exam_id=<?php echo $exam['id']; ?>" data-id="<?php echo $exam['id']; ?>" id="submit">Upload</a>
+
+                                    <?php
+                                    } else {
+                                    ?>
+                                        <a class="btn btn-primary mr-3" id="createFilesButton" href="/admin/exam/preview?exam_id=<?php echo $exam['id']; ?>" data-id="<?php echo $exam['id']; ?>" id="submit">Re-Upload</a>
+
+                                    <?php }
+                                    ?>
                                 <?php
                                 } elseif ($exam['published'] == 1 && !($currentTime >= $startTime && $currentTime <= $endTime)) {
                                 ?>
@@ -39,8 +49,8 @@
                     </div>
                 </div>
                 <div class="white_card_body ml-10">
-                    <div class="card-body d-flex ">
-                        <div class="mb-3 col-4 mr-9" style="border-right: 1px solid #dee2e6;">
+                    <div class="card-body">
+                        <div class="mb-3 col-9 mr-2">
                             <b><label class="form-label" for="title">Title : </label></b>
                             <?php echo $exam['title'] ?>
                             <br>
@@ -78,15 +88,53 @@
                             <?php echo isset($exam['description']) ? $exam['description'] : "Chưa có mô tả"; ?>
                             <br>
                         </div>
-                        <div class="col-7 ml-15">
-                            <b><label class="form-label" for="email">Participants : </label></b>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="white_card card_height_100 mb_30">
+                <div class="white_card_header">
+                    <div class="box_header m-0">
+                        <div class="main-title">
+                            <h4 class="mb-2 nowrap">List participant</h4>
+                        </div>
+                        <div class="input-button-group mr-2">
+                            <button type="button" data-exam_id="<?php echo $exam['id']; ?>" data-path="exam-participant/upload-participant-all" data-id="select" class="btn btn-info text-white btn-delete-select-all btn-sendmail-select" style="display: none;">Send Mail All</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="white_card_body ml-10">
+                    <div class="card-body">
+                        <div class="col-12">
+                            <div class="input-button-group mb-3">
+                                <?php if ($check_status) {
+                                ?>
+                                    <a href="/admin/exam-question/new?exam_id=<?php echo $exam['id']; ?>"><button type=" button" class="btn btn-success float-end">Add Participant</button></a>
+                                <?php
+                                } ?>
+                            </div>
                             <table class="table table-striped table-bordered table-responsive">
                                 <thead>
                                     <tr class="text-center">
+                                        <th class="text-center align-middle">
+                                            <?php if ($check_status) { ?>
+                                                <input type="checkbox" id="selectAll" class="selectAllSendMail" name="select_all">
+                                            <?php } ?>
+                                        </th>
                                         <th scope="col">#</th>
                                         <th scope="col">Email</th>
                                         <th scope="col">Status</th>
-                                        <th scope="col">Scores</th>
+                                        <th scope="col">
+                                            <div>
+                                                <label for="selectScores">Scores</label>
+                                                <select class="text-medium border" id="selectScores" name="" aria-label="Default select example">
+                                                    <option value="0">increase</option>
+                                                    <option selected value="1">decrease</option>
+                                                </select>
+                                            </div>
+                                        </th>
                                         <th scope="col">Link Exam</th>
                                         <th scope="col">Option</th>
                                     </tr>
@@ -105,6 +153,11 @@
                                             }
                                     ?>
                                             <tr class="text-center">
+                                                <th class="text-center align-middle">
+                                                    <?php if ($check_status) { ?>
+                                                        <input type="checkbox" value="<?php echo $email['id']; ?>" name="item[]" class="checkboxSendMail">
+                                                    <?php } ?>
+                                                </th>
                                                 <td><?php echo $stt++; ?></td>
                                                 <td><?php echo $email['email'] ?></td>
                                                 <td><?php echo $email['is_submit'] == 2 ? "<span class='text-danger'>Chưa nộp bài</span>" : "<span class='text-success'>Đã nộp bài</span>"; ?></td>
@@ -117,7 +170,12 @@
                                                     <?php } ?>
                                                 </td>
                                                 <td>
-                                                    <button type="button" data-path="examParticipant" data-id="<?php echo $email['id']; ?>" class="btn btn-danger text-white btn-delete-question mr-2">Delete</button>
+                                                    <?php
+                                                    if ($check_status) {
+                                                    ?>
+                                                        <button type="button" data-path="examParticipant" data-id="<?php echo $email['id']; ?>" class="btn btn-info text-white btn-delete-question mr-2">Send Mail</button>
+                                                        <button type="button" data-path="examParticipant" data-id="<?php echo $email['id']; ?>" class="btn btn-danger text-white btn-delete-question mr-2">Delete</button>
+                                                    <?php } ?>
                                                 </td>
                                             </tr>
                                         <?php
@@ -125,7 +183,7 @@
                                     } else {
                                         ?>
                                         <tr class="text-center">
-                                            <td colspan="5">Empty</td>
+                                            <td colspan="6">Empty</td>
                                         </tr>
                                     <?php
                                     }
@@ -137,21 +195,19 @@
                 </div>
             </div>
         </div>
-
         <div class="col-12">
             <div class="white_card card_box card_height_100 mb_30">
                 <div class="px-4 pt-4">
                     <div class="main-title2 d-flex justify-content-between items-center ">
                         <div class="top-left d-flex">
                             <h4 class="mb-2 nowrap">List question</h4>
-
                         </div>
                         <div class="input-button-group mr-2">
-                            <button type="button" data-exam_id="<?php echo $exam['id']; ?>" data-path="exam-question/delete-question-all" data-id="select" class="btn btn-danger text-white btn-delete-select-all btn-delete-select" style="display: none;">Delete</button>
+                            <button type="button" data-exam_id="<?php echo $exam['id']; ?>" data-path="exam-question/delete-question-all" data-id="select" class="btn btn-danger text-white btn-delete-select-all btn-delete-select" style="display: none;">Delete All</button>
                         </div>
                     </div>
                 </div>
-                <div class="white_card_body">
+                <div class="white_card_body ml-10">
                     <div class="input-button-group mb-3">
                         <?php if ($check_status) {
                         ?>
@@ -228,10 +284,18 @@
                                             if ($cur_user['role_id'] != 3) {
                                                 if ($check_status) {
                                             ?>
-                                                    <td class="col-2 align-middle">
+                                                    <!-- <td class="col-2 align-middle">
                                                         <a href="/admin/question/edit?question_id=<?php echo $exam_detail['question_id']; ?>"><button type="button" class="btn btn-info text-white">Edit</button></a>
                                                         <button data-question_id="<?php echo $exam_detail['question_id']; ?>" data-exam_id="<?php echo $exam['id']; ?>" type="button" class=" btn btn-danger text-white btn-delete-exam-detail">Delete</button>
+                                                    </td> -->
+                                                    <td class="col-2 align-middle text-center">
+                                                        <div class="d-flex justify-content-center">
+                                                            <a href="/admin/question/edit?question_id=<?php echo $exam_detail['question_id']; ?>"><button type="button" class="btn btn-info text-white">Edit</button></a>
+                                                            <div class="mx-2"></div> <!-- Khoảng cách ngang 2 đơn vị -->
+                                                            <button data-question_id="<?php echo $exam_detail['question_id']; ?>" data-exam_id="<?php echo $exam['id']; ?>" type="button" class="btn btn-danger text-white btn-delete-exam-detail">Delete</button>
+                                                        </div>
                                                     </td>
+
                                             <?php
                                                 }
                                             }
@@ -306,12 +370,35 @@
     });
     //end coply link
     // const paginationContainer = document.getElementById("paginations");
-    selectAll()
+    selectAll("selectAll", "checkbox", ".btn-delete-select");
+    selectAll("selectAllSendMail", "checkboxSendMail", ".btn-sendmail-select");
 
-    function updateSelectedValues() {
-        let checkboxes = document.getElementsByClassName("checkbox");
+    function selectAll(classSelectAll, classCheckbox, classBtnSelectAll) {
+        let selectAllCheckboxes = document.getElementsByClassName(classSelectAll);
+        let checkboxes = document.getElementsByClassName(classCheckbox);
         let checkboxesArray = Array.from(checkboxes);
-        let deleteButton = document.querySelector(".btn-delete-select");
+
+        // Sự kiện click cho checkbox "Select All"
+        for (let i = 0; i < selectAllCheckboxes.length; i++) {
+            selectAllCheckboxes[i].addEventListener("click", function() {
+                checkboxesArray.forEach(function(checkbox) {
+                    checkbox.checked = selectAllCheckboxes[i].checked;
+                });
+                updateSelectedValues1(classCheckbox, classBtnSelectAll);
+            });
+        }
+        // Sự kiện click cho các input con
+        checkboxesArray.forEach(function(checkbox) {
+            checkbox.addEventListener("click", function() {
+                updateSelectedValues1(classCheckbox, classBtnSelectAll);
+            });
+        });
+    }
+
+    function updateSelectedValues1(classCheckbox, classBtnSelectAll) {
+        let checkboxes = document.getElementsByClassName(classCheckbox);
+        let checkboxesArray = Array.from(checkboxes);
+        let deleteButton = document.querySelector(classBtnSelectAll);
         let selectedValues = [];
         checkboxesArray.forEach(function(checkbox) {
             if (checkbox.checked) {
@@ -327,25 +414,29 @@
         return selectedValues;
     }
 
-    function selectAll() {
-        let selectAllCheckboxes = document.getElementsByClassName("selectAll");
-        let checkboxes = document.getElementsByClassName("checkbox");
-        let checkboxesArray = Array.from(checkboxes);
+    //select Scores (increase,decrease)
+    const score_id = "selectScores";
+    const paramNameScore = "score";
 
-        // Sự kiện click cho checkbox "Select All"
-        for (let i = 0; i < selectAllCheckboxes.length; i++) {
-            selectAllCheckboxes[i].addEventListener("click", function() {
-                checkboxesArray.forEach(function(checkbox) {
-                    checkbox.checked = selectAllCheckboxes[i].checked;
-                });
-                updateSelectedValues();
-            });
+    searchSelect(score_id, paramNameScore);
+
+    function searchSelect(select, paramName) {
+        var selectBox = document.getElementById(select);
+        var currentURL = window.location.href;
+        var match = currentURL.match(new RegExp("[\\?&]" + paramName + "=([^&]*)"));
+        if (match) {
+            var selectedValue = decodeURIComponent(match[1]);
+            selectBox.value = selectedValue;
         }
-        // Sự kiện click cho các input con
-        checkboxesArray.forEach(function(checkbox) {
-            checkbox.addEventListener("click", function() {
-                updateSelectedValues();
-            });
+        selectBox.addEventListener("change", function() {
+            var newValue = this.value;
+            var newURL;
+            if (match) {
+                newURL = currentURL.replace(new RegExp(paramName + "=[^&]*"), paramName + "=" + encodeURIComponent(newValue));
+            } else {
+                newURL = currentURL + (currentURL.includes("?") ? "&" : "?") + paramName + "=" + encodeURIComponent(newValue);
+            }
+            window.location.href = newURL;
         });
     }
 </script>

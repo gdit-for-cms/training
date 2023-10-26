@@ -85,8 +85,14 @@ class QuestionTitle extends Model
                 q.id AS question_id,
                 GROUP_CONCAT(CONCAT(a.is_correct, ' - ', a.content) SEPARATOR '|<@>|') AS answers
             ");
-        $numbers_of_page = count($this->getAll());
-        
+        $numbers_of_page = count($this->join(" question AS q", "question_title.id = q.question_title_id")
+            ->where("question_title.id", "=", $req_method_ary['question_id'])
+            ->get("
+                question_title.id AS question_title_id, 
+                q.content AS question_content,
+                q.id AS question_id
+            "));
+
         return array(
             'numbers_of_page' => $numbers_of_page,
             'results' => $results,

@@ -52,18 +52,25 @@ class Exam extends Model
         if (isset($req_method_ary['status'])) {
             $currentTime = time();
             $dateTime = date("Y-m-d H:i:s", $currentTime);
+            $array_status = [1, 2, 3];
+            // where (condition1 OR condition2 OR condition3) AND condition4
             if ($req_method_ary['status'] == 1) {
-                $this->where("exam.time_start", ">", $dateTime)
+                $this->where(" (" . "exam.time_start", ">", $dateTime)
                     ->orWhereNull("exam.time_start")
-                    ->orWhere("exam.published", "!=", 1);
+                    ->orWhere("exam.published", "!=", "1");
             } else if ($req_method_ary['status'] == 2) {
-                $this->where("exam.time_start", "<=", "$dateTime")
+                $this->where(" (" . "exam.time_start", "<=", "$dateTime")
                     ->Where("exam.time_end", ">=", $dateTime)
-                    ->Where("exam.published", "=", 1);
+                    ->Where("exam.published", "=", "1");
             } else if ($req_method_ary['status'] == 3) {
-                $this->where("exam.time_end ", "<", $dateTime);
+                $this->where(" (" . "exam.time_end ", "<", $dateTime);
+            }
+
+            if (in_array($req_method_ary['status'], $array_status)) {
+                $this->where =  $this->where . ")";
             }
         }
+
         //filter publish
         if (isset($req_method_ary['publish'])) {
             if ($req_method_ary['publish'] == 1) {
@@ -72,20 +79,30 @@ class Exam extends Model
                 $this->where("exam.published", "=", 0);
             }
         }
+
         //filter search keyword
         $keyword_search = "";
         if (isset($req_method_ary['keyword'])) {
             $keyword_search = trim($req_method_ary['keyword']);
             $this->whereLikeWithSpecialCharEscape("exam.title", $keyword_search);
         }
+
         // limit
         $this->orderBy("exam.id", "desc");
         if ($keyword_search == "") {
             $this->limit($results_per_page, $page_first_result);
         }
+        $where = $this->where;
+        // get number of page
         $results = $this->get("exam.id, exam.title, exam.description, exam.published, exam.uploaded_at, exam.time_start, exam.time_end, exam.updated_at");
+
+        //get number of page
         $numbers_of_page = count($this->getAll());
-        
+        if (isset($req_method_ary['status']) || isset($req_method_ary['publish'])) {
+            $this->where = $where;
+            $numbers_of_page = count($this->get("exam.id"));
+        }
+
         return array(
             'numbers_of_page' => $numbers_of_page,
             'results' => $results,

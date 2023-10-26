@@ -1198,6 +1198,7 @@ function selectAll() {
             updateSelectedValues();
         });
     }
+    
     // Sự kiện click cho các input con
     checkboxesArray.forEach(function (checkbox) {
         checkbox.addEventListener("click", function () {

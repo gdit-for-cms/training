@@ -7,7 +7,6 @@
     </div>
     <div class="box_body white_card_body">
         <div class="default-according" id="accordion2">
-
             <div class="flex col-12 mb-6">
                 <div class="input-button-group col-12">
                     <div class="row">
@@ -35,11 +34,9 @@
                         </div>
                     </div>
                     <button type="button" data-path="exam" data-id="select" class="btn btn-danger text-white btn-delete-select-all btn-delete-select" style="display: none;">Delete</button>
-
                 </div>
             </div>
             <div class="table_member_body table-responsive m-b-30 flex flex-col items-center justify-center">
-
                 <table id="<?= "1" ?>" class="table table-striped table-bordered table-responsive">
                     <thead>
                         <tr>
@@ -125,7 +122,6 @@
                                         <?php if (!$check_progress) { ?>
                                             <button type="button" data-path="exam" data-id="<?php echo $exam['id']; ?>" class="btn btn-danger text-white btn-delete-question mr-2">Delete</button>
                                         <?php } ?>
-
                                     </div>
                                 </td>
                             </tr>
@@ -139,26 +135,33 @@
                     <nav aria-label="Page navigation example">
                         <ul class="paginations" id="paginations">
                             <?php
+                            $status_url = "";
+                            $publish_url = "";
+                            if (isset($status)) {
+                                $status_url = "&status=$status";
+                            }
+                            if (isset($publish)) {
+                                $publish_url = "&publish=$publish";
+                            }
                             $next = $page;
                             if ($page <= $numbers_of_page) {
                                 if ($page > 1) {
                             ?>
-                                    <li class=" cursor-pointer"><a href="/admin/exam/index?page=1">
+                                    <li class=" cursor-pointer"><a href="/admin/exam/index?page=1<?php echo $status_url . $publish_url; ?>">
                                             << </a>
                                     </li>
                                     <li class="  cursor-pointer"><a href="/admin/exam/index?page=<?php $page--;
-                                                                                                    echo $page; ?>">Previous</a></li>
+                                                                                                    echo $page . $status_url . $publish_url; ?>">Previous</a></li>
                                 <?php
                                 }
                                 ?>
                                 <?php for ($i = 1; $i <= $numbers_of_page; $i++) { ?>
-                                    <li class=" cursor-pointer"><a style="<?php if ($next == $i) { ?>background-color: rgb(197, 197, 197)<?php } ?>;" href="/admin/exam/index?page=<?php echo $i; ?>"><?= $i ?></a></li>
+                                    <li class=" cursor-pointer"><a style="<?php if ($next == $i) { ?>background-color: rgb(197, 197, 197)<?php } ?>;" href="/admin/exam/index?page=<?php echo $i . $status_url . $publish_url;; ?>"><?= $i ?></a></li>
                                 <?php }
                                 if ($next < $numbers_of_page) {
                                 ?>
-                                    <li class=" cursor-pointer"><a href="/admin/exam/index?page=<?php echo $next += 1; ?>">Next</a></li>
-                                    <li class=" cursor-pointer"><a href="/admin/exam/index?page=<?php echo $numbers_of_page < 1 ? 1 : $numbers_of_page; ?>">>></a></li>
-
+                                    <li class=" cursor-pointer"><a href="/admin/exam/index?page=<?php echo ($next += 1) . $status_url . $publish_url;; ?>">Next</a></li>
+                                    <li class=" cursor-pointer"><a href="/admin/exam/index?page=<?php echo $numbers_of_page < 1 ? "1" . $status_url . $publish_url : $numbers_of_page . $status_url . $publish_url; ?>">>></a></li>
                                 <?php
                                 }
                                 ?>

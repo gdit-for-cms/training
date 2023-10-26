@@ -63,6 +63,14 @@ class ExamController extends AppController
         $this->data_ary['page'] = $results_ary['page'];
         $this->data_ary['exams'] = $results_ary['results'];
 
+        //get status, punlish
+        if (isset($req_method_ary['status'])) {
+            $this->data_ary['status'] = $req_method_ary['status'];
+        }
+        if (isset($req_method_ary['publish'])) {
+            $this->data_ary['publish'] = $req_method_ary['publish'];
+        }
+
         $this->data_ary['content'] = 'exam/index';
     }
 
@@ -170,9 +178,14 @@ class ExamController extends AppController
         $this->data_ary['page'] = $results_ary['page'];
 
         //get info User and Participants
-        $this->data_ary['emails'] =  $this->obj_model_exam_participant->getBy("exam_id", '=', $exam_id);
+        $direction = "desc";
+        if (isset($req_method_ary['score']) && $req_method_ary['score'] == 0) {
+            $direction = "asc";
+        }
+        $this->data_ary['emails'] =  $this->obj_model_exam_participant->getParticipant("exam_id", " = ", $exam_id, "score",  $direction);
         $this->data_ary['user'] = $this->obj_model_user->getById($exam['user_id']);
         $this->data_ary['total_question_exam'] = $total_question_exam;
+
         //get link do exam of Participants 
         $file = '';
         $html_directory =  Config::FTP_PUBLIC_DIRECTORY_HTML;
@@ -233,7 +246,7 @@ class ExamController extends AppController
     }
 
     public function create(Request $request)
-    {  
+    {
         //validate
         $result_vali_ary = $this->app_request->validate($this->obj_model->rules(), $request, 'post');
         if (in_array('error', $result_vali_ary)) {
