@@ -51,4 +51,7 @@ class Config
     const FTP_PUBLIC_DIRECTORY_EMAIL = '/htdocs/training2/training/cgi/email/';
     const FTP_PUBLIC_DIRECTORY_LINK_EXAM = '/htdocs/training2/training/cgi/random/';
     const FTP_DOMAIN = 'http://cms208.dev3.local/';
+
+    // EMAIL
+    const EMAIL_FROM = "abcs@mmm";
 }

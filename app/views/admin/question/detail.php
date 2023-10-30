@@ -40,7 +40,7 @@
                                 <th class="text-center align-middle">
                                     <input type="checkbox" id="selectAll" class="selectAll" name="select_all">
                                 </th>
-                                <th scope="col">#</th>
+                                <th scope="col" class="text-center">#</th>
                                 <th scope="col">CONTENT</th>
                                 <th scope="col">ANSWER</th>
                                 <th scope="col">ACTION</th>
@@ -57,7 +57,7 @@
                                         <th class="text-center align-middle">
                                             <input type="checkbox" value="<?php echo $question_title['question_id']; ?>" name="item[]" class="checkbox">
                                         </th>
-                                        <th class="align-middle"><?php echo $stt++; ?></th>
+                                        <th class="align-middle text-center"><?php echo $stt++; ?></th>
                                         <td class="col-4 align-middle">
                                             <?php echo html_entity_decode($question_title['question_content']); ?>
                                         </td>

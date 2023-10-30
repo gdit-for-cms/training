@@ -56,6 +56,13 @@ class ExamParticipant extends Model
         return $this->where($column, $operator, $value)->orderBy($order_column, $direction)->get();
     }
 
+    public function getExam($participant_id)
+    {
+        return $this->join(" exam as e", "e.id = " . $this->_table . ".exam_id")
+            ->where($this->_table . ".id", "=", $participant_id)
+            ->get("e.id, e.title, e.time_start, e.time_end")[0];
+    }
+
     public function rules($change = '', $value = array())
     {
         $rules_ary = array(

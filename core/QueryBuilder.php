@@ -328,8 +328,7 @@ trait QueryBuilder
             } else {
                 $sqlQuery = "UPDATE " . $tableName . " SET " . $updateStr;
             }
-            // echo $sqlQuery;
-            // exit;
+          
             $result = $db->query($sqlQuery);
 
             if ($result) {

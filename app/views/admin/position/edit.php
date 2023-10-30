@@ -17,7 +17,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="responsibility">Pages allowed to access*</label>
-                        <?php $access_page_ary = explode('|<@>|', $position['access_page']); ?>
+                        <?php $access_page_ary = explode(',', $position['access_page']); ?>
                         <?php foreach($pages as $page) { ?>
                             <div class="form-check">
                                 <input class="form-check-input" name="access_page[]" type="checkbox"

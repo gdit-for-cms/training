@@ -74,9 +74,6 @@ function submitForm(formId) {
     $(formId).submit(function (e) {
         var content = checkPathName()
         e.preventDefault()
-        // var form = $(this);
-        // data = form.serialize(),
-        // console.log(data);
         Swal.fire({
             title: 'Are you sure?',
             html: content,
@@ -271,6 +268,56 @@ function alertDeleteQuestion() {
                     url: `/admin/${path}/delete?id=${deleteID}`,
                     success: function () {
                         document.location.reload(true);
+                    }
+                });
+            }
+        })
+    });
+}
+
+function alertSendMail() {
+    $('.btn-send-mail').click(function (e) {
+        let path = $(this).data('path');
+        let participant_id = $(this).data('id');
+        let exam_id = $(this).data('exam-id');
+        let ids = updateSelectedValues1("checkboxSendMail", ".btn-sendmail-select")
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: `/admin/${path}/send-mail`,
+                    data: {
+                        participant_id: participant_id,
+                        exam_id: exam_id,
+                        ids: ids,
+                    },
+                    success: function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: "Successfully",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        setTimeout(() => {
+                            document.location.reload(true);
+                        }, "1600");
+                        // window.history.back()
+                    },
+                    error: function (response) {
+                        console.log(response.responseJSON)
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: response.responseJSON.message,
+                        });
                     }
                 });
             }
@@ -547,6 +594,7 @@ $(document).ready(function () {
     submitForm('#form_edit_detail_exam');
     submitForm('#form_new_question_title');
 
+    alertSendMail()
     alertUploadFileExam()
     alertDeleteQuestion()
     alertDeleteExamDetail()
@@ -1198,7 +1246,7 @@ function selectAll() {
             updateSelectedValues();
         });
     }
-    
+
     // Sự kiện click cho các input con
     checkboxesArray.forEach(function (checkbox) {
         checkbox.addEventListener("click", function () {

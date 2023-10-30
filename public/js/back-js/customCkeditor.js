@@ -100,7 +100,7 @@ $(document).ready(() => {
                 modalNotice?.css('display', 'none')
             }
         })
-        
+
         btnUploadTab.addEventListener('click', () => {
             btnListImageTab.classList.remove('active-interface')
         })
@@ -139,6 +139,7 @@ $(document).ready(() => {
             modalNotice.css('display', "block");
         });
     })
+
 
     function addEventTabListImage() {
         btnDeleteImages.forEach((btn) => {
@@ -297,6 +298,7 @@ $(document).ready(() => {
             optionAllResult.innerText = `All (${quantity})`
         }
     }
+
     function addEventChangeImage(){
         arrImgInEditorElements = Array.from(editorInstance.editing.view.getDomRoot().querySelectorAll('img'))
         arrImgInEditorElements.forEach((img)=>{
@@ -464,6 +466,8 @@ $(document).ready(() => {
         </div>
     </li>`
     }
+
+
     function switchToListTab() {
         btnListImageTab.click()
         btnListImageTab.classList.remove('active-interface')
@@ -481,6 +485,7 @@ $(document).ready(() => {
         btnDeleteImages = document.querySelectorAll('.btn-delete-image')
         addEventTabListImage()
     }
+
     // function updatedDomElements() {
     //     btnOpenPreviews = document.querySelectorAll('.open-preview')
     //     btnInsertImages = document.querySelectorAll('.insert-file')

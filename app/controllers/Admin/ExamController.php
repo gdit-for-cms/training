@@ -229,11 +229,11 @@ class ExamController extends AppController
     {
         $errors = array();
         if ((!empty($time_start) && empty($time_end)) || (empty($time_start) && !empty($time_end))) {
-            $errors[] = "Please fill out this field time";
+            $errors[] = "Please fill out this field time!";
         }
         if (!empty($time_start) && !empty($time_end)) {
             if (strtotime($time_start) < time()) {
-                $errors[] = "Time start must be greater than or equal to the current time";
+                $errors[] = "Time start must be greater than or equal to the current time!";
             }
             if (strtotime($time_start) >= strtotime($time_end)) {
                 $errors[] = "Time start must be less than the end time!";
@@ -242,6 +242,7 @@ class ExamController extends AppController
         if (empty($errors)) {
             return false;
         }
+
         return array_shift($errors);
     }
 
@@ -405,6 +406,15 @@ class ExamController extends AppController
         if (strtotime($exam['time_start']) < $current_time) {
             return $this->errorResponse("The exam time is not appropriate");
         }
+
+        // //update participants
+        // $this->obj_model_exam_participant->updateOne(
+        //     [
+        //         'is_sendmail' => 0,
+        //     ],
+        //     "exam_id = $exam_id"
+        // );
+
         // Define paths and directories
         $your_server_directory = Config::YOUR_SERVER_DIRECTORY;
         $html_directory =  Config::FTP_PUBLIC_DIRECTORY_HTML;
@@ -432,6 +442,7 @@ class ExamController extends AppController
             ],
             "id = $exam_id"
         );
+
         return $this->successResponse();
     }
 
@@ -607,6 +618,7 @@ class ExamController extends AppController
             [
                 'is_login' => 1,
                 'is_submit' => 2,
+                'is_sendmail' => 0,
                 'score' => 0
             ],
             "exam_id = $exam_id"

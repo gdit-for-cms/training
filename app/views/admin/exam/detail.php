@@ -88,7 +88,6 @@
                             <?php echo isset($exam['description']) ? $exam['description'] : "Chưa có mô tả"; ?>
                             <br>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -101,7 +100,10 @@
                             <h4 class="mb-2 nowrap">List participant</h4>
                         </div>
                         <div class="input-button-group mr-2">
-                            <button type="button" data-exam_id="<?php echo $exam['id']; ?>" data-path="exam-participant/upload-participant-all" data-id="select" class="btn btn-info text-white btn-delete-select-all btn-sendmail-select" style="display: none;">Send Mail All</button>
+                            <?php if ($exam['published'] == 1) {
+                            ?>
+                                <button type="button" data-path="examParticipant" data-id="select" data-exam-id="<?php echo $exam['id']; ?>" class="btn btn-info text-white btn-send-mail btn-sendmail-select" style="display: none;">Send Mail All</button>
+                            <?php } ?>
                         </div>
                     </div>
                 </div>
@@ -127,7 +129,7 @@
                                         <th scope="col">Email</th>
                                         <th scope="col">Status</th>
                                         <th scope="col">
-                                            <div>
+                                            <div class="custom-inline-grid">
                                                 <label for="selectScores">Scores</label>
                                                 <select class="text-medium border" id="selectScores" name="" aria-label="Default select example">
                                                     <option value="0">increase</option>
@@ -136,6 +138,7 @@
                                             </div>
                                         </th>
                                         <th scope="col">Link Exam</th>
+                                        <th scope="col">Send Mail</th>
                                         <th scope="col">Option</th>
                                     </tr>
                                 </thead>
@@ -169,11 +172,15 @@
                                                         <a style="color:#5d7cc1" href="#" class="copyLink ml-4 linkToCopy text-primary-hover" data-link="<?php echo $directory['domain'] . $exam['id'] . "/" . $email['random'] ?> "><?php echo $directory['domain'] . $exam['id'] . "/" . $email['random'] ?> </a>
                                                     <?php } ?>
                                                 </td>
+                                                <td><?php echo $email['is_sendmail'] == 0 ? "<span class='text-danger'>Chưa gửi mail</span>" : "<span class='text-success'>Đã gửi mail</span>"; ?></td>
+
                                                 <td>
                                                     <?php
                                                     if ($check_status) {
                                                     ?>
-                                                        <button type="button" data-path="examParticipant" data-id="<?php echo $email['id']; ?>" class="btn btn-info text-white btn-delete-question mr-2">Send Mail</button>
+                                                        <?php if ($exam['published'] == 1) { ?>
+                                                            <button type="button" data-path="examParticipant" data-exam-id="<?php echo $exam['id']; ?>" data-id="<?php echo $email['id']; ?>" class="btn btn-info text-white btn-send-mail mr-2">Send Mail</button>
+                                                        <?php } ?>
                                                         <button type="button" data-path="examParticipant" data-id="<?php echo $email['id']; ?>" class="btn btn-danger text-white btn-delete-question mr-2">Delete</button>
                                                     <?php } ?>
                                                 </td>
@@ -281,23 +288,16 @@
                                                 </div>
                                             </td>
                                             <?php
-                                            if ($cur_user['role_id'] != 3) {
-                                                if ($check_status) {
+                                            if ($cur_user['role_id'] != 3 && $check_status) {
                                             ?>
-                                                    <!-- <td class="col-2 align-middle">
+                                                <td class="col-2 align-middle text-center">
+                                                    <div class="d-flex justify-content-center">
                                                         <a href="/admin/question/edit?question_id=<?php echo $exam_detail['question_id']; ?>"><button type="button" class="btn btn-info text-white">Edit</button></a>
-                                                        <button data-question_id="<?php echo $exam_detail['question_id']; ?>" data-exam_id="<?php echo $exam['id']; ?>" type="button" class=" btn btn-danger text-white btn-delete-exam-detail">Delete</button>
-                                                    </td> -->
-                                                    <td class="col-2 align-middle text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <a href="/admin/question/edit?question_id=<?php echo $exam_detail['question_id']; ?>"><button type="button" class="btn btn-info text-white">Edit</button></a>
-                                                            <div class="mx-2"></div> <!-- Khoảng cách ngang 2 đơn vị -->
-                                                            <button data-question_id="<?php echo $exam_detail['question_id']; ?>" data-exam_id="<?php echo $exam['id']; ?>" type="button" class="btn btn-danger text-white btn-delete-exam-detail">Delete</button>
-                                                        </div>
-                                                    </td>
-
+                                                        <div class="mx-2"></div> <!-- Khoảng cách ngang 2 đơn vị -->
+                                                        <button data-question_id="<?php echo $exam_detail['question_id']; ?>" data-exam_id="<?php echo $exam['id']; ?>" type="button" class="btn btn-danger text-white btn-delete-exam-detail">Delete</button>
+                                                    </div>
+                                                </td>
                                             <?php
-                                                }
                                             }
                                             ?>
                                         </tr>
@@ -354,7 +354,6 @@
 <script>
     //copy link
     var copyLinkButtons = document.querySelectorAll(".copyLink");
-
     copyLinkButtons.forEach(function(button) {
         button.addEventListener("click", function() {
             var linkToCopy = button.getAttribute("data-link");
@@ -369,6 +368,7 @@
         });
     });
     //end coply link
+
     // const paginationContainer = document.getElementById("paginations");
     selectAll("selectAll", "checkbox", ".btn-delete-select");
     selectAll("selectAllSendMail", "checkboxSendMail", ".btn-sendmail-select");
