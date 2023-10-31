@@ -5,7 +5,7 @@
                 <div class="white_card_header">
                     <div class="box_header m-0">
                         <div class="main-title">
-                            <h3 class="m-0 fs-2">Collection exam</h3>
+                            <h3 class="m-0 fs-2">Exam</h3>
                         </div>
                         <div class="top-right">
                             <?php
@@ -103,6 +103,8 @@
                             <?php if ($exam['published'] == 1) {
                             ?>
                                 <button type="button" data-path="examParticipant" data-id="select" data-exam-id="<?php echo $exam['id']; ?>" class="btn btn-info text-white btn-send-mail btn-sendmail-select" style="display: none;">Send Mail All</button>
+                                <button type="button" data-path="examParticipant" data-id="select" class="btn btn-danger text-white btn-delete-select-all btn-delete-select ml-4" style="display: none;">Delete</button>
+
                             <?php } ?>
                         </div>
                     </div>
@@ -113,7 +115,7 @@
                             <div class="input-button-group mb-3">
                                 <?php if ($check_status) {
                                 ?>
-                                    <a href="/admin/exam-question/new?exam_id=<?php echo $exam['id']; ?>"><button type=" button" class="btn btn-success float-end">Add Participant</button></a>
+                                    <a href="/admin/exam-participant/edit?exam_id=<?php echo $exam['id']; ?>"><button type=" button" class="btn btn-success float-end">Edit Participant</button></a>
                                 <?php
                                 } ?>
                             </div>
@@ -147,9 +149,6 @@
                                     if (count($emails) > 0) {
                                         $stt = 1;
                                         foreach ($emails as $email) {
-                                            // echo "<pre>";
-                                            // var_dump($email);
-                                            // die();
                                             $score = 0;
                                             if ($total_question_exam > 0) {
                                                 $score = $email['score'] . "/" . $total_question_exam;
@@ -190,7 +189,7 @@
                                     } else {
                                         ?>
                                         <tr class="text-center">
-                                            <td colspan="6">Empty</td>
+                                            <td colspan="8">Empty</td>
                                         </tr>
                                     <?php
                                     }
@@ -372,6 +371,7 @@
     // const paginationContainer = document.getElementById("paginations");
     selectAll("selectAll", "checkbox", ".btn-delete-select");
     selectAll("selectAllSendMail", "checkboxSendMail", ".btn-sendmail-select");
+    selectAll("selectAllSendMail", "checkboxSendMail", ".btn-delete-select");
 
     function selectAll(classSelectAll, classCheckbox, classBtnSelectAll) {
         let selectAllCheckboxes = document.getElementsByClassName(classSelectAll);

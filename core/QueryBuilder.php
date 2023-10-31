@@ -1,10 +1,9 @@
 <?php
-
 namespace Core;
 
 use PDO;
 
-trait QueryBuilder
+Trait QueryBuilder
 {
     public $tableName = '';
     public $where = '';
@@ -36,9 +35,9 @@ trait QueryBuilder
      */
     public function where($column, $compare, $value)
     {
-        if (empty($this->where)) {
+        if(empty($this->where)) {
             $this->operator = ' WHERE ';
-        } else {
+        }else {
             $this->operator = ' AND ';
         }
         $value = addslashes($value);
@@ -56,9 +55,9 @@ trait QueryBuilder
      */
     public function orWhere($column, $compare, $value)
     {
-        if (empty($this->where)) {
+        if(empty($this->where)) {
             $this->operator = ' WHERE ';
-        } else {
+        }else {
             $this->operator = ' OR ';
         }
         $this->where .= "$this->operator $column $compare '$value'";
@@ -74,9 +73,9 @@ trait QueryBuilder
      */
     public function whereLike($column, $value)
     {
-        if (empty($this->where)) {
+        if(empty($this->where)) {
             $this->operator = ' WHERE ';
-        } else {
+        }else {
             $this->operator = ' AND ';
         }
         $value = addslashes($value);
@@ -86,9 +85,9 @@ trait QueryBuilder
 
     public function whereLikeWithOr($column, $value)
     {
-        if (empty($this->where)) {
+        if(empty($this->where)) {
             $this->operator = ' WHERE ';
-        } else {
+        }else {
             $this->operator = ' OR ';
         }
         $value = addslashes($value);
@@ -181,7 +180,7 @@ trait QueryBuilder
         // Reset field
         $this->resetQuery();
 
-        if ($result) {
+        if($result){
             return $result->fetchAll(PDO::FETCH_ASSOC);
         }
         return false;
@@ -201,7 +200,7 @@ trait QueryBuilder
         // Reset field
         $this->resetQuery();
 
-        if ($result) {
+        if($result){
             return $result->fetchAll(PDO::FETCH_ASSOC);
         }
         return false;
@@ -235,7 +234,7 @@ trait QueryBuilder
         // Reset field
         $this->resetQuery();
 
-        if ($result) {
+        if($result){
             return $result->fetch(PDO::FETCH_ASSOC);
         }
         return false;
@@ -275,14 +274,14 @@ trait QueryBuilder
     {
         $db = static::getDB();
         $tableName = $this->_table;
-        if (!empty($data)) {
+        if(!empty($data)){
             $columnStr = '';
             $valueStr = '';
-            foreach ($data as $key => $value) {
+            foreach($data as $key => $value) {
                 $key = addslashes($key);
                 $value = addslashes($value);
-                $columnStr .= $key . ',';
-                $valueStr .= "'" . $value . "',";
+                $columnStr.= $key.',';
+                $valueStr.= "'".$value."',";
             }
             $columnStr = rtrim($columnStr, ',');
             $valueStr = rtrim($valueStr, ',');
@@ -290,7 +289,7 @@ trait QueryBuilder
             $sqlQuery = "INSERT INTO " . $tableName . " (" . $columnStr . ")" . " VALUES " . "(" . $valueStr . ") ";
             $result = $db->query($sqlQuery);
 
-            if ($result) {
+            if($result){
                 return true;
             }
         }
@@ -310,9 +309,9 @@ trait QueryBuilder
         $db = static::getDB();
         $tableName = $this->_table;
 
-        if (!empty($data)) {
+        if(!empty($data)){
             $updateStr = '';
-            foreach ($data as $key => $value) {
+            foreach($data as $key => $value){
                 $key = addslashes($key);
                 $value = addslashes($value);
                 if ($value == NULL) {
@@ -323,15 +322,15 @@ trait QueryBuilder
             }
             $updateStr = rtrim($updateStr, ',');
 
-            if (!empty($conditions)) {
+            if(!empty($conditions)){
                 $sqlQuery = "UPDATE " . $tableName . " SET " . $updateStr . " WHERE " . $conditions;
-            } else {
+            }else{
                 $sqlQuery = "UPDATE " . $tableName . " SET " . $updateStr;
             }
           
             $result = $db->query($sqlQuery);
 
-            if ($result) {
+            if($result){
                 return true;
             }
         }
@@ -345,8 +344,7 @@ trait QueryBuilder
      * @param  array|mixed  $conditions
      * @return boolean
      */
-    public function destroy($conditions)
-    {
+    public function destroy($conditions){
         $db = static::getDB();
         $tableName = $this->_table;
 
@@ -357,7 +355,7 @@ trait QueryBuilder
         return !!$result;
     }
 
-    /**
+     /**
      * Execute the delete query (delete table).
      *
      * @return boolean

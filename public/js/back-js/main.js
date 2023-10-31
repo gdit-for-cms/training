@@ -330,6 +330,9 @@ function alertDeleteSelectAll() {
         let deleteID = $(this).data('id');
         let path = $(this).data('path');
         let ids = updateSelectedValues();
+        if (path == "examParticipant") {
+            ids = updateSelectedValues1("checkboxSendMail", ".btn-sendmail-select")
+        }
         let url = `/admin/${path}/delete?id=${deleteID}`
         if (path == 'exam-question/delete-question-all') {
             let examID = $(this).data('exam_id');

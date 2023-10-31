@@ -1,8 +1,8 @@
 <div class="card_box box_shadow position-relative mb_30">
     <div class="white_box_tittle ">
         <div class="main-title2 flex items-center justify-between">
-            <h4 class="mb-2 nowrap">Exam collection</h4>
-            <a href='/admin/exam/new'><button type="button" class="btn btn-success">Create collection</button></a>
+            <h4 class="mb-2 nowrap">EXAM</h4>
+            <a href='/admin/exam/new'><button type="button" class="btn btn-success">Create</button></a>
         </div>
     </div>
     <div class="box_body white_card_body">

@@ -407,14 +407,6 @@ class ExamController extends AppController
             return $this->errorResponse("The exam time is not appropriate");
         }
 
-        // //update participants
-        // $this->obj_model_exam_participant->updateOne(
-        //     [
-        //         'is_sendmail' => 0,
-        //     ],
-        //     "exam_id = $exam_id"
-        // );
-
         // Define paths and directories
         $your_server_directory = Config::YOUR_SERVER_DIRECTORY;
         $html_directory =  Config::FTP_PUBLIC_DIRECTORY_HTML;

@@ -16,11 +16,14 @@
                     </button>
                 </li>
             </ul>
-            <div class="ml-4">
-                <span style="color: #828bb2;">* Note</span>
-                <p style="padding-left: 20px;">
-                    Select the button on the questions to add questions to the exam
-                </p>
+            <div class="mb-5 ml-4">
+                <i class="bi bi-exclamation-circle"></i>
+                <span class="myDIV text-danger">* Note</span>
+                <div class="hide-note">
+                    <p style="padding-left: 20px;">
+                        Select the button on the questions to add questions to the exam
+                    </p>
+                </div>
             </div>
             <div style=" padding-bottom: 10px;">
                 <span style="margin-left: 20px; margin-right: 20px;">Số câu đã chọn : <span id="total_select">0</span> </span><br>

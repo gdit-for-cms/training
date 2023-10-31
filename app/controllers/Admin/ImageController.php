@@ -111,7 +111,7 @@ class ImageController extends AppController
         }
     }
 
-    
+
     public function addItemUpload($name, $file, $file_key, $add_item_result)
     {
         if (!empty($name) && ($file['size'] > 0)) {

@@ -27,6 +27,108 @@ class ExamParticipantController extends  AppController
         $this->obj_model_exam = new Exam;
     }
 
+    public function editAction(Request $request)
+    {
+        $req_method_ary = $request->getGet()->all();
+        $exam_id = $req_method_ary['exam_id'];
+        $exam = $this->obj_model_exam->getById($exam_id, 'id, title, description');
+        $emails = $this->obj_model->getBy("exam_id", '=', $exam_id);
+
+        $this->data_ary['emails'] = $emails;
+        $this->data_ary['exam'] = $exam;
+
+        $this->data_ary['content'] = 'participant/edit';
+    }
+
+    public function update(Request $request)
+    {
+        $post_ary = $request->getPost()->all();
+        $total_email_db = (int)$post_ary['total_email_db'];
+        $exam_id = $post_ary['exam_id'];
+        // Check for valid email 
+        if (isset($post_ary['email'])) {
+            if ($this->checkEmail($post_ary['email'])) {
+                return $this->errorResponse($this->checkEmail($post_ary['email']));
+            }
+        }
+
+        //check email
+        $email_delete_ids = array();
+        $email_arrays = array();
+        $check_delete_all_email = false;
+        if (isset($post_ary['email'])) {
+            $emails_db = $this->obj_model->getBy('exam_id', '=', $exam_id, 'id,email');
+            $email_arrays = $post_ary['email'];
+
+            foreach ($emails_db as $key1 => $email_db) {
+                $check = false;
+                foreach ($email_arrays as $key2 => $email) {
+                    if ($email_db['email'] == $email) {
+                        unset($email_arrays[$key2]);
+                        $check = true;
+                        break;
+                    }
+                }
+                if (!$check) {
+                    $email_delete_ids[] = $emails_db[$key1]['id'];
+                }
+            }
+        } else if ($total_email_db > 0) {
+            $check_delete_all_email = true;
+        }
+
+        try {
+            foreach ($email_arrays as $email) {
+                $str_random = time() . $email;
+                $hash = hash('sha256', $str_random);
+                $randomChars = substr($hash, 0, 10);
+                $this->obj_model->create([
+                    'exam_id' => $exam_id,
+                    'email' => $email,
+                    'random' => $randomChars,
+                    'is_login' => 1,
+                    'is_submit' => 2
+                ]);
+            }
+
+            if ($check_delete_all_email) {
+                $this->obj_model->destroyBy("exam_id = $exam_id");
+            } elseif (count($email_delete_ids) > 0) {
+                $email_delete_ids = implode(",", $email_delete_ids);
+                $this->obj_model->destroyBy("id IN ($email_delete_ids)");
+            }
+            return $this->successResponse();
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        };
+    }
+
+    //validate email
+    public function checkEmail($emails)
+    {
+        $stt_email = 1;
+        $arr_check_email = array();
+        $errors = "";
+        foreach ($emails as $email) {
+            $email = trim($email);
+            if ($email == "") {
+                $errors = "Email field must be filled out";
+                break;
+            }
+            if (!email($email)) {
+                $errors = "Email number " . $stt_email . " is not in the correct format";
+                break;
+            }
+            if (in_array($email, $arr_check_email)) {
+                $errors = "Email number " . $stt_email . " was duplicated";
+                break;
+            }
+            $stt_email++;
+            array_push($arr_check_email, trim($email));
+        }
+        return $errors;
+    }
+
     public function deleteAction(Request $request)
     {
         $participant_ids = $request->getGet()->get('id');
@@ -52,6 +154,7 @@ class ExamParticipantController extends  AppController
         $exam = $this->obj_model_exam->getById($exam_id);
         $time_start = strtotime($exam['time_start']);
         $time_end = strtotime($exam['time_end']);
+
         // Tính toán thời gian chênh lệch (đơn vị giây)
         $time_difference = $time_end - $time_start;
 
@@ -85,11 +188,10 @@ class ExamParticipantController extends  AppController
         }
 
         //send mail
-        // Send mail
         ini_set('display_errors', 1);
         error_reporting(E_ALL);
         $from = Config::EMAIL_FROM;
-        $success = true; // Biến để kiểm tra xem tất cả email đã được gửi thành công
+        $success = true; 
 
         // Thiết lập ngôn ngữ cho hàm mb_send_mail() thành tiếng Việt
         mb_language('uni');

@@ -54,7 +54,7 @@
                             <button type="button" class="btn btn-info ml-3 text-white" style="margin-top: 3px;" onclick="addAnswer()">Add</button>
                         </div>
                     </div>
-                    <button id="submit" type="submit" class="btn btn-primary">Save</button>
+                    <button id="submit" type="submit" class="btn btn-primary ml-3 mt-3">Save</button>
                 </form>
             </div>
         </div>

@@ -90,7 +90,6 @@ class QuestionController extends  AppController
 
     public function create(Request $request)
     {
-
         $result_vali_ary = $this->app_request->validate($this->obj_model->rules(), $request, 'post');
         //Question data validation
         if (in_array('error', $result_vali_ary)) {

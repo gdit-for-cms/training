@@ -478,7 +478,7 @@ $(document).ready(() => {
         btnFormatTab.click()
         btnListImageTab.classList.add('active-interface')
     }
-    
+
     function updateDomElements() {
         btnOpenPreviews = document.querySelectorAll('.btn-open-preview')
         btnInsertImages = document.querySelectorAll('.btn-insert-image')

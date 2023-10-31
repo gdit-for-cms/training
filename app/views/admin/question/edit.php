@@ -18,13 +18,16 @@
                             <?php echo $question['content']; ?>
                         </textarea>
                     </div>
-                    <div class="mb-3">
-                        <span style="color: #828bb2;">* Note</span>
-                        <p style="padding-left: 20px;">
-                            Correct : Choose the correct answers<br>
-                            Answer : Enter the answer to the question<br>
-                            Button Add : Click the "add" button to add an answer
-                        </p>
+                    <div class="mb-5">
+                        <i class="bi bi-exclamation-circle"></i>
+                        <span class="myDIV text-danger">* Note</span>
+                        <div class="hide-note">
+                            <p style="padding-left: 20px;">
+                                Correct : Choose the correct answers<br>
+                                Answer : Enter the answer to the question<br>
+                                Button Add : Click the "add" button to add an answer
+                            </p>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" style="margin-right: 30px;" for="correct">Correct<span class="text-danger">*</span></label>
