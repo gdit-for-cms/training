@@ -1,4 +1,4 @@
-<?php
+<?php 
 namespace Core;
 
 use PDO;
@@ -35,7 +35,7 @@ Trait QueryBuilder
      */
     public function where($column, $compare, $value)
     {
-        if(empty($this->where)) {
+        if(empty($this->where)){
             $this->operator = ' WHERE ';
         }else {
             $this->operator = ' AND ';
@@ -55,7 +55,7 @@ Trait QueryBuilder
      */
     public function orWhere($column, $compare, $value)
     {
-        if(empty($this->where)) {
+        if(empty($this->where)){
             $this->operator = ' WHERE ';
         }else {
             $this->operator = ' OR ';
@@ -73,7 +73,7 @@ Trait QueryBuilder
      */
     public function whereLike($column, $value)
     {
-        if(empty($this->where)) {
+        if(empty($this->where)){
             $this->operator = ' WHERE ';
         }else {
             $this->operator = ' AND ';
@@ -85,7 +85,7 @@ Trait QueryBuilder
 
     public function whereLikeWithOr($column, $value)
     {
-        if(empty($this->where)) {
+        if(empty($this->where)){
             $this->operator = ' WHERE ';
         }else {
             $this->operator = ' OR ';
@@ -129,9 +129,9 @@ Trait QueryBuilder
     public function orderBy($column, $direction = 'asc')
     {
         $arrColumns = array_filter(explode(',', $column));
-        if (!empty($arrColumns) && count($arrColumns) >= 2) {
-            $this->orderBy = "ORDER BY" . implode(', ', $arrColumns);
-        } else {
+        if(!empty($arrColumns) && count($arrColumns) >= 2 ){
+            $this->orderBy = "ORDER BY". implode(', ', $arrColumns);
+        }else {
             $this->orderBy = "ORDER BY" . " " . $column . " " . $direction;
         }
         return $this;
@@ -260,7 +260,7 @@ Trait QueryBuilder
      */
     public function join($tableName, $relationship)
     {
-        $this->innerJoin .= "INNER JOIN" . $tableName . " ON " . $relationship . " ";
+        $this->innerJoin .= "INNER JOIN" .$tableName. " ON " .$relationship." ";
         return $this;
     }
 
@@ -277,7 +277,7 @@ Trait QueryBuilder
         if(!empty($data)){
             $columnStr = '';
             $valueStr = '';
-            foreach($data as $key => $value) {
+            foreach($data as $key => $value){
                 $key = addslashes($key);
                 $value = addslashes($value);
                 $columnStr.= $key.',';
@@ -286,7 +286,7 @@ Trait QueryBuilder
             $columnStr = rtrim($columnStr, ',');
             $valueStr = rtrim($valueStr, ',');
 
-            $sqlQuery = "INSERT INTO " . $tableName . " (" . $columnStr . ")" . " VALUES " . "(" . $valueStr . ") ";
+            $sqlQuery = "INSERT INTO " . $tableName . " (" . $columnStr . ")" . " VALUES " . "(" . $valueStr . ") " ;
             $result = $db->query($sqlQuery);
 
             if($result){
@@ -304,10 +304,10 @@ Trait QueryBuilder
      * @param  array|mixed  $conditions
      * @return boolean
      */
-    public function update($data, $conditions = '')
+    public function update($data , $conditions = '')
     {
         $db = static::getDB();
-        $tableName = $this->_table;
+        $tableName = $this->_table; 
 
         if(!empty($data)){
             $updateStr = '';
@@ -334,7 +334,7 @@ Trait QueryBuilder
                 return true;
             }
         }
-
+        
         return false;
     }
 
