@@ -100,12 +100,14 @@
                             <h4 class="mb-2 nowrap">List participant</h4>
                         </div>
                         <div class="input-button-group mr-2">
-                            <?php if ($exam['published'] == 1) {
+                            <?php
+                            // if ($exam['published'] == 1) {
                             ?>
-                                <button type="button" data-path="examParticipant" data-id="select" data-exam-id="<?php echo $exam['id']; ?>" class="btn btn-info text-white btn-send-mail btn-sendmail-select" style="display: none;">Send Mail All</button>
-                                <button type="button" data-path="examParticipant" data-id="select" class="btn btn-danger text-white btn-delete-select-all btn-delete-select ml-4" style="display: none;">Delete</button>
-
-                            <?php } ?>
+                            <button type="button" data-path="examParticipant" data-id="select" data-exam-id="<?php echo $exam['id']; ?>" class="btn btn-info text-white btn-send-mail btn-sendmail-select" style="display: none;">Send Mail All</button>
+                            <?php
+                            // }
+                            ?>
+                            <!-- <button type="button" data-path="examParticipant" data-id="select" class="btn btn-danger text-white btn-delete-select-all btn-delete-select2 ml-4" style="display: none;">Delete</button> -->
                         </div>
                     </div>
                 </div>
@@ -258,7 +260,7 @@
                                             <th scope="row" class="align-middle"><?php echo $st++; ?></th>
                                             <td class="align-middle">
                                                 <div class="overflow-auto">
-                                                    <?php echo $exam_detail['question_content'] ?>
+                                                    <?php echo html_entity_decode($exam_detail['question_content']) ?>
                                                 </div>
                                             </td>
                                             <td>

@@ -83,7 +83,7 @@ class Exam extends Model
         //filter search keyword
         $keyword_search = "";
         if (isset($req_method_ary['keyword'])) {
-            $keyword_search = trim($req_method_ary['keyword']);
+            $keyword_search = htmlspecialchars(trim($req_method_ary['keyword']));
             $this->whereLikeWithSpecialCharEscape("exam.title", $keyword_search);
         }
 

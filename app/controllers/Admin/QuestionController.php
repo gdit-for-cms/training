@@ -215,7 +215,7 @@ class QuestionController extends  AppController
             // $this->obj_model->beginTransaction();
             $this->obj_model->updateOne(
                 [
-                    'content' => $content,
+                    'content' => htmlspecialchars($content),
                 ],
                 "id = $question_id"
             );

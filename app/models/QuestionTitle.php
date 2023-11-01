@@ -105,7 +105,7 @@ class QuestionTitle extends Model
         $key_word = '';
         //filter 
         if (isset($req_method_ary['keyword'])) {
-            $key_word = trim($req_method_ary['keyword']);
+            $key_word = htmlspecialchars(trim($req_method_ary['keyword']));
             $this->whereLikeWithSpecialCharEscape("question_title.title", $key_word);
         }
 

@@ -274,7 +274,7 @@ class ExamController extends AppController
 
         $user_id = $result_vali_ary['user_id'];
         $title = htmlspecialchars(trim($result_vali_ary['title']));
-        $description = $result_vali_ary['description'];
+        $description = htmlspecialchars($result_vali_ary['description']);
         $time_start = $result_vali_ary['date_start'];
         $time_end = $result_vali_ary['date_end'];
 
@@ -527,8 +527,8 @@ class ExamController extends AppController
 
         //data update exam
         $data = [
-            'title' => $title,
-            'description' => $description,
+            'title' => htmlspecialchars($title),
+            'description' => htmlspecialchars($description),
             'time_start' => $time_start,
             'time_end' => $time_end,
             'uploaded_at' => (new \DateTime())->format('Y-m-d H:i:s'),
