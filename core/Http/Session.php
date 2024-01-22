@@ -16,55 +16,53 @@ namespace Core\Http;
  * @link https://Paonit.com
  * @link https://Dah-kenangnon.com
  */
-class Session
-{
+class Session {
     // Sestion status constants
     const SESSION_STARTED = TRUE;
     const SESSION_NOT_STARTED = FALSE;
-    
+
     // The state of the session
     private $sessionState = self::SESSION_NOT_STARTED;
-    
+
     // The only instance of the class
     private static $instance;
-    
-    private function __construct() {}
-    
+
+    private function __construct() {
+    }
+
     /**
      * Get The instance of 'Session'.
      * The session is automatically initialized if it wasn't.
      * 
      * @return object
      */
-    public static function getInstance()
-    {
+    public static function getInstance() {
 
         if (!isset(self::$instance)) {
             self::$instance = new self;
         }
         // State the session
         self::$instance->startSession();
-        
+
         return self::$instance;
     }
-    
+
     /**
      * (Re)starts the session
      * 
      * @return bool True if the session has been initialized, False otherwise
      * 
      */
-    public function startSession()
-    {
+    public function startSession() {
         // If the session is not yet started previously, let's start it
         if ($this->sessionState == self::SESSION_NOT_STARTED) {
             $this->sessionState = session_start();
         }
-        
+
         return $this->sessionState;
     }
-    
-    
+
+
     /**
      * Save data inside the session
      * 
@@ -76,11 +74,10 @@ class Session
      * 
      * @return void
      */
-    public function __set( $name , $value )
-    {
+    public function __set($name, $value) {
         $_SESSION[$name] = $value;
     }
-    
+
     /**
      * Get data from the session
      * 
@@ -90,14 +87,13 @@ class Session
      * 
      * @return mixed
      */
-    public function __get( $name )
-    {
+    public function __get($name) {
         if (isset($_SESSION[$name])) {
             return $_SESSION[$name];
         }
     }
-    
-    
+
+
     /**
      * Check if a key is set in the session
      * 
@@ -107,11 +103,10 @@ class Session
      * 
      * @return bool
      */
-    public function __isset( $name )
-    {
+    public function __isset($name) {
         return isset($_SESSION[$name]);
     }
-    
+
     /**
      * Destroy a variable from the session
      * 
@@ -120,26 +115,24 @@ class Session
      * 
      * @return void
      */
-    public function __unset( $name )
-    {
-        unset($_SESSION[$name] );
+    public function __unset($name) {
+        unset($_SESSION[$name]);
     }
-    
-     /**
+
+    /**
      * Destroy the current session
      * 
      * 
      * @return bool True is session has been deleted, else False.
      */
-    public function destroy()
-    {
+    public function destroy() {
         if ($this->sessionState == self::SESSION_STARTED) {
             $this->sessionState = !session_destroy();
-            unset( $_SESSION );
-            
+            unset($_SESSION);
+
             return !$this->sessionState;
         }
-        
+
         return FALSE;
     }
 }

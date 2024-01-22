@@ -10,8 +10,7 @@ use App\Config;
  *
  * PHP version 7.0
  */
-abstract class Model
-{
+abstract class Model {
 
     /**
      * Get the PDO database connection

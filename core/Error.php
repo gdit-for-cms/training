@@ -7,8 +7,7 @@ namespace Core;
  *
  * PHP version 7.0
  */
-class Error
-{
+class Error {
 
     /**
      * Error handler. Convert all errors to Exceptions by throwing an ErrorException.

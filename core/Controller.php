@@ -7,8 +7,7 @@ namespace Core;
  *
  * PHP version 7.0
  */
-abstract class Controller
-{
+abstract class Controller {
 
     /**
      * Parameters from the matched route
