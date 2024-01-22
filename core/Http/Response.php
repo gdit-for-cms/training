@@ -3,8 +3,7 @@
 namespace Core\Http;
 
 
-class Response
-{
+class Response {
     /**
      * @var string The page content
      */
@@ -25,8 +24,7 @@ class Response
      */
     protected $statusText;
 
-    public function __construct(?string $content = '', int $status = 200, string $statusText = "Not Found", array $headers = [])
-    {
+    public function __construct(?string $content = '', int $status = 200, string $statusText = "Not Found", array $headers = []) {
         $this->setContent($content);
         $this->setStatus($status);
         $this->setStatusText($statusText);
@@ -41,8 +39,7 @@ class Response
      * 
      * @return self
      */
-    public function sendHeaders()
-    {
+    public function sendHeaders() {
         //If header is already send skipped
         if (headers_sent()) {
             return $this;
@@ -66,8 +63,7 @@ class Response
      * 
      * @return self
      */
-    public function sendContent()
-    {
+    public function sendContent() {
         echo $this->content;
 
         return $this;
@@ -78,8 +74,7 @@ class Response
      *
      *  @return self
      */
-    public function send()
-    {
+    public function send() {
         $this->sendHeaders();
         $this->sendContent();
         return $this;
@@ -90,8 +85,7 @@ class Response
      * 
      * @return string The HTTP response content
      */
-    public function getContent()
-    {
+    public function getContent() {
         return $this->content;
     }
 
@@ -100,8 +94,7 @@ class Response
      *
      * 
      */
-    public function setContent($content)
-    {
+    public function setContent($content) {
         $this->content = $content;
 
         return $this;
@@ -112,8 +105,7 @@ class Response
      * 
      * @return int The HTTP status
      */
-    public function getStatus()
-    {
+    public function getStatus() {
         return $this->status;
     }
 
@@ -124,8 +116,7 @@ class Response
      * 
      * 
      */
-    public function setStatus($status)
-    {
+    public function setStatus($status) {
         $this->status = $status;
 
         return $this;
@@ -137,8 +128,7 @@ class Response
      * 
      * @return  The HTTP response status text
      */
-    public function getStatusText()
-    {
+    public function getStatusText() {
         return $this->statusText;
     }
 
@@ -148,8 +138,7 @@ class Response
      * @param int The HTTP response status text
      *
      */
-    public function setStatusText($statusText)
-    {
+    public function setStatusText($statusText) {
         $this->statusText = $statusText;
 
         return $this;
@@ -160,8 +149,7 @@ class Response
      * 
      *  @return  array The response headers
      */
-    public function getHeaders()
-    {
+    public function getHeaders() {
         return $this->headers;
     }
 
@@ -172,8 +160,7 @@ class Response
      * 
      * 
      */
-    public function setHeaders($headers)
-    {
+    public function setHeaders($headers) {
         $this->headers = $headers;
 
         return $this;
