@@ -1,13 +1,11 @@
-<?php 
+<?php
 
 namespace Core\Http\Bag;
 
-class Bag
-{
+class Bag {
     protected $container;
 
-    public function __construct($container)
-    {
+    public function __construct($container) {
         $this->container = $container;
     }
 
@@ -15,24 +13,24 @@ class Bag
         return isset($container[$key]);
     }
 
-    public function get(String $key){
+    public function get(String $key) {
         return $this->container[$key];
     }
 
-    public function set(String $key, $value){
-        if($this->container === $_COOKIE){
-            throw new \Exception("Cookies must be set on the response", 1); 
+    public function set(String $key, $value) {
+        if ($this->container === $_COOKIE) {
+            throw new \Exception("Cookies must be set on the response", 1);
         }
         $this->container[$key] = $value;
 
         return $this;
     }
 
-    public function hasSet(){
+    public function hasSet() {
         return isset($this->container) && !empty($this->container);
     }
 
-    public function all(){
+    public function all() {
         return $this->container;
     }
 }

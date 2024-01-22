@@ -23,8 +23,7 @@ use Core\Http\Bag\Get;
  * @link https://Paonit.com
  * @link https://Dah-kenangnon.com
  */
-class Request
-{
+class Request {
     /**
      * @var Post 
      */
@@ -61,8 +60,7 @@ class Request
      */
     protected $session;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->setGet(new Get())
             ->setPost(new Post())
             ->setFiles(new Files())
@@ -72,8 +70,7 @@ class Request
     }
 
     // Check whether there are file uploaded
-    public function hasUploadedFile()
-    {
+    public function hasUploadedFile() {
         $files = $this->getFiles();
 
         return $files->hasSet();
@@ -84,8 +81,7 @@ class Request
      *
      * @return  Post
      */
-    public function getPost()
-    {
+    public function getPost() {
         return $this->post;
     }
 
@@ -96,8 +92,7 @@ class Request
      *
      * 
      */
-    public function setPost(Post $post)
-    {
+    public function setPost(Post $post) {
         $this->post = $post;
 
         return $this;
@@ -108,8 +103,7 @@ class Request
      *
      * @return  Get
      */
-    public function getGet()
-    {
+    public function getGet() {
         return $this->get;
     }
 
@@ -120,8 +114,7 @@ class Request
      *
      * 
      */
-    public function setGet(Get $get)
-    {
+    public function setGet(Get $get) {
         $this->get = $get;
 
         return $this;
@@ -132,8 +125,7 @@ class Request
      *
      * @return  Files
      */
-    public function getFiles()
-    {
+    public function getFiles() {
         return $this->files;
     }
 
@@ -144,8 +136,7 @@ class Request
      *
      * 
      */
-    public function setFiles(Files $files)
-    {
+    public function setFiles(Files $files) {
         $this->files = $files;
 
         return $this;
@@ -156,8 +147,7 @@ class Request
      *
      * @return  String
      */
-    public function getMethod()
-    {
+    public function getMethod() {
         return $this->method;
     }
 
@@ -168,8 +158,7 @@ class Request
      *
      * 
      */
-    public function setMethod(String $method)
-    {
+    public function setMethod(String $method) {
         $this->method = $method;
 
         return $this;
@@ -180,8 +169,7 @@ class Request
      *
      * @return  String
      */
-    public function getUrl()
-    {
+    public function getUrl() {
         return $this->url;
     }
 
@@ -192,8 +180,7 @@ class Request
      *
      * 
      */
-    public function setUrl(String $url)
-    {
+    public function setUrl(String $url) {
         $this->url = $url;
 
         return $this;
@@ -204,8 +191,7 @@ class Request
      *
      * @return  Session
      */
-    public function getSession()
-    {
+    public function getSession() {
         return $this->session;
     }
 
@@ -215,44 +201,42 @@ class Request
      *
      * 
      */
-    public function setSession()
-    {
+    public function setSession() {
         $this->session = Session::getInstance();
 
         return $this;
     }
 
-     /**
+    /**
      * Save the connected user in the session
      *
      * @param User $user The user to save
      *
      * 
      */
-    public function saveUser($user){
+    public function saveUser($user) {
         $this->session->user = $user;
         return $this;
     }
 
-     /**
+    /**
      * Clear the connected user from the session
      *
      *
      * 
      */
-    public function deleteUser(){
+    public function deleteUser() {
         $this->session->user = null;
         return $this;
     }
 
-     /**
+    /**
      * Get the connected user
      *
      *
      * @return mixed
      */
-    public function getUser(){
+    public function getUser() {
         return $this->session->user;
     }
 }
-

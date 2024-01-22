@@ -2,8 +2,7 @@
 
 namespace Core\Http\Bag;
 
-class File
-{
+class File {
 
     /**
      * File name
@@ -31,8 +30,7 @@ class File
      */
     private $size;
 
-    public function __construct($fileData)
-    {
+    public function __construct($fileData) {
         $this->setName($fileData['name']);
         $this->setType($fileData['type']);
         $this->setTempDir($fileData['temp_name']);
@@ -43,8 +41,7 @@ class File
     /**
      * Get file name
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->name;
     }
 
@@ -53,8 +50,7 @@ class File
      *
      * 
      */
-    public function setName($name)
-    {
+    public function setName($name) {
         $this->name = $name;
 
         return $this;
@@ -63,8 +59,7 @@ class File
     /**
      * Get file type
      */
-    public function getType()
-    {
+    public function getType() {
         return $this->type;
     }
 
@@ -73,8 +68,7 @@ class File
      *
      * 
      */
-    public function setType($type)
-    {
+    public function setType($type) {
         $this->type = $type;
 
         return $this;
@@ -83,8 +77,7 @@ class File
     /**
      * Get file temp_dir
      */
-    public function getTempDir()
-    {
+    public function getTempDir() {
         return $this->temp_dir;
     }
 
@@ -93,8 +86,7 @@ class File
      *
      * 
      */
-    public function setTempDir($temp_dir)
-    {
+    public function setTempDir($temp_dir) {
         $this->temp_dir = $temp_dir;
 
         return $this;
@@ -103,8 +95,7 @@ class File
     /**
      * Get the value of error
      */
-    public function getError()
-    {
+    public function getError() {
         return $this->error;
     }
 
@@ -113,8 +104,7 @@ class File
      *
      * 
      */
-    public function setError($error)
-    {
+    public function setError($error) {
         $this->error = $error;
 
         return $this;
@@ -123,8 +113,7 @@ class File
     /**
      * Get file size
      */
-    public function getSize()
-    {
+    public function getSize() {
         return $this->size;
     }
 
@@ -133,8 +122,7 @@ class File
      *
      * 
      */
-    public function setSize($size)
-    {
+    public function setSize($size) {
         $this->size = $size;
 
         return $this;

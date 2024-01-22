@@ -1,2 +1,6 @@
+# Ftp
 /.vscode
+# Vendor
 /vendor
+# Tailwind output
+output.css
