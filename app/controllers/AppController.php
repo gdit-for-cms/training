@@ -1,9 +1,7 @@
 <?php
 
-namespace App\Controllers\Admin;
+namespace App\Controllers;
 
-use App\Models\Permission;
-use App\Models\Room;
 use Core\Controller;
 use Core\Http\Request;
 use Core\View;

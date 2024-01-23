@@ -19,7 +19,7 @@ class Config {
      * Database name
      * @var string
      */
-    const DB_NAME = 'training';
+    const DB_NAME = 'php_food_code';
 
     /**
      * Database user

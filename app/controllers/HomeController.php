@@ -2,17 +2,13 @@
 
 namespace App\Controllers;
 
-use Core\Controller;
 use Core\View;
+use Core\Http\Request;
 
-class HomeController extends Controller {
+class HomeController extends AppController {
+    public array $data_ary;
 
-    /**
-     * Show the index page
-     *
-     * @return void
-     */
     public function indexAction() {
-        View::render('default/index.php1');
+        View::render('home/homepage.php');
     }
 }

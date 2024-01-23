@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Admin;
+namespace App\Controllers;
 
 use Core\View;
 use App\models\User;
@@ -10,8 +10,8 @@ class AuthController extends AppController {
     public array $data_ary;
 
     protected function before() {
-        if (!isLogged()) {
-            header('Location: /admin');
+        if (isLogged()) {
+            header('Location: /home/index');
             exit;
         }
 
@@ -22,41 +22,40 @@ class AuthController extends AppController {
     }
 
     public function loginAction() {
-        View::render('admin/auth/login.php');
+        View::render('home/login.php');
     }
 
     public function loginProcessAction(Request $request) {
         $post = $request->getPost();
 
-        $email = $post->get('email');
+        $username = $post->get('username');
         $password = $post->get('password');
 
         $user = new User();
-        $inputUser = $user->table('user')
-            ->where('email', '=', $email)
-            ->where('password', '=', $password)
-            ->first();
+        $exist_user = $user->table('app_user')
+            ->where('name', '=', $username)->first();
 
-        if (!$inputUser) {
+        if (!$exist_user) {
             $this->data_ary['error'] = showError('login');
 
-            View::render('admin/auth/login.php', $this->data_ary);
+            View::render('home/login.php', $this->data_ary);
             exit;
         }
 
-        $data_ary = [
-            'id' => $inputUser['id'],
-            'name' => $inputUser['name'],
-            'email' => $inputUser['email'],
-            'role_id' => $inputUser['role_id'],
-            'room_id' => $inputUser['room_id'],
-            'position_id' => $inputUser['position_id'],
-            'avatar_image' => $inputUser['avatar_image'],
-        ];
+        $exist_password = $exist_user['pass'];
+
+        if (password_verify($password, $exist_password)) {
+            $data_ary = [
+                'id' => $exist_user['id'],
+                'name' => $exist_user['name'],
+                'display_name' => $exist_user['display_name'],
+                'img_code' => $exist_user['img_code'],
+            ];
+        };
 
         $request->saveUser($data_ary);
 
-        header('Location: /admin');
+        header('Location: /home/index');
         exit;
     }
 
