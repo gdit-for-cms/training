@@ -28,8 +28,8 @@ class AuthController extends AppController {
     public function loginProcessAction(Request $request) {
         $post = $request->getPost();
 
-        $username = $post->get('username');
-        $password = $post->get('password');
+        $username = $post->get('name');
+        $password = $post->get('pass');
 
         $user = new User();
         $exist_user = $user->table('app_user')
