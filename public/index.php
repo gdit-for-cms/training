@@ -18,6 +18,7 @@ $request = new Core\Http\Request();
 
 // Add the routes
 $router->add('', ['controller' => 'Auth', 'action' => 'login']);
+$router->add('register', ['controller' => 'Register', 'action' => 'index']);
 $router->add('{controller}/{action}');
 
 $router->dispatch($request);

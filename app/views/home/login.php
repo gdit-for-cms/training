@@ -40,7 +40,7 @@
                             </form>
 
                             <!--Register button-->
-                            <form action="register.php" class="flex items-center justify-between pb-6">
+                            <form action="/register/index" class="flex items-center justify-between pb-6">
                                 <p class="mb-0 mr-2 text-black ">Bạn chưa có tài khoản?</p>
                                 <button type="submit" name="register" class="inline-block rounded px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-white" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
                                     Đăng ký
