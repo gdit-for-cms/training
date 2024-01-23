@@ -1,9 +1,6 @@
 <?php
 
-use App\Models\Permission;
 use Core\Http\Request;
-use App\Models\Position;
-use App\Models\Room;
 
 
 if (!function_exists('isLogged')) {
