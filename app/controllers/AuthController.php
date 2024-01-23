@@ -10,6 +10,7 @@ class AuthController extends AppController {
     public array $data_ary;
 
     protected function before() {
+        // Can check Auth here
         if (isLogged()) {
             header('Location: /home/index');
             exit;
@@ -37,7 +38,6 @@ class AuthController extends AppController {
 
         if (!$exist_user) {
             $this->data_ary['error'] = showError('login');
-
             View::render('home/login.php', $this->data_ary);
             exit;
         }
@@ -61,7 +61,6 @@ class AuthController extends AppController {
 
     public function logout(Request $request) {
         $request->deleteUser();
-
         header('Location: /');
         exit;
     }

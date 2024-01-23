@@ -7,7 +7,7 @@ use Core\Http\Request;
 use Core\View;
 
 class AppController extends Controller {
-    public $title = 'App';
+    public $title = 'Home';
 
     public array $data_ary;
 
@@ -19,16 +19,18 @@ class AppController extends Controller {
 
         $request = new Request;
         $user = $request->getUser();
-        $cur_user = [
-            // 
+        $current_user = [
+            'id' => $user['id'],
+            'name' => $user['name'],
+            'display_name' => $user['display_name'],
         ];
 
-        $this->data_ary['cur_user'] = $cur_user;
+        $this->data_ary['current_user'] = $current_user;
         $this->data_ary['title'] = $this->title;
     }
 
 
     protected function after() {
-        View::render('admin/back-layouts/master.php', $this->data_ary);
+        View::render('/layouts/master.php', $this->data_ary);
     }
 }

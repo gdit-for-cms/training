@@ -9,6 +9,5 @@ class HomeController extends AppController {
     public array $data_ary;
 
     public function indexAction() {
-        View::render('home/homepage.php');
     }
 }
