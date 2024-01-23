@@ -6,6 +6,11 @@
             "App\\Controllers\\": "app/controllers/",
             "App\\Models\\": "app/models/",
             "App\\Services\\": "app/services/"
-        }
+        },
+        "files" : [
+            "app/functions/helpers.php",
+            "app/functions/errors.php",
+            "app/functions/validation.php"
+        ]
     }
 }
