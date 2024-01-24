@@ -25,7 +25,7 @@
     <nav id="header" class="fixed w-full z-30 top-0 text-white h-24">
         <div class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 py-2">
             <div class="pl-4 flex items-center">
-                <a class="toggleColour text-white no-underline hover:no-underline font-bold text-2xl lg:text-4xl flex justify-between items-center" href="#">
+                <a href="/home/index" class="toggleColour text-white no-underline hover:no-underline font-bold text-2xl lg:text-4xl flex justify-between items-center" href="#">
                     <div class="w-20 h-20 mr-2">
                         <img class="object-cover" src="/img/PHP_Food_Code_logo_large.png" alt="php logo">
                     </div>
@@ -43,18 +43,22 @@
                 </button>
             </div>
             <div class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden mt-2 lg:mt-0 bg-white lg:bg-transparent text-black p-4 lg:p-0 z-20" id="nav-content">
-                <ul class="list-reset lg:flex justify-end flex-1 items-center">
-                    <li class="mr-3">
-                        <a class="inline-block py-2 px-4 text-black font-bold no-underline" href="#">
+                <ul class="list-reset lg:flex justify-end flex-1 items-center mr-3">
+                    <a id="navDashboard" class="flex gap-2 items-center justify-around no-underline mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full mt-4 lg:mt-0 py-4 px-8 shadow opacity-75 focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out" href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                        </svg>
+                        <div>
                             <?php
                             if (isset($current_user)) {
                                 echo "$current_user[display_name]";
                             }
                             ?>
-                        </a>
-                    </li>
+                        </div>
+                    </a>
                 </ul>
-                <button onclick="confirm_logout()" id="navAction" class="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full mt-4 lg:mt-0 py-4 px-8 shadow opacity-75 focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
+                <button onclick="confirm_logout()" id="navAction" class="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full mt-4 lg:mt-0 py-4 px-8 shadow opacity-75 focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
                     Đăng xuất
                 </button>
             </div>
@@ -83,81 +87,9 @@
         </svg>
     </div>
 
-    <section class="bg-white border-b py-4">
-        <div class="container mx-auto grid space-x-6 grid-cols-1 md:grid-cols-3 pt-4 pb-12">
-            <h1 class="col-span-full my-2 text-5xl font-bold leading-tight text-center text-gray-800">
-                Đơn đang mở
-            </h1>
-            <div class="col-span-full mb-4">
-                <div class="h-1 mx-auto gradient w-64 opacity-25 my-0 py-0 rounded-t"></div>
-            </div>
-            <!-- Start of Grid Column -->
-            <!-- Card Content -->
-            <div class="p-6 flex flex-col flex-grow flex-shrink gap-1 bg-gray-50 rounded overflow-hidden shadow m-3">
-                <div class="flex-1 bg-white rounded-t rounded-b-none overflow-hidden py-2">
-                    <a href="#" class="flex gap-2 flex-wrap no-underline hover:no-underline">
-                        <p class="w-full text-gray-600 text-xs md:text-sm px-6">
-                            18/01/2024
-                        </p>
-                        <div class="w-full font-bold text-xl text-gray-800 px-6 min-h-14">
-                            Trà Sữa Tiger Sugar Delivery
-                        </div>
-                        <div class="px-6">
-                            <img class="object-cover" src="https://images.foody.vn/res/g118/1175684/prof/s640x400/foody-upload-api-foody-mobile-im-664a69ca-230630074759.jpeg" alt="">
-                        </div>
-                    </a>
-                </div>
-                <div class="px-6">
-                    <button class="mx-auto lg:mx-0 gradient text-white font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
-                        Đặt món
-                    </button>
-                </div>
-            </div>
-            <!-- Card Content -->
-            <div class="p-6 flex flex-col flex-grow flex-shrink gap-1 bg-gray-50 rounded overflow-hidden shadow m-3">
-                <div class="flex-1 bg-white rounded-t rounded-b-none overflow-hidden py-2">
-                    <a href="#" class="flex gap-2 flex-wrap no-underline hover:no-underline">
-                        <p class="w-full text-gray-600 text-xs md:text-sm px-6">
-                            18/01/2024
-                        </p>
-                        <div class="w-full font-bold text-xl text-gray-800 px-6 min-h-14">
-                            Cơm Tấm Ngon - 452 Hoàng Diệu
-                        </div>
-                        <div class="px-6">
-                            <img class="object-cover" src="https://images.foody.vn/res/g114/1135603/prof/s640x400/foody-upload-api-foody-mobile-co-a19e639a-220504112255.jpeg" alt="">
-                        </div>
-                    </a>
-                </div>
-                <div class="px-6">
-                    <button class="mx-auto lg:mx-0 gradient text-white font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
-                        Đặt món
-                    </button>
-                </div>
-            </div>
-            <!-- Card Content -->
-            <div class="p-6 flex flex-col flex-grow flex-shrink gap-1 bg-gray-50 rounded overflow-hidden shadow m-3">
-                <div class="flex-1 bg-white rounded-t rounded-b-none overflow-hidden py-2">
-                    <a href="#" class="flex gap-2 flex-wrap no-underline hover:no-underline">
-                        <p class="w-full text-gray-600 text-xs md:text-sm px-6">
-                            &nbsp;
-                        </p>
-                        <div class="animate-bounce text-center w-full font-bold text-xl text-gray-800 px-6 min-h-14">
-                            Không tìm thấy đơn bạn cần...???
-                        </div>
-                        <div class="px-6">
-                            <img class="object-cover" src="/img/where_it_is.png" alt="">
-                        </div>
-                    </a>
-                </div>
-                <div class="px-6 flex items-center justify-center">
-                    <button class="mx-auto lg:mx-0 bg-blue-400 text-white font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
-                        Tạo đơn
-                    </button>
-                </div>
-            </div>
+    <!-- Main content -->
+    <?php require_once '../app/views' . $content . '.php' ?>
 
-        </div>
-    </section>
     <!-- Change the colour #f8fafc to match the previous section colour -->
     <svg class="wave-top" viewBox="0 0 1439 147" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -207,6 +139,7 @@
         var header = document.getElementById("header");
         var navcontent = document.getElementById("nav-content");
         var navaction = document.getElementById("navAction");
+        var navdashboard = document.getElementById("navDashboard");
         var brandname = document.getElementById("brandname");
         var toToggle = document.querySelectorAll(".toggleColour");
 
@@ -220,6 +153,10 @@
                 navaction.classList.add("gradient");
                 navaction.classList.remove("text-gray-800");
                 navaction.classList.add("text-white");
+                navdashboard.classList.remove("bg-white");
+                navdashboard.classList.add("gradient");
+                navdashboard.classList.remove("text-gray-800");
+                navdashboard.classList.add("text-white");
                 //Use to switch toggleColour colours
                 for (var i = 0; i < toToggle.length; i++) {
                     toToggle[i].classList.add("text-gray-800");
@@ -234,6 +171,10 @@
                 navaction.classList.add("bg-white");
                 navaction.classList.remove("text-white");
                 navaction.classList.add("text-gray-800");
+                navdashboard.classList.remove("gradient");
+                navdashboard.classList.add("bg-white");
+                navdashboard.classList.remove("text-white");
+                navdashboard.classList.add("text-gray-800");
                 //Use to switch toggleColour colours
                 for (var i = 0; i < toToggle.length; i++) {
                     toToggle[i].classList.add("text-white");
