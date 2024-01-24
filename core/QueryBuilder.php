@@ -152,9 +152,11 @@ trait QueryBuilder {
      *
      * @return array
      */
-    public function get($column = '*') {
+    public function get($column = null) {
         $db = static::getDB();
-        $this->selectColumn = $column;
+        if ($column !== null) {
+            $this->selectColumn = $column;
+        }
         $sqlQuery =
             "SELECT " . $this->selectColumn .
             " FROM " . $this->_table . " " .
@@ -235,14 +237,15 @@ trait QueryBuilder {
     }
 
     /**
-     * Set the columns to be selected.
+     * Add a JOIN clause to the query.
      *
-     * @param  array|mixed  $column
-     * @param  string  $tableName
+     * @param  string  $tableName The name of the table to join.
+     * @param  string  $relationship The relationship for the join.
      * @return $this
      */
     public function join($tableName, $relationship) {
-        $this->innerJoin = "INNER JOIN" . $tableName . " ON " . $relationship . " ";
+        // Concatenate the new JOIN clause to any existing joins
+        $this->innerJoin .= " INNER JOIN " . $tableName . " ON " . $relationship . " ";
         return $this;
     }
 
