@@ -16,7 +16,8 @@ function showError($errorName) {
         "name" => "The entered text must be name format",
         "gender" => "'gender' you selected does not exist",
         "password" => "The entered text must be password format",
-        "pageExisted" => "'page' you selected does not exist"
+        "pageExisted" => "'page' you selected does not exist",
+        "loadHTML" => 'Can not load HTML from your page, please check link and try again'
     ];
     if ($error_ary[$errorName]) {
         return $error_ary[$errorName];

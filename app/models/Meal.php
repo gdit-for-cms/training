@@ -5,6 +5,8 @@ namespace App\Models;
 use Core\Model;
 use PDO;
 use Core\QueryBuilder;
+use DateTime;
+use Core\Http\Request;
 
 /**
  * Example user model
@@ -16,20 +18,31 @@ class Meal extends Model {
 
     private $_table = 'meal';
 
-    public function create($url, $order_name) {
+    public function create($url) {
         $store = new Store();
-        $id = $store->checkLink($url);
+        $store_id = $store->checkLink($url);
+        if ($store_id === -1) {
+            return FALSE;
+        }
+        $request = new Request;
+        $user = $request->getUser();
+        if ($this->createMeal($user['id'], $store_id)) {
+            return TRUE;
+        }
+        return FALSE;
     }
 
     public function createMeal($userId, $storeId) {
-        $data = [
-            'user_id' => $userId,
-            'store_id' => $storeId,
-            // Assuming 'time_open' is set to CURRENT_TIMESTAMP by default
-            'closed' => 0 // Initially, the meal is open (not closed)
-        ];
-
-        return $this->insert($data);
+        $pdo = parent::getDB();
+        $sql = "INSERT INTO meal (user_id, store_id, time_open, closed) VALUES (?, ?, ?, 0)";
+        $stmt = $pdo->prepare($sql);
+        $currentDateTime = new DateTime();
+        $currentDateTimeString = $currentDateTime->format('Y-m-d H:i:s');
+        $stmt->bindParam(1, $userId);
+        $stmt->bindParam(2, $storeId);
+        $stmt->bindParam(3, $currentDateTimeString);
+        $result = $stmt->execute();
+        return $result;
     }
 
     public function closeMeal($mealId) {

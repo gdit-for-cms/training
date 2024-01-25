@@ -11,7 +11,8 @@
             "app/functions/helpers.php",
             "app/functions/errors.php",
             "app/functions/validation.php",
-            "app/functions/crawl.php"
+            "app/functions/crawl.php",
+            "app/functions/success.php"
         ]
     },
     "require": {

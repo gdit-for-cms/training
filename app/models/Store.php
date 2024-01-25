@@ -5,8 +5,7 @@ namespace App\Models;
 use Core\Model;
 use DateTime;
 use DOMDocument;
-
-
+use Exception;
 
 class Store extends Model {
 
@@ -69,23 +68,25 @@ class Store extends Model {
     }
 
     function checkLink($url) {
+
+        if (!strpos($url, "shopeefood")) {
+            return -1;
+        }
+
         $store = new Store();
-
         $id = $store->checkStore($url);
-
-
-
         $pageSource = getHTMLPage($url);
-
 
         $options = LIBXML_NOERROR | LIBXML_NOWARNING;
         $dom = new DOMDocument();
-        $dom->loadHTML($pageSource, $options);
 
-
+        try {
+            $dom->loadHTML($pageSource, $options);
+        } catch (Exception $e) {
+            return -1;
+        }
 
         $food = new Food();
-
         $name_list = getNameFromHTML($dom);
         $price_list = getPriceFromHTML($dom);
         $img_list = getImageFromHTML($dom);
@@ -93,12 +94,12 @@ class Store extends Model {
         $img_store = getImageStoreFromHTML($dom);
 
         if (count($name_list) === 0) {
-            return false;
+            return -1;
         }
 
         if (count($name_list) != count($price_list) || count($name_list) != count($img_list)) {
 
-            return false;
+            return -1;
         }
 
 
