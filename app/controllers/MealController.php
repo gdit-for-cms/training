@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Meal;
+use App\Models\Store;
 use Core\View;
 use Core\Http\Request;
 
@@ -11,6 +12,9 @@ class MealController extends AppController {
     public array $data_ary;
 
     public function createAction() {
+        $store = new Store();
+        $result_ary = $store->getAllStores();
+        $this->data_ary['stores'] = $result_ary;
         $this->data_ary['title'] = 'Tạo đơn';
         $this->data_ary['content'] = '/meal/create';
     }
@@ -19,8 +23,6 @@ class MealController extends AppController {
     }
 
     public function createMealAction(Request $request) {
-
-
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($_POST['link'])) {

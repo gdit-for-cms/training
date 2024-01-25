@@ -6,8 +6,13 @@ use Core\Model;
 use DateTime;
 use DOMDocument;
 use Exception;
+use Core\QueryBuilder;
 
 class Store extends Model {
+
+    use QueryBuilder;
+
+    private $_table = 'store';
 
     public function checkStore($url) {
         $pdo = parent::getDB();
@@ -81,7 +86,7 @@ class Store extends Model {
         $dom = new DOMDocument();
 
         try {
-            $dom->loadHTML($pageSource, $options);
+            $dom->loadHTML('<?xml encoding="utf-8" ?>' . $pageSource, $options);
         } catch (Exception $e) {
             return -1;
         }
@@ -111,5 +116,60 @@ class Store extends Model {
             $this->updateStore($id, $name_list, $price_list, $img_list);
         }
         return $id;
+    }
+
+    // Query Builder setup:
+    public function createStoreQB($name, $link, $updateDate, $image) {
+        $data = [
+            'name' => $name,
+            'link' => $link,
+            'update_date' => $updateDate,
+            'image' => $image,
+            'deleted' => 0 // Initially, the store is not deleted
+        ];
+
+        return $this->insert($data);
+    }
+
+    public function updateStoreQB($storeId, $data) {
+        $conditions = "id = $storeId";
+        return $this->update($data, $conditions);
+    }
+
+    public function getStoreById($storeId) {
+        return $this->where('deleted', '=', 0)
+            ->find($storeId);
+    }
+
+    public function getAllStores() {
+        return $this->where('deleted', '=', 0)
+            ->all();
+    }
+
+    public function deleteStore($storeId) {
+        // Soft delete the store by setting 'deleted' to 1
+        $data = ['deleted' => 1];
+        $conditions = "id = $storeId";
+        return $this->update($data, $conditions);
+    }
+
+    public function restoreStore($storeId) {
+        // Restore the store by setting 'deleted' to 0
+        $data = ['deleted' => 0];
+        $conditions = "id = $storeId";
+        return $this->update($data, $conditions);
+    }
+
+    public function getStoreWithFoods($storeId) {
+        $this->table($this->_table)
+            ->join('food', 'store.id = food.store_id')
+            ->where('store.id', '=', $storeId)
+            ->where('store.deleted', '=', 0)
+            ->where('food.deleted', '=', 0);
+
+        $selectColumns = 'store.id, store.name as store_name, store.link, store.update_date, store.image as store_image, '
+            . 'food.id as food_id, food.name as food_name, food.price, food.image as food_image';
+
+        return $this->select($selectColumns)->get();
     }
 }

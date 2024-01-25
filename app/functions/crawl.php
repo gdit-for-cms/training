@@ -5,7 +5,12 @@ use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\WebDriverDimension;
 
+// Set the path to the directory containing the .env file
+$dotenvPath = realpath(__DIR__ . '/../../'); // Adjust the path as needed
 
+// Load .env file from the correct path
+$dotenv = Dotenv\Dotenv::createImmutable($dotenvPath);
+$dotenv->load();
 
 function getHTMLPage($url) {
 
@@ -16,7 +21,12 @@ function getHTMLPage($url) {
     $options->addArguments(['--headless', '--no-sandbox', '--disable-dev-shm-usage']);
     $capabilities = DesiredCapabilities::chrome();
     $capabilities->setCapability(ChromeOptions::CAPABILITY, $options);
-    $driver = RemoteWebDriver::create('http://192.168.1.217:4444/wd/hub', $capabilities);
+
+    // Use environment variable for Selenium WebDriver hub URL
+    $seleniumHubUrl = getenv('SELENIUM_HUB_URL') ?: 'http://localhost:4444/wd/hub';
+
+    //  Call driver
+    $driver = RemoteWebDriver::create($seleniumHubUrl, $capabilities);
 
     // Set the browser window size to a large dimension
     $width = 1920;  // You can adjust the width as needed

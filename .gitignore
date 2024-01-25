@@ -4,3 +4,7 @@
 /vendor
 # Tailwind output
 output.css
+# Selenium Server
+selenium-server-4.16.1.jar
+# Environment File
+.env
