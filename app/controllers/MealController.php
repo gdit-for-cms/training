@@ -17,4 +17,26 @@ class MealController extends AppController {
 
     public function displayOpenMealsAction() {
     }
+
+    public function createMealAction(Request $request) {
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_POST['link'])) {
+                $url = $_POST['link'];
+                $order_name = "";
+                if (isset($_POST['name'])) {
+                    $order_name = $_POST['name'];
+                }
+                $meal = new Meal();
+                $meal->create($url, $order_name);
+            } else {
+            }
+        } else {
+            echo "Không có dữ liệu được gửi qua phương thức POST";
+        }
+        echo "ok";
+
+        header('Location: /home/index');
+        exit;
+    }
 }

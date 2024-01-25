@@ -10,7 +10,12 @@
         "files" : [
             "app/functions/helpers.php",
             "app/functions/errors.php",
-            "app/functions/validation.php"
+            "app/functions/validation.php",
+            "app/functions/crawl.php"
         ]
+    },
+    "require": {
+        "php-webdriver/webdriver": "^1.15",
+        "facebook/webdriver": "^1.7"
     }
 }

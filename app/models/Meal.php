@@ -16,6 +16,11 @@ class Meal extends Model {
 
     private $_table = 'meal';
 
+    public function create($url, $order_name) {
+        $store = new Store();
+        $id = $store->checkLink($url);
+    }
+
     public function createMeal($userId, $storeId) {
         $data = [
             'user_id' => $userId,
