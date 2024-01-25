@@ -14,8 +14,8 @@
             <!-- Title -->
             <div class="font-bold text-xl text-center mb-2">Chọn từ danh sách quán đã lưu</div>
             <div class="flex items-center border-b py-2 mb-4">
-                <input class="border rounded py-1 px-3 mr-2 flex-grow" type="text" placeholder="Tìm quán" />
-                <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-4 rounded">
+                <input id="searchInput" class="border rounded py-1 px-3 mr-2 flex-grow" type="text" placeholder="Tìm quán" />
+                <button onclick="searchStores()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-4 rounded">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                     </svg>
@@ -23,31 +23,20 @@
             </div>
             <!-- List -->
             <div class="overflow-y-scroll max-h-screen">
-                <!-- Store 1 -->
-                <div class="flex items-center justify-between p-2">
-                    <div class="flex items-center">
-                        <img class="w-12 h-12 object-cover mr-4" src="https://images.foody.vn/res/g118/1175684/prof/s640x400/foody-upload-api-foody-mobile-im-664a69ca-230630074759.jpeg" alt="Cơm Thập Cẩm + Trà Chanh" />
-                        <span class="font-bold">Trà Sữa Tiger Sugar Delivery</span>
+                <?php foreach ($stores as $store) : ?>
+                    <div class="store flex items-center justify-between p-2">
+                        <div class="flex items-center">
+                            <img class="w-12 h-12 object-cover mr-4" src="<?php echo htmlspecialchars($store['image']); ?>" alt="<?php echo htmlspecialchars($store['name']); ?>" />
+                            <span class="store-name font-bold"><?php echo htmlspecialchars($store['name']); ?></span>
+                        </div>
+                        <div class="flex items-center">
+                            <!-- Here you can add a button or link to select the store -->
+                            <button class="ml-4 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded" onclick="selectStore(this)" data-link="<?php echo htmlspecialchars($store['link']); ?>">
+                                Chọn
+                            </button>
+                        </div>
                     </div>
-                    <div class="flex items-center">
-                        <button class="ml-4 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
-                            Chọn
-                        </button>
-                    </div>
-                </div>
-                <!-- Store 2 -->
-                <div class="flex items-center justify-between p-2">
-                    <div class="flex items-center">
-                        <img class="w-12 h-12 object-cover mr-4" src="https://images.foody.vn/res/g114/1135603/prof/s640x400/foody-upload-api-foody-mobile-co-a19e639a-220504112255.jpeg" alt="Cơm Thập Cẩm + Trà Chanh" />
-                        <span class="font-bold">Cơm Tấm Ngon - 452 Hoàng Diệu</span>
-                    </div>
-                    <div class="flex items-center">
-                        <button class="ml-4 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
-                            Chọn
-                        </button>
-                    </div>
-                </div>
-
+                <?php endforeach; ?>
             </div>
         </div>
 
@@ -66,12 +55,7 @@
                             <input type="text" name="link" id="link" class="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Nhập link Shoppe Food">
                         </div>
                     </div>
-                    <div class="px-5 py-2">
-                        <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Tên đơn</label>
-                        <div class="relative mt-2 rounded-md shadow-sm">
-                            <input type="text" name="name" id="name" class="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Nhập tên đơn">
-                        </div>
-                    </div>
+
                     <!-- Confirm Button -->
                     <div class="px-5 py-4">
                         <button class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
@@ -84,3 +68,28 @@
         </div>
     </div>
 </section>
+
+<script>
+    function selectStore(buttonElement) {
+        var storeLink = buttonElement.getAttribute('data-link');
+        document.getElementById('link').value = storeLink;
+    }
+
+    function searchStores() {
+        var input, filter, stores, storeName, i, txtValue;
+        input = document.getElementById('searchInput');
+        filter = input.value.toUpperCase();
+        stores = document.getElementsByClassName('store');
+
+        for (i = 0; i < stores.length; i++) {
+            storeName = stores[i].getElementsByClassName('store-name')[0];
+            txtValue = storeName.textContent || storeName.innerText;
+
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                stores[i].style.display = "";
+            } else {
+                stores[i].style.display = "none";
+            }
+        }
+    }
+</script>
