@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Models\DetailMeal;
+use App\Models\Food;
 use App\Models\Meal;
 use App\Models\Store;
 use Core\View;
@@ -38,5 +40,32 @@ class MealController extends AppController {
         $this->data_ary['error'] = showError('loadHTML');
         header('Location: /home/index');
         exit;
+    }
+
+    public function showAction(Request $request) {
+        $login_user = $request->getUser();
+        $login_user_id = $login_user['id'];
+
+        $meal_id = $request->getGet()->get('id');
+        $meal = new Meal();
+        $detail_meal = $meal->getDetailMealById($meal_id);
+        if (!isset($detail_meal)) {
+            // Handle error
+            exit;
+        }
+
+        $object_detail_meal = new DetailMeal();
+        $user_foods = $object_detail_meal->getDetailsByUserAndMeal($meal_id, $login_user_id);
+
+        $store = $meal->getStoreFromMealId($meal_id);
+        $store_id = $store['store_id'];
+        $food = new Food();
+        $foods = $food->getFoodsByStoreId($store_id);
+
+        $this->data_ary['user_foods'] = $user_foods;
+        $this->data_ary['detail_meal'] = $detail_meal;
+        $this->data_ary['foods'] = $foods;
+        $this->data_ary['title'] = 'Đặt món';
+        $this->data_ary['content'] = '/detail_meal/list';
     }
 }
