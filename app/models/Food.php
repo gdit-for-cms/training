@@ -3,11 +3,16 @@
 namespace App\Models;
 
 use Core\Model;
-use DOMDocument;
+use Core\QueryBuilder;
 use PDO;
 
 
 class Food extends Model {
+
+    use QueryBuilder;
+
+    private $_table = 'food';
+
     function createListFood($id, $name_list, $price_list, $img_list) {
         $pdo = parent::getDB();
         $sql = "INSERT INTO food (name, price, store_id, image, deleted) VALUES (?, ?, ?, ?, 0)";
@@ -71,5 +76,36 @@ class Food extends Model {
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
+    }
+
+    // Query Builder
+
+    public function updateFoodQB($foodId, $data) {
+        $conditions = "id = $foodId";
+        return $this->update($data, $conditions);
+    }
+
+    public function getFoodById($foodId) {
+        return $this->where('id', '=', $foodId)
+            ->where('deleted', '=', 0) // Only get if not marked as deleted
+            ->first();
+    }
+
+    public function getAllFoods() {
+        return $this->where('deleted', '=', 0) // Only get foods not marked as deleted
+            ->all();
+    }
+
+    public function deleteFoodQB($foodId) {
+        // Soft delete the food item by setting 'deleted' to 1
+        $data = ['deleted' => 1];
+        $conditions = "id = $foodId";
+        return $this->update($data, $conditions);
+    }
+
+    public function getFoodsByStoreId($storeId) {
+        return $this->where('store_id', '=', $storeId)
+            ->where('deleted', '=', 0) // Only get foods not marked as deleted
+            ->get();
     }
 }

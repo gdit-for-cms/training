@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="/css/style.css">
     <link href="/css/tailwind/output.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Include jQuery from a CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- Define your gradient here - use online tools to find a gradient matching your branding-->
     <style>
         .gradient {

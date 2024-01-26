@@ -52,8 +52,18 @@ class Meal extends Model {
         return $this->update($data, $conditions);
     }
 
-    public function getMealById($mealId) {
-        return $this->find($mealId);
+    public function getDetailMealById($mealId) {
+        $this->table($this->_table)
+            ->join('app_user', 'meal.user_id = app_user.id')
+            ->join('store', 'meal.store_id = store.id')
+            ->where('meal.id', '=', $mealId)
+            ->where('meal.closed', '=', 0);
+
+        $selectColumns = 'meal.*, '
+            . 'app_user.name as user_name, app_user.display_name, app_user.img_code, '
+            . 'store.name as store_name, store.link, store.update_date, store.image';
+
+        return $this->select($selectColumns)->get();
     }
 
     public function getAllOpenMeals() {
@@ -91,5 +101,15 @@ class Meal extends Model {
     public function deleteMeal($mealId) {
         $conditions = "id = $mealId";
         return $this->destroy($conditions);
+    }
+
+    public function getStoreFromMealId($mealId) {
+        $this->table($this->_table)
+            ->join('store', 'meal.store_id = store.id')
+            ->where('meal.id', '=', $mealId);
+
+        $selectColumns = 'store.id, store.name, store.link, store.update_date, store.image, store.deleted';
+
+        return $this->select($selectColumns)->first();
     }
 }
