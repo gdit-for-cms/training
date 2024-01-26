@@ -32,24 +32,26 @@ class Meal extends Model {
         return FALSE;
     }
 
-    public function createMeal($userId, $storeId) {
+    public function createMeal($user_id, $store_id) {
         $pdo = parent::getDB();
         $sql = "INSERT INTO meal (user_id, store_id, time_open, closed) VALUES (?, ?, ?, 0)";
         $stmt = $pdo->prepare($sql);
         $currentDateTime = new DateTime();
         $currentDateTimeString = $currentDateTime->format('Y-m-d H:i:s');
-        $stmt->bindParam(1, $userId);
-        $stmt->bindParam(2, $storeId);
+        $stmt->bindParam(1, $user_id);
+        $stmt->bindParam(2, $store_id);
         $stmt->bindParam(3, $currentDateTimeString);
         $result = $stmt->execute();
         return $result;
     }
 
-    public function closeMeal($mealId) {
-        $data = ['closed' => 1]; // Set closed flag to 1
-        $conditions = "id = $mealId";
-
-        return $this->update($data, $conditions);
+    public function closeMeal($meal_id) {
+        $pdo = parent::getDB();
+        $sql = "UPDATE meal SET closed = 1 WHERE id = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(1, $meal_id);
+        $result = $stmt->execute();
+        return $result;
     }
 
     public function getDetailMealById($mealId) {
@@ -79,8 +81,31 @@ class Meal extends Model {
         return $this->select($selectColumns)->get();
     }
 
-    public function getMealsByUser($userId) {
-        return $this->where('user_id', '=', $userId)->get();
+    public function getMealsByUser() {
+        $request = new Request;
+        $user_id = $request->getUser()['id'];
+        $meals = array();
+        $pdo = parent::getDB();
+        $sql = "SELECT m.id as id, m.store_id as store_id, m.time_open as time_open, 
+        m.closed as closed, s.name as store_name, s.image as image
+        FROM meal m 
+        JOIN store s on m.store_id = s.id
+        WHERE m.user_id = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(1, $user_id);
+        $stmt->execute();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $meal = array(
+                'id' => $row['id'],
+                'store_id' => $row['store_id'],
+                'time_open' => $row['time_open'],
+                'closed' => $row['closed'],
+                'store_name' => $row['store_name'],
+                'image' => $row['image']
+            );
+            $meals[] = $meal;
+        }
+        return $meals;
     }
 
     public function getOpenMealsByUser($userId) {

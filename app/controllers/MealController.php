@@ -68,4 +68,18 @@ class MealController extends AppController {
         $this->data_ary['title'] = 'Đặt món';
         $this->data_ary['content'] = '/detail_meal/list';
     }
+
+    public function closeMeal() {
+        $id = 0;
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_POST['meal_id'])) {
+                $id = $_POST['meal_id'];
+                $meal = new Meal;
+                $meal->closeMeal($id);
+                // header('Location: /detail-meal/display-general-detail');
+            }
+        }
+        header('Location: /detail-meal/display-general-detail');
+        exit;
+    }
 }
