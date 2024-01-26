@@ -5,6 +5,7 @@ namespace App\Models;
 use Core\Model;
 use Core\QueryBuilder;
 use Core\Http\Request;
+use PDO;
 
 class DetailMeal extends Model {
     use QueryBuilder;
@@ -47,5 +48,43 @@ class DetailMeal extends Model {
     public function deleteMealDetail($mealDetailId) {
         $conditions = "id = $mealDetailId";
         return $this->destroy($conditions);
+    }
+
+    function getGenerallDetailMealByMealId($meal_id) {
+        $details = array();
+        $pdo = parent::getDB();
+        $sql = "SELECT d.food_id, d.price,d.describes, SUM(d.amount) as amount, f.name, f.image, GROUP_CONCAT(d.describes SEPARATOR' - ') as describes
+        FROM detail_meal d 
+        JOIN food f on d.food_id = f.id
+        WHERE d.meal_id = ?
+        GROUP BY d.food_id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(1, $meal_id);
+        $result = $stmt->execute();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $detail = array(
+                'food_id' => $row['food_id'],
+                'price' => $row['price'],
+                'describes' => $row['describes'],
+                'amount' => $row['amount'],
+                'name' => $row['name'],
+                'image' => $row['image'],
+                'describes_concatenated' => $row['describes']
+            );
+            $details[] = $detail;
+        }
+        return $details;
+    }
+    function getDetailDetailMealByMealId($meal_id) {
+        $pdo = parent::getDB();
+        $sql = "SELECT d.food_id, d.price,d.describes, d.amount, f.name, f.image, d.describes, a.display_name
+        FROM detail_meal d 
+        JOIN food f on d.food_id = f.id
+        JOIN app_user a on d.user_id = a.id
+        WHERE d.meal_id = ? ";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(1, $meal_id);
+        $result = $stmt->execute();
+        return $result;
     }
 }
