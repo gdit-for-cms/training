@@ -2,7 +2,8 @@
 
 function showError($errorName) {
     $error_ary = [
-        "login" => 'Email or Password is incorrect',
+        "login name" => 'Name is wrong',
+        "login password" => 'Password is wrong',
         "create" => 'Create failed',
         "existed" => 'Object has been exist',
         "email existed" => 'Email has been exist',

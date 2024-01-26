@@ -36,8 +36,10 @@ class AuthController extends AppController {
         $exist_user = $user->table('app_user')
             ->where('name', '=', $username)->first();
 
+        $this->data_ary['pre_name'] = $username;
+
         if (!$exist_user) {
-            $this->data_ary['error'] = showError('login');
+            $this->data_ary['name_error'] = showError('login name');
             View::render('home/login.php', $this->data_ary);
             exit;
         }
@@ -51,6 +53,10 @@ class AuthController extends AppController {
                 'display_name' => $exist_user['display_name'],
                 'img_code' => $exist_user['img_code'],
             ];
+        } else {
+            $this->data_ary['pass_error'] = showError('login password');
+            View::render('home/login.php', $this->data_ary);
+            exit;
         };
 
         $request->saveUser($data_ary);
