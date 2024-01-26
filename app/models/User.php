@@ -49,29 +49,17 @@ class User extends Model {
                 'filled',
                 'maxLen:30',
             ),
-            'email' => array(
+            'pass' => array(
                 'required',
-                'email',
-                'filled',
-            ),
-            'gender' => array(
-                'required',
-                'gender'
-            ),
-            'password' => array(
-                'required',
-                'password',
+                'pass',
                 'filled',
                 'minLen:8',
             ),
-            'role_id' => array(
+            'display_name' => array(
                 'required',
-            ),
-            'room_id' => array(
-                'required',
-            ),
-            'position_id' => array(
-                'required',
+                'display_name',
+                'filled',
+                'maxLen:30',
             ),
         );
         switch ($change) {

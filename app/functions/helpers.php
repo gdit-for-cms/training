@@ -14,3 +14,15 @@ if (!function_exists('isLogged')) {
         }
     }
 }
+
+if (!function_exists('isRegisterURL')) {
+    function isRegisterURL() {
+        $obj_request = new Request;
+        $url = $obj_request->getURL();
+        if ($url == 'user/register') {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+}
