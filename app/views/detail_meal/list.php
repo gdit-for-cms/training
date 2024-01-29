@@ -19,7 +19,7 @@
           <div class="flex flex-col flex-1 w-1/2 min-h-screen">
               <div class="flex items-center pb-2 mb-4 border-b">
                   <input id="searchInput" onkeyup="searchFoods()" class="flex-grow px-3 py-1 mr-2 border rounded" type="text" placeholder="Tìm món" />
-                  <button class="px-4 py-1 font-bold text-white bg-red-500 rounded hover:bg-red-700">
+                  <button class="px-4 py-1 font-bold text-white bg-red-400 rounded hover:bg-red-600">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                           <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                       </svg>
@@ -37,7 +37,7 @@
                           </div>
                           <div class="flex items-center gap-2">
                               <span class="font-bold text-red-500"><?php echo htmlspecialchars(number_format($food['price'], 0, ',', '.')); ?></span>
-                              <button class="px-2 py-1 font-bold text-white bg-red-500 rounded add-item-btn hover:bg-red-700" data-food-id="<?php echo htmlspecialchars($food['id']); ?>" data-food-price="<?php echo htmlspecialchars($food['price']); ?>" data-food-name="<?php echo htmlspecialchars($food['name']); ?>">
+                              <button class="px-2 py-1 font-bold text-white bg-red-400 rounded add-item-btn hover:bg-red-600" data-food-id="<?php echo htmlspecialchars($food['id']); ?>" data-food-price="<?php echo htmlspecialchars($food['price']); ?>" data-food-name="<?php echo htmlspecialchars($food['name']); ?>">
                                   +
                               </button>
                           </div>
@@ -80,8 +80,8 @@
 
                   <!-- Confirm Button -->
                   <div class="px-5 py-4">
-                      <button onclick="submitOrder()" id="confirm-order-btn" class="w-full px-4 py-2 font-bold text-white bg-green-600 rounded cursor-not-allowed hover:bg-green-700">
-                          Lưu
+                      <button onclick="submitOrder()" id="confirm-order-btn" class="w-full px-4 py-2 font-bold text-white bg-green-600 rounded hover:bg-green-700">
+                          Nhấn để lưu
                       </button>
                   </div>
               </div>
@@ -175,13 +175,9 @@
           if (total > 0) {
               totalPriceTitle.textContent = 'Tổng cộng (tạm tính)';
               totalPriceElement.textContent = `${formatNumber(total)}`;
-              confirmOrderBtn.removeAttribute("disabled");
-              confirmOrderBtn.classList.remove('cursor-not-allowed');
           } else {
               totalPriceTitle.textContent = '';
               totalPriceElement.textContent = 'Bạn chưa chọn món';
-              confirmOrderBtn.setAttribute("disabled", true);
-              confirmOrderBtn.classList.add('cursor-not-allowed');
           }
 
           Object.entries(order.items).forEach(([foodId, item]) => {
@@ -255,10 +251,6 @@
               updateOrderDisplay();
           }
       });
-
-      document.querySelector('#confirm-order-btn').addEventListener('click', () => {
-          console.log(order);
-      });
   </script>
 
 
@@ -283,25 +275,89 @@
   </script>
 
   <script>
-      function submitOrder() {
-          alert('submit');
-          //   const orderData = {
-          //       // ... your order data ...
-          //   };
+      //   function submitOrder() {
+      //       alert('order');
+      //       const orderData = {
+      //           user_id: <?php echo json_encode($user_id); ?>,
+      //           meal_id: <?php echo json_encode($meal_id); ?>,
+      //           items: order.items,
+      //           total: order.total
+      //       };
+      //       console.log(orderData);
 
-          //   fetch('submit_order.php', {
-          //           method: 'POST',
-          //           headers: {
-          //               'Content-Type': 'application/json'
-          //           },
-          //           body: JSON.stringify(orderData)
-          //       })
-          //       .then(response => response.json())
-          //       .then(data => {
-          //           console.log('Order submitted successfully:', data);
-          //       })
-          //       .catch((error) => {
-          //           console.error('Error:', error);
-          //       });
+      //       fetch('/detail-meal/add-order', {
+      //               method: 'POST',
+      //               headers: {
+      //                   'Content-Type': 'application/json'
+      //               },
+      //               body: JSON.stringify(orderData)
+      //           })
+      //           .then(response => response.text())
+      //           .then(text => {
+      //               console.log('Raw response:', text);
+      //               return JSON.parse(text);
+      //           })
+      //           .then(data => {
+      //               console.log('Order submitted successfully:', data);
+      //           })
+      //           .catch((error) => {
+      //               console.error('Error:', error);
+      //           });
+      //   }
+
+      function submitOrder() {
+          const orderData = {
+              user_id: <?php echo json_encode($user_id); ?>,
+              meal_id: <?php echo json_encode($meal_id); ?>,
+              items: order.items,
+              total: order.total
+          };
+
+          fetch('/detail-meal/add-order', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(orderData)
+              })
+              .then(response => {
+                  if (response.ok) {
+                      return response.json();
+                  } else {
+                      throw new Error('Network response was not ok.');
+                  }
+              })
+              .then(data => {
+                  console.log('The response data:', data);
+                  if (data.data.status == 'meal_closed_or_deleted') {
+                      Swal.fire({
+                          title: 'Warning',
+                          text: 'Đơn này đã được xử lý theo thông tin đặt hàng gần nhất. Không thể chỉnh sửa tại thời điểm này. Vui lòng liên hệ host',
+                          icon: 'warning',
+                          confirmButtonText: 'Quay lại trang chủ'
+                      }).then(() => {
+                          window.location.href = "/";
+                      });
+                  }
+                  if (data.data.status == 'success') {
+                      Swal.fire({
+                          title: 'Thành công!',
+                          text: 'Bạn đã lưu thông tin đặt hàng thành công',
+                          icon: 'success',
+                          confirmButtonText: 'Ok'
+                      }).then(() => {
+                          window.location.reload();
+                      });
+                  }
+              })
+              .catch((error) => {
+                  console.error('Error:', error);
+                  Swal.fire({
+                      title: 'Error!',
+                      text: 'Đã có lỗi xảy ra trong quá trình thao tác',
+                      icon: 'error',
+                      confirmButtonText: 'Ok'
+                  });
+              });
       }
   </script>

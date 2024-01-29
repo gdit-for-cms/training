@@ -87,4 +87,61 @@ class DetailMeal extends Model {
         $result = $stmt->execute();
         return $result;
     }
+
+    public function processOrder($orderData) {
+        $userId = $orderData['user_id'];
+        $mealId = $orderData['meal_id'];
+        $submittedItems = $orderData['items'];
+
+        // Check if meal is closed
+        $object_meal = new Meal();
+        $meal = $object_meal->find($mealId);
+        if ($meal['closed'] == 1 || !isset($meal)) {
+            return ['status' => 'meal_closed_or_deleted'];
+        }
+
+        // Retrieve existing items from the database
+        $existingItems = $this->table($this->_table)
+            ->where('meal_id', '=', $mealId)
+            ->where('user_id', '=', $userId)
+            ->get();
+
+        try {
+            // Convert existing items to an associative array for easy lookup
+            $existingItemsAssoc = [];
+            foreach ($existingItems as $item) {
+                $existingItemsAssoc[$item['food_id']] = $item;
+            }
+
+            // Process each submitted item
+            foreach ($submittedItems as $foodId => $submittedItem) {
+                $insertData = [
+                    'user_id' => $userId,
+                    'meal_id' => $mealId,
+                    'food_id' => $foodId,
+                    'price' => $submittedItem['price'],
+                    'amount' => $submittedItem['quantity'],
+                    'describes' => isset($submittedItem['describes']) ? $submittedItem['describes'] : ''
+                ];
+
+                if (isset($existingItemsAssoc[$foodId])) {
+                    // Update existing item
+                    $this->table($this->_table)->update($insertData, "food_id = $foodId");
+                    unset($existingItemsAssoc[$foodId]); // Remove from the array to track deletions
+                } else {
+                    // Insert new item
+                    $this->table($this->_table)->insert($insertData);
+                }
+            }
+
+            // Delete any items that were not in the submitted data
+            foreach ($existingItemsAssoc as $foodId => $item) {
+                $this->table($this->_table)->destroy("food_id = $foodId");
+            }
+
+            return ['status' => 'success'];
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
 }
