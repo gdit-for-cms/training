@@ -12,7 +12,8 @@ $dotenvPath = realpath(__DIR__ . '/../../'); // Adjust the path as needed
 $dotenv = Dotenv\Dotenv::createImmutable($dotenvPath);
 $dotenv->load();
 
-function getHTMLPage($url) {
+function getHTMLPage($url)
+{
 
 
 
@@ -67,7 +68,8 @@ function getHTMLPage($url) {
     return $pageSource;
 }
 
-function getNameStoreFromHTML($dom) {
+function getNameStoreFromHTML($dom)
+{
     $h1Elements = $dom->getElementsByTagName('h1');
     $restaurant_name = '';
     foreach ($h1Elements as $h1Element) {
@@ -80,25 +82,28 @@ function getNameStoreFromHTML($dom) {
     return $restaurant_name;
 }
 
-function getImageStoreFromHTML($dom) {
+function getImageStoreFromHTML($dom)
+{
     $xpath = new DOMXPath($dom);
     $query = '//div[contains(@class, "detail-restaurant-img")]/img/@src';
     $img_store = $xpath->query($query)->item(0)->nodeValue;
     return $img_store;
 }
 
-function getImageFromHTML($dom) {
+function getImageFromHTML($dom)
+{
     $xpath = new DOMXPath($dom);
     $img_list = array();
-
 
     $query = '//div[contains(@class, "col-auto item-restaurant-img")]';
 
     $divs = $xpath->query($query);
     foreach ($divs as $div) {
+        // Using XPath to find the image within the context of the current div
         $img = $xpath->query('.//button[contains(@class, "inline")]/img/@src', $div)->item(0);
 
-        if ($img) {
+        // Check if an image was found before attempting to access its properties
+        if ($img !== null) {
             array_push($img_list, $img->nodeValue);
         }
     }
@@ -106,7 +111,8 @@ function getImageFromHTML($dom) {
     return $img_list;
 }
 
-function getPriceFromHTML($dom) {
+function getPriceFromHTML($dom)
+{
     $divElements = $dom->getElementsByTagName('div');
     $price_list = array();
 
@@ -121,7 +127,8 @@ function getPriceFromHTML($dom) {
     return $price_list;
 }
 
-function getNameFromHTML($dom) {
+function getNameFromHTML($dom)
+{
     $h2Elements = $dom->getElementsByTagName('h2');
     $name_list = array();
 

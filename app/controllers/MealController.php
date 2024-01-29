@@ -63,6 +63,8 @@ class MealController extends AppController {
         $foods = $food->getFoodsByStoreId($store_id);
 
         $this->data_ary['user_foods'] = $user_foods;
+        $this->data_ary['meal_id'] = $meal_id;
+        $this->data_ary['user_id'] = $login_user_id;
         $this->data_ary['detail_meal'] = $detail_meal;
         $this->data_ary['foods'] = $foods;
         $this->data_ary['title'] = 'Đặt món';
