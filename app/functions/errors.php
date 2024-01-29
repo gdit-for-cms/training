@@ -18,7 +18,8 @@ function showError($errorName) {
         "gender" => "'gender' you selected does not exist",
         "password" => "The entered text must be password format",
         "pageExisted" => "'page' you selected does not exist",
-        "loadHTML" => 'Can not load HTML from your page, please check link and try again'
+        "loadHTML" => 'Can not load HTML from your page, please check link and try again',
+        "nonMeal" => 'Bạn không có đơn nào để quản lí'
     ];
     if ($error_ary[$errorName]) {
         return $error_ary[$errorName];

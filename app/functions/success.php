@@ -2,7 +2,9 @@
 
 function showSuccess($successName) {
     $error_ary = [
-        "createMeal" => 'Tạo hóa đơn thành công'
+        "createMeal" => 'Tạo đơn rồi nha, cảm ơn vì đã chờ ^^!',
+        "createOrder" => 'Đơn đã được lưu lại rồi nha',
+        "deleteMeal" => 'Đơn đã xóa rồi nha'
     ];
     if ($error_ary[$successName]) {
         return $error_ary[$successName];

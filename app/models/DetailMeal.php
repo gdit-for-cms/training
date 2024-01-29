@@ -50,10 +50,10 @@ class DetailMeal extends Model {
         return $this->destroy($conditions);
     }
 
-    function getGenerallDetailMealByMealId($meal_id) {
+    public function getGenerallDetailMealByMealId($meal_id) {
         $details = array();
         $pdo = parent::getDB();
-        $sql = "SELECT d.food_id, d.price,d.describes, SUM(d.amount) as amount, f.name, f.image, GROUP_CONCAT(d.describes SEPARATOR' - ') as describes
+        $sql = "SELECT d.food_id, d.price,d.describes, SUM(d.amount) as amount, f.name, f.image, GROUP_CONCAT(d.describes SEPARATOR'-') as describes
         FROM detail_meal d 
         JOIN food f on d.food_id = f.id
         WHERE d.meal_id = ?
@@ -75,7 +75,8 @@ class DetailMeal extends Model {
         }
         return $details;
     }
-    function getDetailDetailMealByMealId($meal_id) {
+
+    public function getDetailDetailMealByMealId($meal_id) {
         $pdo = parent::getDB();
         $sql = "SELECT d.food_id, d.price,d.describes, d.amount, f.name, f.image, d.describes, a.display_name
         FROM detail_meal d 
@@ -143,5 +144,37 @@ class DetailMeal extends Model {
         } catch (\Exception $e) {
             throw $e;
         }
+    }
+
+    public function getDetailMealByMealId($meal_id) {
+        $pdo = parent::getDB();
+        $sql = "SELECT d.id, d.user_id, d.food_id, d.price, d.amount, d.describes
+        FROM detail_meal d 
+        WHERE d.meal_id = ? ";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(1, $meal_id);
+        $stmt->execute();
+        $details = array();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $detail = array(
+                'id' => $row['id'],
+                'user_id' => $row['user_id'],
+                'price' => $row['price'],
+                'food_id' => $row['food_id'],
+                'amount' => $row['amount'],
+                'describes' => $row['describes'],
+            );
+            $details[] = $detail;
+        }
+        return $details;
+    }
+
+    public function deleteAllDetailMealByMealId($meal_id) {
+        $pdo = parent::getDB();
+        $sql = "DELETE FROM detail_meal WHERE meal_id = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(1, $meal_id);
+        $result = $stmt->execute();
+        return $result;
     }
 }

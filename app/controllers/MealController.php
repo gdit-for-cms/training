@@ -71,7 +71,7 @@ class MealController extends AppController {
         $this->data_ary['content'] = '/detail_meal/list';
     }
 
-    public function closeMeal() {
+    public function closeMealAction() {
         $id = 0;
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($_POST['meal_id'])) {
@@ -81,6 +81,21 @@ class MealController extends AppController {
                 // header('Location: /detail-meal/display-general-detail');
             }
         }
+        header('Location: /detail-meal/display-general-detail');
+        exit;
+    }
+
+    public function deleteMealAction() {
+        if (!isset($_POST['meal_id'])) {
+            echo "???";
+            exit;
+        }
+        $meal_id = $_POST['meal_id'];
+
+        $detail_meal = new DetailMeal;
+        $meal = new Meal;
+        $detail_meal->deleteAllDetailMealByMealId($meal_id);
+        $meal->deleteMeal($meal_id);
         header('Location: /detail-meal/display-general-detail');
         exit;
     }
