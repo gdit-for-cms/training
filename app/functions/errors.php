@@ -6,7 +6,7 @@ function showError($errorName) {
         "login password" => 'Password is wrong',
         "create" => 'Create failed',
         "existed" => 'Object has been exist',
-        "email existed" => 'Email has been exist',
+        "name existed" => 'Name has been exist',
         "undefined_error" => "Error undefined",
         "string" => "This field must be string",
         "required" => "Missing a field",

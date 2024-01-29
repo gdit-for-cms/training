@@ -18,37 +18,51 @@
                     <!-- Left column container-->
                     <div class="px-4 md:px-0 lg:w-6/12 flex items-center justify-center">
                         <div class="md:mx-6 md:p-12 w-3/4 rounded-lg px-4 my-4" style="background: white">
-                            <form class="w-full my-4" method="post">
+                            <form action="/user/registerProcess" class="w-full my-4" method="POST">
 
                                 <p class="mb-4 text-3xl text-center uppercase">Đăng ký</p>
 
                                 <!--Username input-->
-                                <div class="relative mb-4">
+                                <div class="relative mt-4">
                                     <input type="text" name="name" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" id="exampleFormControlInput1" placeholder="Tên tài khoản" />
                                 </div>
 
+                                <div class="relative">
+                                    <p class="w-full h-fit text-xs text-red-500">
+                                        <?php if (isset($name_error)) {
+                                            echo $name_error;
+                                        } ?>
+                                    </p>
+                                </div>
+
                                 <!--Password input-->
-                                <div class="relative mb-4">
+                                <div class="relative mt-4">
                                     <input type="password" name="pass" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" id="exampleFormControlInput11" placeholder="Mật khẩu" />
                                 </div>
 
                                 <!--Your display name-->
-                                <div class="relative mb-4">
+                                <div class="relative mt-4">
                                     <input type="text" name="display_name" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" id="exampleFormControlInput11" placeholder="Tên hiển thị" />
                                 </div>
 
                                 <!--QR code-->
-                                <!-- <div class="relative mb-4">
+                                <!-- <div class="relative mt-4">
                                     <input type="text" name="qrcode" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" id="exampleFormControlInput11" placeholder="Mã QR" />
                                 </div> -->
 
                                 <!--Submit button-->
-                                <div class="mb-12 pb-1 pt-1 text-center">
+                                <div class="mt-4 mb-12 pb-1 pt-1 text-center">
                                     <button class="mb-3 inline-block w-full rounded px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]" type="submit" name="submit" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
                                         Đăng ký
                                     </button>
+                                </div>
 
-
+                                <div class="relative">
+                                    <p class="w-full h-fit text-xs text-red-500">
+                                        <?php if (isset($create_success)) {
+                                            echo $create_success;
+                                        } ?>
+                                    </p>
                                 </div>
 
                             </form>
