@@ -6,6 +6,7 @@
         <td>Trạng trái</td>
         <td></td>
         <td></td>
+        <td></td>
     </tr>
     <?php foreach ($meals as $meal) : ?>
         <tr>
@@ -24,6 +25,8 @@
             <td>
                 <form method="POST" action="/detail-meal/display-general-detail">
                     <input name="meal_id" id="meal_id" value="<?php echo $meal['id'] ?>" hidden>
+                    <input name="store_id" id="store_id" value="<?php echo $meal['store_id'] ?>" hidden>
+                    <input name="closed" id="closed" value="<?php echo $meal['closed'] ?>" hidden>
                     <button type="submit">Xem</button>
                 </form>
             </td>
@@ -31,6 +34,12 @@
                 <form method="POST" action="/meal/close-meal">
                     <input name="meal_id" id="meal_id" value="<?php echo $meal['id'] ?>" hidden>
                     <button type="submit">Đóng</button>
+                </form>
+            </td>
+            <td>
+                <form method="POST" action="/meal/delete-meal">
+                    <input name="meal_id" id="meal_id" value="<?php echo $meal['id'] ?>" hidden>
+                    <button type="submit">Xóa</button>
                 </form>
             </td>
         </tr>
@@ -61,20 +70,40 @@
                 echo $detail_meal['price'] * $detail_meal['amount'];
                 ?></td>
         </tr>
+        <tr>
+            <td colspan="5">
+                <?php
+
+                echo "Ghi chú: " . $detail_meal['describes'];
+                ?>
+            </td>
+        </tr>
     <?php endforeach; ?>
     <tr>
         <td colspan="4">Tổng tiền: </td>
         <td><span id="total"><?php echo $total_money ?></span><span> đồng</span></td>
     </tr>
 </table>
-<form>
+<form action="/order/create-order" method="POST">
+    <?php
+    echo "<input name=\"meal_id\" id=\"meal_id\" value=" . $meal_id . " hidden>";
+    echo "<input name=\"store_id\" id=\"store_id\" value=" . $store_id . " hidden>";
+    ?>
     <label for="ship_fee">Nhập phí ship + phí dịch vụ</label>
-    <input onchange="setFinalPrice()" style="color: black;" type="number" name="ship_fee" id="ship_fee">
+    <input onchange="setFinalPrice()" style="color: black;" type="number" name="ship_fee" id="ship_fee" value="0">
     <label for="discount">Nhập số tiền giảm giá</label>
-    <input onchange="setFinalPrice()" style="color: black;" type="number" name="discount" id="discount">
+    <input onchange="setFinalPrice()" style="color: black;" type="number" name="discount" id="discount" value="0">
+    <?php
+    if ($status) {
+        echo "<button type=\"submit\">Chốt đơn</button>";
+    } else {
+        echo "<button type=\"button\" onclick=\"noti2()\">Chốt đơn</button>";
+    }
+
+    ?>
 </form>
 
-<input style="color: black;" id="final_price" type="number">
+<input style="color: black;" id="final_price" type="number" readonly>
 
 <script>
     function setFinalPrice() {
@@ -84,6 +113,23 @@
         console.log(discount);
         document.getElementById("final_price").value = total + ship_fee - discount;
     }
+
+    function noti1() {
+        alert("đã chốt đơn");
+    }
+
+    function noti2() {
+        alert("Đơn chưa đóng, bạn hãy đóng trước khi chốt đơn");
+    }
+
+    const formatNumber = (number) => {
+        const roundedNumber = Math.floor(number);
+        const formattedNumber = roundedNumber.toLocaleString("vi", {
+            style: "currency",
+            currency: "VND",
+        });
+        return formattedNumber;
+    };
 
     setFinalPrice();
 </script>

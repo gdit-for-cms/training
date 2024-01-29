@@ -137,4 +137,13 @@ class Meal extends Model {
 
         return $this->select($selectColumns)->first();
     }
+
+    public function checkMealClosed($meal_id) {
+        $pdo = parent::getDB();
+        $sql = "SELECT closed FROM meal WHERE id = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(1, $meal_id);
+        $result = $stmt->execute();
+        return $result;
+    }
 }
