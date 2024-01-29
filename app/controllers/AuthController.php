@@ -29,14 +29,14 @@ class AuthController extends AppController {
     public function loginProcessAction(Request $request) {
         $post = $request->getPost();
 
-        $username = $post->get('name');
-        $password = $post->get('pass');
+        $name = $post->get('name');
+        $pass = $post->get('pass');
 
         $user = new User();
         $exist_user = $user->table('app_user')
-            ->where('name', '=', $username)->first();
+            ->where('name', '=', $name)->first();
 
-        $this->data_ary['pre_name'] = $username;
+        $this->data_ary['pre_name'] = $name;
 
         if (!$exist_user) {
             $this->data_ary['name_error'] = showError('login name');
@@ -46,7 +46,7 @@ class AuthController extends AppController {
 
         $exist_password = $exist_user['pass'];
 
-        if (password_verify($password, $exist_password)) {
+        if (password_verify($pass, $exist_password)) {
             $data_ary = [
                 'id' => $exist_user['id'],
                 'name' => $exist_user['name'],
