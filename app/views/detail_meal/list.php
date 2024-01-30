@@ -168,8 +168,8 @@
           // Confirm button state:
           const confirmOrderBtn = document.getElementById('confirm-order-btn');
 
-
-          orderTableBody.innerHTML = ''; // Clear existing items
+          // Clear existing items
+          orderTableBody.innerHTML = '';
 
           let total = calculateTotal();
           if (total > 0) {
@@ -215,7 +215,7 @@
                 </div>
             </td>
             <td class="px-2 py-2 text-sm bg-white border-b border-gray-200">
-                <input class="w-20 food-note-input" type="text" data-food-id="${foodId}" placeholder="Ghi chú..." value="${item.describes ? item.describes : ''}">
+                <input class="w-20 food-note-input" type="text" data-food-id="${foodId}" placeholder="Ghi chú..." value="${item.describes ? item.describes : ''}" onchange="updateItemDescribes(${foodId}, this.value)">
             </td>
         `;
               orderTableBody.appendChild(row);
@@ -233,6 +233,14 @@
               addItemToOrder(foodId, foodPrice, foodName);
           });
       });
+
+      // Event listener for add item describes/note
+      function updateItemDescribes(foodId, describes) {
+          if (order.items[foodId]) {
+              order.items[foodId].describes = describes;
+          }
+      }
+
       //   Increase, decrease, delete
       document.querySelector('.order-details tbody').addEventListener('click', function(event) {
           // Find the closest element with data-food-id attribute
@@ -275,36 +283,6 @@
   </script>
 
   <script>
-      //   function submitOrder() {
-      //       alert('order');
-      //       const orderData = {
-      //           user_id: <?php echo json_encode($user_id); ?>,
-      //           meal_id: <?php echo json_encode($meal_id); ?>,
-      //           items: order.items,
-      //           total: order.total
-      //       };
-      //       console.log(orderData);
-
-      //       fetch('/detail-meal/add-order', {
-      //               method: 'POST',
-      //               headers: {
-      //                   'Content-Type': 'application/json'
-      //               },
-      //               body: JSON.stringify(orderData)
-      //           })
-      //           .then(response => response.text())
-      //           .then(text => {
-      //               console.log('Raw response:', text);
-      //               return JSON.parse(text);
-      //           })
-      //           .then(data => {
-      //               console.log('Order submitted successfully:', data);
-      //           })
-      //           .catch((error) => {
-      //               console.error('Error:', error);
-      //           });
-      //   }
-
       function submitOrder() {
           const orderData = {
               user_id: <?php echo json_encode($user_id); ?>,
