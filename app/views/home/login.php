@@ -6,12 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login Page</title>
     <link href="/css/tailwind/output.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
 
 <body>
 
-    <div class="h-screen ">
+    <div class="h-screen" style="font-family: 'Source Sans Pro', sans-serif;">
         <div class="container mx-auto h-full">
             <div class="flex h-full w-full flex-wrap items-center justify-center">
                 <div class="block rounded-lg shadow-lg lg:flex lg:flex-wrap" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593)">

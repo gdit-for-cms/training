@@ -6,13 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Register Page</title>
     <link href="/css/tailwind/output.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
 
 <body>
 
 
-    <div class="h-screen">
+    <div class="h-screen" style="font-family: 'Source Sans Pro', sans-serif;">
         <div class="container mx-auto h-full">
             <div class="flex h-full w-full flex-wrap items-center justify-center">
                 <div class="block rounded-lg shadow-lg lg:flex lg:flex-wrap" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593)">
@@ -20,15 +21,7 @@
                     <!-- Left column container-->
                     <div class="px-4 md:px-0 lg:w-6/12 flex items-center justify-center">
                         <div class="md:mx-6 md:p-12 w-3/4 rounded-lg px-4 my-4" style="background: white">
-                            <a href="/">
-                                <button type="submit" name="back_login" class="relative rounded p-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
-                                    ← Đăng nhập
-                                </button>
-                            </a>
-
-
-                            <form action="/user/registerProcess" class="w-full my-4" method="POST" x-data="{password: '',password_confirm: ''}" enctype="multipart/form-data">
-
+                            <form action="/user/registerProcess" class="w-full my-3" method="POST" x-data="{password: '',password_confirm: ''}" enctype="multipart/form-data">
                                 <p class="mb-4 text-3xl text-center uppercase">Đăng ký</p>
 
                                 <!--Username input-->
@@ -110,7 +103,7 @@
 
                                 <!--Submit button-->
                                 <div class="mt-4 mb-12 pb-1 pt-1 text-center">
-                                    <button class="mb-3 inline-block w-full rounded px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]" type="submit" name="submit" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
+                                    <button class="mb-2 inline-block w-full rounded px-6 py-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]" type="submit" name="submit" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
                                         Đăng ký
                                     </button>
                                 </div>
@@ -124,6 +117,15 @@
                                 </div>
 
                             </form>
+
+                            <!--Back login page button-->
+                            <form action="/" class="flex items-center justify-between pb-6">
+                                <p class="mb-0 mr-2 text-black ">Bạn đã có tài khoản?</p>
+                                <button type="submit" name="back_login" class="inline-block rounded px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-white" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
+                                    Đăng nhập
+                                </button>
+                            </form>
+
                         </div>
                     </div>
 
