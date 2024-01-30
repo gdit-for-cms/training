@@ -50,14 +50,15 @@ class DetailMeal extends Model {
         return $this->destroy($conditions);
     }
 
-    public function getGenerallDetailMealByMealId($meal_id) {
+    public function getGeneralDetailMealByMealId($meal_id) {
         $details = array();
         $pdo = parent::getDB();
-        $sql = "SELECT d.food_id, d.price,d.describes, SUM(d.amount) as amount, f.name, f.image, GROUP_CONCAT(d.describes SEPARATOR'-') as describes
+        $sql = "SELECT d.food_id, d.price,d.describes, SUM(d.amount) as amount, f.name, f.image
         FROM detail_meal d 
         JOIN food f on d.food_id = f.id
         WHERE d.meal_id = ?
-        GROUP BY d.food_id";
+        GROUP BY d.food_id, d.describes, d.price
+        ORDER BY d.food_id";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(1, $meal_id);
         $result = $stmt->execute();

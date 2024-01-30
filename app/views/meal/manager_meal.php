@@ -1,126 +1,196 @@
-<table border="1">
-    <tr>
-        <td></td>
-        <td>Tên quán</td>
-        <td>Thời gian tạo</td>
-        <td>Trạng trái</td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <?php foreach ($meals as $meal) : ?>
-        <tr>
-            <td><img class="w-12 h-12 object-cover mr-4" src="<?php echo $meal['image'] ?>"></td>
-            <td><?php echo $meal['store_name'] ?></td>
-            <td><?php echo $meal['time_open'] ?></td>
-            <td>
-                <?php
-                if (!$meal['closed']) {
-                    echo "Mở";
-                } else {
-                    echo "Đóng";
-                }
-                ?>
-            </td>
-            <td>
-                <form method="POST" action="/detail-meal/display-general-detail">
-                    <input name="meal_id" id="meal_id" value="<?php echo $meal['id'] ?>" hidden>
-                    <input name="store_id" id="store_id" value="<?php echo $meal['store_id'] ?>" hidden>
-                    <input name="closed" id="closed" value="<?php echo $meal['closed'] ?>" hidden>
-                    <button type="submit">Xem</button>
+<section class="bg-white border-b py-4">
+    <div class="col-span-full my-2 leading-tight text-center text-gray-800 flex flex-col gap-2">
+        <h1 class="text-4xl font-bold">
+            Quản lý đơn đặt
+        </h1>
+    </div>
+    <div class="col-span-full mb-4">
+        <div class="h-1 mx-auto gradient w-64 opacity-25 my-0 py-0 rounded-t"></div>
+    </div>
+    <!-- Main -->
+    <div class="container mx-auto bg-white shadow rounded text-gray-800 flex justify-between items-center gap-5">
+        <!-- Left Column -->
+        <div class="w-1/2 flex-1 flex flex-col min-h-screen">
+            <!-- List -->
+            <div class="font-bold text-xl text-center mb-2">Danh sách đơn của bạn</div>
+
+            <table class="table-auto min-w-full leading-normal">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 ">
+                    <td scope="col" class="px-6 py-3"></td>
+                    <td scope="col" class="px-6 py-3">Tên quán</td>
+                    <td scope="col" class="px-2 py-3 text-center">Chi tiết</td>
+                    <td scope="col" class="px-2 py-3 text-center">Đóng</td>
+                    <td scope="col" class="px-2 py-3 text-center">Xóa</td>
+                </thead>
+                <?php foreach ($meals as $meal) : ?>
+                    <tr class="bg-white border-b">
+                        <td><img class=" w-12 h-12 object-cover mr-4" src="<?php echo $meal['image'] ?>"></td>
+                        <form method="POST" action="/detail-meal/display-general-detail">
+                            <input name="meal_id" id="meal_id" value="<?php echo $meal['id'] ?>" hidden>
+                            <input name="store_id" id="store_id" value="<?php echo $meal['store_id'] ?>" hidden>
+                            <input name="store_name" id="store_name" value="<?php echo $meal['store_name'] ?>" hidden>
+                            <input name="closed" id="closed" value="<?php echo $meal['closed'] ?>" hidden>
+                            <td scope="row" class="px-2 py-4 font-medium text-gray-900 text-left"><button type=" submit" class="text-left"><?php echo $meal['store_name'] ?></button></td>
+                        </form>
+                        <td>
+                            <a class="flex items-center justify-center" href="#">
+                                <button>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                    </svg>
+                                </button>
+                            </a>
+
+                        </td>
+                        <td>
+                            <?php
+                            $link = "";
+                            $icon = "";
+                            if ($meal['closed']) {
+                                $link = "/meal/open-meal";
+                                $icon = "M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z";
+                            } else {
+                                $link = "/meal/close-meal";
+                                $icon = "M13.5 10.5V6.75a4.5 4.5 0 1 1 9 0v3.75M3.75 21.75h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H3.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z";
+                            }
+                            ?>
+
+
+                            <form class="flex items-center justify-center" method="POST" action="<?php echo $link ?>">
+                                <input name="meal_id" id="meal_id" value="<?php echo $meal['id'] ?>" hidden>
+                                <button type="submit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="<?php echo $icon ?>" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </td>
+                        <td>
+                            <form class="flex items-center justify-center" method="POST" action="/meal/delete-meal">
+                                <input name="meal_id" id="meal_id" value="<?php echo $meal['id'] ?>" hidden>
+                                <button type="submit" class="text-red-500 delete-item-btn hover:text-red-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+
+            </table>
+        </div>
+
+        <!-- Right Column -->
+        <div class="relative w-1/2 min-h-screen">
+            <!-- Order Details Column -->
+            <div class="sticky w-full text-gray-800 bg-white rounded shadow top-28">
+                <!-- Order Title -->
+                <div class="text-xl font-bold text-center"><?php echo $store_name ?></div>
+
+                <!-- Table -->
+                <div>
+                    <table class="min-w-full leading-normal table-fixed">
+                        <thead>
+                            <tr>
+                                <th class="px-2 py-3 border-b-2 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider"></th>
+                                <th class="lg:w-[320px] px-2 py-3 border-b-2 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Sản phẩm</th>
+                                <th class="px-2 py-3 text-xs font-semibold tracking-wider text-center text-gray-600 uppercase border-b-2">Giá</th>
+                                <th class="px-2 py-3 text-xs font-semibold tracking-wider text-center text-gray-600 uppercase border-b-2">Số lượng</th>
+                                <th class="px-2 py-3 text-xs font-semibold tracking-wider text-center text-gray-600 uppercase border-b-2">Tổng</th>
+                                <th class="lg:w-[100px] px-2 py-3 border-b-2 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Ghi chú</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Food -->
+                            <?php
+                            $total_money = 0;
+                            ?>
+                            <?php foreach ($detail_meals as $detail_meal) : ?>
+                                <tr>
+                                    <td class="px-2 py-2 text-base bg-white border-b border-gray-200"><img class="w-12 h-12 object-cover mr-4" src="<?php echo $detail_meal['image'] ?>"></td>
+                                    <td class="px-2 py-2 text-base bg-white border-b border-gray-200">
+                                        <div class="flex items-center">
+                                            <span><?php echo $detail_meal['name'] ?></span>
+                                        </div>
+                                    </td>
+                                    <td class="px-2 py-2 text-base bg-white border-b border-gray-200 text-end">
+                                        <?php echo number_format($detail_meal['price'], 0, ',', '.') . ' đ'; ?>
+                                    </td>
+                                    <td class="px-2 py-2 text-base bg-white border-b border-gray-200">
+                                        <div class="flex items-center justify-center">
+                                            <span class="mx-2"><?php echo $detail_meal['amount'] ?></span>
+                                        </div>
+                                    </td>
+                                    <td class="px-2 py-2 text-base bg-white border-b border-gray-200 text-end">
+                                        <?php
+                                        $total_money += $detail_meal['price'] * $detail_meal['amount'];
+                                        echo number_format($detail_meal['price'] * $detail_meal['amount'], 0, ',', '.') . ' đ';
+                                        ?>
+                                    </td>
+                                    <td class="px-2 py-2 text-base bg-white border-b border-gray-200">
+                                        <?php echo $detail_meal['describes']; ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                            <tr>
+                                <td class="px-2 py-2 text-base bg-white border-b border-gray-200"></td>
+                                <td class="px-2 py-2 bg-white border-b border-gray-200 text-lg font-bold">Tạm tính</td>
+                                <td class="px-2 py-2 text-base bg-white border-b border-gray-200" colspan="2"></td>
+                                <td class="px-2 py-2 text-lg font-bold bg-white border-b border-gray-200" id="total-price" colspan="2" class="text-lg font-bold"><?php echo number_format($total_money, 0, ',', '.') . ' đ'; ?></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <form action="/order/create-order" method="POST" class="mt-5">
+                    <?php
+                    echo "<input name=\"meal_id\" id=\"meal_id\" value=" . $meal_id . " hidden>";
+                    echo "<input name=\"store_id\" id=\"store_id\" value=" . $store_id . " hidden>";
+                    ?>
+                    <div class="flex items-center justify-between px-5 py-4 border-t border-gray-200">
+                        <span id="total-title" class="text-xl font-bold"><label for="ship_fee">Nhập phí ship + phí dịch vụ</label></span>
+                        <span id="total-price" class="text-xl font-bold"><input class="text-end" onchange="setFinalPrice()" style="color: black;" type="number" name="ship_fee" id="ship_fee" value="0"></span>
+                    </div>
+                    <div class="flex items-center justify-between px-5 py-4 border-t border-gray-200">
+                        <span id="total-title" class="text-xl font-bold"><label for="discount">Nhập số tiền giảm giá</label></span>
+                        <span id="total-price" class="text-xl font-bold"> <input class="text-end" onchange="setFinalPrice()" style="color: black;" type="number" name="discount" id="discount" value="0"></span>
+                    </div>
+                    <div class="flex items-center justify-between px-5 py-4 border-t border-gray-200">
+                        <span id="total-title" class="text-xl font-bold"><label for="discount">Tổng tiền</label></span>
+                        <span id="total-price" class="text-xl font-bold">
+                            <div style="color: black;" id="final_price"></div>
+                        </span>
+                    </div>
+                    <?php
+                    if ($status) {
+                        echo "         <div class=\"px-5 py-4\">
+                        <button class=\"w-full px-4 py-2 font-bold text-white bg-green-600 rounded hover:bg-green-700\">
+                            Chốt đơn
+                        </button>
+                    </div>";
+                    } else {
+                        echo "         <div class=\"px-5 py-4\">
+                        <button type=\"button\" onclick=\"noti2()\" class=\"w-full px-4 py-2 font-bold text-white bg-green-600 rounded hover:bg-green-700\">
+                            Chốt đơn
+                        </button>
+                        </div>";
+                    }
+                    ?>
                 </form>
-            </td>
-            <td>
-                <form method="POST" action="/meal/close-meal">
-                    <input name="meal_id" id="meal_id" value="<?php echo $meal['id'] ?>" hidden>
-                    <button type="submit">Đóng</button>
-                </form>
-            </td>
-            <td>
-                <form method="POST" action="/meal/delete-meal">
-                    <input name="meal_id" id="meal_id" value="<?php echo $meal['id'] ?>" hidden>
-                    <button type="submit">Xóa</button>
-                </form>
-            </td>
-        </tr>
-    <?php endforeach; ?>
 
-</table>
+                <!-- Confirm Button -->
 
-<table border="1">
-    <tr>
-        <td></td>
-        <td>Tên móm</td>
-        <td>Số lượng</td>
-        <td>Giá</td>
-        <td>Tổng</td>
-    </tr>
+            </div>
+        </div>
+    </div>
+</section>
 
-    <?php
-    $total_money = 0;
-    ?>
-    <?php foreach ($detail_meals as $detail_meal) : ?>
-        <tr>
-            <td><img class="w-12 h-12 object-cover mr-4" src="<?php echo $detail_meal['image'] ?>"></td>
-            <td><?php echo $detail_meal['name'] ?></td>
-            <td><?php echo $detail_meal['amount'] ?></td>
-            <td><?php echo $detail_meal['price'] ?></td>
-            <td><?php
-                $total_money += $detail_meal['price'] * $detail_meal['amount'];
-                echo $detail_meal['price'] * $detail_meal['amount'];
-                ?></td>
-        </tr>
-        <tr>
-            <td colspan="5">
-                <?php
-
-                echo "Ghi chú: " . $detail_meal['describes'];
-                ?>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-    <tr>
-        <td colspan="4">Tổng tiền: </td>
-        <td><span id="total"><?php echo $total_money ?></span><span> đồng</span></td>
-    </tr>
-</table>
-<form action="/order/create-order" method="POST">
-    <?php
-    echo "<input name=\"meal_id\" id=\"meal_id\" value=" . $meal_id . " hidden>";
-    echo "<input name=\"store_id\" id=\"store_id\" value=" . $store_id . " hidden>";
-    ?>
-    <label for="ship_fee">Nhập phí ship + phí dịch vụ</label>
-    <input onchange="setFinalPrice()" style="color: black;" type="number" name="ship_fee" id="ship_fee" value="0">
-    <label for="discount">Nhập số tiền giảm giá</label>
-    <input onchange="setFinalPrice()" style="color: black;" type="number" name="discount" id="discount" value="0">
-    <?php
-    if ($status) {
-        echo "<button type=\"submit\">Chốt đơn</button>";
-    } else {
-        echo "<button type=\"button\" onclick=\"noti2()\">Chốt đơn</button>";
-    }
-
-    ?>
-</form>
-
-<input style="color: black;" id="final_price" type="number" readonly>
 
 <script>
-    function setFinalPrice() {
-        let total = document.getElementById("total").textContent * 1;
-        let discount = document.getElementById("discount").value * 1;
-        let ship_fee = document.getElementById("ship_fee").value * 1;
-        console.log(discount);
-        document.getElementById("final_price").value = total + ship_fee - discount;
-    }
-
-    function noti1() {
-        alert("đã chốt đơn");
-    }
-
-    function noti2() {
-        alert("Đơn chưa đóng, bạn hãy đóng trước khi chốt đơn");
-    }
+    const total = <?php echo $total_money ?>;
 
     const formatNumber = (number) => {
         const roundedNumber = Math.floor(number);
@@ -130,6 +200,17 @@
         });
         return formattedNumber;
     };
+
+    function setFinalPrice() {
+        let discount = document.getElementById("discount").value * 1;
+        let ship_fee = document.getElementById("ship_fee").value * 1;
+        console.log(discount);
+        document.getElementById("final_price").innerText = formatNumber(total + ship_fee - discount);
+    }
+
+    function noti2() {
+        alert("Đơn chưa đóng, bạn hãy đóng trước khi chốt đơn");
+    }
 
     setFinalPrice();
 </script>

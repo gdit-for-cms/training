@@ -78,7 +78,19 @@ class MealController extends AppController {
                 $id = $_POST['meal_id'];
                 $meal = new Meal;
                 $meal->closeMeal($id);
-                // header('Location: /detail-meal/display-general-detail');
+            }
+        }
+        header('Location: /detail-meal/display-general-detail');
+        exit;
+    }
+
+    public function openMealAction() {
+        $id = 0;
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_POST['meal_id'])) {
+                $id = $_POST['meal_id'];
+                $meal = new Meal;
+                $meal->openMeal($id);
             }
         }
         header('Location: /detail-meal/display-general-detail');
