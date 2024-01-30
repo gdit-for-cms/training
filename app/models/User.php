@@ -29,6 +29,10 @@ class User extends Model {
         return $this->where($column, $operator, $value)->get($select_column);
     }
 
+    public function getImgBy($column, $operator, $value) {
+        return $this->where($column, $operator, $value)->get();
+    }
+
     public function create($data) {
         return $this->insert($data);
     }
