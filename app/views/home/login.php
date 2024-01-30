@@ -24,7 +24,8 @@
                                 <p class="mb-4 text-3xl text-center uppercase text-black">Đăng nhập</p>
                                 <!--Username input-->
                                 <div class="relative mt-4">
-                                    <input type="text" name="name" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" id="exampleFormControlInput1" placeholder="Tên tài khoản" <?php if (isset($pre_name)) {
+                                    <input type="text" name="name" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" id="exampleFormControlInput1" placeholder="Tên tài khoản" <?php
+                                                                                                                                                                                                    if (isset($pre_name)) {
                                                                                                                                                                                                         echo 'value="' . $pre_name . '"';
                                                                                                                                                                                                     }
                                                                                                                                                                                                     ?> />
