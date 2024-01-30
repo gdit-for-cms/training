@@ -4,3 +4,8 @@
  font-family: 'Public Sans', sans-serif;
  box-sizing: border-box;
 }
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+  }
+  
