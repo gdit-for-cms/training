@@ -54,6 +54,15 @@ class Meal extends Model {
         return $result;
     }
 
+    public function openMeal($meal_id) {
+        $pdo = parent::getDB();
+        $sql = "UPDATE meal SET closed = 0 WHERE id = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(1, $meal_id);
+        $result = $stmt->execute();
+        return $result;
+    }
+
     public function getDetailMealById($mealId) {
         $this->table($this->_table)
             ->join('app_user', 'meal.user_id = app_user.id')
