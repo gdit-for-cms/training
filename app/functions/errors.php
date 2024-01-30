@@ -2,11 +2,12 @@
 
 function showError($errorName) {
     $error_ary = [
-        "login name" => 'Name is wrong',
-        "login password" => 'Password is wrong',
+        "login name" => 'Tên đăng nhập sai',
+        "login password" => 'Mật khẩu sai',
         "create" => 'Create failed',
         "existed" => 'Object has been exist',
-        "name existed" => 'Name has been exist',
+        "name existed" => 'Tên đăng nhập đã tồn tại',
+        "display name existed" => 'Tên hiển thị đã tồn tại',
         "undefined_error" => "Error undefined",
         "string" => "This field must be string",
         "required" => "Missing a field",
