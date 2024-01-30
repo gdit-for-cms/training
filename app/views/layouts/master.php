@@ -76,7 +76,7 @@
                                 </a>
                             </li>
                             <li class="text-gray-800 font-bold rounded-full shadow focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
-                                <a class="flex gap-2 min-w-full rounded-full bg-gray-200 hover:bg-gray-400 py-2 px-4 whitespace-no-wrap" href="#">
+                                <a href="/order/display" class="flex gap-2 min-w-full rounded-full bg-gray-200 hover:bg-gray-400 py-2 px-4 whitespace-no-wrap" href="#">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                     </svg>
@@ -172,7 +172,6 @@
         var header = document.getElementById("header");
         var navcontent = document.getElementById("nav-content");
         var navaction = document.getElementById("navAction");
-        var navdashboard = document.getElementById("navDashboard");
         var brandname = document.getElementById("brandname");
         var toToggle = document.querySelectorAll(".toggleColour");
 
@@ -186,10 +185,7 @@
                 navaction.classList.add("gradient");
                 navaction.classList.remove("text-gray-800");
                 navaction.classList.add("text-white");
-                navdashboard.classList.remove("bg-white");
-                navdashboard.classList.add("gradient");
-                navdashboard.classList.remove("text-gray-800");
-                navdashboard.classList.add("text-white");
+
                 //Use to switch toggleColour colours
                 for (var i = 0; i < toToggle.length; i++) {
                     toToggle[i].classList.add("text-gray-800");
@@ -204,10 +200,6 @@
                 navaction.classList.add("bg-white");
                 navaction.classList.remove("text-white");
                 navaction.classList.add("text-gray-800");
-                navdashboard.classList.remove("gradient");
-                navdashboard.classList.add("bg-white");
-                navdashboard.classList.remove("text-white");
-                navdashboard.classList.add("text-gray-800");
                 //Use to switch toggleColour colours
                 for (var i = 0; i < toToggle.length; i++) {
                     toToggle[i].classList.add("text-white");

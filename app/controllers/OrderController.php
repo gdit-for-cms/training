@@ -35,4 +35,8 @@ class OrderController extends AppController {
         header('Location: /home/index');
         exit;
     }
+
+    public function displayAction(Request $request) {
+        $this->data_ary['content'] = "/order/display";
+    }
 }
