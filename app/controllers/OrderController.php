@@ -36,7 +36,7 @@ class OrderController extends AppController {
         exit;
     }
 
-    public function displayAction(Request $request) {
+    public function displayAction() {
         $this->data_ary['content'] = "/order/display";
     }
 }

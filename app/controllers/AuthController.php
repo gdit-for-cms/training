@@ -51,7 +51,7 @@ class AuthController extends AppController {
                 'id' => $exist_user['id'],
                 'name' => $exist_user['name'],
                 'display_name' => $exist_user['display_name'],
-                'img_code' => $exist_user['img_code'],
+                'img' => $exist_user['img'],
             ];
         } else {
             $this->data_ary['pass_error'] = showError('login password');
