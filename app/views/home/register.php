@@ -2,12 +2,16 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Register Page</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>PHP FoodCode - Register</title>
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="stylesheet" href="/css/style.css">
     <link href="/css/tailwind/output.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    <!-- Include jQuery from a CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -21,7 +25,7 @@
                     <!-- Left column container-->
                     <div class="px-4 md:px-0 lg:w-6/12 flex items-center justify-center">
                         <div class="md:mx-6 md:p-12 w-3/4 rounded-lg px-4 my-4" style="background: white">
-                            <form action="/user/registerProcess" class="w-full my-3" method="POST" x-data="{password: '',password_confirm: ''}" enctype="multipart/form-data">
+                            <form action="/register/registerProcess" class="w-full my-3" method="POST" x-data="{password: '',password_confirm: ''}" enctype="multipart/form-data">
                                 <p class="mb-4 text-3xl text-center uppercase">Đăng ký</p>
 
                                 <!--Username input-->
@@ -69,12 +73,12 @@
                                 </div>
 
                                 <!--QR code-->
-                                <div class="relative mt-4">
+                                <!-- <div class="relative mt-4">
                                     <div class="flex items-center w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5 text-gray-400">
                                         <label for="img_code">Mã QR của bạn: &nbsp;</label>
                                         <input type="file" name="img_code" id="exampleFormControlInput11" accept="image/*" />
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <div class="flex justify-start mt-3 ml-4 p-1">
                                     <ul>
@@ -143,5 +147,25 @@
 </body>
 
 <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.js" defer></script>
+
+<script>
+    function register_alert() {
+        let message = 'Bạn đã đăng ký thành công';
+        Swal.fire({
+            title: 'Đăng ký',
+            text: message,
+            icon: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Xác nhận',
+            cancelButtonText: 'Không'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/auth/logout';
+            }
+        });
+    }
+</script>
 
 </html>
