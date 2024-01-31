@@ -2,11 +2,16 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login Page</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>PHP FoodCode - Login</title>
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="stylesheet" href="/css/style.css">
     <link href="/css/tailwind/output.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Include jQuery from a CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 </head>
 
@@ -62,7 +67,7 @@
                             </form>
 
                             <!--Register button-->
-                            <form action="/user/register" class="flex items-center justify-between pb-6">
+                            <form action="/register/register" class="flex items-center justify-between pb-6">
                                 <p class="mb-0 mr-2 text-black ">Bạn chưa có tài khoản?</p>
                                 <button type="submit" name="register" class="inline-block rounded px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-white" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
                                     Đăng ký
