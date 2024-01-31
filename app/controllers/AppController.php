@@ -23,6 +23,7 @@ class AppController extends Controller {
             'id' => $user['id'],
             'name' => $user['name'],
             'display_name' => $user['display_name'],
+            'img' => $user['img'],
         ];
 
         $this->data_ary['current_user'] = $current_user;

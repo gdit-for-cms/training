@@ -8,7 +8,7 @@
     <title>
         <?= 'PHP FoodCode - ' . $title ?>
     </title>
-    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="//<?php echo ($_SERVER['SERVER_NAME'] . '/favicon-96x96.png'); ?>">
     <link rel="stylesheet" href="/css/style.css">
     <link href="/css/tailwind/output.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -48,19 +48,27 @@
                 <ul class="list-reset lg:flex justify-end flex-1 items-center mr-3">
                     <!-- Drop down menu -->
                     <div class="dropdown inline-block relative w-50">
-                        <button id="navAction" class="ring-2 ring-red-900 min-w-44 flex gap-2 p-4 bg-white text-gray-900 font-bold rounded-full shadow opacity-75 focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                            </svg>
+                        <div id="navAction" class="ring-2 ring-red-900 min-w-44 flex items-center gap-2 p-3 bg-white text-gray-900 font-bold rounded-full shadow opacity-75 focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
+                            <div class="w-8 h-8 rounded-full overflow-hidden">
+                                <img class="w-full h-full object-cover rounded-full" src="<?php if (isset($current_user) && $current_user['img'] != null) {
+                                                                                                $icon_data = $current_user['img'];
+                                                                                                // Encode the BLOB data to a Base64 string
+                                                                                                $base64_icon = base64_encode($icon_data);
+
+                                                                                                // Construct the SRC attribute for the IMG tag
+                                                                                                echo 'data:image/jpeg;base64,' . $base64_icon;
+                                                                                            } else {
+                                                                                                echo 'https://i.stack.imgur.com/l60Hf.png';
+                                                                                            } ?>" alt="user_img">
+                            </div>
                             <!-- Display user's name -->
                             <?php if (isset($current_user)) {
                                 echo $current_user['display_name'];
                             } ?>
-                        </button>
+                        </div>
                         <ul class="min-w-full dropdown-menu absolute hidden text-gray-800 pt-1">
                             <li class="text-gray-800 font-bold rounded-full shadow focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
-                                <a class="flex gap-2 min-w-full rounded-full bg-gray-200 hover:bg-gray-400 py-2 px-4 whitespace-no-wrap" href="#">
+                                <a href="/user/show" class="flex gap-2 min-w-full rounded-full bg-gray-200 hover:bg-gray-400 py-2 px-4 whitespace-no-wrap" href="#">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
                                     </svg>
@@ -96,7 +104,7 @@
                 </ul>
             </div>
         </div>
-        <hr class="border-b border-gray-100 opacity-25 my-0 py-0" />
+        <hr class="border-b border-gray-50 opacity-15 my-0 py-0" />
     </nav>
     <!--Hero-->
     <div class="pt-28">
@@ -182,9 +190,7 @@
             if (scrollpos > 10) {
                 header.classList.add("bg-white");
                 navaction.classList.remove("bg-white");
-                navaction.classList.add("gradient");
-                navaction.classList.remove("text-gray-800");
-                navaction.classList.add("text-white");
+                navaction.classList.add("bg-yellow-400");
 
                 //Use to switch toggleColour colours
                 for (var i = 0; i < toToggle.length; i++) {
@@ -196,10 +202,8 @@
                 navcontent.classList.add("bg-white");
             } else {
                 header.classList.remove("bg-white");
-                navaction.classList.remove("gradient");
+                navaction.classList.remove("bg-yellow-400");
                 navaction.classList.add("bg-white");
-                navaction.classList.remove("text-white");
-                navaction.classList.add("text-gray-800");
                 //Use to switch toggleColour colours
                 for (var i = 0; i < toToggle.length; i++) {
                     toToggle[i].classList.add("text-white");
