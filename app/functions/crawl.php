@@ -12,8 +12,7 @@ $dotenvPath = realpath(__DIR__ . '/../../'); // Adjust the path as needed
 $dotenv = Dotenv\Dotenv::createImmutable($dotenvPath);
 $dotenv->load();
 
-function getHTMLPage($url)
-{
+function getHTMLPage($url) {
 
 
 
@@ -68,8 +67,7 @@ function getHTMLPage($url)
     return $pageSource;
 }
 
-function getNameStoreFromHTML($dom)
-{
+function getNameStoreFromHTML($dom) {
     $h1Elements = $dom->getElementsByTagName('h1');
     $restaurant_name = '';
     foreach ($h1Elements as $h1Element) {
@@ -82,16 +80,19 @@ function getNameStoreFromHTML($dom)
     return $restaurant_name;
 }
 
-function getImageStoreFromHTML($dom)
-{
+function getImageStoreFromHTML($dom) {
     $xpath = new DOMXPath($dom);
     $query = '//div[contains(@class, "detail-restaurant-img")]/img/@src';
-    $img_store = $xpath->query($query)->item(0)->nodeValue;
+    $img_store = "";
+    try {
+        $img_store = $xpath->query($query)->item(0)->nodeValue;
+    } catch (Exception $e) {
+        $img_store = "https://www.shutterstock.com/image-vector/red-store-vector-sign-promotion-260nw-1918121837.jpg";
+    }
     return $img_store;
 }
 
-function getImageFromHTML($dom)
-{
+function getImageFromHTML($dom) {
     $xpath = new DOMXPath($dom);
     $img_list = array();
 
@@ -105,14 +106,15 @@ function getImageFromHTML($dom)
         // Check if an image was found before attempting to access its properties
         if ($img !== null) {
             array_push($img_list, $img->nodeValue);
+        } else {
+            array_push($img_list, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSg42_wt_mrgp4hU9qPPnPKwsZvFObDHozB0nXmeboBmbf6n5lKvDiUxEwJFRlGqa9UwQY&usqp=CAU");
         }
     }
 
     return $img_list;
 }
 
-function getPriceFromHTML($dom)
-{
+function getPriceFromHTML($dom) {
     $divElements = $dom->getElementsByTagName('div');
     $price_list = array();
 
@@ -127,8 +129,7 @@ function getPriceFromHTML($dom)
     return $price_list;
 }
 
-function getNameFromHTML($dom)
-{
+function getNameFromHTML($dom) {
     $h2Elements = $dom->getElementsByTagName('h2');
     $name_list = array();
 

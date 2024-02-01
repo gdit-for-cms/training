@@ -26,8 +26,9 @@ class DetailOrder extends Model {
     public function getUnconfirmedDebtListForDebtor($user_id, $paid) {
         $pdo = parent::getDB();
         $sql = "SELECT a1.display_name AS debtor_name, a1.id as debtor_id, 
-        a2.display_name as creditor_name, a2.id as creditor_id, SUM(d.amount*d.price) AS total, 
-        GROUP_CONCAT(d.id SEPARATOR',') AS ids  
+        a2.display_name as creditor_name, a2.id as creditor_id, SUM(d.amount*d.price) AS total,
+        GROUP_CONCAT(d.id SEPARATOR',') AS ids,
+        a2.bank_bin, a2.bank_acc  
         FROM detail_order d
         JOIN orders o ON d.order_id = o.id
         JOIN app_user a1 ON a1.id = d.user_id
