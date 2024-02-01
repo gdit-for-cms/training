@@ -57,9 +57,22 @@
                         Tạo đơn
                     </button>
                 </a>
-
             </div>
         </div>
-
     </div>
 </section>
+
+<script>
+    // Alert update status
+    const nonMealStatus = <?php if (isset($non_meal_status)) {
+                                echo json_encode($non_meal_status);
+                            } else {
+                                echo '';
+                            } ?>;
+    if (nonMealStatus === 'true') {
+        Swal.fire('Bạn không có đơn để quản lý', '', 'warning')
+            .then(() => {
+                window.history.pushState({}, '', '/home/index');
+            });
+    }
+</script>
