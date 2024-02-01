@@ -111,7 +111,7 @@ class RegisterController extends AppController {
                 ]
             );
             $this->data_ary['create_success'] = 'Register success';
-            View::render('home/login.php', $this->data_ary);
+            View::render('home/register.php', $this->data_ary);
             exit;
         } else {
             if ($exist_user) {
