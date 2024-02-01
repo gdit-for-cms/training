@@ -27,13 +27,17 @@ $banks = getBankData();
 ?>
 
 <!-- Render user image -->
-<?php if (!empty($user_data[0]['img'])) {
+<?php
+$imgSrc = '';
+if (!empty($user_data[0]['img']) && $user_data[0]['img'] != null) {
     $imageData = $user_data[0]['img'];
     // Encode the BLOB data to a Base64 string
     $base64Image = base64_encode($imageData);
 
     // Construct the SRC attribute for the IMG tag
     $imgSrc = 'data:image/jpeg;base64,' . $base64Image;
+} else {
+    $imgSrc = null;
 } ?>
 
 <script>
@@ -83,7 +87,11 @@ $banks = getBankData();
                 <div class="mb-5 text-gray-800">
                     <div class="flex flex-col justify-center items-center">
                         <div id="drop_zone" class="d-flex justify-content-center align-items-start" ondragover="dragOverHandler(event);" ondrop="dropHandler(event);">
-                            <img class="border-b border-gray-300 rounded shadow-lg w-52 h-52" src="<?php echo $imgSrc; ?>" alt="">
+                            <img class="border-b border-gray-300 rounded shadow-lg w-52 h-52" src="<?php if (isset($imgSrc)) {
+                                                                                                        echo $imgSrc;
+                                                                                                    } else {
+                                                                                                        echo 'https://static.vecteezy.com/system/resources/previews/009/734/564/original/default-avatar-profile-icon-of-social-media-user-vector.jpg';
+                                                                                                    }  ?>" alt="">
                         </div>
                         <div class="mt-3">
                             <div class="text-sm text-center text-red-800">Kéo thả để thay đổi hình</div>
@@ -98,7 +106,11 @@ $banks = getBankData();
                 <div class="bg-white p-5 shadow rounded-lg text-gray-800">
                     <form id="update_form" class="w-full" action="/user/update" method="POST">
                         <!-- Input img -->
-                        <input type="hidden" id="image_data" name="image_data" value="<?php echo $imgSrc; ?>">
+                        <input type="hidden" id="image_data" name="image_data" value="<?php if (isset($imgSrc)) {
+                                                                                            echo $imgSrc;
+                                                                                        } else {
+                                                                                            echo null;
+                                                                                        }  ?>">
                         <div class="my-4">
                             <label for="display_name" class="block text-lg font-semibold mb-1">Tên hiển thị</label>
                             <input type="text" id="display_name" name="display_name" value="<?php echo htmlspecialchars($user_data[0]['display_name']); ?>" class="w-full border rounded p-2" />
@@ -155,7 +167,11 @@ $banks = getBankData();
 
 <script>
     // Alert update status
-    const updateStatus = <?php echo json_encode($update_status); ?>;
+    const updateStatus = <?php if (isset($update_status)) {
+                                echo json_encode($update_status);
+                            } else {
+                                echo '';
+                            } ?>;
     if (updateStatus === 'true') {
         Swal.fire('Cập nhật thành công', '', 'success')
             .then(() => {

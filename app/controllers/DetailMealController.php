@@ -18,8 +18,7 @@ class DetailMealController extends AppController {
         $meal = new Meal;
         $this->data_ary['meals'] = $meal->getMealsByUser();
         if (!$this->data_ary['meals']) {
-            $this->data_ary['errors'] = showError('nonMeal');
-            header('Location: /home/index');
+            header('Location: /home/index?non-meal=true');
             exit;
         }
         $meal_id = 0;
