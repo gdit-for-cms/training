@@ -34,8 +34,6 @@ $banks = getBankData();
 
     // Construct the SRC attribute for the IMG tag
     $imgSrc = 'data:image/jpeg;base64,' . $base64Image;
-} else {
-    $imgSrc = 'https://i.stack.imgur.com/l60Hf.png';
 } ?>
 
 <script>
@@ -98,7 +96,7 @@ $banks = getBankData();
             <!-- Information -->
             <div class="w-2/3 p-5 flex-grow">
                 <div class="bg-white p-5 shadow rounded-lg text-gray-800">
-                    <form class="w-full" action="/user/update" method="POST">
+                    <form id="update_form" class="w-full" action="/user/update" method="POST">
                         <!-- Input img -->
                         <input type="hidden" id="image_data" name="image_data" value="<?php echo $imgSrc; ?>">
                         <div class="my-4">
@@ -122,10 +120,12 @@ $banks = getBankData();
                             <label for="bank_acc" class="block text-lg font-semibold mb-1">Số tài khoản</label>
                             <input type="text" id="bank_acc" name="bank_acc" placeholder="Vui lòng nhập số tài khoản" value="<?php echo htmlspecialchars($user_data[0]['bank_acc']); ?>" class="w-full border rounded p-2" />
                         </div>
-                        <button type="submit" class="bg-green-500 text-white rounded px-4 py-2 mt-4 w-28">Cập nhật</button>
-                        <a href="/">
-                            <button type="button" class="bg-blue-500 text-white rounded px-4 py-2 mt-4 w-28">Thoát</button>
-                        </a>
+                        <div class="flex gap-2">
+                            <button onclick="submitUpdate()" type="button" class="bg-green-600 text-white rounded px-4 py-2 mt-4 w-28">Cập nhật</button>
+                            <a href="/">
+                                <button type="button" class="bg-blue-500 text-white rounded px-4 py-2 mt-4 w-28">Thoát</button>
+                            </a>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -133,6 +133,41 @@ $banks = getBankData();
         </div>
     </div>
 </div>
+
+<script>
+    function submitUpdate() {
+        Swal.fire({
+            title: 'Xác nhận cập nhật',
+            text: 'Các thông tin là chính xác và tiến hành cập nhật?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Xác nhận',
+            cancelButtonText: 'Không'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('update_form').submit();
+            }
+        });
+    }
+</script>
+
+<script>
+    // Alert update status
+    const updateStatus = <?php echo json_encode($update_status); ?>;
+    if (updateStatus === 'true') {
+        Swal.fire('Cập nhật thành công', '', 'success')
+            .then(() => {
+                window.history.pushState({}, '', '/user/show');
+            });
+    } else if (updateStatus === 'false') {
+        Swal.fire('Cập nhật thất bại', 'Vui lòng thử lại', 'error')
+            .then(() => {
+                window.history.pushState({}, '', '/user/show');
+            });
+    }
+</script>
 
 <!-- Check account name via bank and account number -->
 <!-- <script>

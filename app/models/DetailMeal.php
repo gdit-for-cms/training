@@ -28,10 +28,10 @@ class DetailMeal extends Model {
     public function getDetailsByUserAndMeal($mealId, $userId) {
         $this->table('detail_meal')
             ->join('meal', 'detail_meal.meal_id = meal.id')
-            ->join('app_user', 'meal.user_id = app_user.id')
+            ->join('app_user', 'detail_meal.user_id = app_user.id')
             ->join('food', 'detail_meal.food_id = food.id')
             ->where('meal.id', '=', $mealId)
-            ->where('meal.user_id', '=', $userId);
+            ->where('detail_meal.user_id', '=', $userId);
 
         $selectColumns = 'detail_meal.*, '
             . 'meal.time_open, meal.closed, '
