@@ -24,11 +24,13 @@ class AuthController extends AppController {
     }
 
     public function loginAction(Request $request) {
-        try {
+
+        if ($request->getGet()->has('pre_name')) {
             $name = $request->getGet()->get('pre_name');
             $this->data_ary['pre_name'] = $name;
             View::render('home/login.php', $this->data_ary);
-        } catch (Exception $e) {
+            exit;
+        } else {
             View::render('home/login.php');
         }
     }

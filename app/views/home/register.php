@@ -110,14 +110,6 @@
                                     </button>
                                 </div>
 
-                                <div class="relative">
-                                    <p class="w-full h-fit text-xs text-red-500">
-                                        <?php if (isset($create_success)) {
-                                            echo $create_success;
-                                        } ?>
-                                    </p>
-                                </div>
-
                             </form>
 
                             <!--Back login page button-->
@@ -151,21 +143,8 @@
     let pre_name = <?php echo json_encode($pre_name); ?>;
 
     if (create_success == 'Register success') {
-        register_alert();
-    }
-
-    function register_alert() {
-        let message = 'Bạn đã đăng ký thành công';
-        Swal.fire({
-            title: 'Đăng ký',
-            text: message,
-            icon: 'success',
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Xác nhận',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = '/auth/login?pre_name=' + pre_name;
-            }
+        Swal.fire('Đăng ký thành công', '', 'success').then(() => {
+            window.location.href = '/auth/login?pre_name=' + pre_name;
         });
     }
 </script>
