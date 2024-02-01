@@ -42,6 +42,9 @@ class RegisterController extends AppController {
         $pass = $post->get('pass');
         $hashed_pass = password_hash($pass, PASSWORD_BCRYPT);
         $display_name = $post->get('display_name');
+        $image_data = $post->get('image_data');
+        // Decode base64 image
+        $image_data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $image_data));
 
         // Query the exist user
         $exist_user = $this->current_user->table('app_user')
@@ -107,7 +110,8 @@ class RegisterController extends AppController {
                 [
                     'name' => $name,
                     'pass' => $hashed_pass,
-                    'display_name' => $display_name
+                    'display_name' => $display_name,
+                    'img' => $image_data
                 ]
             );
             $this->data_ary['create_success'] = 'Register success';

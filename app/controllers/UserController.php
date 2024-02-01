@@ -12,24 +12,31 @@ class UserController extends AppController {
 
     public array $data_ary;
 
-    public object $current_user;
+    public $title = 'User';
 
-    protected function after() {
-    }
 
     public function showAction(Request $request) {
         $current_user = $request->getUser();
+        // Get data user
         $object_user = new User();
         $user_data = $object_user->getBy('id', '=', $current_user['id']);
 
+        // If after update
+        if ($request->getGet()->has('update')) {
+            $update_status = $request->getGet()->get('update');
+            $this->data_ary['update_status'] = $update_status;
+        }
+
+
         $this->data_ary['user_data'] = $user_data;
+        $this->data_ary['title'] = $this->title;
         $this->data_ary['content'] = '/user/display';
         View::render('/layouts/master.php', $this->data_ary);
     }
 
     public function lookupAction(Request $request) {
-        $clientId = 'fd7324df-4819-419c-abce-15a87efb7efb'; // Replace with your x-client-id
-        $apiKey = '830b441c-7f7c-4609-b61d-cc180ea12936'; // Replace with your x-api-key
+        $clientId = 'fd7324df-4819-419c-abce-15a87efb7efb'; // x-client-id of VietQR
+        $apiKey = '830b441c-7f7c-4609-b61d-cc180ea12936'; // x-api-key of VietQR
 
         $post = $request->getPost();
 
@@ -95,8 +102,22 @@ class UserController extends AppController {
         $object_user = new User();
 
         if ($object_user->updateUser($update_data, "id = $current_user_id")) {
-            header('Location: /user/show');
+            $user_data = $object_user->getBy('id', '=', $current_user['id']);
+            $data_ary = [
+                'id' => $user_data[0]['id'],
+                'name' => $user_data[0]['name'],
+                'display_name' => $user_data[0]['display_name'],
+                'img' => $user_data[0]['img'],
+            ];
+            $request->saveUser($data_ary);
+            header('Location: /user/show?update=true');
+            exit;
+        } else {
+            header('Location: /user/show?update=false');
             exit;
         }
+    }
+
+    protected function after() {
     }
 }

@@ -48,7 +48,7 @@
                 <div class="font-bold text-xl text-center mt-2">Nhập link</div>
 
                 <!-- Form -->
-                <form action="/meal/create-meal" method="post">
+                <form action="/meal/create-meal" method="post" id="create_meal_form">
                     <div class="px-5 py-2">
                         <label for="link" class="block text-sm font-medium leading-6 text-gray-900">Link Shoppe Food</label>
                         <div class="relative mt-2 rounded-md shadow-sm">
@@ -57,12 +57,12 @@
                     </div>
 
                     <!-- Confirm Button -->
-                    <div class="px-5 py-4">
-                        <button class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                            Tạo đơn
-                        </button>
-                    </div>
                 </form>
+                <div class="px-5 py-4">
+                    <button type="button" onclick="createMeal()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                        Tạo đơn
+                    </button>
+                </div>
 
             </div>
         </div>
@@ -90,6 +90,24 @@
             } else {
                 stores[i].style.display = "none";
             }
+        }
+    }
+</script>
+
+<script>
+    function createMeal() {
+        // Get the value of link
+        const link = document.getElementById('link').value;
+        const pattern = /^https:\/\/shopeefood\.vn\//;
+
+        // Check link
+        if (!link) {
+            Swal.fire('Bạn chưa nhập link', '', 'warning');
+        } else if (!pattern.test(link)) {
+            Swal.fire("Link phải bắt đầu bằng 'https://shopeefood.vn/'.", "", "warning");
+        } else {
+            document.getElementById('create_meal_form').submit();
+            $('#spinner').show();
         }
     }
 </script>
