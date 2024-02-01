@@ -80,7 +80,7 @@ class MealController extends AppController {
                 $meal->closeMeal($id);
             }
         }
-        header('Location: /detail-meal/display-general-detail');
+        header('Location: /detail-meal/display-general-detail?meal_id=' . $id);
         exit;
     }
 
@@ -93,7 +93,7 @@ class MealController extends AppController {
                 $meal->openMeal($id);
             }
         }
-        header('Location: /detail-meal/display-general-detail');
+        header('Location: /detail-meal/display-general-detail?meal_id=' . $id);
         exit;
     }
 

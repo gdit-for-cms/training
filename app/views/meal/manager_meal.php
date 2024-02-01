@@ -25,16 +25,13 @@
                 <?php foreach ($meals as $meal) : ?>
                     <tr class="bg-white border-b">
                         <td><img class=" w-12 h-12 object-cover mr-4" src="<?php echo $meal['image'] ?>"></td>
-                        <form method="POST" action="/detail-meal/display-general-detail">
+                        <form method="GET" action="/detail-meal/display-general-detail">
                             <input name="meal_id" id="meal_id" value="<?php echo $meal['id'] ?>" hidden>
-                            <input name="store_id" id="store_id" value="<?php echo $meal['store_id'] ?>" hidden>
-                            <input name="store_name" id="store_name" value="<?php echo $meal['store_name'] ?>" hidden>
-                            <input name="closed" id="closed" value="<?php echo $meal['closed'] ?>" hidden>
-                            <td scope="row" class="px-2 py-4 font-medium text-gray-900 text-left"><button type=" submit" class="text-left"><?php echo $meal['store_name'] ?></button></td>
+                            <td scope="row" class="px-2 py-4 font-medium text-gray-900"><button type="submit" class="text-left"><?php echo $meal['store_name'] ?></button></td>
                         </form>
                         <td>
                             <a class="flex items-center justify-center" href="#">
-                                <button>
+                                <button class="hover:scale-105">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
@@ -59,7 +56,7 @@
 
                             <form class="flex items-center justify-center" method="POST" action="<?php echo $link ?>">
                                 <input name="meal_id" id="meal_id" value="<?php echo $meal['id'] ?>" hidden>
-                                <button type="submit">
+                                <button class="hover:scale-105" type="submit">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="<?php echo $icon ?>" />
                                     </svg>
@@ -69,7 +66,7 @@
                         <td>
                             <form class="flex items-center justify-center" method="POST" action="/meal/delete-meal">
                                 <input name="meal_id" id="meal_id" value="<?php echo $meal['id'] ?>" hidden>
-                                <button type="submit" class="text-red-500 delete-item-btn hover:text-red-700">
+                                <button type="submit" class="text-red-500 delete-item-btn hover:text-red-700 hover:scale-105">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                                     </svg>
@@ -140,12 +137,15 @@
                                 <td class="px-2 py-2 text-base bg-white border-b border-gray-200" colspan="2"></td>
                                 <td class="px-2 py-2 text-lg font-bold bg-white border-b border-gray-200" id="total-price" colspan="2" class="text-lg font-bold"><?php echo number_format($total_money, 0, ',', '.') . ' đ'; ?></td>
                             </tr>
+
                         </tbody>
                     </table>
+                    <h6 class="px-1 py-1 bg-white border-b border-red-200 text-sm font-bold text-center">*Nhớ đóng đơn trước khi bắt đầu đặt nha</h6>
                 </div>
 
 
-                <form action="/order/create-order" method="POST" class="mt-5">
+
+                <form id="submit_order" action="/order/create-order" method="POST" class="mt-5">
                     <?php
                     echo "<input name=\"meal_id\" id=\"meal_id\" value=" . $meal_id . " hidden>";
                     echo "<input name=\"store_id\" id=\"store_id\" value=" . $store_id . " hidden>";
@@ -164,10 +164,11 @@
                             <div style="color: black;" id="final_price"></div>
                         </span>
                     </div>
+                    <!-- Confirm Button -->
                     <?php
                     if ($status) {
                         echo "         <div class=\"px-5 py-4\">
-                        <button class=\"w-full px-4 py-2 font-bold text-white bg-green-600 rounded hover:bg-green-700\">
+                        <button type=\"button\" onclick=\"confirmOrder()\" class=\"w-full px-4 py-2 font-bold text-white bg-green-600 rounded hover:bg-green-700\">
                             Chốt đơn
                         </button>
                     </div>";
@@ -180,8 +181,6 @@
                     }
                     ?>
                 </form>
-
-                <!-- Confirm Button -->
 
             </div>
         </div>
@@ -201,6 +200,24 @@
         return formattedNumber;
     };
 
+    function confirmPay(id) {
+        let message = 'Hãy chắc chắn bạn đã trả';
+        Swal.fire({
+            title: 'Trả tiền',
+            text: message,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Trả',
+            cancelButtonText: 'Đóng'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/order/pay?ids=' + id;
+            }
+        });
+    }
+
     function setFinalPrice() {
         let discount = document.getElementById("discount").value * 1;
         let ship_fee = document.getElementById("ship_fee").value * 1;
@@ -208,8 +225,35 @@
         document.getElementById("final_price").innerText = formatNumber(total + ship_fee - discount);
     }
 
+    function confirmOrder() {
+        let message = 'Hãy chắc chắn đơn hàng đã được giao thành công trước khi chốt';
+        Swal.fire({
+            title: 'Chốt đơn',
+            text: message,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Chốt đơn',
+            cancelButtonText: 'Đóng'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('submit_order').submit();
+            }
+        });
+    }
+
     function noti2() {
-        alert("Đơn chưa đóng, bạn hãy đóng trước khi chốt đơn");
+        let message = 'Bạn phải đóng đơn trước khi chốt';
+        Swal.fire({
+            text: message,
+            icon: 'warning',
+            showCancelButton: true,
+            showConfirmButton: false,
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'Đóng'
+
+        })
     }
 
     setFinalPrice();

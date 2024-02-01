@@ -7,7 +7,7 @@
                 <thead>
                     <tr>
                         <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                            User
+                            Tình trạng
                         </th>
                         <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Phải trả
@@ -15,14 +15,11 @@
                         <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Phải thu
                         </th>
+                        <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            User
+                        </th>
                         <th class="w-30 px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             QR Code
-                        </th>
-                        <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                            Tình trạng
-                        </th>
-                        <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                            Tổng
                         </th>
                         <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Thao tác
@@ -30,117 +27,148 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Row 1 -->
-                    <tr>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <div class="flex items-center">
-                                <div class="ml-3">
-                                    <p class="text-gray-900 whitespace-no-wrap">
-                                        Nguyen Long Vu
-                                    </p>
+                    <!-- -list for debtor unpaid -->
+                    <?php foreach ($list_for_debtor_unpaid as $debtor_unpaid) : ?>
+                        <tr>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <span class="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight">
+                                    <span aria-hidden="true" class="absolute inset-0 bg-red-200 opacity-50 rounded-full"></span>
+                                    <span class="relative">Bạn chưa trả</span>
+                                </span>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <p class="text-gray-900 whitespace-no-wrap">
+                                    <?php echo number_format($debtor_unpaid["total"]) . " đ" ?>
+                                </p>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <p class="text-gray-900 whitespace-no-wrap"></p>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <div class="flex items-center">
+                                    <div class="ml-3">
+                                        <p class="text-gray-900 whitespace-no-wrap">
+                                            <?php echo $debtor_unpaid["creditor_name"] ?>
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">100.000 đ</p>
-                        </td>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">100.000 đ</p>
-                        </td>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <div class="w-10 h-10 cursor-pointer">
-                                <img src="https://img.vietqr.io/image/tpbank-0979119989-compact2.png?amount=100000&addInfo=CT&accountName=TO%KHA%VY" alt="QR Code" onclick="openModal(this.src)">
-                            </div>
-                        </td>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <span class="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight">
-                                <span aria-hidden="true" class="absolute inset-0 bg-red-200 opacity-50 rounded-full"></span>
-                                <span class="relative">PHẢI TRẢ</span>
-                            </span>
-                        </td>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">100.000 đ</p>
-                        </td>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <a href="#" class="text-blue-600 hover:text-blue-900 whitespace-no-wrap">Xác nhận</a>
-                        </td>
-                    </tr>
-                    <!-- Row 2 -->
-                    <tr>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <div class="flex items-center">
-                                <div class="ml-3">
-                                    <p class="text-gray-900 whitespace-no-wrap">
-                                        Lê Huy
-                                    </p>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <div class="w-10 h-10 cursor-pointer">
+                                    <img src="https://img.vietqr.io/image/tpbank-0979119989-compact2.png?amount=100000&addInfo=CT&accountName=TO%KHA%VY" alt="QR Code" onclick="openModal(this.src)">
                                 </div>
-                            </div>
-                        </td>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">100.000 đ</p>
-                        </td>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">100.000 đ</p>
-                        </td>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <div class="w-10 h-10 cursor-pointer">
-                                <img src="https://img.vietqr.io/image/tpbank-0979119989-compact2.png?amount=100000&addInfo=CT&accountName=TO%KHA%VY" alt="QR Code" onclick="openModal(this.src)">
-                            </div>
-                        </td>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <span class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                                <span aria-hidden="true" class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
-                                <span class="relative">PHẢI THU</span>
-                            </span>
-                        </td>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">100.000 đ</p>
-                        </td>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <a href="#" class="text-blue-600 hover:text-blue-900 whitespace-no-wrap">Xác nhận</a>
-                        </td>
-                    </tr>
-                    <!-- Row 3 -->
-                    <tr>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <div class="flex items-center">
-                                <div class="ml-3">
-                                    <p class="text-gray-900 whitespace-no-wrap">
-                                        To Kha Vy
-                                    </p>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <button onclick="confirmPay('<?php echo $debtor_unpaid['ids']; ?>')" class="text-white bg-gray-400 rounded border-b w-20">Trả tiền</button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    <!-- -list for debtor paid -->
+                    <?php foreach ($list_for_debtor_paid as $debtor_paid) : ?>
+                        <tr>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <span class="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight">
+                                    <span aria-hidden="true" class="absolute inset-0 bg-red-200 opacity-50 rounded-full"></span>
+                                    <span class="relative">Bạn đã trả, chờ xác nhận</span>
+                                </span>
+                            </td>
+
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <p class="text-gray-900 whitespace-no-wrap">
+                                    <?php echo number_format($debtor_paid["total"]) . " đ" ?>
+                                </p>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <p class="text-gray-900 whitespace-no-wrap"></p>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <div class="flex items-center">
+                                    <div class="ml-3">
+                                        <p class="text-gray-900 whitespace-no-wrap">
+                                            <?php echo $debtor_paid["creditor_name"] ?>
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">100.000 đ</p>
-                        </td>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">100.000 đ</p>
-                        </td>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <div class="w-10 h-10 cursor-pointer">
-                                <img src="https://img.vietqr.io/image/tpbank-0979119989-compact2.png?amount=100000&addInfo=CT&accountName=TO%KHA%VY" alt="QR Code" onclick="openModal(this.src)">
-                            </div>
-                        </td>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <span class="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight">
-                                <span aria-hidden="true" class="absolute inset-0 bg-red-200 opacity-50 rounded-full"></span>
-                                <span class="relative">PHẢI THU</span>
-                            </span>
-                        </td>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">100.000 đ</p>
-                        </td>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <a href="#" class="text-blue-600 hover:text-blue-900 whitespace-no-wrap">Xác nhận</a>
-                        </td>
-                    </tr>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    <!-- -list for creditor unpaid -->
+                    <?php foreach ($list_for_creditor_unpaid as $creditor_unpaid) : ?>
+                        <tr>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <span class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
+                                    <span aria-hidden="true" class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
+                                    <span class="relative">Con nợ chưa trả</span>
+                                </span>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <p class="text-gray-900 whitespace-no-wrap">
+                                    <?php echo number_format($creditor_unpaid["total"]) . " đ" ?>
+                                </p>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <div class="flex items-center">
+                                    <div class="ml-3">
+                                        <p class="text-gray-900 whitespace-no-wrap">
+                                            <?php echo $creditor_unpaid["debtor_name"] ?>
+                                        </p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    <!-- -list for creditor paid -->
+                    <?php foreach ($list_for_creditor_paid as $creditor_paid) : ?>
+                        <tr>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <span class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
+                                    <span aria-hidden="true" class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
+                                    <span class="relative">Đã trả, bạn hãy xác nhận lại</span>
+                                </span>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <p class="text-gray-900 whitespace-no-wrap">
+                                    <?php echo number_format($creditor_paid["total"]) . " đ" ?>
+                                </p>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <div class="flex items-center">
+                                    <div class="ml-3">
+                                        <p class="text-gray-900 whitespace-no-wrap">
+                                            <?php echo $creditor_paid["debtor_name"] ?>
+                                        </p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <button onclick="confirmConfirm('<?php echo $creditor_paid['ids'] ?>')" class="text-white bg-gray-400 rounded border-b w-20">Xác nhận</button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+
                 </tbody>
             </table>
         </div>
     </div>
 </div>
-
 
 <!-- Modal backdrop -->
 <div id="modal-backdrop" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
@@ -167,6 +195,51 @@
 </div>
 
 <script>
+    const formatNumber = (number) => {
+        const roundedNumber = Math.floor(number);
+        const formattedNumber = roundedNumber.toLocaleString("vi", {
+            style: "currency",
+            currency: "VND",
+        });
+        return formattedNumber;
+    };
+
+    function confirmPay(id) {
+        let message = 'Hãy chắc chắn bạn đã trả';
+        Swal.fire({
+            title: 'Trả tiền',
+            text: message,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Trả tiền',
+            cancelButtonText: 'Đóng'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/order/pay?ids=' + id;
+            }
+        });
+    }
+
+    function confirmConfirm(id) {
+        let message = 'Hãy chắc chắn con nợ đã trả, thao tác này không thể hoàn tác';
+        Swal.fire({
+            title: 'Xác nhận',
+            text: message,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Xác nhận',
+            cancelButtonText: 'Đóng'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/order/confirm?ids=' + id;
+            }
+        });
+    }
+
     // Function to open the modal with the clicked image
     function openModal(imgSrc) {
         document.getElementById('modal-image').src = imgSrc; // Set the src for the modal image

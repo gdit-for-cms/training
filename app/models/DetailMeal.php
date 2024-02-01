@@ -69,8 +69,7 @@ class DetailMeal extends Model {
                 'describes' => $row['describes'],
                 'amount' => $row['amount'],
                 'name' => $row['name'],
-                'image' => $row['image'],
-                'describes_concatenated' => $row['describes']
+                'image' => $row['image']
             );
             $details[] = $detail;
         }
