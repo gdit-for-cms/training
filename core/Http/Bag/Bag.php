@@ -10,7 +10,7 @@ class Bag {
     }
 
     public function has(String $key) {
-        return isset($container[$key]);
+        return isset($this->container[$key]);
     }
 
     public function get(String $key) {

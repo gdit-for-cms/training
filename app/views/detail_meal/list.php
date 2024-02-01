@@ -215,7 +215,7 @@
                 </div>
             </td>
             <td class="px-2 py-2 text-sm bg-white border-b border-gray-200">
-                <input class="w-20 food-note-input" type="text" data-food-id="${foodId}" placeholder="Ghi chú..." value="${item.describes ? item.describes : ''}" onchange="updateItemDescribes(${foodId}, this.value)">
+                <input class="w-20 food-note-input" type="text" data-food-id="${foodId}" placeholder="Ghi chú..." value="${item.describes ? item.describes.trim() : ''}" onchange="updateItemDescribes(${foodId}, this.value)">
             </td>
         `;
               orderTableBody.appendChild(row);

@@ -5,6 +5,7 @@ namespace App\Controllers;
 use Core\View;
 use App\models\User;
 use Core\Http\Request;
+use Exception;
 
 class AuthController extends AppController {
     public array $data_ary;
@@ -22,8 +23,14 @@ class AuthController extends AppController {
     protected function after() {
     }
 
-    public function loginAction() {
-        View::render('home/login.php');
+    public function loginAction(Request $request) {
+        try {
+            $name = $request->getGet()->get('pre_name');
+            $this->data_ary['pre_name'] = $name;
+            View::render('home/login.php', $this->data_ary);
+        } catch (Exception $e) {
+            View::render('home/login.php');
+        }
     }
 
     public function loginProcessAction(Request $request) {
@@ -51,7 +58,7 @@ class AuthController extends AppController {
                 'id' => $exist_user['id'],
                 'name' => $exist_user['name'],
                 'display_name' => $exist_user['display_name'],
-                'img_code' => $exist_user['img_code'],
+                'img' => $exist_user['img'],
             ];
         } else {
             $this->data_ary['pass_error'] = showError('login password');

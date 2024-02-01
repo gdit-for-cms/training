@@ -37,7 +37,7 @@ class OrderController extends AppController {
         exit;
     }
 
-    public function displayAction(Request $request) {
+public function displayAction(Request $request) {
         $user = $request->getUser();
         $user_id = $user['id'];
         $detail_order = new DetailOrder;
