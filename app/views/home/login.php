@@ -37,8 +37,8 @@
                                                                                                                                                                                                     ?> />
                                 </div>
 
-                                <div class="relative">
-                                    <p class="w-full h-fit text-xs text-red-500">
+                                <div class="relative mt-2 mx-5">
+                                    <p class="w-full h-fit text-sm text-red-500 ">
                                         <?php if (isset($name_error)) {
                                             echo $name_error;
                                         } ?>
@@ -50,8 +50,8 @@
                                     <input type="password" name="pass" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" id="exampleFormControlInput11" placeholder="Mật khẩu" />
                                 </div>
 
-                                <div class="relative">
-                                    <p class="w-full h-fit text-xs text-red-500">
+                                <div class="relative mt-2 mx-5">
+                                    <p class="w-full h-fit text-sm text-red-500">
                                         <?php if (isset($pass_error)) {
                                             echo $pass_error;
                                         } ?>
@@ -59,8 +59,8 @@
                                 </div>
 
                                 <!--Submit button-->
-                                <div class="mt-4 mb-12 pb-1 pt-1 text-center">
-                                    <button class="mb-3 inline-block w-full rounded px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]" type="submit" name="submit" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
+                                <div class="mt-6 mb-12 pb-1 pt-1 text-center">
+                                    <button class="mb-3 inline-block w-full rounded px-6 pb-2 pt-2.5 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]" type="submit" name="submit" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
                                         Đăng nhập
                                     </button>
                                 </div>
@@ -69,7 +69,7 @@
                             <!--Register button-->
                             <form action="/register/register" class="flex items-center justify-between pb-6">
                                 <p class="mb-0 mr-2 text-black ">Bạn chưa có tài khoản?</p>
-                                <button type="submit" name="register" class="inline-block rounded px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-white" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
+                                <button type="submit" name="register" class="inline-block rounded px-6 pb-[6px] pt-2 text-sm font-medium uppercase leading-normal text-white" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
                                     Đăng ký
                                 </button>
                             </form>

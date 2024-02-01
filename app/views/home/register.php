@@ -15,8 +15,6 @@
 </head>
 
 <body>
-
-
     <div class="h-screen" style="font-family: 'Source Sans Pro', sans-serif;">
         <div class="container mx-auto h-full">
             <div class="flex h-full w-full flex-wrap items-center justify-center">
@@ -37,8 +35,8 @@
                                                                                                                                                                                                             ?> />
                                 </div>
 
-                                <div class="relative">
-                                    <p class="w-full h-fit text-xs text-red-500">
+                                <div class="relative mt-2 mx-5">
+                                    <p class="w-full h-fit text-sm text-red-500">
                                         <?php if (isset($name_error)) {
                                             echo $name_error;
                                         } ?>
@@ -54,8 +52,8 @@
                                                                                                                                                                                                                     ?> />
                                 </div>
 
-                                <div class="relative">
-                                    <p class="w-full h-fit text-xs text-red-500">
+                                <div class="relative mt-2 mx-5">
+                                    <p class="w-full h-fit text-sm text-red-500">
                                         <?php if (isset($display_name_error)) {
                                             echo $display_name_error;
                                         } ?>
@@ -106,8 +104,8 @@
                                 </div>
 
                                 <!--Submit button-->
-                                <div class="mt-4 mb-12 pb-1 pt-1 text-center">
-                                    <button class="mb-2 inline-block w-full rounded px-6 py-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]" type="submit" name="submit" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
+                                <div class="mt-6 mb-12 pb-1 pt-1 text-center">
+                                    <button class="mb-2 inline-block w-full rounded px-6 py-2 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]" type="submit" name="submit" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
                                         Đăng ký
                                     </button>
                                 </div>
@@ -125,7 +123,7 @@
                             <!--Back login page button-->
                             <form action="/" class="flex items-center justify-between pb-6">
                                 <p class="mb-0 mr-2 text-black ">Bạn đã có tài khoản?</p>
-                                <button type="submit" name="back_login" class="inline-block rounded px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-white" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
+                                <button type="submit" name="back_login" class="inline-block rounded px-6 pb-[6px] pt-2 text-sm font-medium uppercase leading-normal text-white" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
                                     Đăng nhập
                                 </button>
                             </form>
@@ -149,20 +147,24 @@
 <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.js" defer></script>
 
 <script>
+    let create_success = <?php echo json_encode($create_success); ?>;
+    let pre_name = <?php echo json_encode($pre_name); ?>;
+
+    if (create_success == 'Register success') {
+        register_alert();
+    }
+
     function register_alert() {
         let message = 'Bạn đã đăng ký thành công';
         Swal.fire({
             title: 'Đăng ký',
             text: message,
             icon: 'success',
-            showCancelButton: false,
             confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
             confirmButtonText: 'Xác nhận',
-            cancelButtonText: 'Không'
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = '/auth/logout';
+                window.location.href = '/auth/login?pre_name=' + pre_name;
             }
         });
     }
