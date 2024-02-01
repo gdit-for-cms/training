@@ -23,12 +23,15 @@ class DetailMealController extends AppController {
             exit;
         }
         $meal_id = 0;
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (isset($_POST['meal_id']) && isset($_POST['closed']) && isset($_POST['store_id'])  && isset($_POST['store_name'])) {
-                $meal_id = $_POST['meal_id'];
-                $this->data_ary['status'] = $_POST['closed'];
-                $this->data_ary['store_id'] = $_POST['store_id'];
-                $this->data_ary['store_name'] = $_POST['store_name'];
+        if (isset($_GET['meal_id']) && $_GET['meal_id'] != 0) {
+            $meal_id = $_GET['meal_id'];
+            foreach ($this->data_ary['meals'] as $element) {
+                if ($element['id'] == $meal_id) {
+                    $this->data_ary['status'] = $element['closed'];
+                    $this->data_ary['store_id'] = $element['store_id'];
+                    $this->data_ary['store_name'] = $element['store_name'];
+                    break;
+                }
             }
         } else {
             $meal_id = $this->data_ary['meals'][0]['id'];
@@ -39,6 +42,7 @@ class DetailMealController extends AppController {
         $this->data_ary['meal_id'] = $meal_id;
         $this->data_ary['detail_meals'] = $detail_meal->getGeneralDetailMealByMealId($meal_id);
         $this->data_ary['content'] = '/meal/manager_meal';
+        $this->data_ary['title'] = 'Quản lí đơn';
         View::render('/layouts/master.php', $this->data_ary);
     }
 

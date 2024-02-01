@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\DetailOrder;
 use App\Models\Order;
 use Core\Http\Request;
 
@@ -37,6 +38,38 @@ class OrderController extends AppController {
     }
 
     public function displayAction(Request $request) {
+        $user = $request->getUser();
+        $user_id = $user['id'];
+        $detail_order = new DetailOrder;
+        $list_for_debtor_unpaid = $detail_order->getUnconfirmedDebtListForDebtor($user_id, 0);
+        $list_for_debtor_paid = $detail_order->getUnconfirmedDebtListForDebtor($user_id, 1);
+        $list_for_creditor_unpaid = $detail_order->getUnconfirmedDebtListForCreditor($user_id, 0);
+        $list_for_creditor_paid = $detail_order->getUnconfirmedDebtListForCreditor($user_id, 1);
+        $this->data_ary['list_for_debtor_unpaid'] = $list_for_debtor_unpaid;
+        $this->data_ary['list_for_debtor_paid'] = $list_for_debtor_paid;
+        $this->data_ary['list_for_creditor_unpaid'] = $list_for_creditor_unpaid;
+        $this->data_ary['list_for_creditor_paid'] = $list_for_creditor_paid;
+        $this->data_ary['title'] = "Nợ nần";
         $this->data_ary['content'] = "/order/display";
+    }
+
+    public function payAction(Request $request) {
+        if (isset($_GET['ids'])) {
+            $list_id = explode(",", $_GET['ids']);
+            $detail_order = new DetailOrder;
+            $detail_order->updateDetailOrderPaid($list_id);
+        }
+
+        header('Location: /order/display');
+    }
+
+    public function confirmAction(Request $request) {
+        if (isset($_GET['ids'])) {
+            $list_id = explode(",", $_GET['ids']);
+            $detail_order = new DetailOrder;
+            $detail_order->updateDetailOrderConfirmed($list_id);
+        }
+
+        header('Location: /order/display');
     }
 }

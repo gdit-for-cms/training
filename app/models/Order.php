@@ -39,7 +39,11 @@ class Order extends Model {
 
         foreach ($detail_meal_list as $detail) {
             $price = $detail['price'] * $final_total_money / $temporary_total_money;
-            $detail_order->createDetailOrder($detail['user_id'], $order_id, $detail['food_id'], $price, $detail['amount'], $detail['describes']);
+            if ($user_id === $detail['user_id']) {
+                $detail_order->createDetailOrder($detail['user_id'], $order_id, $detail['food_id'], $price, $detail['amount'], $detail['describes'], 1, 1);
+            } else {
+                $detail_order->createDetailOrder($detail['user_id'], $order_id, $detail['food_id'], $price, $detail['amount'], $detail['describes']);
+            }
         }
 
         $detail_meal->deleteAllDetailMealByMealId($meal_id);
