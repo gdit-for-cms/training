@@ -55,6 +55,15 @@ if (!empty($user_data[0]['img']) && $user_data[0]['img'] != null) {
                 if (ev.dataTransfer.items[i].kind === "file") {
                     let file = ev.dataTransfer.items[i].getAsFile();
 
+                    console.log(file);
+
+                    if (file.size > 100000) {
+                        Swal.fire('Ảnh phải nhỏ hơn 140kB', 'Vui lòng thử lại', 'error').then(() => {
+                            window.location.reload();
+                        });
+                        break;
+                    }
+
                     let img = document.createElement("img");
                     img.classList.add("object-cover", "border-b", "rounded", "shadow-lg", "w-52", "h-52");
                     img.file = file;
