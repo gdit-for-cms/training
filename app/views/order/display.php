@@ -58,9 +58,8 @@
                                 $bank_bin = $debtor_unpaid["bank_bin"];
                                 $bank_acc = $debtor_unpaid["bank_acc"];
                                 ?>
-
                                 <div class="w-10 h-10 cursor-pointer">
-                                    <img src="https://img.vietqr.io/image/<?php echo $bank_bin ?>-<?php echo $bank_acc ?>-compact2.png?amount=<?php echo $debtor_unpaid["total"] ?>&addInfo=CT" alt="QR Code" onclick="openModal(this.src)">
+                                    <img src="https://img.vietqr.io/image/<?php echo $bank_bin ?>-<?php echo $bank_acc ?>-compact2.png?amount=<?php echo $debtor_unpaid["total"] ?>&addInfo=CT" alt="QR Code" onclick="openModal(this.src)" onerror="this.onerror=null; this.src='<?php echo '/img/no_QR_code.png'; ?>';">
                                 </div>
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">

@@ -87,7 +87,7 @@ function getImageStoreFromHTML($dom) {
     try {
         $img_store = $xpath->query($query)->item(0)->nodeValue;
     } catch (Exception $e) {
-        $img_store = "https://www.shutterstock.com/image-vector/red-store-vector-sign-promotion-260nw-1918121837.jpg";
+        $img_store = "/img/food_store_img_1610.png";
     }
     return $img_store;
 }
