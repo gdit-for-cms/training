@@ -37,7 +37,7 @@ class OrderController extends AppController {
         exit;
     }
 
-public function displayAction(Request $request) {
+    public function displayAction(Request $request) {
         $user = $request->getUser();
         $user_id = $user['id'];
         $detail_order = new DetailOrder;
@@ -45,10 +45,12 @@ public function displayAction(Request $request) {
         $list_for_debtor_paid = $detail_order->getUnconfirmedDebtListForDebtor($user_id, 1);
         $list_for_creditor_unpaid = $detail_order->getUnconfirmedDebtListForCreditor($user_id, 0);
         $list_for_creditor_paid = $detail_order->getUnconfirmedDebtListForCreditor($user_id, 1);
+        $list_detail = $detail_order->getAllDetailOrderRelatedToUser($user_id);
         $this->data_ary['list_for_debtor_unpaid'] = $list_for_debtor_unpaid;
         $this->data_ary['list_for_debtor_paid'] = $list_for_debtor_paid;
         $this->data_ary['list_for_creditor_unpaid'] = $list_for_creditor_unpaid;
         $this->data_ary['list_for_creditor_paid'] = $list_for_creditor_paid;
+        $this->data_ary['list_detail'] = $list_detail;
         $this->data_ary['title'] = "Nợ nần";
         $this->data_ary['content'] = "/order/display";
     }

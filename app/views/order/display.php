@@ -1,6 +1,6 @@
 <div class="bg-white p-8">
     <!-- Table 1 -->
-    <div class="container mx-auto px-4 bg-white shadow-md rounded-lg" style="height: 70vh;"> <!-- Set 2/3 of viewport height -->
+    <div class="container mx-auto px-4 bg-white shadow-md rounded-lg mb-10" style="height: 50vh;"> <!-- Set 2/3 of viewport height -->
         <div class="py-4 px-8 text-2xl font-semibold border-b border-gray-300 text-gray-800 bg-yellow-200 rounded-full">Công nợ</div>
         <div class="overflow-x-auto overflow-y-scroll h-full"> <!-- Set overflow-y-scroll and height to full to take the height of parent -->
             <table class="min-w-full leading-normal">
@@ -164,6 +164,101 @@
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                 <button onclick="confirmConfirm('<?php echo $creditor_paid['ids'] ?>')" class="text-white bg-gray-400 rounded border-b w-20">Xác nhận</button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <!-- Table 2 -->
+    <div class="container mx-auto px-4 bg-white shadow-md rounded-lg" style="height: 50vh;"> <!-- Set 2/3 of viewport height -->
+        <div class="py-4 px-8 text-2xl font-semibold border-b border-gray-300 text-gray-800 bg-blue-200 rounded-full">Chi tiết</div>
+        <div class="overflow-x-auto overflow-y-scroll h-full"> <!-- Set overflow-y-scroll and height to full to take the height of parent -->
+            <table class="min-w-full leading-normal">
+                <thead>
+                    <tr>
+                        <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            Tình trạng
+                        </th>
+                        <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            Chủ nợ
+                        </th>
+                        <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            Con nợ
+                        </th>
+                        <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            Tên món
+                        </th>
+                        <th class="px-5 py-3 border-b-2 border-gray-300 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            Số lượng
+                        </th>
+                        <th class="w-30 px-5 py-3 border-b-2 border-gray-300 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            Giá
+                        </th>
+                        <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            Thời gian
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- -list detail -->
+                    <?php foreach ($list_detail as $detail) : ?>
+                        <tr>
+                            <?php
+                            $status = '';
+                            if ($detail['payed']) {
+                                $status = 'Đã trả';
+                            } else {
+                                $status = 'Chưa trả';
+                            }
+                            ?>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <span class="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight">
+                                    <span aria-hidden="true" class="absolute inset-0 bg-red-200 opacity-50 rounded-full"></span>
+                                    <span class="relative"><?php echo $status ?></span>
+                                </span>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <p class="text-gray-900 whitespace-no-wrap">
+                                    <?php echo $detail['creditor_name'] ?>
+                                </p>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <p class="text-gray-900 whitespace-no-wrap">
+                                    <?php echo $detail['debtor_name'] ?>
+                                </p>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <div class="flex items-center">
+                                    <div class="ml-3">
+                                        <p class="text-gray-900 whitespace-no-wrap">
+                                            <?php echo $detail['name'] ?>
+                                        </p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <p class="text-gray-900 whitespace-no-wrap text-center">
+                                    <?php echo $detail['amount'] ?>
+                                </p>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <p class="text-gray-900 whitespace-no-wrap text-right">
+                                    <?php echo number_format($detail['price']) . " đ" ?>
+                                </p>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <div class="flex items-center">
+                                    <div class="ml-3">
+                                        <p class="text-gray-900 whitespace-no-wrap">
+                                            <?php echo $detail['time_close'] ?>
+                                        </p>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>

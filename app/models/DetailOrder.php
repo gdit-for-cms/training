@@ -99,4 +99,28 @@ class DetailOrder extends Model {
             $stmt->execute();
         }
     }
+
+    public function getAllDetailOrderRelatedToUser($user_id) {
+        $pdo = parent::getDB();
+        $sql = "SELECT a1.display_name AS debtor_name, 
+        a2.display_name as creditor_name, f.name, d.amount, d.price, o.time_close, d.payed
+        FROM detail_order d
+        JOIN orders o ON d.order_id = o.id
+        JOIN app_user a1 ON a1.id = d.user_id
+        JOIN app_user a2 ON a2.id = o.user_id
+        JOIN food f ON f.id = d.food_id
+        WHERE d.confirmed = 0 
+        AND (o.user_id = ? OR d.user_id = ?)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(1, $user_id);
+        $stmt->bindParam(2, $user_id);
+        $result = $stmt->execute();
+        $results = [];
+        if ($result) {
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $results[] = $row;
+            }
+        }
+        return $results;
+    }
 }
