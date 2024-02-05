@@ -30,18 +30,27 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                <?php foreach ($meals as $index => $item) : ?>
+                                <?php if (empty($meals)) : ?>
                                     <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $index + 1 ?></td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?= htmlspecialchars($item['display_name']) ?></td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?= htmlspecialchars($item['food_name']) ?></td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= number_format($item['price'], 0, ',', '.') ?> <sup>đ</sup></td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $item['amount'] ?></td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= number_format(($item['price'] * $item['amount']), 0, ',', '.') ?> <sup>đ</sup></td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($item['describes']) ?: 'N/A' ?></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-3xl text-gray-500 text-center" colspan="7">
+                                            <a href="/">Đang ế, chưa có người đặt, ra đặt mở hàng thôi...</a>
+                                        </td>
                                     </tr>
-                                <?php endforeach; ?>
+                                <?php else : ?>
+                                    <?php foreach ($meals as $index => $item) : ?>
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $index + 1 ?></td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?= htmlspecialchars($item['display_name']) ?></td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?= htmlspecialchars($item['food_name']) ?></td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= number_format($item['price'], 0, ',', '.') ?> <sup>đ</sup></td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $item['amount'] ?></td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= number_format(($item['price'] * $item['amount']), 0, ',', '.') ?> <sup>đ</sup></td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($item['describes']) ?: 'N/A' ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </tbody>
+
                         </table>
                     </div>
                 </div>
