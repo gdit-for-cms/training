@@ -41,7 +41,7 @@ class DetailMealController extends AppController {
         $this->data_ary['meal_id'] = $meal_id;
         $this->data_ary['detail_meals'] = $detail_meal->getGeneralDetailMealByMealId($meal_id);
         $this->data_ary['content'] = '/meal/manager_meal';
-        $this->data_ary['title'] = 'Quản lí đơn';
+        $this->data_ary['title'] = 'Quản lý đơn';
         View::render('/layouts/master.php', $this->data_ary);
     }
 
@@ -61,6 +61,27 @@ class DetailMealController extends AppController {
             return $this->errorResponse($e->getMessage());
             exit;
         }
+    }
+
+    public function showAction(Request $request) {
+        $post = $request->getPost();
+        $meal_id = $post->get('meal_id');
+
+        $meal = new Meal();
+        $detail_meal = $meal->getDetailMealById($meal_id);
+        if (!isset($detail_meal)) {
+            // Handle error
+            exit;
+        }
+
+
+        $object_detail_meal = new DetailMeal();
+        $data = $object_detail_meal->getDetailsByUserAndMeal($meal_id);
+        $this->data_ary['meals'] = $data;
+        $this->data_ary['detail_meal'] = $detail_meal;
+
+        $this->data_ary['content'] = '/detail_meal/show';
+        View::render('/layouts/master.php', $this->data_ary);
     }
 
     protected function after() {
