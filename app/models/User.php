@@ -26,7 +26,7 @@ class User extends Model {
     }
 
     public function getBy($column, $operator, $value, $select_column = '*') {
-        return $this->where($column, $operator, $value)->get($select_column);
+        return $this->table($this->_table)->where($column, $operator, $value)->get($select_column);
     }
 
     public function getImgBy($column, $operator, $value) {

@@ -104,8 +104,9 @@ class Food extends Model {
     }
 
     public function getFoodsByStoreId($storeId) {
-        return $this->where('store_id', '=', $storeId)
-            ->where('deleted', '=', 0) // Only get foods not marked as deleted
+        return $this->table($this->_table) // Assuming 'foods' is your table name
+            ->where('store_id', '=', $storeId)
+            ->where('deleted', '=', 0)
             ->get();
     }
 }

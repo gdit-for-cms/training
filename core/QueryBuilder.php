@@ -12,6 +12,7 @@ trait QueryBuilder {
     public $limit = '';
     public $orderBy = '';
     public $innerJoin = '';
+    public $groupBy = '';
 
     /**
      *
@@ -159,14 +160,14 @@ trait QueryBuilder {
         }
         $sqlQuery =
             "SELECT " . $this->selectColumn .
-            " FROM " . $this->_table . " " .
+            " FROM " . $this->tableName . " " .
             $this->innerJoin . " " .
             $this->where . " " .
+            $this->groupBy . " " .
             $this->orderBy . " " .
             $this->limit;
         $sqlQuery = trim($sqlQuery);
         $result = $db->query($sqlQuery);
-        // Reset field
         $this->resetQuery();
 
         if ($result) {
@@ -224,6 +225,21 @@ trait QueryBuilder {
             return $result->fetch(PDO::FETCH_ASSOC);
         }
         return false;
+    }
+
+    /**
+     * Set the GROUP BY clause.
+     *
+     * @param  string|array  $columns The column(s) to group by.
+     * @return $this
+     */
+    public function groupBy($columns) {
+        if (is_array($columns)) {
+            $this->groupBy = 'GROUP BY ' . implode(', ', $columns);
+        } else {
+            $this->groupBy = 'GROUP BY ' . $columns;
+        }
+        return $this;
     }
 
     public function resetQuery() {
