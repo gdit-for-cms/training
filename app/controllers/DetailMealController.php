@@ -22,17 +22,20 @@ class DetailMealController extends AppController {
             exit;
         }
         $meal_id = 0;
-        if (isset($_GET['meal_id']) && $_GET['meal_id'] != 0) {
+        $flag = FALSE;
+        if (isset($_GET['meal_id']) && $_GET['meal_id'] > 0) {
             $meal_id = $_GET['meal_id'];
             foreach ($this->data_ary['meals'] as $element) {
                 if ($element['id'] == $meal_id) {
                     $this->data_ary['status'] = $element['closed'];
                     $this->data_ary['store_id'] = $element['store_id'];
                     $this->data_ary['store_name'] = $element['store_name'];
+                    $flag = TRUE;
                     break;
                 }
             }
-        } else {
+        }
+        if (!$flag) {
             $meal_id = $this->data_ary['meals'][0]['id'];
             $this->data_ary['status'] = $this->data_ary['meals'][0]['closed'];
             $this->data_ary['store_id'] = $this->data_ary['meals'][0]['store_id'];
