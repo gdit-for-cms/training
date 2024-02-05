@@ -46,9 +46,9 @@ class MealController extends AppController {
         $login_user = $request->getUser();
         $login_user_id = $login_user['id'];
 
-        $meal_id = $request->getGet()->get('id');
+        $meal_id = $request->getPost()->get('id');
         $meal = new Meal();
-        $detail_meal = $meal->getDetailMealById($meal_id);
+        $detail_meal = $meal->getDetailMealById($meal_id, 0);
         if (!isset($detail_meal)) {
             // Handle error
             exit;

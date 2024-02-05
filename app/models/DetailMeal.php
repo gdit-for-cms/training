@@ -25,21 +25,28 @@ class DetailMeal extends Model {
         return $this->insert($data);
     }
 
-    public function getDetailsByUserAndMeal($mealId, $userId) {
-        $this->table('detail_meal')
+    public function getDetailsByUserAndMeal($mealId, $userId = null) {
+        $query = $this->table('detail_meal')
             ->join('meal', 'detail_meal.meal_id = meal.id')
             ->join('app_user', 'detail_meal.user_id = app_user.id')
             ->join('food', 'detail_meal.food_id = food.id')
-            ->where('meal.id', '=', $mealId)
-            ->where('detail_meal.user_id', '=', $userId);
+            ->where('meal.id', '=', $mealId);
+
+        // Only add the user_id condition if a specific userId is provided
+        if ($userId !== null) {
+            $query->where('detail_meal.user_id', '=', $userId);
+        }
+
+        $query->orderBy('user_id');
 
         $selectColumns = 'detail_meal.*, '
             . 'meal.time_open, meal.closed, '
             . 'app_user.name as user_name, app_user.display_name, app_user.img_code, '
             . 'food.name as food_name, food.price, food.image';
 
-        return $this->select($selectColumns)->get();
+        return $query->select($selectColumns)->get();
     }
+
     public function updateMealDetail($mealDetailId, $data) {
         $conditions = "id = $mealDetailId";
         return $this->update($data, $conditions);
