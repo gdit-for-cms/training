@@ -25,7 +25,7 @@ class Order extends Model {
         return $lastInsertedId;
     }
 
-    public function submitOrder($meal_id, $user_id, $store_id, $ship_fee, $discount) {
+    public function submitOrder($meal_id, $user_id, $store_id, $ship_fee, $discount, $is_free) {
         $order_id = $this->createOrder($user_id, $store_id, $ship_fee, $discount);
         $detail_meal = new DetailMeal;
         $detail_order = new DetailOrder;
@@ -36,15 +36,22 @@ class Order extends Model {
             $temporary_total_money += $detail['amount'] * $detail['price'];
         }
         $final_total_money = $temporary_total_money + $ship_fee - $discount;
-
-        foreach ($detail_meal_list as $detail) {
-            $price = $detail['price'] * $final_total_money / $temporary_total_money;
-            if ($user_id === $detail['user_id']) {
+        if ($is_free) {
+            foreach ($detail_meal_list as $detail) {
+                $price = $detail['price'] * $final_total_money / $temporary_total_money;
                 $detail_order->createDetailOrder($detail['user_id'], $order_id, $detail['food_id'], $price, $detail['amount'], $detail['describes'], 1, 1);
-            } else {
-                $detail_order->createDetailOrder($detail['user_id'], $order_id, $detail['food_id'], $price, $detail['amount'], $detail['describes']);
+            }
+        } else {
+            foreach ($detail_meal_list as $detail) {
+                $price = $detail['price'] * $final_total_money / $temporary_total_money;
+                if ($user_id === $detail['user_id']) {
+                    $detail_order->createDetailOrder($detail['user_id'], $order_id, $detail['food_id'], $price, $detail['amount'], $detail['describes'], 1, 1);
+                } else {
+                    $detail_order->createDetailOrder($detail['user_id'], $order_id, $detail['food_id'], $price, $detail['amount'], $detail['describes']);
+                }
             }
         }
+
 
         $detail_meal->deleteAllDetailMealByMealId($meal_id);
         $meal->deleteMeal($meal_id);

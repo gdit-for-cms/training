@@ -30,6 +30,7 @@ class DetailMealController extends AppController {
                     $this->data_ary['status'] = $element['closed'];
                     $this->data_ary['store_id'] = $element['store_id'];
                     $this->data_ary['store_name'] = $element['store_name'];
+                    $this->data_ary['is_free'] = $element['is_free'];
                     $flag = TRUE;
                     break;
                 }
@@ -40,6 +41,7 @@ class DetailMealController extends AppController {
             $this->data_ary['status'] = $this->data_ary['meals'][0]['closed'];
             $this->data_ary['store_id'] = $this->data_ary['meals'][0]['store_id'];
             $this->data_ary['store_name'] = $this->data_ary['meals'][0]['store_name'];
+            $this->data_ary['is_free'] = $this->data_ary['meals'][0]['is_free'];
         }
         $this->data_ary['meal_id'] = $meal_id;
         $this->data_ary['detail_meals'] = $detail_meal->getGeneralDetailMealByMealId($meal_id);

@@ -18,29 +18,32 @@ class Meal extends Model {
 
     private $_table = 'meal';
 
-    public function create($url) {
+    public function create($url, $is_free) {
         $store = new Store();
         $store_id = $store->checkLink($url);
         if ($store_id === -1) {
             return FALSE;
         }
         $request = new Request;
+
         $user = $request->getUser();
-        if ($this->createMeal($user['id'], $store_id)) {
+
+        if ($this->createMeal($user['id'], $store_id, $is_free)) {
             return TRUE;
         }
         return FALSE;
     }
 
-    public function createMeal($user_id, $store_id) {
+    public function createMeal($user_id, $store_id, $is_free = FALSE) {
         $pdo = parent::getDB();
-        $sql = "INSERT INTO meal (user_id, store_id, time_open, closed) VALUES (?, ?, ?, 0)";
+        $sql = "INSERT INTO meal (user_id, store_id, time_open, is_free, closed) VALUES (?, ?, ?, ?, 0)";
         $stmt = $pdo->prepare($sql);
         $currentDateTime = new DateTime();
         $currentDateTimeString = $currentDateTime->format('Y-m-d H:i:s');
         $stmt->bindParam(1, $user_id);
         $stmt->bindParam(2, $store_id);
         $stmt->bindParam(3, $currentDateTimeString);
+        $stmt->bindParam(4, $is_free, PDO::PARAM_INT);
         $result = $stmt->execute();
         return $result;
     }
@@ -87,7 +90,7 @@ class Meal extends Model {
             ->join('store', 'meal.store_id = store.id')
             ->where('meal.closed', '=', 0);
 
-        $selectColumns = 'meal.id, meal.user_id, meal.store_id, meal.time_open as time_open, meal.closed, '
+        $selectColumns = 'meal.id, meal.user_id, meal.store_id, meal.time_open as time_open, meal.closed, meal.is_free, '
             . 'app_user.name as user_meal_name, app_user.display_name as user_meal_display_name, app_user.img_code as user_meal_code, '
             . 'store.name as store_meal_name, store.link as store_meal_link, store.update_date, store.image as store_meal_img';
 
@@ -100,7 +103,7 @@ class Meal extends Model {
         $meals = array();
         $pdo = parent::getDB();
         $sql = "SELECT m.id as id, m.store_id as store_id, m.time_open as time_open, 
-        m.closed as closed, s.name as store_name, s.image as image
+        m.closed as closed, m.is_free, s.name as store_name, s.image as image
         FROM meal m 
         JOIN store s on m.store_id = s.id
         WHERE m.user_id = ?";
@@ -114,17 +117,12 @@ class Meal extends Model {
                 'time_open' => $row['time_open'],
                 'closed' => $row['closed'],
                 'store_name' => $row['store_name'],
-                'image' => $row['image']
+                'image' => $row['image'],
+                'is_free' => $row['is_free']
             );
             $meals[] = $meal;
         }
         return $meals;
-    }
-
-    public function getOpenMealsByUser($userId) {
-        return $this->where('user_id', '=', $userId)
-            ->where('closed', '=', 0)
-            ->get();
     }
 
     public function getAllMeals() {

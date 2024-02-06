@@ -152,6 +152,7 @@
                     <?php
                     echo "<input name=\"meal_id\" id=\"meal_id\" value=" . $meal_id . " hidden>";
                     echo "<input name=\"store_id\" id=\"store_id\" value=" . $store_id . " hidden>";
+                    echo "<input name=\"is_free\" id=\"is_free\" value=" . $is_free . " hidden>";
                     ?>
                     <div class="flex items-center justify-between px-5 py-4 border-t border-gray-200">
                         <span id="total-title" class="text-xl font-bold"><label for="ship_fee">Nhập phí ship + phí dịch vụ</label></span>
