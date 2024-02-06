@@ -30,18 +30,15 @@
                             <td scope="row" class="px-2 py-4 font-medium text-gray-900"><button type="submit" class="text-left"><?php echo $meal['store_name'] ?></button></td>
                         </form>
                         <td>
-                            <a class="flex items-center justify-center" href="#">
-                                <form action="/detail-meal/show" method='POST'>
-                                    <input type="hidden" name="meal_id" value="<?= htmlspecialchars($meal['id']) ?>">
-                                    <button class="hover:scale-105">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                        </svg>
-                                    </button>
-                                </form>
-                            </a>
-
+                            <form action="/detail-meal/show" class="m-0 flex justify-center items-end" method='POST'>
+                                <input type="hidden" name="meal_id" value="<?= htmlspecialchars($meal['id']) ?>">
+                                <button class="hover:scale-105">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                    </svg>
+                                </button>
+                            </form>
                         </td>
                         <td>
                             <?php
@@ -59,7 +56,7 @@
 
                             <form class="flex items-center justify-center" method="POST" action="<?php echo $link ?>">
                                 <input name="meal_id" id="meal_id" value="<?php echo $meal['id'] ?>" hidden>
-                                <button class="hover:scale-105" type="submit">
+                                <button class="hover:scale-105 text-blue-700" type="submit">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="<?php echo $icon ?>" />
                                     </svg>

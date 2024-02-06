@@ -33,7 +33,7 @@
                                 <?php if (empty($meals)) : ?>
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap text-3xl text-gray-500 text-center" colspan="7">
-                                            <a href="/">Đang ế, chưa có người đặt, ra đặt mở hàng thôi...</a>
+                                            <button type="button" onclick="submitToMeal()">Đang ế, chưa có người đặt. <span class="underline">Click đặt mở hàng thôi...</span></button>
                                         </td>
                                     </tr>
                                 <?php else : ?>
@@ -60,7 +60,15 @@
 
 </section>
 
+<form action="/meal/show" method="post" id='to_meal'>
+    <input type="hidden" name="id" value="<?= htmlspecialchars($detail_meal[0]['id']) ?>">
+</form>
+
 <script>
+    function submitToMeal() {
+        document.getElementById('to_meal').submit();
+    }
+
     const formatNumber = (number) => {
         const roundedNumber = Math.floor(number);
         const formattedNumber = roundedNumber.toLocaleString("vi", {
