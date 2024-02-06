@@ -41,7 +41,6 @@ class HomeController extends AppController {
             $non_meal_status = $request->getGet()->get('non-meal');
             $this->data_ary['non_meal_status'] = $non_meal_status;
         }
-
         $this->data_ary['open_meals'] = $all_meals;
         $this->data_ary['content'] = '/home/homepage';
     }

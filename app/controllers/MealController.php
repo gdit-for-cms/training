@@ -29,8 +29,11 @@ class MealController extends AppController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($_POST['link'])) {
                 $url = $_POST['link'];
+
+                $is_free = isset($_POST['is_free']) ? TRUE : FALSE;
+
                 $meal = new Meal();
-                if ($meal->create($url)) {
+                if ($meal->create($url, $is_free)) {
                     $this->data_ary['success'] = showSuccess('createMeal');
                     header('Location: /home/index');
                     exit;
