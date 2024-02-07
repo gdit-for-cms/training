@@ -38,7 +38,7 @@ class AuthController extends AppController {
     public function loginProcessAction(Request $request) {
         $post = $request->getPost();
 
-        $name = $post->get('name');
+        $name = htmlspecialchars($post->get('name'));
         $pass = $post->get('pass');
 
         $user = new User();
