@@ -134,8 +134,8 @@ class DetailMeal extends Model {
 
                 if (isset($existingItemsAssoc[$foodId])) {
                     // Update existing item
-                    $this->table($this->_table)->update($insertData, "food_id = $foodId");
-                    unset($existingItemsAssoc[$foodId]); // Remove from the array to track deletions
+                    $this->table($this->_table)->update($insertData, "food_id = $foodId " . " AND " . " user_id = $userId ");
+                    unset($existingItemsAssoc[$foodId]);
                 } else {
                     // Insert new item
                     $this->table($this->_table)->insert($insertData);
@@ -144,7 +144,7 @@ class DetailMeal extends Model {
 
             // Delete any items that were not in the submitted data
             foreach ($existingItemsAssoc as $foodId => $item) {
-                $this->table($this->_table)->destroy("food_id = $foodId");
+                $this->table($this->_table)->destroy("food_id = $foodId " . " AND " . " user_id = $userId ");
             }
 
             return ['status' => 'success'];
