@@ -7,6 +7,9 @@ use App\Models\Meal;
 use Core\Http\Request;
 use Core\Http\ResponseTrait;
 use Core\View;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 class DetailMealController extends AppController {
     use ResponseTrait;
@@ -87,6 +90,49 @@ class DetailMealController extends AppController {
 
         $this->data_ary['content'] = '/detail_meal/show';
         View::render('/layouts/master.php', $this->data_ary);
+    }
+
+    public function exportAction() {
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+        $meal_id = $data['meal_id'] ?? null;
+
+        $object_detail_meal = new DetailMeal();
+
+        $meals = $object_detail_meal->getDetailsByUserAndMeal($meal_id);
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Set the cell content and style for the header row
+        $headers = ['#', 'Tên người đặt', 'Món', 'Giá', 'Số lượng', 'Tổng', 'Note'];
+        $column = 1; // Excel columns start at 1
+        foreach ($headers as $header) {
+            $sheet->setCellValueByColumnAndRow($column, 1, $header);
+            $sheet->getStyleByColumnAndRow($column, 1)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $column++;
+        }
+
+        // Fill data
+        $row = 2; // Starting from the second row, because the first row is for headers
+        foreach ($meals as $index => $item) {
+            $sheet->setCellValueByColumnAndRow(1, $row, $index + 1);
+            $sheet->setCellValueByColumnAndRow(2, $row, $item['display_name']);
+            $sheet->setCellValueByColumnAndRow(3, $row, $item['food_name']);
+            $sheet->setCellValueByColumnAndRow(4, $row, $item['price']);
+            $sheet->setCellValueByColumnAndRow(5, $row, $item['amount']);
+            $sheet->setCellValueByColumnAndRow(6, $row, $item['price'] * $item['amount']);
+            $sheet->setCellValueByColumnAndRow(7, $row, $item['describes'] ?: 'N/A');
+            $row++;
+        }
+
+        // Set HTTP headers for download
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="meals.xlsx"');
+
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('php://output');
+        exit;
     }
 
     protected function after() {
