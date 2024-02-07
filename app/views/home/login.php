@@ -30,11 +30,11 @@
                                 <p class="mb-4 text-3xl text-center uppercase text-black">Đăng nhập</p>
                                 <!--Username input-->
                                 <div class="relative mt-4">
-                                    <input type="text" name="name" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" id="exampleFormControlInput1" placeholder="Tên tài khoản" <?php
-                                                                                                                                                                                                    if (isset($pre_name)) {
-                                                                                                                                                                                                        echo 'value="' . $pre_name . '"';
-                                                                                                                                                                                                    }
-                                                                                                                                                                                                    ?> />
+                                    <input type="text" name="name" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" placeholder="Tên tài khoản" <?php
+                                                                                                                                                                    if (isset($pre_name)) {
+                                                                                                                                                                        echo 'value="' . $pre_name . '"';
+                                                                                                                                                                    }
+                                                                                                                                                                    ?> />
                                 </div>
 
                                 <div class="relative mt-2 mx-5">
@@ -47,7 +47,7 @@
 
                                 <!--Password input-->
                                 <div class="relative mt-4">
-                                    <input type="password" name="pass" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" id="exampleFormControlInput11" placeholder="Mật khẩu" />
+                                    <input type="password" name="pass" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" placeholder="Mật khẩu" />
                                 </div>
 
                                 <div class="relative mt-2 mx-5">
@@ -69,7 +69,7 @@
                             <!--Register button-->
                             <form action="/register/register" class="flex items-center justify-between pb-6">
                                 <p class="mb-0 mr-2 text-black ">Bạn chưa có tài khoản?</p>
-                                <button type="submit" name="register" class="inline-block rounded px-6 pb-[6px] pt-2 text-sm font-medium uppercase leading-normal text-white" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
+                                <button type="submit" class="inline-block rounded px-6 pb-[6px] pt-2 text-sm font-medium uppercase leading-normal text-white" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
                                     Đăng ký
                                 </button>
                             </form>

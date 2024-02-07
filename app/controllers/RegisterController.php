@@ -40,92 +40,57 @@ class RegisterController extends AppController {
         // Get value 
         $name = $post->get('name');
         $pass = $post->get('pass');
+        $pass_confirm = $post->get('pass_confirm');
         $hashed_pass = password_hash($pass, PASSWORD_BCRYPT);
         $display_name = $post->get('display_name');
         $image_data = $post->get('image_data');
         // Decode base64 image
         $image_data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $image_data));
 
-        // Query the exist user
-        $exist_user = $this->current_user->table('app_user')
-            ->where('name', '=', $name)->first();
-        $exist_display_name = $this->current_user->table('app_user')
-            ->where('display_name', '=', $display_name)->first();
-
         // Save the previous value
         $this->data_ary['pre_name'] = $name;
         $this->data_ary['pre_display_name'] = $display_name;
 
-        // Image
-        // $files =  $request->getFiles();
-        // var_dump($files);
-        // echo '<br>';
-        // var_dump($post);
-        // echo '<br>';
-        // $data_upload = array();
-        // $all_results = array();
-        // $add_item_result = [
-        //     'all_results' => [],
-        //     'data_upload' => [],
-        // ];
-
-        // $file_key = 'img_code';
-        // $file = $files->get($file_key);
-        //var_dump($file);
-        //echo '<br>';
-
-        //
-        // if (!empty($name) && ($file['size'] > 0)) {
-        //     if ($file['size'] < 4000000) {
-        //         $add_item_result['data_upload'][$file_key] = [
-        //             'name' => $name,
-        //             'file' => $file
-        //         ];
-        //     } else {
-        //         $add_item_result['all_results']['failed'][$file_key] = 'File too large!';
-        //     }
-        // } else {
-        //     $add_item_result['all_results']['failed'][$file_key] = 'Please enter name input and select image file!';
-        // }
-
-        // $data_upload = $add_item_result['data_upload'];
-        // $all_results = $add_item_result['all_results'];
-
-        // if (!empty($data_upload)) {
-        //     foreach ($data_upload as $key => $value) {
-        //         $extension = explode('.', $value['file']['name'])[1];
-        //         //var_dump($extension);
-        //         //echo '<br>';
-
-        //         $file_name = $name . rand(10, 1000000) . time() . '.' . $extension;
-        //         //var_dump($file_name);
-        //         //echo '<br>';
-        //         $file_path = 'img/qr_code/' . $file_name;
-        //     }
+        // Validate
+        // function validate() {
         // }
 
         // Render page
-        if (!$exist_user && !$exist_display_name) {
-            $this->current_user->table('app_user')->create(
-                [
-                    'name' => $name,
-                    'pass' => $hashed_pass,
-                    'display_name' => $display_name,
-                    'img' => $image_data
-                ]
-            );
-            $this->data_ary['create_success'] = 'Register success';
+        if (empty($name) || empty($display_name) || empty($pass) || empty($pass_confirm)) {
+            $this->data_ary['register_error'] = showError('none register value');
             View::render('home/register.php', $this->data_ary);
             exit;
         } else {
-            if ($exist_user) {
-                $this->data_ary['name_error'] = showError('name existed');
+            // Query the exist user
+            $exist_user = $this->current_user->table('app_user')
+                ->where('name', '=', $name)->first();
+            $exist_display_name = $this->current_user->table('app_user')
+                ->where('display_name', '=', $display_name)->first();
+
+            if (!$exist_user && !$exist_display_name && $pass == $pass_confirm) {
+                $this->current_user->table('app_user')->create(
+                    [
+                        'name' => $name,
+                        'pass' => $hashed_pass,
+                        'display_name' => $display_name,
+                        'img' => $image_data
+                    ]
+                );
+                $this->data_ary['register_state'] = 'success';
+                View::render('home/register.php', $this->data_ary);
+                exit;
+            } else {
+                if ($exist_user && $exist_display_name) {
+                    $this->data_ary['register_error'] = showError('both name existed');
+                } else if ($exist_user) {
+                    $this->data_ary['register_error'] = showError('name existed');
+                } else if ($exist_display_name) {
+                    $this->data_ary['register_error'] = showError('display name existed');
+                }
+
+                View::render('home/register.php', $this->data_ary);
+                exit;
             }
-            if ($exist_display_name) {
-                $this->data_ary['display_name_error'] = showError('display name existed');
-            }
-            View::render('home/register.php', $this->data_ary);
-            exit;
         }
     }
 }
