@@ -20,4 +20,9 @@ $request = new Core\Http\Request();
 $router->add('', ['controller' => 'Auth', 'action' => 'login']);
 $router->add('{controller}/{action}');
 
-$router->dispatch($request);
+if (isset($_REQUEST['data']) && empty($_SESSION['user'])) {
+    $_SESSION['previous_url'] = $_SERVER['REQUEST_URI'];
+    $router->dispatch($request);
+} else {
+    $router->dispatch($request);
+}
