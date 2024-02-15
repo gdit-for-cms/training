@@ -70,7 +70,11 @@ class AuthController extends AppController {
 
         $request->saveUser($data_ary);
 
-        header('Location: /home/index');
+        $referer = $_SESSION['previous_url'] ?? '/home/index';
+
+        unset($_SESSION['previous_url']);
+
+        header("Location: $referer");
         exit;
     }
 

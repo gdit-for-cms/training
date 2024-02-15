@@ -49,7 +49,21 @@ class MealController extends AppController {
         $login_user = $request->getUser();
         $login_user_id = $login_user['id'];
 
-        $meal_id = $request->getPost()->get('id');
+        $encrypted = $request->getGet()->get('data');
+
+        // Decode the base64 encoded string
+        $encrypted = base64_decode($encrypted);
+
+        // Split the encrypted data and the IV
+        list($encryptedData, $iv) = explode('::', $encrypted, 2);
+
+        // Decrypt the data
+        $decrypted = openssl_decrypt($encryptedData, 'aes-256-cbc', 'gdit', 0, $iv);
+
+        parse_str($decrypted, $output);
+
+        $meal_id = $output['id'];
+
         $meal = new Meal();
         $detail_meal = $meal->getDetailMealById($meal_id, 0);
         if (!isset($detail_meal)) {

@@ -81,12 +81,26 @@
 
                 </div>
                 <div class="px-6 flex items-center justify-center">
-                    <form action="/meal/show" method="post">
-                        <input type="hidden" name="id" value="<?= htmlspecialchars($meal['id']) ?>">
+
+                    <?php
+                    $data = 'id=' . $meal['id'];
+
+                    // Encryption key
+                    $key = 'gdit';
+
+                    // Encrypt the data
+                    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+                    $encrypted = openssl_encrypt($data, 'aes-256-cbc', $key, 0, $iv);
+                    $encrypted = base64_encode($encrypted . '::' . $iv);
+
+                    // Encrypted link
+                    $encryptedLink = "/meal/show?data=" . urlencode($encrypted);
+                    ?>
+                    <a href="<?php echo $encryptedLink ?>">
                         <button type="submit" class="mx-auto lg:mx-0 gradient text-white font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
                             Đặt món
                         </button>
-                    </form>
+                    </a>
                 </div>
             </div>
         <?php endforeach; ?>
