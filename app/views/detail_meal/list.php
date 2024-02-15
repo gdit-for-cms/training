@@ -106,8 +106,9 @@
       let orderState = true;
 
       let order = {
-          items: {}, // to store food items with their quantities and prices
-          total: 0 // to store the total price
+          // Store food items with their quantities and prices
+          items: {},
+          total: 0
       };
 
       // Get user foods and store to order array:
@@ -322,9 +323,16 @@
                           title: 'Thành công!',
                           text: 'Bạn đã lưu thông tin đặt hàng thành công',
                           icon: 'success',
-                          confirmButtonText: 'Ok'
-                      }).then(() => {
-                          window.location.reload();
+                          showDenyButton: true,
+                          denyButtonText: 'Đóng',
+                          confirmButtonText: 'Xem tổng đơn'
+                      }).then((result) => {
+                          if (result.isConfirmed) {
+                              // Correct way to include PHP variable in JavaScript
+                              window.location.href = '/detail-meal/show?meal_id=' + <?php echo json_encode($detail_meal[0]['id']); ?>;
+                          } else if (result.isDenied) {
+                              window.location.reload();
+                          }
                       });
                   }
               })

@@ -72,8 +72,8 @@ class DetailMealController extends AppController {
     }
 
     public function showAction(Request $request) {
-        $post = $request->getPost();
-        $meal_id = $post->get('meal_id');
+        $get = $request->getGet();
+        $meal_id = $get->get('meal_id');
 
         $meal = new Meal();
         $detail_meal = $meal->getDetailMealById($meal_id);

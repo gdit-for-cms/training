@@ -47,7 +47,7 @@
                                 </div>
                             <?php endif; ?>
                             <div class="relative flex items-center justify-center">
-                                <form action="/detail-meal/show" method='POST' class="hidden" id="<?php echo 'eye_button_' . $meal['id']; ?>">
+                                <form action="/detail-meal/show" method='GET' class="hidden" id="<?php echo 'eye_button_' . $meal['id']; ?>">
                                     <input type="hidden" name="meal_id" value="<?= htmlspecialchars($meal['id']) ?>">
                                 </form>
 

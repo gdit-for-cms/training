@@ -76,6 +76,11 @@
                 </button>
             </div>
             <div class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden mt-2 lg:mt-0 bg-white lg:bg-transparent text-black p-4 lg:p-0 z-20" id="nav-content">
+                <a href="/">
+                    <div class="text-center ms-10 hover:cursor-pointer ring-2 ring-red-900 p-3 min-w-40 bg-white text-gray-900 font-bold text-base lg:text-xl rounded-full shadow opacity-75 focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
+                        Trang chủ
+                    </div>
+                </a>
                 <ul class="list-reset lg:flex justify-end flex-1 items-center mr-3">
                     <!-- Drop down menu -->
                     <div class="dropdown inline-block relative w-50">
@@ -92,10 +97,12 @@
                                                                                                 echo 'https://static.vecteezy.com/system/resources/previews/009/734/564/original/default-avatar-profile-icon-of-social-media-user-vector.jpg';
                                                                                             } ?>" alt="user_img">
                             </div>
-                            <!-- Display user's name -->
-                            <?php if (isset($current_user)) {
-                                echo $current_user['display_name'];
-                            } ?>
+                            <span class="text-center min-w-24">
+                                <!-- Display user's name -->
+                                <?php if (isset($current_user)) {
+                                    echo $current_user['display_name'];
+                                } ?>
+                            </span>
                         </div>
                         <ul class="min-w-full dropdown-menu absolute hidden text-gray-800 pt-1">
                             <li class="text-gray-800 font-bold rounded-full shadow focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
