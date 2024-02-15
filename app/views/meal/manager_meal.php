@@ -30,7 +30,8 @@
                             <td scope="row" class="px-2 py-4 font-medium text-gray-900"><button type="submit" class="text-left"><?php echo $meal['store_name'] ?></button></td>
                         </form>
                         <td>
-                            <form action="/detail-meal/show" class="m-0 flex justify-center items-end" method='POST'>
+
+                            <form action="/detail-meal/show" class="m-0 flex justify-center items-end" method='GET'>
                                 <input type="hidden" name="meal_id" value="<?= htmlspecialchars($meal['id']) ?>">
                                 <button class="hover:scale-105">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

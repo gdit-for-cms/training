@@ -88,7 +88,8 @@ class Meal extends Model {
         $this->table($this->_table)
             ->join('app_user', 'meal.user_id = app_user.id')
             ->join('store', 'meal.store_id = store.id')
-            ->where('meal.closed', '=', 0);
+            ->where('meal.closed', '=', 0)
+            ->orderBy('time_open', 'desc');
 
         $selectColumns = 'meal.id, meal.user_id, meal.store_id, meal.time_open as time_open, meal.closed, meal.is_free, '
             . 'app_user.name as user_meal_name, app_user.display_name as user_meal_display_name, app_user.img_code as user_meal_code, '
