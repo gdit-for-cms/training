@@ -77,7 +77,7 @@
             </div>
             <div class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden mt-2 lg:mt-0 bg-white lg:bg-transparent text-black p-4 lg:p-0 z-20" id="nav-content">
                 <a href="/">
-                    <div class="text-center ms-10 hover:cursor-pointer ring-2 ring-red-900 p-3 min-w-40 bg-white text-gray-900 font-bold text-base lg:text-xl rounded-full shadow opacity-75 focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
+                    <div class="text-center ms-10 hover:cursor-pointer ring-2 ring-red-900 p-3 min-w-40 bg-white text-gray-900 font-bold text-base lg:text-xl rounded-full shadow opacity-65 focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
                         Trang chủ
                     </div>
                 </a>
@@ -108,9 +108,17 @@
                             <li class="text-gray-800 font-bold rounded-full shadow focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
                                 <a href="/user/show" class="flex gap-2 min-w-full rounded-full bg-gray-200 hover:bg-gray-400 py-2 px-4 whitespace-no-wrap" href="#">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z" />
                                     </svg>
                                     <span>Thông tin</span>
+                                </a>
+                            </li>
+                            <li class="text-gray-800 font-bold rounded-full shadow focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
+                                <a href="/detail-meal/display-general-detail" class="flex gap-2 min-w-full rounded-full bg-gray-200 hover:bg-gray-400 py-2 px-4 whitespace-no-wrap" href="#">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                    </svg>
+                                    <span>Lịch sử đặt</span>
                                 </a>
                             </li>
                             <li class="text-gray-800 font-bold rounded-full shadow focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
@@ -293,6 +301,13 @@
             return false;
         }
     </script>
+    <!-- Display alert non meal -->
+    <?php if (isset($_SESSION['non_meal'])) {
+        echo '<script>
+         Swal.fire("Bạn chưa tạo đơn", "Mục này chỉ dành cho host có tạo đơn", "warning");
+       </script>';
+        unset($_SESSION['non_meal']);
+    } ?>
 </body>
 
 </html>

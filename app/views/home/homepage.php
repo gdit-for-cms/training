@@ -136,18 +136,3 @@
         document.getElementById(button_id).submit();
     }
 </script>
-
-<script>
-    // Alert update status
-    const nonMealStatus = <?php if (isset($non_meal_status)) {
-                                echo json_encode($non_meal_status);
-                            } else {
-                                echo 1;
-                            } ?>;
-    if (nonMealStatus === 'true') {
-        Swal.fire('Bạn không có đơn để quản lý', '', 'warning')
-            .then(() => {
-                window.history.pushState({}, '', '/home/index');
-            });
-    }
-</script>
