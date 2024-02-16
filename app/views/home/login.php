@@ -32,7 +32,7 @@
                                 <div class="relative mt-4">
                                     <input type="text" name="name" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" placeholder="Tên tài khoản" <?php
                                                                                                                                                                     if (isset($pre_name)) {
-                                                                                                                                                                        echo 'value="' . $pre_name . '"';
+                                                                                                                                                                        echo 'value="' . htmlspecialchars($pre_name) . '"';
                                                                                                                                                                     }
                                                                                                                                                                     ?> />
                                 </div>

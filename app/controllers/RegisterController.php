@@ -38,11 +38,11 @@ class RegisterController extends AppController {
         $post = $request->getPost();
 
         // Get value 
-        $name = $post->get('name');
+        $name = htmlspecialchars($post->get('name'));
         $pass = $post->get('pass');
         $pass_confirm = $post->get('pass_confirm');
         $hashed_pass = password_hash($pass, PASSWORD_BCRYPT);
-        $display_name = $post->get('display_name');
+        $display_name = htmlspecialchars($post->get('display_name'));
         $image_data = $post->get('image_data');
         // Decode base64 image
         $image_data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $image_data));

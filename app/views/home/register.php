@@ -30,7 +30,7 @@
                                 <div class="relative mt-4">
                                     <input <?php
                                             if (isset($pre_name)) {
-                                                echo 'value="' . $pre_name . '"';
+                                                echo 'value="' . htmlspecialchars($pre_name) . '"';
                                             }
                                             ?> type="text" name="name" id="name" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" placeholder="Tên tài khoản" />
                                 </div>
@@ -47,7 +47,7 @@
                                 <div class="relative mt-4">
                                     <input <?php
                                             if (isset($pre_display_name)) {
-                                                echo 'value="' . $pre_display_name . '"';
+                                                echo 'value="' . htmlspecialchars($pre_display_name) . '"';
                                             }
                                             ?> type="text" name="display_name" id="display_name" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" placeholder="Tên hiển thị" />
                                 </div>
@@ -123,13 +123,8 @@
 
 <script>
     function validateName(name) {
-        for (let i = 0; i < name.length; i++) {
-            let char = name.charAt(i);
-            if (char == ' ') {
-                return false;
-            }
-        }
-        return true;
+        var name_pattern = /^[a-zA-Z0-9]+$/i;
+        return name_pattern.test(name);
     }
 
     function validatePass(pass) {
@@ -146,14 +141,14 @@
         let pass_confirm = document.getElementById('pass_confirm').value;
         let flag = true;
 
-        if (name.trim() == "" || display_name.trim() == "" || pass.trim() == "" || pass_confirm.trim() == "") {
+        if (name.trim() == "" || display_name.trim() == "" || pass == "" || pass_confirm == "") {
             Swal.fire('Vui lòng nhập đầy đủ thông tin', '', 'warning');
             flag = false;
         } else {
             //console.log('name: ' + validateName(name));
             //console.log('pass: ' + validatePass(pass));
             if (!validateName(name)) {
-                Swal.fire('Tên đăng nhập chứa ký tự space', '', 'warning');
+                Swal.fire('Tên đăng nhập chứa ký tự đặc biệt', '', 'warning');
                 flag = false;
             } else
             if (!validatePass(pass)) {
