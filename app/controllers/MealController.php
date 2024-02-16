@@ -25,24 +25,26 @@ class MealController extends AppController {
     }
 
     public function createMealAction(Request $request) {
+        $post = $request->getPost();
+        $url = $post->get('link');
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (isset($_POST['link'])) {
-                $url = $_POST['link'];
+        $url = trim($url);
 
-                $is_free = isset($_POST['is_free']) ? TRUE : FALSE;
+        if (isset($url)) {
 
-                $meal = new Meal();
-                if ($meal->create($url, $is_free)) {
-                    $this->data_ary['success'] = showSuccess('createMeal');
-                    header('Location: /home/index');
-                    exit;
-                }
+            $is_free = isset($_POST['is_free']) ? TRUE : FALSE;
+
+            $meal = new Meal();
+            if ($meal->create($url, $is_free)) {
+                $_SESSION['status_create_meal'] = TRUE;
+                header('Location: /home/index');
+                exit;
+            } else {
+                $_SESSION['status_create_meal'] = FALSE;
+                header('Location: /home/index');
+                exit;
             }
         }
-        $this->data_ary['error'] = showError('loadHTML');
-        header('Location: /home/index');
-        exit;
     }
 
     public function showAction(Request $request) {
