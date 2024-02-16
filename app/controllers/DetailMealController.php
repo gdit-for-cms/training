@@ -16,15 +16,20 @@ class DetailMealController extends AppController {
 
     public array $data_ary;
 
-    function displayGeneralDetailAction(Request $request) {
+    function displayGeneralDetailAction() {
         $detail_meal = new DetailMeal;
         $meal = new Meal;
         $this->data_ary['meals'] = $meal->getMealsByUser();
         if (!$this->data_ary['meals']) {
-            $_SESSION['non_meal'] = TRUE;
             $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/home/index';
-            header('Location: ' . $referer);
-            exit;
+            if (strpos($referer, '/detail-meal/display-general-detail')) {
+                header('Location: /home/index');
+                exit;
+            } else {
+                $_SESSION['non_meal'] = TRUE;
+                header('Location: ' . $referer);
+                exit;
+            }
         }
         $meal_id = 0;
         $flag = FALSE;

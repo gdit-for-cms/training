@@ -122,7 +122,17 @@ if (!empty($user_data[0]['img']) && $user_data[0]['img'] != null) {
                                                                                         }  ?>">
                         <div class="my-4">
                             <label for="display_name" class="block text-lg font-semibold mb-1">Tên hiển thị</label>
-                            <input type="text" id="display_name" name="display_name" value="<?php echo htmlspecialchars($user_data[0]['display_name']); ?>" class="w-full border rounded p-2" />
+                            <input onchange="checkValidate()" type="text" id="display_name" name="display_name" value="<?php echo htmlspecialchars($user_data[0]['display_name']); ?>" class="w-full border rounded p-2" />
+                            <div id="display_name_error" class="text-red-800 hidden">
+                                <div class="flex gap-1 items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+                                    </svg>
+                                    <span id="display_name_error_content">
+                                        Error message here
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                         <div class="my-4">
                             <label for="bank_bin" class="block text-lg font-semibold mb-1">Thông tin ngân hàng (BIN - Bank)</label>
@@ -156,21 +166,46 @@ if (!empty($user_data[0]['img']) && $user_data[0]['img'] != null) {
 </div>
 
 <script>
+    function checkValidate() {
+        var displayName = document.getElementById('display_name').value;
+        var errorDiv = document.getElementById('display_name_error');
+        var errorMessageDiv = document.getElementById('display_name_error_content');
+
+        if (displayName.trim() === '') {
+            errorDiv.classList.remove('hidden');
+            errorMessageDiv.textContent = 'Tên hiển thị không được để trống.';
+            return false;
+        } else if (!/^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+$/.test(displayName.trim())) {
+            errorDiv.classList.remove('hidden');
+            errorMessageDiv.textContent = 'Tên hiển thị chỉ được chứa chữ cái và khoảng trắng.';
+            return false;
+        } else if (displayName.trim().length < 3 || displayName.trim().length > 50) {
+            errorDiv.classList.remove('hidden');
+            errorMessageDiv.textContent = 'Tên hiển thị phải có độ dài từ 3 đến 50 ký tự.';
+            return false;
+        } else {
+            errorDiv.classList.add('hidden');
+            return true;
+        }
+    }
+
     function submitUpdate() {
-        Swal.fire({
-            title: 'Xác nhận cập nhật',
-            text: 'Các thông tin là chính xác và tiến hành cập nhật?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Xác nhận',
-            cancelButtonText: 'Không'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById('update_form').submit();
-            }
-        });
+        if (checkValidate()) {
+            Swal.fire({
+                title: 'Xác nhận cập nhật',
+                text: 'Các thông tin là chính xác và tiến hành cập nhật?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Xác nhận',
+                cancelButtonText: 'Không'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('update_form').submit();
+                }
+            });
+        }
     }
 </script>
 
@@ -193,6 +228,21 @@ if (!empty($user_data[0]['img']) && $user_data[0]['img'] != null) {
             });
     }
 </script>
+
+<?php if (isset($_SESSION['existed_name'])) {
+    $existed_name = htmlspecialchars($_SESSION['existed_name'], ENT_QUOTES, 'UTF-8');
+    if ($existed_name != '?') {
+        echo "<script>
+        Swal.fire('Tên hiển thị \"{$existedName}\" đã được sử dụng', 'Vui lòng thử tên khác', 'error');
+      </script>";
+    } else {
+        echo "<script>
+        Swal.fire('Đã có lỗi xảy ra trong quá trình thực hiện', 'Vui lòng thử lại sau', 'error');
+      </script>";
+    }
+    unset($_SESSION['existed_name']);
+} ?>
+
 
 <!-- Check account name via bank and account number -->
 <!-- <script>

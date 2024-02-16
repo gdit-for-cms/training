@@ -6,6 +6,7 @@ use Core\View;
 use App\models\User;
 use Core\Http\Request;
 use Core\Http\ResponseTrait;
+use Exception;
 
 class UserController extends AppController {
     use ResponseTrait;
@@ -89,9 +90,9 @@ class UserController extends AppController {
         // Decode base64 image
         $image_data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $image_data));
 
-        $display_name = $post->get('display_name');
-        $bank_bin = $post->get('bank_bin');
-        $bank_acc = $post->get('bank_acc');
+        $display_name = htmlspecialchars(trim($post->get('display_name')));
+        $bank_bin = htmlspecialchars($post->get('bank_bin'));
+        $bank_acc = htmlspecialchars($post->get('bank_acc'));
         $update_data = [
             'img' => $image_data,
             'display_name' => $display_name,
@@ -101,20 +102,31 @@ class UserController extends AppController {
 
         $object_user = new User();
 
-        if ($object_user->updateUser($update_data, "id = $current_user_id")) {
-            $user_data = $object_user->getBy('id', '=', $current_user['id']);
-            $data_ary = [
-                'id' => $user_data[0]['id'],
-                'name' => $user_data[0]['name'],
-                'display_name' => $user_data[0]['display_name'],
-                'img' => $user_data[0]['img'],
-            ];
-            $request->saveUser($data_ary);
-            header('Location: /user/show?update=true');
-            exit;
-        } else {
-            header('Location: /user/show?update=false');
-            exit;
+        try {
+            if ($object_user->updateUser($update_data, "id = $current_user_id")) {
+                $user_data = $object_user->getBy('id', '=', $current_user['id']);
+                $data_ary = [
+                    'id' => $user_data[0]['id'],
+                    'name' => $user_data[0]['name'],
+                    'display_name' => $user_data[0]['display_name'],
+                    'img' => $user_data[0]['img'],
+                ];
+                $request->saveUser($data_ary);
+                header('Location: /user/show?update=true');
+                exit;
+            } else {
+                header('Location: /user/show?update=false');
+                exit;
+            }
+        } catch (Exception $e) {
+            $errCode = $e->getCode();
+            if ($errCode == 23000) {
+                $_SESSION['existed_name'] = $display_name;
+                header('Location: /user/show');
+            } else {
+                $_SESSION['existed_name'] = '?';
+                header('Location: /user/show');
+            }
         }
     }
 

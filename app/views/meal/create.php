@@ -128,7 +128,7 @@
 <script>
     function createMeal() {
         // Get the value of link
-        const link = document.getElementById('link').value;
+        const link = document.getElementById('link').value.trim();
         const pattern = /^https:\/\/shopeefood\.vn\//;
 
         // Check link
