@@ -21,7 +21,9 @@ class DetailMealController extends AppController {
         $meal = new Meal;
         $this->data_ary['meals'] = $meal->getMealsByUser();
         if (!$this->data_ary['meals']) {
-            header('Location: /home/index?non-meal=true');
+            $_SESSION['non_meal'] = TRUE;
+            $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/home/index';
+            header('Location: ' . $referer);
             exit;
         }
         $meal_id = 0;
