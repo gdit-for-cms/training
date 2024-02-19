@@ -34,7 +34,7 @@ class User extends Model {
     }
 
     public function create($data) {
-        return $this->insert($data);
+        return $this->table($this->_table)->insert($data);
     }
 
     public function updateUser($data, $condition) {

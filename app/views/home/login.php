@@ -26,7 +26,7 @@
                     <div class="px-4 md:px-0 lg:w-6/12 flex items-center justify-center">
                         <div class="md:m-6 md:p-12 w-3/4 rounded-lg px-4 my-4" style="background: white">
 
-                            <form class="w-full my-4" action="/auth/loginProcess" method="POST">
+                            <form class="w-full mt-4" action="/auth/loginProcess" method="POST">
                                 <p class="mb-4 text-3xl text-center uppercase text-black">Đăng nhập</p>
                                 <!--Username input-->
                                 <div class="relative mt-4">
@@ -59,12 +59,33 @@
                                 </div>
 
                                 <!--Submit button-->
-                                <div class="mt-6 mb-12 pb-1 pt-1 text-center">
-                                    <button class="mb-3 inline-block w-full rounded px-6 pb-2 pt-2.5 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]" type="submit" name="submit" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
+                                <div class="mt-6 mb-2 pb-1 pt-1 text-center">
+                                    <button class="inline-block w-full rounded px-6 pb-2 pt-2.5 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]" type="submit" name="submit" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
                                         Đăng nhập
                                     </button>
                                 </div>
                             </form>
+
+                            <!-- Login with Facebook -->
+                            <?php
+                            $fb = new Facebook\Facebook([
+                                'app_id' => '1535192830662504',
+                                'app_secret' => '02c132f5cc9b005bf5c9dac5eb2cd0f0',
+                                'default_graph_version' => 'v2.10',
+                            ]);
+
+                            $helper = $fb->getRedirectLoginHelper();
+
+                            $permissions = ['email'];
+                            $loginUrl = $helper->getLoginUrl('https://cms209.dev1.local/auth/facebook-login', $permissions);
+                            ?>
+                            <div class="mb-4">
+                                <a href="<?php echo htmlspecialchars($loginUrl) ?> " class="flex items-center justify-center w-full px-4 py-2 space-x-3 text-sm text-center bg-blue-500 text-white transition-colors duration-200 transform border rounded  hover:bg-blue-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
+                                        <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z" />
+                                    </svg>
+                                    <span class="text-sm text-white dark:text-gray-200">ĐĂNG NHẬP VỚI FACEBOOK</span></a>
+                            </div>
 
                             <!--Register button-->
                             <form action="/register/register" class="flex items-center justify-between pb-6">
@@ -74,6 +95,7 @@
                                 </button>
                             </form>
                         </div>
+
                     </div>
 
                     <!-- Right column container with background and description-->
