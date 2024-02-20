@@ -5,16 +5,7 @@ use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\WebDriverDimension;
 
-// Set the path to the directory containing the .env file
-$dotenvPath = realpath(__DIR__ . '/../../'); // Adjust the path as needed
-
-// Load .env file from the correct path
-$dotenv = Dotenv\Dotenv::createImmutable($dotenvPath);
-$dotenv->load();
-
 function getHTMLPage($url) {
-
-
 
     // Configure Selenium WebDriver with Chrome
     $options = new ChromeOptions();
