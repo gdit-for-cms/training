@@ -43,6 +43,7 @@ class RegisterController extends AppController {
         $pass_confirm = $post->get('pass_confirm');
         $hashed_pass = password_hash($pass, PASSWORD_BCRYPT);
         $display_name = htmlspecialchars($post->get('display_name'));
+        $email = htmlspecialchars($post->get('email'));
         $image_data = $post->get('image_data');
         // Decode base64 image
         $image_data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $image_data));
@@ -56,7 +57,7 @@ class RegisterController extends AppController {
         // }
 
         // Render page
-        if (empty($name) || empty($display_name) || empty($pass) || empty($pass_confirm)) {
+        if (empty($name) || empty($display_name) || empty($pass) || empty($pass_confirm) || empty($email)) {
             $this->data_ary['register_error'] = showError('none register value');
             View::render('home/register.php', $this->data_ary);
             exit;
@@ -73,6 +74,7 @@ class RegisterController extends AppController {
                         'name' => $name,
                         'pass' => $hashed_pass,
                         'display_name' => $display_name,
+                        'email' => $email,
                         'img' => $image_data
                     ]
                 );
