@@ -32,14 +32,11 @@
                                             if (isset($pre_name)) {
                                                 echo 'value="' . htmlspecialchars($pre_name) . '"';
                                             }
-                                            ?> type="text" name="name" id="name" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" placeholder="Tên tài khoản" />
+                                            ?> onchange="checkValidateName()" type="text" name="name" id="name" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" placeholder="Tên tài khoản" />
                                 </div>
 
-                                <div class="relative mt-2 mx-5">
-                                    <p class="w-full h-fit text-sm text-red-500">
-                                        <?php if (isset($name_error)) {
-                                            echo $name_error;
-                                        } ?>
+                                <div class="relative mt-2 mx-5 hidden" id="name_error">
+                                    <p class="w-full h-fit text-xs text-red-500" id="name_error_content">
                                     </p>
                                 </div>
 
@@ -49,20 +46,36 @@
                                             if (isset($pre_display_name)) {
                                                 echo 'value="' . htmlspecialchars($pre_display_name) . '"';
                                             }
-                                            ?> type="text" name="display_name" id="display_name" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" placeholder="Tên hiển thị" />
+                                            ?> onchange="checkValidateDisplayName()" type="text" name="display_name" id="display_name" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" placeholder="Tên hiển thị" />
                                 </div>
 
-                                <div class="relative mt-2 mx-5">
-                                    <p class="w-full h-fit text-sm text-red-500">
-                                        <?php if (isset($display_name_error)) {
-                                            echo $display_name_error;
-                                        } ?>
+                                <div class="relative mt-2 mx-5 hidden" id="display_name_error">
+                                    <p class="w-full h-fit text-xs text-red-500" id="display_name_error_content">
+                                    </p>
+                                </div>
+
+                                <!--Your gmail-->
+                                <div class="relative mt-4">
+                                    <input <?php
+                                            if (isset($pre_email)) {
+                                                echo 'value="' . htmlspecialchars($pre_email) . '"';
+                                            }
+                                            ?> onchange="checkValidateEmail()" type="text" name="email" id="email" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" placeholder="Email" />
+                                </div>
+
+                                <div class="relative mt-2 mx-5 hidden" id="email_error">
+                                    <p class="w-full h-fit text-xs text-red-500" id="email_error_content">
                                     </p>
                                 </div>
 
                                 <!--Password input-->
                                 <div class="relative mt-4">
-                                    <input type="password" name="pass" id="pass" x-model="password" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" placeholder="Mật khẩu" />
+                                    <input onchange="checkValidatePass()" type="password" name="pass" id="pass" x-model="password" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" placeholder="Mật khẩu" />
+                                </div>
+
+                                <div class="relative mt-2 mx-5 hidden" id="pass_error">
+                                    <p class="w-full h-fit text-xs text-red-500" id="pass_error_content">
+                                    </p>
                                 </div>
 
                                 <!--Password confirm-->
@@ -88,7 +101,7 @@
                                 </div>
 
                                 <!--Submit button-->
-                                <div class="mt-6 mb-12 pb-1 pt-1 text-center">
+                                <div class="mt-2 mb-12 pb-1 pt-1 text-center">
                                     <button class="mb-2 inline-block w-full rounded px-6 py-2 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]" type="button" onclick="submitButton()" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
                                         Đăng ký
                                     </button>
@@ -122,14 +135,88 @@
 <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.js" defer></script>
 
 <script>
-    function validateName(name) {
-        var name_pattern = /^[a-zA-Z0-9]+$/i;
-        return name_pattern.test(name);
+    function checkValidateName() {
+        var nameEl = document.getElementById('name').value;
+        var nameError = document.getElementById('name_error');
+        var nameErrorContent = document.getElementById('name_error_content');
+
+        if (nameEl.trim() === '') {
+            nameError.classList.remove('hidden');
+            nameErrorContent.textContent = 'Tên đăng nhập không được để trống.';
+            return false;
+        } else if (!/^[a-zA-Z0-9]+$/i.test(nameEl.trim())) {
+            nameError.classList.remove('hidden');
+            nameErrorContent.textContent = 'Tên đăng nhập không được chứa ký tự đặc biệt và khoảng trắng.';
+            return false;
+        } else if (nameEl.trim().length < 3 || nameEl.trim().length > 50) {
+            nameError.classList.remove('hidden');
+            nameErrorContent.textContent = 'Tên đăng nhập có độ dài từ 3 đến 50 ký tự.';
+            return false;
+        } else {
+            nameError.classList.add('hidden');
+            return true;
+        }
     }
 
-    function validatePass(pass) {
-        var password_pattern = /^\S+$/;
-        return password_pattern.test(pass);
+    function checkValidateDisplayName() {
+        var displayNameEl = document.getElementById('display_name').value;
+        var displayNameError = document.getElementById('display_name_error');
+        var displayNameErrorContent = document.getElementById('display_name_error_content');
+
+        if (displayNameEl.trim() === '') {
+            displayNameError.classList.remove('hidden');
+            displayNameErrorContent.textContent = 'Tên hiển thị không được để trống.';
+            return false;
+        } else if (!/^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+$/.test(displayNameEl.trim())) {
+            displayNameError.classList.remove('hidden');
+            displayNameErrorContent.textContent = 'Tên hiển thị chỉ được chứa chữ cái và khoảng trắng.';
+            return false;
+        } else if (displayNameEl.trim().length < 3 || displayNameEl.trim().length > 50) {
+            displayNameError.classList.remove('hidden');
+            displayNameErrorContent.textContent = 'Tên hiển thị phải có độ dài từ 3 đến 50 ký tự.';
+            return false;
+        } else {
+            displayNameError.classList.add('hidden');
+            return true;
+        }
+    }
+
+    function checkValidatePass() {
+        var passEl = document.getElementById('pass').value;
+        var passError = document.getElementById('pass_error');
+        var passErrorContent = document.getElementById('pass_error_content');
+
+        if (passEl === '') {
+            passError.classList.remove('hidden');
+            passErrorContent.textContent = 'Mật khẩu không được để trống.';
+            return false;
+        } else if (!/^[a-zA-Z0-9\S]{6,}$/.test(passEl)) {
+            passError.classList.remove('hidden');
+            passErrorContent.textContent = 'Mật khẩu phải dài hơn 6 ký tự và không chứa khoảng trắng.';
+            return false;
+        } else {
+            passError.classList.add('hidden');
+            return true;
+        }
+    }
+
+    function checkValidateEmail() {
+        var emailEl = document.getElementById('email').value;
+        var emailError = document.getElementById('email_error');
+        var emailErrorContent = document.getElementById('email_error_content');
+
+        if (emailEl.trim() === '') {
+            emailError.classList.remove('hidden');
+            emailErrorContent.textContent = 'Email không được để trống.';
+            return false;
+        } else if (!/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi.test(emailEl)) {
+            emailError.classList.remove('hidden');
+            emailErrorContent.textContent = 'Email phải có dạng example@gmail.com.';
+            return false;
+        } else {
+            emailError.classList.add('hidden');
+            return true;
+        }
     }
 
     // submit function when don't caching any error on FE
@@ -139,20 +226,25 @@
         let display_name = document.getElementById('display_name').value;
         let pass = document.getElementById('pass').value;
         let pass_confirm = document.getElementById('pass_confirm').value;
+        let email = document.getElementById('email').value;
         let flag = true;
 
-        if (name.trim() == "" || display_name.trim() == "" || pass == "" || pass_confirm == "") {
+        if (name.trim() == "" || display_name.trim() == "" || pass == "" || pass_confirm == "" || email == "") {
             Swal.fire('Vui lòng nhập đầy đủ thông tin', '', 'warning');
             flag = false;
         } else {
             //console.log('name: ' + validateName(name));
             //console.log('pass: ' + validatePass(pass));
-            if (!validateName(name)) {
-                Swal.fire('Tên đăng nhập chứa ký tự đặc biệt', '', 'warning');
+            if (!checkValidateName()) {
+                Swal.fire('Tên đăng nhập chưa hợp lệ', '', 'warning');
                 flag = false;
             } else
-            if (!validatePass(pass)) {
-                Swal.fire('Mật khẩu chứa ký tự space', '', 'warning');
+            if (!checkValidateDisplayName()) {
+                Swal.fire('Tên hiển thị chưa hợp lệ', '', 'warning');
+                flag = false;
+            } else
+            if (!checkValidatePass()) {
+                Swal.fire('Mật khẩu chưa hợp lệ', '', 'warning');
                 flag = false;
             } else
             if (pass != pass_confirm) {
