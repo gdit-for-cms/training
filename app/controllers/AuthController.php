@@ -135,9 +135,6 @@ class AuthController extends AppController {
                 echo "<p>Error getting long-lived access token: " . $e->getMessage() . "</p>\n\n";
                 exit;
             }
-
-            echo '<h3>Long-lived Access Token</h3>';
-            var_dump($accessToken->getValue());
         }
 
         // $_SESSION['fb_access_token'] = (string) $accessToken;
@@ -146,10 +143,6 @@ class AuthController extends AppController {
         try {
             $response = $fb->get('/me?fields=id,name,email,picture.type(normal)', $accessToken);
             $user_fb = $response->getGraphUser();
-            var_dump($user_fb);
-            echo 'Name: ' . $user_fb['name'] . '<br>';
-            echo 'Email: ' . $user_fb['email'];
-            echo 'ID' . $user_fb['id'];
 
             // Accessing the profile picture URL
             $picture = $user_fb['picture'];
@@ -178,7 +171,7 @@ class AuthController extends AppController {
             echo 'Facebook SDK returned an error: ' . $e->getMessage();
             exit;
         } catch (ClientException $e) {
-            $image_data = null;
+            $picture_url = 'https://static.vecteezy.com/system/resources/previews/009/734/564/original/default-avatar-profile-icon-of-social-media-user-vector.jpg';
         }
 
         $object_user = new User();
@@ -191,7 +184,7 @@ class AuthController extends AppController {
                 'pass' => password_hash('123456', PASSWORD_BCRYPT),
                 'display_name' => $user_fb['name'],
                 'email' => $user_fb['email'],
-                'img' => $image_data
+                'img' => $picture_url
             ];
             $object_user->create($user_data);
         }

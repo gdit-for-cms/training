@@ -1,3 +1,7 @@
+<!-- Cloudinary Upload Widget -->
+<script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript">
+</script>
+
 <?php
 // Function to call the API and return data
 function getBankData() {
@@ -30,17 +34,12 @@ $banks = getBankData();
 <?php
 $imgSrc = '';
 if (!empty($user_data[0]['img']) && $user_data[0]['img'] != null) {
-    $imageData = $user_data[0]['img'];
-    // Encode the BLOB data to a Base64 string
-    $base64Image = base64_encode($imageData);
-
-    // Construct the SRC attribute for the IMG tag
-    $imgSrc = 'data:image/jpeg;base64,' . $base64Image;
+    $imgSrc = $user_data[0]['img'];;
 } else {
     $imgSrc = null;
 } ?>
 
-<script>
+<!-- <script>
     function dragOverHandler(ev) {
         ev.preventDefault();
     }
@@ -83,7 +82,7 @@ if (!empty($user_data[0]['img']) && $user_data[0]['img'] != null) {
             }
         }
     }
-</script>
+</script> -->
 
 
 <div class="bg-white p-8">
@@ -102,11 +101,16 @@ if (!empty($user_data[0]['img']) && $user_data[0]['img'] != null) {
                                                                                                         echo 'https://static.vecteezy.com/system/resources/previews/009/734/564/original/default-avatar-profile-icon-of-social-media-user-vector.jpg';
                                                                                                     }  ?>" alt="">
                         </div>
-                        <div class="mt-3">
-                            <div class="text-sm text-center text-red-800">Kéo thả để thay đổi hình</div>
+                        <div class="mt-2">
+                            <button id="upload_widget" class="bg-blue-300 hover:bg-blue-500 text-white font-bold py-1 px-4 rounded transition ease-in-out duration-150 flex gap-2 justify-between items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                                </svg>
+                                Đổi ảnh
+                            </button>
                         </div>
                     </div>
-                    <h3 class="text-center text-2xl font-bold mt-2"><?php echo htmlspecialchars($user_data[0]['name']); ?></h3>
+                    <h3 class="text-center text-lg font-bold mt-2"><?php echo htmlspecialchars($user_data[0]['name']); ?></h3>
                 </div>
             </div>
 
@@ -164,6 +168,26 @@ if (!empty($user_data[0]['img']) && $user_data[0]['img'] != null) {
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    var myWidget = cloudinary.createUploadWidget({
+        cloudName: '<?php echo $_ENV['CLOUDINARY_CLOUD_NAME']; ?>',
+        uploadPreset: '<?php echo $_ENV['CLOUDINARY_UPLOAD_PRESET']; ?>',
+        cropping: true
+    }, (error, result) => {
+        if (!error && result && result.event === "success") {
+            console.log('Done! Here is the image info: ', result.info);
+            // Update the src attribute of the img tag
+            document.querySelector("#drop_zone img").src = result.info.secure_url;
+            // Set the value of the hidden input field
+            document.getElementById("image_data").value = result.info.secure_url;
+        }
+    });
+
+    document.getElementById("upload_widget").addEventListener("click", function() {
+        myWidget.open();
+    }, false);
+</script>
 
 <script>
     function checkValidate() {

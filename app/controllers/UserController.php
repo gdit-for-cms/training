@@ -87,9 +87,6 @@ class UserController extends AppController {
         $current_user_id = $current_user['id'];
         $post = $request->getPost();
         $image_data = $post->get('image_data');
-        // Decode base64 image
-        $image_data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $image_data));
-
         $display_name = htmlspecialchars(trim($post->get('display_name')));
         $bank_bin = htmlspecialchars($post->get('bank_bin'));
         $bank_acc = htmlspecialchars($post->get('bank_acc'));

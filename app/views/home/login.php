@@ -69,8 +69,8 @@
                             <!-- Login with Facebook -->
                             <?php
                             $fb = new Facebook\Facebook([
-                                'app_id' => '1535192830662504',
-                                'app_secret' => '02c132f5cc9b005bf5c9dac5eb2cd0f0',
+                                'app_id' => $_ENV['FACEBOOK_APP_ID'],
+                                'app_secret' => $_ENV['FACEBOOK_APP_SECRET'],
                                 'default_graph_version' => 'v2.10',
                             ]);
 

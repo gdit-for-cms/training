@@ -92,12 +92,7 @@
                         <div id="navAction" class="hover:cursor-pointer ring-2 ring-red-900 min-w-44 flex items-center gap-2 p-3 bg-white text-gray-900 font-bold rounded-full shadow opacity-75 focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
                             <div class="w-8 h-8 rounded-full overflow-hidden">
                                 <img class="w-full h-full object-cover rounded-full" src="<?php if (isset($current_user) && $current_user['img'] != null) {
-                                                                                                $icon_data = $current_user['img'];
-                                                                                                // Encode the BLOB data to a Base64 string
-                                                                                                $base64_icon = base64_encode($icon_data);
-
-                                                                                                // Construct the SRC attribute for the IMG tag
-                                                                                                echo 'data:image/jpeg;base64,' . $base64_icon;
+                                                                                                echo $current_user['img'];
                                                                                             } else {
                                                                                                 echo 'https://static.vecteezy.com/system/resources/previews/009/734/564/original/default-avatar-profile-icon-of-social-media-user-vector.jpg';
                                                                                             } ?>" alt="user_img">
