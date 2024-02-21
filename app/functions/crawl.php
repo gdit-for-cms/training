@@ -7,14 +7,21 @@ use Facebook\WebDriver\WebDriverDimension;
 
 function getHTMLPage($url) {
 
-    // Configure Selenium WebDriver with Chrome
     $options = new ChromeOptions();
     $options->addArguments(['--headless', '--no-sandbox', '--disable-dev-shm-usage']);
+
+    // Set longer timeout values
+    $timeouts = [
+        'pageLoad' => 600000, // 10 minutes for page load
+        'script' => 120000, // 2 minutes for scripts
+    ];
+
     $capabilities = DesiredCapabilities::chrome();
     $capabilities->setCapability(ChromeOptions::CAPABILITY, $options);
+    $capabilities->setCapability('timeouts', $timeouts); //
 
     // Use environment variable for Selenium WebDriver hub URL
-    $seleniumHubUrl = getenv('SELENIUM_HUB_URL') ?: 'http://localhost:4444/wd/hub';
+    $seleniumHubUrl = $_ENV['SELENIUM_HUB_URL'] ?: 'http://localhost:4444/wd/hub';
 
     //  Call driver
     $driver = RemoteWebDriver::create($seleniumHubUrl, $capabilities);
