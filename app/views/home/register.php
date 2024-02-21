@@ -48,7 +48,7 @@
 
                                 <!--Your gmail-->
                                 <div class="relative mt-4">
-                                    <input id='email' onchange="checkValidateEmail()" type="text" name="email" id="email" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" placeholder="Email" />
+                                    <input type='text' onchange="checkValidateEmail()" id='email' name="email" id="email" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" placeholder="Email" />
                                 </div>
 
                                 <div class="relative mt-2 mx-5 hidden" id="email_error">
@@ -224,16 +224,16 @@
             if (!checkValidateName()) {
                 Swal.fire('Tên đăng nhập chưa hợp lệ', '', 'warning');
                 flag = false;
-            } else
-            if (!checkValidateDisplayName()) {
+            } else if (!checkValidateDisplayName()) {
                 Swal.fire('Tên hiển thị chưa hợp lệ', '', 'warning');
                 flag = false;
-            } else
-            if (!checkValidatePass()) {
+            } else if (!checkValidatePass()) {
                 Swal.fire('Mật khẩu chưa hợp lệ', '', 'warning');
                 flag = false;
-            } else
-            if (pass != pass_confirm) {
+            } else if (!checkValidateEmail()) {
+                Swal.fire('Email chưa hợp lệ', '', 'warning');
+                flag = false;
+            } else if (pass != pass_confirm) {
                 Swal.fire('Mật khẩu không trùng khớp', '', 'warning');
                 flag = false;
             }
