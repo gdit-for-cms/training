@@ -77,7 +77,7 @@
                             $helper = $fb->getRedirectLoginHelper();
 
                             $permissions = ['email'];
-                            $loginUrl = $helper->getLoginUrl('https://cms209.dev1.local/auth/facebook-login', $permissions);
+                            $loginUrl = $helper->getLoginUrl($_ENV['FACEBOOK_URL_LOGIN'], $permissions);
                             ?>
                             <div class="mb-4">
                                 <a href="<?php echo htmlspecialchars($loginUrl) ?> " class="flex items-center justify-center w-full px-4 py-2 space-x-3 text-sm text-center bg-blue-500 text-white transition-colors duration-200 transform border rounded  hover:bg-blue-600">

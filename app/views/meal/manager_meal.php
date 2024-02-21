@@ -128,7 +128,7 @@
                                         ?>
                                     </td>
                                     <td class="px-2 py-2 text-base bg-white border-b border-gray-200">
-                                        <?php echo $detail_meal['describes']; ?>
+                                        <?php echo htmlspecialchars($detail_meal['describes']); ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -244,12 +244,27 @@
     function setFinalPrice() {
         let discount = document.getElementById("discount").value * 1;
         let ship_fee = document.getElementById("ship_fee").value * 1;
-        console.log(discount);
         document.getElementById("final_price").innerText = formatNumber(total + ship_fee - discount);
     }
 
     function confirmOrder() {
         let message = 'Hãy chắc chắn đơn hàng đã được giao thành công trước khi chốt';
+        let discount = document.getElementById("discount").value * 1;
+        let ship_fee = document.getElementById("ship_fee").value * 1;
+        if (total + ship_fee - discount < 0) {
+            message = 'Tổng tiền của bạn đang bị âm kìa'
+            Swal.fire({
+                title: 'Thông báo',
+                text: message,
+                icon: 'warning',
+                showConfirmButton: false,
+                showCancelButton: true,
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Đóng',
+                timer: 5000
+            })
+            return;
+        }
         Swal.fire({
             title: 'Chốt đơn',
             text: message,
