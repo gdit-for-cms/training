@@ -113,14 +113,14 @@
                                     <span>Thông tin</span>
                                 </a>
                             </li>
-                            <li class="text-gray-800 font-bold rounded-full shadow focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
+                            <!-- <li class="text-gray-800 font-bold rounded-full shadow focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
                                 <a href="/detail-meal/display-general-detail" class="flex gap-2 min-w-full rounded-full bg-gray-200 hover:bg-gray-400 py-2 px-4 whitespace-no-wrap" href="#">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                     </svg>
                                     <span>Lịch sử đặt</span>
                                 </a>
-                            </li>
+                            </li> -->
                             <li class="text-gray-800 font-bold rounded-full shadow focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
                                 <a href="/detail-meal/display-general-detail" class="flex gap-2 min-w-full rounded-full bg-gray-200 hover:bg-gray-400 py-2 px-4 whitespace-no-wrap" href="#">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

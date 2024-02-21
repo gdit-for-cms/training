@@ -4,63 +4,74 @@ use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\WebDriverDimension;
+use App\Config;
 
-function getHTMLPage($url) {
-
-    $options = new ChromeOptions();
-    $options->addArguments(['--headless', '--no-sandbox', '--disable-dev-shm-usage']);
-
-    // Set longer timeout values
-    $timeouts = [
-        'pageLoad' => 600000, // 10 minutes for page load
-        'script' => 120000, // 2 minutes for scripts
-    ];
-
-    $capabilities = DesiredCapabilities::chrome();
-    $capabilities->setCapability(ChromeOptions::CAPABILITY, $options);
-    $capabilities->setCapability('timeouts', $timeouts); //
-
-    // Use environment variable for Selenium WebDriver hub URL
-    $seleniumHubUrl = $_ENV['SELENIUM_HUB_URL'] ?: 'http://localhost:4444/wd/hub';
-
-    //  Call driver
-    $driver = RemoteWebDriver::create($seleniumHubUrl, $capabilities);
-
-    // Set the browser window size to a large dimension
-    $width = 1920;  // You can adjust the width as needed
-    $height = 20000; // Set a very large height
-    $driver->manage()->window()->setSize(new WebDriverDimension($width, $height));
-
-    // Load target website
-    $driver->get($url);
-
-    // Get initial height of the webpage
-    $lastHeight = $driver->executeScript('return document.body.scrollHeight');
-
+function getHTMLPage($url, $maxRetries = 5) {
+    $retryCount = 0;
+    $maxRetries = Config::RETRY_CRAWL_TIMES;
     $pageSource = ""; // Initialize an empty string to store the entire page source
 
-    while (true) {
-        // Scroll down to the bottom
-        $driver->executeScript('window.scrollTo(0, document.body.scrollHeight);');
+    while ($retryCount < $maxRetries) {
+        try {
+            $options = new ChromeOptions();
+            $options->addArguments(['--headless', '--no-sandbox', '--disable-dev-shm-usage']);
 
-        // Wait for content to load
-        sleep(10);
+            // Set longer timeout values
+            $timeouts = [
+                'pageLoad' => 600000, // 10 minutes for page load
+                'script' => 120000, // 2 minutes for scripts
+            ];
 
-        // Get new height
-        $newHeight = $driver->executeScript('return document.body.scrollHeight');
+            $capabilities = DesiredCapabilities::chrome();
+            $capabilities->setCapability(ChromeOptions::CAPABILITY, $options);
+            $capabilities->setCapability('timeouts', $timeouts);
 
-        if ($newHeight == $lastHeight) {
-            break; // Break the loop if the height hasn't changed
+            // Use environment variable for Selenium WebDriver hub URL
+            $seleniumHubUrl = $_ENV['SELENIUM_HUB_URL'] ?: 'http://localhost:4444/wd/hub';
+
+            // Call driver
+            $driver = RemoteWebDriver::create($seleniumHubUrl, $capabilities);
+
+            // Set the browser window size to a large dimension
+            $driver->manage()->window()->setSize(new WebDriverDimension(1920, 20000));
+
+            // Load target website
+            $driver->get($url);
+
+            // Your existing scrolling logic to capture the page source...
+            $lastHeight = $driver->executeScript('return document.body.scrollHeight');
+            while (true) {
+                $driver->executeScript('window.scrollTo(0, document.body.scrollHeight);');
+                sleep(10); // Wait for content to load
+                $newHeight = $driver->executeScript('return document.body.scrollHeight');
+                if ($newHeight == $lastHeight) {
+                    break; // Break the loop if the height hasn't changed
+                }
+                $lastHeight = $newHeight;
+                $currentSource = $driver->getPageSource();
+                $pageSource .= $currentSource; // Append the new content
+            }
+
+            // If everything goes well, break out of the retry loop
+            break;
+        } catch (Exception $e) {
+            // Log or handle the exception as needed
+            // Increase the retry counter
+            $retryCount++;
+            // Optionally, log the retry attempt
+            echo "Attempt $retryCount failed: " . $e->getMessage() . "\nRetrying...\n";
+        } finally {
+            // Ensure the browser is always closed after each attempt
+            if (isset($driver)) {
+                $driver->quit();
+            }
         }
-
-        $lastHeight = $newHeight;
-
-        // Get the current page source and append it to $pageSource
-        $currentSource = $driver->getPageSource();
-        $pageSource .= $currentSource; // Append the new content
     }
-    // Close the browser
-    $driver->quit();
+
+    if ($retryCount == $maxRetries) {
+        // Handle the case where all retries have failed
+        echo "Failed to load the page after $maxRetries attempts.";
+    }
 
     return $pageSource;
 }
