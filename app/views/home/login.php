@@ -30,33 +30,46 @@
                                 <p class="mb-4 text-3xl text-center uppercase text-black">Đăng nhập</p>
                                 <!--Username input-->
                                 <div class="relative mt-4">
-                                    <input type="text" name="name" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" placeholder="Tên tài khoản" <?php
-                                                                                                                                                                    if (isset($pre_name)) {
-                                                                                                                                                                        echo 'value="' . htmlspecialchars($pre_name) . '"';
-                                                                                                                                                                    }
-                                                                                                                                                                    ?> />
+                                    <input id="username" type="text" name="name" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" placeholder="Tên tài khoản" <?php
+                                                                                                                                                                                    if (isset($_SESSION['pre_name'])) {
+                                                                                                                                                                                        echo 'value="' . htmlspecialchars($_SESSION['pre_name']) . '"';
+                                                                                                                                                                                    }
+                                                                                                                                                                                    unset($_SESSION['pre_name']);
+                                                                                                                                                                                    ?> />
                                 </div>
 
-                                <div class="relative mt-2 mx-5">
-                                    <p class="w-full h-fit text-sm text-red-500 ">
-                                        <?php if (isset($name_error)) {
-                                            echo $name_error;
-                                        } ?>
-                                    </p>
-                                </div>
+                                <?php if (isset($_SESSION['name_error'])) : ?>
+                                    <script>
+                                        Swal.fire({
+                                            title: '<?php echo $_SESSION['name_error']; ?>',
+                                            text: 'Vui lòng thử lại',
+                                            icon: 'error',
+                                            confirmButtonText: 'OK'
+                                        });
+                                    </script>
+                                    <?php unset($_SESSION['name_error']) ?>
+                                <?php endif; ?>
+
 
                                 <!--Password input-->
                                 <div class="relative mt-4">
                                     <input type="password" name="pass" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" placeholder="Mật khẩu" />
                                 </div>
 
-                                <div class="relative mt-2 mx-5">
-                                    <p class="w-full h-fit text-sm text-red-500">
-                                        <?php if (isset($pass_error)) {
-                                            echo $pass_error;
-                                        } ?>
-                                    </p>
-                                </div>
+                                <?php if (isset($_SESSION['pass_error']) && isset($_SESSION['pre_name_pass'])) : ?>
+                                    <script>
+                                        Swal.fire({
+                                            title: '<?php echo $_SESSION['pass_error']; ?>',
+                                            text: 'Vui lòng thử lại',
+                                            icon: 'error',
+                                            confirmButtonText: 'OK'
+                                        });
+                                        document.getElementById('username').value = '<?php echo $_SESSION['pre_name_pass']; ?>'
+                                        <?php unset($_SESSION['name_error']);
+                                        unset($_SESSION['pre_name_pass']) ?>
+                                    </script>
+                                <?php endif; ?>
+
 
                                 <!--Submit button-->
                                 <div class="mt-6 mb-2 pb-1 pt-1 text-center">
@@ -104,12 +117,22 @@
                             <img src="../img/PHP_Food_Code_logo_large.png" alt="PHP FoodCode">
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Validate Form Login -->
+    <script>
+        document.querySelector('form').onsubmit = function(e) {
+            var name = document.querySelector('input[name="name"]').value.trim();
+            var pass = document.querySelector('input[name="pass"]').value;
+            if (!name || !pass) {
+                Swal.fire('Vui lòng nhập đầy đủ thông tin', '', 'warning');
+                e.preventDefault();
+            }
+        };
+    </script>
 </body>
 
 </html>

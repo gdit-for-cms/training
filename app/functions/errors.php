@@ -2,8 +2,8 @@
 
 function showError($errorName) {
     $error_ary = [
-        "login name" => 'Tên đăng nhập sai',
-        "login password" => 'Mật khẩu sai',
+        "login name" => 'Tên đăng nhập không tồn tại',
+        "login password" => 'Mật khẩu không đúng',
         "create" => 'Create failed',
         "existed" => 'Object has been exist',
         "name existed" => 'name existed',
@@ -22,7 +22,8 @@ function showError($errorName) {
         "password" => "The entered text must be password format",
         "pageExisted" => "'page' you selected does not exist",
         "loadHTML" => 'Can not load HTML from your page, please check link and try again',
-        "nonMeal" => 'Bạn không có đơn nào để quản lí'
+        "nonMeal" => 'Bạn không có đơn nào để quản lí',
+        "email existed" => 'email existed'
     ];
     if ($error_ary[$errorName]) {
         return $error_ary[$errorName];

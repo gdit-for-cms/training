@@ -5,6 +5,7 @@ namespace App\Controllers;
 use Core\View;
 use App\models\User;
 use Core\Http\Request;
+use PDOException;
 
 class RegisterController extends AppController {
     public array $data_ary;
@@ -44,22 +45,21 @@ class RegisterController extends AppController {
         $hashed_pass = password_hash($pass, PASSWORD_BCRYPT);
         $display_name = htmlspecialchars($post->get('display_name'));
         $email = htmlspecialchars($post->get('email'));
-        $image_data = $post->get('image_data');
-        // Decode base64 image
-        $image_data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $image_data));
+        $image_data = htmlspecialchars($post->get('image_data'));
 
-        // Save the previous value
-        $this->data_ary['pre_name'] = $name;
-        $this->data_ary['pre_display_name'] = $display_name;
+        // Store a data input in Session to give information back to form if error.
 
-        // Validate
-        // function validate() {
-        // }
+        $data_input = [
+            'pre_name' => $name,
+            'pre_display_name' => $display_name,
+            'email' => $email
+        ];
+
+        $_SESSION['data_input'] = $data_input;
 
         // Render page
         if (empty($name) || empty($display_name) || empty($pass) || empty($pass_confirm) || empty($email)) {
-            $this->data_ary['register_error'] = showError('none register value');
-            View::render('home/register.php', $this->data_ary);
+            header('Location: /home/register');
             exit;
         } else {
             // Query the exist user
@@ -67,30 +67,38 @@ class RegisterController extends AppController {
                 ->where('name', '=', $name)->first();
             $exist_display_name = $this->current_user->table('app_user')
                 ->where('display_name', '=', $display_name)->first();
-
-            if (!$exist_user && !$exist_display_name && $pass == $pass_confirm) {
-                $this->current_user->table('app_user')->create(
-                    [
-                        'name' => $name,
-                        'pass' => $hashed_pass,
-                        'display_name' => $display_name,
-                        'email' => $email,
-                        'img' => $image_data
-                    ]
-                );
-                $this->data_ary['register_state'] = 'success';
-                View::render('home/register.php', $this->data_ary);
-                exit;
-            } else {
-                if ($exist_user && $exist_display_name) {
-                    $this->data_ary['register_error'] = showError('both name existed');
-                } else if ($exist_user) {
-                    $this->data_ary['register_error'] = showError('name existed');
-                } else if ($exist_display_name) {
-                    $this->data_ary['register_error'] = showError('display name existed');
+            $exist_email = $this->current_user->table('app_user')
+                ->where('email', '=', $email)->first();
+            try {
+                if (!$exist_user && !$exist_display_name && !$exist_email && $pass == $pass_confirm) {
+                    $this->current_user->table('app_user')->create(
+                        [
+                            'name' => $name,
+                            'pass' => $hashed_pass,
+                            'display_name' => $display_name,
+                            'email' => $email,
+                            'img' => $image_data
+                        ]
+                    );
+                    unset($_SESSION['data_input']);
+                    $_SESSION['register_state'] = 'success';
+                    header('Location: /register/register');
+                    exit;
+                } else {
+                    if ($exist_user && $exist_display_name) {
+                        $_SESSION['register_error'] = showError('both name existed');
+                    } else if ($exist_user) {
+                        $_SESSION['register_error'] = showError('name existed');
+                    } else if ($exist_display_name) {
+                        $_SESSION['register_error'] = showError('display name existed');
+                    } else if ($exist_email) {
+                        $_SESSION['register_error'] = showError('email existed');
+                    }
+                    header('Location: /register/register');
+                    exit;
                 }
-
-                View::render('home/register.php', $this->data_ary);
+            } catch (PDOException $e) {
+                var_dump($e);
                 exit;
             }
         }
