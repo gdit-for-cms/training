@@ -21,7 +21,7 @@ class OrderController extends AppController {
 
         $meal_id = $_POST['meal_id'];
         $store_id = $_POST['store_id'];
-        $is_free = $_POST['is_free'];
+        $is_free = intval($_POST['is_free']);
 
         if (isset($_POST['ship_fee']) && !empty($_POST['ship_fee'])) {
             $ship_fee = $_POST['ship_fee'];
