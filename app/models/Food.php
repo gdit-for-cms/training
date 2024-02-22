@@ -13,9 +13,9 @@ class Food extends Model {
 
     private $_table = 'food';
 
-    function createListFood($id, $name_list, $price_list, $img_list) {
+    function createListFood($id, $name_list, $price_list, $img_list, $status_list) {
         $pdo = parent::getDB();
-        $sql = "INSERT INTO food (name, price, store_id, image, deleted) VALUES (?, ?, ?, ?, 0)";
+        $sql = "INSERT INTO food (name, price, store_id, image, deleted, is_over) VALUES (?, ?, ?, ?, 0, ?)";
         $stmt = $pdo->prepare($sql);
         $count = count($name_list);
         $pdo->beginTransaction();
@@ -23,34 +23,38 @@ class Food extends Model {
             $name_food = $name_list[$i];
             $price_food = str_replace(',', '', $price_list[$i]);
             $image_food = $img_list[$i];
+            $is_over = $status_list[$i];
             $stmt->bindParam(1, $name_food);
             $stmt->bindParam(2, $price_food, PDO::PARAM_INT);
             $stmt->bindParam(3, $id, PDO::PARAM_INT);
             $stmt->bindParam(4, $image_food);
+            $stmt->bindParam(5, $is_over, PDO::PARAM_INT);
             $stmt->execute();
         }
         $pdo->commit();
     }
 
-    function createFood($id, $name_food, $price_food, $image_food) {
+    function createFood($id, $name_food, $price_food, $image_food, $is_over = 0) {
         $pdo = parent::getDB();
-        $sql = "INSERT INTO food (name, price, store_id, image, deleted) VALUES (?, ?, ?, ?, 0)";
+        $sql = "INSERT INTO food (name, price, store_id, image, deleted, is_over) VALUES (?, ?, ?, ?, 0, ?)";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(1, $name_food);
         $stmt->bindParam(2, $price_food, PDO::PARAM_INT);
         $stmt->bindParam(3, $id, PDO::PARAM_INT);
         $stmt->bindParam(4, $image_food);
+        $stmt->bindParam(5, $is_over, PDO::PARAM_INT);
         $result = $stmt->execute();
         return $result;
     }
 
-    function updateFood($id, $price_food, $image_food) {
+    function updateFood($id, $price_food, $image_food, $is_over = 0) {
         $pdo = parent::getDB();
-        $sql = "UPDATE food SET price = ?, image = ? WHERE id = ?";
+        $sql = "UPDATE food SET price = ?, image = ?, is_over = ? WHERE id = ?";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(1, $price_food, PDO::PARAM_INT);
         $stmt->bindParam(2, $image_food);
-        $stmt->bindParam(3, $id, PDO::PARAM_INT);
+        $stmt->bindParam(3, $is_over, PDO::PARAM_INT);
+        $stmt->bindParam(4, $id, PDO::PARAM_INT);
         $result = $stmt->execute();
         return $result;
     }
@@ -58,7 +62,7 @@ class Food extends Model {
     function getFoodFromStore($id) {
         $pdo = parent::getDB();
         $list_food = array();
-        $sql = "SELECT f.id, f.name, f.price, f.image FROM food f JOIN store s ON f.store_id = s.id WHERE s.id = :id AND f.deleted = 0";
+        $sql = "SELECT f.id, f.name, f.price, f.image, f.is_over FROM food f JOIN store s ON f.store_id = s.id WHERE s.id = :id AND f.deleted = 0";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
