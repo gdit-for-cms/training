@@ -144,14 +144,14 @@
                     <h6 class="px-1 py-1 bg-white border-b border-red-200 text-sm font-bold text-center">*Nhớ đóng đơn trước khi bắt đầu đặt nha</h6>
                 </div>
 
-
-
-                <form id="submit_order" action="/order/create-order" method="POST" class="mt-5">
-                    <?php
-                    echo "<input name=\"meal_id\" id=\"meal_id\" value=" . $meal_id . " hidden>";
-                    echo "<input name=\"store_id\" id=\"store_id\" value=" . $store_id . " hidden>";
-                    echo "<input name=\"is_free\" id=\"is_free\" value=" . $is_free . " hidden>";
-                    ?>
+                <?php
+                if ($status) {
+                    echo    '<form id="submit_order" action="/order/create-order" method="POST" class="mt-5">
+                    
+                     <input name="meal_id" id="meal_id" value=" ' . $meal_id . '" hidden>
+                     <input name="store_id" id="store_id" value=" ' . $store_id . ' " hidden>
+                     <input name="is_free" id="is_free" value=" ' . htmlspecialchars($is_free) . ' " hidden>
+                    
                     <div class="flex items-center justify-between px-5 py-4 border-t border-gray-200">
                         <span id="total-title" class="text-xl font-bold"><label for="ship_fee">Nhập phí ship + phí dịch vụ</label></span>
                         <span id="total-price" class="text-xl font-bold border"><input class="text-end" onchange="setFinalPrice()" style="color: black;" type="number" name="ship_fee" id="ship_fee" value="0"></span>
@@ -167,22 +167,14 @@
                         </span>
                     </div>
                     <!-- Confirm Button -->
-                    <?php
-                    if ($status) {
-                        echo "         <div class=\"px-5 py-4\">
-                        <button type=\"button\" onclick=\"confirmOrder()\" class=\"w-full px-4 py-2 font-bold text-white bg-green-600 rounded hover:bg-green-700\">
+                       <div class="px-5 py-4\">
+                        <button type="button" onclick="confirmOrder()" class="w-full px-4 py-2 font-bold text-white bg-green-600 rounded hover:bg-green-700\">
                             Chốt đơn
                         </button>
-                    </div>";
-                    } else {
-                        echo "         <div class=\"px-5 py-4\">
-                        <button type=\"button\" onclick=\"noti2()\" class=\"w-full px-4 py-2 font-bold text-white bg-green-600 rounded hover:bg-green-700\">
-                            Chốt đơn
-                        </button>
-                        </div>";
-                    }
-                    ?>
-                </form>
+                    </div>    
+                </form>';
+                }
+                ?>
 
             </div>
         </div>
@@ -279,19 +271,6 @@
                 document.getElementById('submit_order').submit();
             }
         });
-    }
-
-    function noti2() {
-        let message = 'Bạn phải đóng đơn trước khi chốt';
-        Swal.fire({
-            text: message,
-            icon: 'warning',
-            showCancelButton: true,
-            showConfirmButton: false,
-            cancelButtonColor: '#d33',
-            cancelButtonText: 'Đóng'
-
-        })
     }
 
     setFinalPrice();
