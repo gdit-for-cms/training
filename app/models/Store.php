@@ -41,7 +41,7 @@ class Store extends Model {
         return $result;
     }
 
-    function updateStore($id, $name_list_crawl, $price_list_crawl, $img_list_crawl) {
+    function updateStore($id, $name_list_crawl, $price_list_crawl, $img_list_crawl, $status_list_crawl) {
         $food = new Food();
         $food_list = $food->getFoodFromStore($id);
         $db_length = count($food_list);
@@ -51,11 +51,11 @@ class Store extends Model {
             $flag = false;
             for ($j = 0; $j < count($food_list); $j++) {
                 if ($food_list[$j]->name === $name_list_crawl[$i]) {
-                    if ($food_list[$j]->price === $price_list_crawl[$i] && $food_list[$j]->image === $img_list_crawl[$i]) {
+                    if ($food_list[$j]->price === $price_list_crawl[$i] && $food_list[$j]->image === $img_list_crawl[$i] && $food_list[$j]->is_over == $status_list_crawl[$i]) {
                         //nothing happens
                     } else {
 
-                        $food->updateFood($food_list[$j]->id, $price_list_crawl[$i], $img_list_crawl[$i]);
+                        $food->updateFood($food_list[$j]->id, $price_list_crawl[$i], $img_list_crawl[$i], $status_list_crawl[$i]);
                     }
                     array_splice($food_list, $j, 1);
                     $flag = true;
@@ -63,7 +63,7 @@ class Store extends Model {
                 }
             }
             if (!$flag) {
-                $food->createFood($id, $name_list_crawl[$i], $price_list_crawl[$i], $img_list_crawl[$i]);
+                $food->createFood($id, $name_list_crawl[$i], $price_list_crawl[$i], $img_list_crawl[$i], $status_list_crawl[$i]);
             }
         }
         //delete food if dont have at shopee
@@ -79,8 +79,8 @@ class Store extends Model {
         }
 
         $store = new Store();
-        $id = $store->checkStore($url);
         $pageSource = getHTMLPage($url);
+        $id = $store->checkStore($url);
 
         $options = LIBXML_NOERROR | LIBXML_NOWARNING;
         $dom = new DOMDocument();
@@ -97,23 +97,24 @@ class Store extends Model {
         $img_list = getImageFromHTML($dom);
         $restaurant_name = getNameStoreFromHTML($dom);
         $img_store = getImageStoreFromHTML($dom);
+        $status_list = getStatusFoodFromHTML($dom);
 
         if (count($name_list) === 0) {
             return -1;
         }
 
-        if (count($name_list) != count($price_list) || count($name_list) != count($img_list)) {
-
-            return -1;
+        if (count($name_list) != count($price_list) || count($name_list) != count($img_list) || count($name_list) != count($status_list)) {
+            echo 1;
+            exit;
         }
 
 
         if ($id === 0) {
             $store->createStore($restaurant_name, $url, $img_store);
             $id = $store->checkStore($url);
-            $food->createListFood($id, $name_list, $price_list, $img_list);
+            $food->createListFood($id, $name_list, $price_list, $img_list, $status_list);
         } else {
-            $this->updateStore($id, $name_list, $price_list, $img_list);
+            $this->updateStore($id, $name_list, $price_list, $img_list, $status_list);
         }
         return $id;
     }

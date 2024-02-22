@@ -152,3 +152,19 @@ function getNameFromHTML($dom) {
 
     return $name_list;
 }
+
+function getStatusFoodFromHTML($dom) {
+    $xpath = new DOMXPath($dom);
+    $status_list = array();
+    $divs = $xpath->query('//div[contains(@class, "col-auto adding-food-cart txt-right")]');
+    foreach ($divs as $div) {
+        $childDiv = $div->getElementsByTagName('div');
+        if ($childDiv[0]->getAttribute('class') == "btn-over") {
+            array_push($status_list, 1);
+        } else {
+            array_push($status_list, 0);
+        }
+    }
+
+    return $status_list;
+}
