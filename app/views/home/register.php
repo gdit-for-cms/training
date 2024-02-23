@@ -199,7 +199,7 @@
             return false;
         } else if (!/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi.test(emailEl)) {
             emailError.classList.remove('hidden');
-            emailErrorContent.textContent = 'Email phải có dạng example@gmail.com.';
+            emailErrorContent.textContent = 'Email phải có dạng [your-email]@[domain]';
             return false;
         } else {
             emailError.classList.add('hidden');

@@ -79,8 +79,8 @@ class Store extends Model {
         }
 
         $store = new Store();
-        $id = $store->checkStore($url);
         $pageSource = getHTMLPage($url);
+        $id = $store->checkStore($url);
 
         $options = LIBXML_NOERROR | LIBXML_NOWARNING;
         $dom = new DOMDocument();

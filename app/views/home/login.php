@@ -70,9 +70,15 @@
                                     </script>
                                 <?php endif; ?>
 
+                                <!-- Forgot password button -->
+                                <div class="flex justify-end">
+                                    <div class="px-4 inline-block mt-4">
+                                        <button type="button" id="forgotPasswordButton" class="text-base text-blue-500 hover:text-blue-700 focus:outline-none focus:underline transition duration-150 ease-in-out">Quên mật khẩu?</button>
+                                    </div>
+                                </div>
 
                                 <!--Submit button-->
-                                <div class="mt-6 mb-2 pb-1 pt-1 text-center">
+                                <div class="mt-4 mb-2 pb-1 pt-1 text-center">
                                     <button class="inline-block w-full rounded px-6 pb-2 pt-2.5 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]" type="submit" name="submit" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
                                         Đăng nhập
                                     </button>
@@ -111,6 +117,49 @@
         </div>
     </div>
 
+    <!-- Modal Structure -->
+    <div id="forgotPasswordModal" class="hidden fixed z-10 inset-0 overflow-y-auto">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <!-- Background overlay, show modal backdrop -->
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+
+            <!-- Modal panel, show modal content -->
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
+                                Quên Mật Khẩu
+                            </h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500">
+                                    Vui lòng nhập địa chỉ email của bạn để nhận liên kết đặt lại mật khẩu.
+                                </p>
+                                <form id="emailForm" action="/auth/send-mail" method="POST">
+                                    <input onchange="checkValidateEmail()" id='email' type="email" name="email" class="mt-3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline w-full" placeholder="Email">
+                                    <div class="mt-2hidden" id="email_error">
+                                        <p class="w-full h-fit text-xs text-red-500" id="email_error_content">
+                                        </p>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button onclick="submitMail()" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-500 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm" id="sendEmailButton">
+                        Gửi
+                    </button>
+                    <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" id="closeModalButton">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Validate Form Login -->
     <script>
         document.querySelector('form').onsubmit = function(e) {
@@ -127,12 +176,12 @@
         function loginFacebookSubmit() {
             Swal.fire({
                 title: 'Lưu ý',
-                text: 'Bạn phải có tài khoản Facebook Developers và được Admin add vào môi trường dev để trải nghiệm chức năng này',
+                text: 'Bạn phải có tài khoản Facebook Developers và được add vào môi trường dev để trải nghiệm chức năng này. Liên hệ nếu chưa thực hiện thao tác trên',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Xác nhận',
+                confirmButtonText: 'Tiếp tục đăng nhập',
                 cancelButtonText: 'Đóng'
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -154,6 +203,90 @@
             });
         }
     </script>
+
+    <!-- Modal forgot password -->
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const modal = document.getElementById('forgotPasswordModal');
+            const openModalButton = document.getElementById('forgotPasswordButton');
+            const closeModalButton = document.getElementById('closeModalButton');
+
+            openModalButton.addEventListener('click', () => {
+                modal.classList.remove('hidden');
+            });
+
+            closeModalButton.addEventListener('click', () => {
+                modal.classList.add('hidden');
+                document.getElementById('email').value = '';
+                document.getElementById('email_error').classList.add('hidden');
+                document.getElementById('email_error_content').textContent = '';
+            });
+        });
+    </script>
+
+    <!-- Notification when have error login FB -->
+    <?php if (isset($_SESSION['fb_login_err'])) : ?>
+        <script>
+            Swal.fire({
+                title: '<?php echo $_SESSION['fb_login_err']; ?>',
+                text: 'Vui lòng thử cách đăng nhập khác',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            <?php unset($_SESSION['fb_login_err']); ?>
+        </script>
+    <?php endif; ?>
+
+    <script>
+        function checkValidateEmail() {
+            var emailEl = document.getElementById('email').value;
+            var emailError = document.getElementById('email_error');
+            var emailErrorContent = document.getElementById('email_error_content');
+
+            if (emailEl.trim() === '') {
+                emailError.classList.remove('hidden');
+                emailErrorContent.textContent = 'Email không được để trống.';
+                return false;
+            } else if (!/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi.test(emailEl)) {
+                emailError.classList.remove('hidden');
+                emailErrorContent.textContent = 'Email phải có dạng [your-email]@[domain]';
+                return false;
+            } else {
+                emailError.classList.add('hidden');
+                return true;
+            }
+        }
+
+        function submitMail() {
+            if (checkValidateEmail()) {
+                document.getElementById('emailForm').submit();
+            }
+        }
+    </script>
+
+    <?php if (isset($_SESSION['sent_email_status'])) : ?>
+        <script>
+            let sent_mail_status = '<?php echo $_SESSION['sent_email_status'] ?>';
+            switch (sent_mail_status) {
+                case "email had not been registered":
+                    Swal.fire('Email chưa được đăng ký', 'Vui lòng đăng ký tài khoản hoặc thử lại', 'error');
+                    break;
+                case "error":
+                    Swal.fire('Đã có lỗi xảy ra', '', 'error');
+                    break;
+                case "success":
+                    Swal.fire('Link tạo lại mật khẩu đã được gửi qua email của quý Anh/Chị', '', 'success');
+                    break;
+                case "change_pass_success":
+                    Swal.fire('Đã đổi password thành công', '', 'success');
+                    break;
+                default:
+                    break;
+            }
+        </script>
+        <?php unset($_SESSION['sent_email_status']) ?>
+    <?php endif; ?>
+
 </body>
 
 </html>

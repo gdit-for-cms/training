@@ -11,7 +11,7 @@ function getHTMLPage($url, $maxRetries = 5) {
     $maxRetries = Config::RETRY_CRAWL_TIMES;
     $pageSource = ""; // Initialize an empty string to store the entire page source
 
-    while ($retryCount < $maxRetries) {
+    while ($retryCount < $maxRetries && $pageSource == "") {
         try {
             $options = new ChromeOptions();
             $options->addArguments(['--headless', '--no-sandbox', '--disable-dev-shm-usage']);
@@ -51,9 +51,6 @@ function getHTMLPage($url, $maxRetries = 5) {
                 $currentSource = $driver->getPageSource();
                 $pageSource .= $currentSource; // Append the new content
             }
-
-            // If everything goes well, break out of the retry loop
-            break;
         } catch (Exception $e) {
             // Log or handle the exception as needed
             // Increase the retry counter
