@@ -2,14 +2,17 @@
 
 namespace App\Controllers;
 
+use App\Models\Token;
 use Core\View;
 use App\models\User;
 use Core\Http\Request;
+use Exception;
 use Facebook;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise;
 use GuzzleHttp\Exception\ClientException;
 use PDOException;
+use PHPMailer\PHPMailer;
 
 class AuthController extends AppController {
     public array $data_ary;
@@ -105,9 +108,13 @@ class AuthController extends AppController {
                 echo "Error Code: " . $helper->getErrorCode() . "\n";
                 echo "Error Reason: " . $helper->getErrorReason() . "\n";
                 echo "Error Description: " . $helper->getErrorDescription() . "\n";
+                $_SESSION['fb_login_err'] = 'Lỗi trong quá trình đăng nhập bằng Facebook';
+                header('Location: /auth/login');
+                exit;
             } else {
-                header('HTTP/1.0 400 Bad Request');
-                echo 'Bad request';
+                $_SESSION['fb_login_err'] = 'Lỗi trong quá trình đăng nhập bằng Facebook';
+                header('Location: /auth/login');
+                exit;
             }
             exit;
         }
@@ -118,7 +125,7 @@ class AuthController extends AppController {
         // Get the access token metadata from /debug_token
         $tokenMetadata = $oAuth2Client->debugToken($accessToken);
 
-        $tokenMetadata->validateAppId('1535192830662504');
+        $tokenMetadata->validateAppId($_ENV['FACEBOOK_APP_ID']);
         // Validation (these will throw FacebookSDKException's when they fail)
         $tokenMetadata->validateExpiration();
 
@@ -131,8 +138,6 @@ class AuthController extends AppController {
                 exit;
             }
         }
-
-        // $_SESSION['fb_access_token'] = (string) $accessToken;
 
         // Request for user data
         try {
@@ -205,112 +210,123 @@ class AuthController extends AppController {
         exit;
     }
 
-    // public function sendMailAction() {
-    //     $email = $_POST['email'];
+    public function sendMailAction(Request $request) {
 
-    //     $object_user = new User();
-
-    //     $exist_user = $object_user->table('app_user')
-    //         ->where('email', '=', $email)->first();
-
-    //     if (!$exist_user) {
-    //         $_SESSION['sent_email_status'] = 'email had not been registered';
-    //         header('Location: /auth/login');
-    //         exit;
-    //     }
-
-    //     $encryptedEmail = $this->encryptEmail($email);
-
-    //     $encodedEmail = urlencode($encryptedEmail);
-
-    //     $serverName = $_SERVER['SERVER_NAME'];
-    //     $resetPassUrl = "http://$serverName/auth/reset-pass?email=$encodedEmail";
-
-    //     // Send the email to the user with the reset password URL
-    //     $subject = "Reset Your Password â";
-    //     $body = "Please use the following link to reset your password: $resetPassUrl";
-    //     $headers = 'From: noreply@yourdomain.com' . "\r\n" .
-    //         'Reply-To: noreply@yourdomain.com' . "\r\n" .
-    //         'X-Mailer: PHP/' . phpversion();
-
-    //     mail($email, $subject, $body, $headers);
-
-    //     $_SESSION['sent_email_status'] = 'success';
-    //     header('Location: /auth/login');
-    // }
-
-    public function sendMailAction() {
-        $email = $_POST['email'];
+        $username = $request->getPost()->get('username');
 
         $object_user = new User();
 
         $exist_user = $object_user->table('app_user')
-            ->where('email', '=', $email)->first();
+            ->where('name', '=', $username)->first();
 
         if (!$exist_user) {
-            $_SESSION['sent_email_status'] = 'email had not been registered';
+            $_SESSION['sent_email_status'] = 'not_register';
             header('Location: /auth/login');
             exit;
         }
+        // If user existed
+        // Generate a random IV with expiration 60 minutes
+        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($_ENV['METHOD_ENCRYPT_A']));
+        // Base64 encode the IV to ensure it's in a safe format to store in the DB
+        $encodedIv = base64_encode($iv);
+        $expiration = time() + 60;
+
+        // Save Initialization Vector as token to DB
+        $object_token = new Token();
+        // Check if a token already exists for the user
+        $existingToken = $object_token->findByUserId($exist_user['id']);
+
+        if ($existingToken) {
+            // Token exists, so update it
+            $object_token->updateToken([
+                'value' => $encodedIv,
+                'expiration' => $expiration
+            ], "id = " . $exist_user['id']);
+        } else {
+            // No token exists, create a new one
+            $object_token->create([
+                'id' => $exist_user['id'],
+                'value' => $encodedIv,
+                'expiration' => $expiration
+            ]);
+        }
+        $email = $exist_user['email'];
 
         $encryptedEmail = $this->encryptEmail($email);
-
         $encodedEmail = urlencode($encryptedEmail);
-
         $serverName = $_SERVER['SERVER_NAME'];
-        $resetPassUrl = "http://$serverName/auth/reset-pass?email=$encodedEmail";
+        $resetPassUrl = "http://$serverName/auth/reset-pass?field=$encodedEmail";
 
-        // Prepare the email body
-        $subject = "PHP Food Code - Reset Password";
-        $body = '<html><head>';
-        $body .= '<title>Password Reset Request</title>';
-        $body .= '</head><body>';
-        $body .= '<h2>PHP Food Code - Password Reset Notification</h2>';
-        $body .= '<p>Dear, ' . $exist_user['email'] . '</p>';
-        $body .= '<p>You\'re receiving this email because we received a password reset request for your account. If you did not request a password reset, no further action is required.</p>';
-        $body .= '<p>To reset your password, please click on the link below:</p>';
-        $body .= '<a href="' . $resetPassUrl . '" style="padding: 10px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">Reset Password</a>';
-        $body .= '<p>This password reset link will expire in 60 minutes. After the link has expired, you will need to request a new password reset.</p>';
-        $body .= '<p>If you have any issues or did not request this action, please contact our support team.</p>';
-        $body .= '<br>';
-        $body .= '<p>Best Regards,</p>';
-        $body .= '<p>Your PHP Food Code Team</p>';
-        $body .= '</body></html>';
 
-        // Always set content-type when sending HTML email
-        $headers = "MIME-Version: 1.0" . "\r\n";
-        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+        $mail = new PHPMailer\PHPMailer(true);
 
-        // Attempt to send the email
-        if (!mail($email, $subject, $body, $headers)) {
-            // Log the error or handle the failure
-            echo ('Email sending failed to ' . $email);
-            exit;
-            $_SESSION['sent_email_status'] = 'error';
-        } else {
-            // If email is sent successfully
+        try {
+            $mail->isSendmail();
+            $mail->Sendmail = '/usr/bin/env catchmail --smtp-ip 192.168.1.209 -f cms8341-test-mail@glode.co.jp';
+
+            // Recipients
+            $mail->setFrom('no_reply@phpfoodcode.com', 'Mailer');
+            $mail->addAddress($email, 'Recipient Name');
+
+            // Content
+            $mail->isHTML(true);
+            $mail->CharSet = 'UTF-8';
+            $mail->Subject = 'PHP Food Code - Đặt Lại Mật Khẩu';
+
+
+            $name = htmlspecialchars($exist_user['display_name'], ENT_QUOTES, 'UTF-8');
+            $resetLink = htmlspecialchars($resetPassUrl, ENT_QUOTES, 'UTF-8');
+
+            $body = '<html><head>';
+            $body .= '<title>Yêu Cầu Đặt Lại Mật Khẩu</title>';
+            $body .= '</head><body>';
+            $body .= '<h2>PHP Food Code - Thông Báo Đặt Lại Mật Khẩu</h2>';
+            $body .= '<p>Kính gửi, ' . $name . '</p>';
+            $body .= '<p>Bạn nhận được email này vì chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn. Nếu bạn không yêu cầu đặt lại mật khẩu, không cần thực hiện thêm bất kỳ hành động nào.</p>';
+            $body .= '<p>Để đặt lại mật khẩu của bạn, vui lòng nhấp vào liên kết dưới đây:</p>';
+            $body .= '<a href="' . $resetLink . '" style="padding: 10px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">Đặt Lại Mật Khẩu</a>';
+            $body .= '<p>Liên kết đặt lại mật khẩu này sẽ hết hạn trong 1 phút. Sau khi liên kết hết hạn, bạn sẽ cần yêu cầu đặt lại mật khẩu mới.</p>';
+            $body .= '<p>Nếu bạn gặp bất kỳ vấn đề nào hoặc không yêu cầu hành động này, vui lòng liên hệ với đội ngũ hỗ trợ của chúng tôi.</p>';
+            $body .= '<br>';
+            $body .= '<p>Trân trọng,</p>';
+            $body .= '<p>Đội Ngũ PHP Food Code</p>';
+            $body .= '</body></html>';
+
+            $mail->Body = $body;
+
+
+            // Set the email format to HTML
+            $mail->isHTML(true);
+            $mail->CharSet = 'UTF-8';
+
+            // Continue setting other properties like Subject, AltBody, and Recipients as before...
+            $mail->Subject = 'PHP Food Code - Đặt Lại Mật Khẩu';
+            $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+            // Send the email
+            $mail->send();
             $_SESSION['sent_email_status'] = 'success';
+        } catch (Exception $e) {
+            error_log('Message could not be sent. Mailer Error: ', $mail->ErrorInfo);
+            $_SESSION['sent_email_status'] = 'error';
         }
 
-        // Redirect to the login page
         header('Location: /auth/login');
     }
 
-    function encryptEmail($email) {
-        $method = 'AES-256-CBC';
-        // Ensure the key is 32 bytes long for AES-256-CBC
-        $key = openssl_digest('your_secret_key', 'SHA256', true);
-        // Use a fixed IV for simplicity (not recommended for production)
-        $iv = str_repeat("a", openssl_cipher_iv_length($method));
 
-        $encrypted = openssl_encrypt($email, $method, $key, 0, $iv);
+    function encryptEmail($email) {
+        // Ensure the key is 32 bytes long for AES-256-CBC
+        $key = openssl_digest($_ENV['SECRET_KEY'], 'SHA256', true);
+
+        $encrypted = openssl_encrypt($email, $_ENV['METHOD_ENCRYPT_B'], $key, 0);
         // Base64-encode
         return base64_encode($encrypted);
     }
 
     public function resetPassAction(Request $request) {
         $get = $request->getGet();
-        $encryptedEmail = $get->get('email');
+        $encryptedEmail = $get->get('field');
 
         if (!isset($encryptedEmail)) {
             echo "Invalid request.";
@@ -324,22 +340,44 @@ class AuthController extends AppController {
             return;
         }
 
-        $method = 'AES-256-CBC';
-        // Use the same method to generate the key as in the encryption function
-        $key = openssl_digest('your_secret_key', 'SHA256', true);
-        // Use the same fixed IV as in the encryption function
-        $iv = str_repeat("a", openssl_cipher_iv_length($method));
+        $key = openssl_digest($_ENV['SECRET_KEY'], 'SHA256', true);
 
-        $decryptedEmail = openssl_decrypt($encrypted, $method, $key, 0, $iv);
+        $decryptedEmail = openssl_decrypt($encrypted, $_ENV['METHOD_ENCRYPT_B'], $key, 0);
 
-        if (false === $decryptedEmail) {
-            echo "Invalid or corrupted link.";
-            return;
+
+        $object_user = new User();
+
+        $exist_user = $object_user->table('app_user')
+            ->where('email', '=', $decryptedEmail)->first();
+
+        if (!$exist_user) {
+            $_SESSION['sent_email_status'] = 'error';
+            header('Location: /auth/login');
+            exit;
         }
 
-        if (!filter_var($decryptedEmail, FILTER_VALIDATE_EMAIL)) {
-            echo "Invalid email address.";
-            return;
+        // Fetch Initialization Vector in DB and check expiration
+        // Initialize the Token model
+        $object_token = new Token();
+
+        // Fetch the token for the user
+        $token = $object_token->findByUserId($exist_user['id']);
+
+        if ($token) {
+            $expiration = $token['expiration'];
+            $currentTime = time();
+
+            if ($currentTime > $expiration) {
+                $_SESSION['sent_email_status'] = 'token_expire';
+                header('Location: /auth/login');
+                exit;
+            }
+        }
+
+        if (false === $decryptedEmail) {
+            $_SESSION['sent_email_status'] = 'error';
+            header('Location: /auth/login');
+            exit;
         }
 
         $_SESSION['decrypted_email'] = $decryptedEmail;
@@ -368,14 +406,16 @@ class AuthController extends AppController {
                 $object_user->updateUser($data, $condition);
                 $_SESSION['sent_email_status'] = 'change_pass_success';
                 header('Location: /auth/login');
+                exit;
             } else {
                 $_SESSION['sent_email_status'] = 'error';
                 header('Location: /auth/login');
+                exit;
             }
         } catch (PDOException $e) {
-            var_dump($e);
             $_SESSION['sent_email_status'] = 'error';
             header('Location: /auth/login');
+            exit;
         }
     }
 
