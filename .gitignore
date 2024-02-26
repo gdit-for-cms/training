@@ -8,3 +8,5 @@ output.css
 selenium-server-4.16.1.jar
 # Environment File
 .env
+# Logs file
+/logs

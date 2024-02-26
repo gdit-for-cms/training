@@ -88,7 +88,7 @@ if (!empty($user_data[0]['img']) && $user_data[0]['img'] != null) {
 <div class="bg-white p-8">
     <div class="container mx-auto px-4 bg-white shadow-md rounded-lg" style="height: 70vh;"> <!-- Set 2/3 of viewport height -->
         <div class="py-4 px-8 text-2xl font-semibold border-b border-gray-300 text-gray-800 bg-yellow-200 rounded-full">Thông tin người dùng</div>
-        <div class="w-3/4 flex items-center justify-center bg-white mx-auto mt-5">
+        <div class="w-full flex items-center justify-center bg-white mx-auto mt-5">
             <!-- User -->
             <div class="w-1/3 bg-white p-5 shadow rounded-lg flex-none">
                 <h2 class="text-lg font-semibold mb-5">User settings</h2>
@@ -102,27 +102,35 @@ if (!empty($user_data[0]['img']) && $user_data[0]['img'] != null) {
                                                                                                     }  ?>" alt="">
                         </div>
                         <div class="mt-2">
-                            <button id="upload_widget" class="bg-blue-300 hover:bg-blue-500 text-white font-bold py-1 px-4 rounded transition ease-in-out duration-150 flex gap-2 justify-between items-center">
+                            <button id="upload_widget" class="bg-blue-300 hover:bg-blue-500 text-white font-bold py-1 px-4 rounded transition ease-in-out duration-150 flex gap-2 justify-between items-center font-normal">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
                                 </svg>
                                 Đổi ảnh
                             </button>
                         </div>
                     </div>
-                    <h3 class="text-center text-lg font-bold mt-2"><?php echo htmlspecialchars($user_data[0]['name']); ?></h3>
+                    <h3 class="text-center text-lg font-bold mt-2 flex flex-col">
+                        <span class="text-base underline">Username</span>
+                        <span><?php echo htmlspecialchars($user_data[0]['name']); ?></span>
+                    </h3>
                 </div>
             </div>
 
             <!-- Information -->
             <div class="w-2/3 p-5 flex-grow">
-                <div class="bg-white p-5 shadow rounded-lg text-gray-800">
+                <div class="bg-white p-5 text-gray-800">
                     <form id="update_form" class="w-full" action="/user/update" method="POST">
                         <!-- Input img -->
                         <input type="hidden" id="image_data" name="image_data" value="<?php if (isset($imgSrc)) {
                                                                                             echo $imgSrc;
                                                                                         } else {
                                                                                             echo null;
+                                                                                        }  ?>">
+                        <input type="hidden" id="image_code" name="image_code" value="<?php if (isset($user_data[0]['img_code']) && $user_data[0]['img_code'] != null) {
+                                                                                            echo $user_data[0]['img_code'];
+                                                                                        } else {
+                                                                                            echo 'no_code';
                                                                                         }  ?>">
                         <div class="my-4">
                             <label for="display_name" class="block text-lg font-semibold mb-1">Tên hiển thị</label>
@@ -162,6 +170,29 @@ if (!empty($user_data[0]['img']) && $user_data[0]['img'] != null) {
                             </a>
                         </div>
                     </form>
+                </div>
+            </div>
+
+            <!-- QR Code -->
+            <div class="w-1/3 bg-white p-5 shadow rounded-lg flex-none">
+                <h2 class="text-lg font-semibold mb-5">User settings</h2>
+                <div class="mb-5 text-gray-800">
+                    <div class="flex flex-col justify-center items-center">
+                        <div id="drop_zone" class="d-flex justify-content-center align-items-start" ondragover="dragOverHandler(event);" ondrop="dropHandler(event);">
+                            <img class="border-b border-gray-300 rounded shadow-lg w-64 h-64" src="<?php if (isset($user_data[0]['img_code']) && $user_data[0]['img_code'] != null) {
+                                                                                                        echo $user_data[0]['img_code'];
+                                                                                                    } else {
+                                                                                                        echo '/img/no_QR_user.png';
+                                                                                                    }  ?>" alt="">
+                        </div>
+                    </div>
+                    <h3 class="text-center text-base italic font-bold mt-2 flex flex-col">
+                        <span><?php if (isset($user_data[0]['img_code']) && $user_data[0]['img_code'] != null) {
+                                    echo 'QR Code';
+                                } else {
+                                    echo 'Cập nhật thông tin Ngân hàng để hiển thị QR Code';
+                                }  ?></span>
+                    </h3>
                 </div>
             </div>
 
@@ -214,6 +245,15 @@ if (!empty($user_data[0]['img']) && $user_data[0]['img'] != null) {
     }
 
     function submitUpdate() {
+        let bankBin = document.getElementById('bank_bin').value;
+        let bankAcc = document.getElementById('bank_acc').value;
+        let imgQRLink = "";
+        if (bankBin === "Vui lòng chọn thông tin..." || bankAcc === "") {
+            imgQRLink = "no_code";
+        } else {
+            imgQRLink = "https://img.vietqr.io/image/" + bankBin + "-" + bankAcc + "-qr_only.png";
+        }
+        document.getElementById('image_code').value = imgQRLink;
         if (checkValidate()) {
             Swal.fire({
                 title: 'Xác nhận cập nhật',
