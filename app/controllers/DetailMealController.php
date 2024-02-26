@@ -58,6 +58,7 @@ class DetailMealController extends AppController {
         $this->data_ary['content'] = '/meal/manager_meal';
         $this->data_ary['title'] = 'Quản lý đơn';
         View::render('/layouts/master.php', $this->data_ary);
+        exit;
     }
 
     public function addOrderAction() {
@@ -84,8 +85,8 @@ class DetailMealController extends AppController {
 
         $meal = new Meal();
         $detail_meal = $meal->getDetailMealById($meal_id);
-        if (!isset($detail_meal)) {
-            // Handle error
+        if (empty($detail_meal)) {
+            header('Location: /404.php');
             exit;
         }
 
@@ -97,6 +98,7 @@ class DetailMealController extends AppController {
 
         $this->data_ary['content'] = '/detail_meal/show';
         View::render('/layouts/master.php', $this->data_ary);
+        exit;
     }
 
     public function exportAction() {

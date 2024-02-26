@@ -142,3 +142,10 @@
         }
     }
 </script>
+
+<?php if (isset($_SESSION['failed_connect_selenium'])) : ?>
+    <script>
+        Swal.fire('Chưa kết nối Server Selenium', 'Vui lòng liên hệ admin', 'error');
+    </script>
+    <?php unset($_SESSION['failed_connect_selenium']); ?>
+<?php endif; ?>

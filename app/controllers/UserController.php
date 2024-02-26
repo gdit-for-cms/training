@@ -87,11 +87,16 @@ class UserController extends AppController {
         $current_user_id = $current_user['id'];
         $post = $request->getPost();
         $image_data = $post->get('image_data');
+        $image_code = $post->get('image_code');
+        if ($image_code == 'no_code') {
+            $image_code = null;
+        }
         $display_name = htmlspecialchars(trim($post->get('display_name')));
         $bank_bin = htmlspecialchars($post->get('bank_bin'));
         $bank_acc = htmlspecialchars($post->get('bank_acc'));
         $update_data = [
             'img' => $image_data,
+            'img_code' => $image_code,
             'display_name' => $display_name,
             'bank_bin' => $bank_bin,
             'bank_acc' => $bank_acc

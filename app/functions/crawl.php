@@ -29,8 +29,15 @@ function getHTMLPage($url, $maxRetries = 5) {
             // Use environment variable for Selenium WebDriver hub URL
             $seleniumHubUrl = $_ENV['SELENIUM_HUB_URL'] ?: 'http://localhost:4444/wd/hub';
 
-            // Call driver
-            $driver = RemoteWebDriver::create($seleniumHubUrl, $capabilities);
+            try {
+                $driver = RemoteWebDriver::create($seleniumHubUrl, $capabilities);
+            } catch (Exception $e) {
+                // Handle when server error or did not run
+                error_log("Failed to connect to Selenium Server: " . $e->getMessage());
+                $_SESSION['failed_connect_selenium'] = 'failed_connect_selenium';
+                header('Location: /meal/create');
+                exit;
+            }
 
             // Set the browser window size to a large dimension
             $driver->manage()->window()->setSize(new WebDriverDimension(1920, 20000));

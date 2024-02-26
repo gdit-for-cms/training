@@ -90,8 +90,8 @@ class Food extends Model {
     }
 
     public function getFoodById($foodId) {
-        return $this->where('id', '=', $foodId)
-            ->where('deleted', '=', 0) // Only get if not marked as deleted
+        return $this->where('id', ' = ', $foodId)
+            ->where('deleted', ' = ', 0) // Only get if not marked as deleted
             ->first();
     }
 
@@ -111,6 +111,7 @@ class Food extends Model {
         return $this->table($this->_table) // Assuming 'foods' is your table name
             ->where('store_id', '=', $storeId)
             ->where('deleted', '=', 0)
+            ->where('is_over', ' = ', 0) // Only get available foods
             ->get();
     }
 }

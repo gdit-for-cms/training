@@ -25,6 +25,10 @@ class User extends Model {
         return $this->all();
     }
 
+    public function findById($id) {
+        return $this->table($this->_table)->find($id);
+    }
+
     public function getBy($column, $operator, $value, $select_column = '*') {
         return $this->table($this->_table)->where($column, $operator, $value)->get($select_column);
     }
