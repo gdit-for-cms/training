@@ -88,7 +88,7 @@ class AuthController extends AppController {
         $helper = $fb->getRedirectLoginHelper();
 
         try {
-            $accessToken = $helper->getAccessToken();
+            $access_token = $helper->getAccessToken();
         } catch (Facebook\Exceptions\FacebookResponseException $e) {
             echo 'Graph returned an error: ' . $e->getMessage();
             $_SESSION['fb_login_err'] = 'Lỗi trong quá trình đăng nhập bằng Facebook';
@@ -101,7 +101,7 @@ class AuthController extends AppController {
             exit;
         }
 
-        if (!isset($accessToken)) {
+        if (!isset($access_token)) {
             if ($helper->getError()) {
                 header('HTTP/1.0 401 Unauthorized');
                 echo "Error: " . $helper->getError() . "\n";
@@ -123,16 +123,16 @@ class AuthController extends AppController {
         $oAuth2Client = $fb->getOAuth2Client();
 
         // Get the access token metadata from /debug_token
-        $tokenMetadata = $oAuth2Client->debugToken($accessToken);
+        $token_metadata = $oAuth2Client->debugToken($access_token);
 
-        $tokenMetadata->validateAppId($_ENV['FACEBOOK_APP_ID']);
+        $token_metadata->validateAppId($_ENV['FACEBOOK_APP_ID']);
         // Validation (these will throw FacebookSDKException's when they fail)
-        $tokenMetadata->validateExpiration();
+        $token_metadata->validateExpiration();
 
-        if (!$accessToken->isLongLived()) {
+        if (!$access_token->isLongLived()) {
             // Exchanges a short-lived access token for a long-lived one
             try {
-                $accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
+                $access_token = $oAuth2Client->getLongLivedAccessToken($access_token);
             } catch (Facebook\Exceptions\FacebookSDKException $e) {
                 echo "<p>Error getting long-lived access token: " . $e->getMessage() . "</p>\n\n";
                 exit;
@@ -141,7 +141,7 @@ class AuthController extends AppController {
 
         // Request for user data
         try {
-            $response = $fb->get('/me?fields=id,name,email,picture.type(normal)', $accessToken);
+            $response = $fb->get('/me?fields=id,name,email,picture.type(normal)', $access_token);
             $user_fb = $response->getGraphUser();
 
             // Accessing the profile picture URL
@@ -225,37 +225,39 @@ class AuthController extends AppController {
             exit;
         }
         // If user existed
-        // Generate a random IV with expiration 60 minutes
-        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($_ENV['METHOD_ENCRYPT_A']));
-        // Base64 encode the IV to ensure it's in a safe format to store in the DB
-        $encodedIv = base64_encode($iv);
+        // Generate a random token
+        $token = bin2hex(random_bytes(32));
+        // Encrypt token
+        $encrypted_token = openssl_encrypt($token, $_ENV['METHOD_ENCRYPT'], $_ENV['SECRET_KEY'], 0, hex2bin($_ENV['INITIALIZATION_VECTOR_HEX']));
+        // Expiration time for token (1 minute)
         $expiration = time() + 60;
 
-        // Save Initialization Vector as token to DB
+        // Save token to DB
         $object_token = new Token();
         // Check if a token already exists for the user
-        $existingToken = $object_token->findByUserId($exist_user['id']);
+        $existing_token = $object_token->findByUserId($exist_user['id']);
 
-        if ($existingToken) {
+        if ($existing_token) {
             // Token exists, so update it
             $object_token->updateToken([
-                'value' => $encodedIv,
+                'value' => $encrypted_token,
                 'expiration' => $expiration
             ], "id = " . $exist_user['id']);
         } else {
             // No token exists, create a new one
             $object_token->create([
                 'id' => $exist_user['id'],
-                'value' => $encodedIv,
+                'value' => $encrypted_token,
                 'expiration' => $expiration
             ]);
         }
+        $verification_string = openssl_encrypt($exist_user['id'] . ':' . $token, $_ENV['METHOD_ENCRYPT'], $_ENV['SECRET_KEY'], 0, hex2bin($_ENV['INITIALIZATION_VECTOR_HEX']));
+
         $email = $exist_user['email'];
 
-        $encryptedEmail = $this->encryptEmail($email);
-        $encodedEmail = urlencode($encryptedEmail);
+        $encode_verification = urlencode($verification_string);
         $serverName = $_SERVER['SERVER_NAME'];
-        $resetPassUrl = "http://$serverName/auth/reset-pass?field=$encodedEmail";
+        $resetPassUrl = "http://$serverName/auth/reset-pass?verification=$encode_verification";
 
 
         $mail = new PHPMailer\PHPMailer(true);
@@ -275,7 +277,7 @@ class AuthController extends AppController {
 
 
             $name = htmlspecialchars($exist_user['display_name'], ENT_QUOTES, 'UTF-8');
-            $resetLink = htmlspecialchars($resetPassUrl, ENT_QUOTES, 'UTF-8');
+            $reset_link = htmlspecialchars($resetPassUrl, ENT_QUOTES, 'UTF-8');
 
             $body = '<html><head>';
             $body .= '<title>Yêu Cầu Đặt Lại Mật Khẩu</title>';
@@ -284,7 +286,7 @@ class AuthController extends AppController {
             $body .= '<p>Kính gửi, ' . $name . '</p>';
             $body .= '<p>Bạn nhận được email này vì chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn. Nếu bạn không yêu cầu đặt lại mật khẩu, không cần thực hiện thêm bất kỳ hành động nào.</p>';
             $body .= '<p>Để đặt lại mật khẩu của bạn, vui lòng nhấp vào liên kết dưới đây:</p>';
-            $body .= '<a href="' . $resetLink . '" style="padding: 10px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">Đặt Lại Mật Khẩu</a>';
+            $body .= '<a href="' . $reset_link . '" style="padding: 10px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">Đặt Lại Mật Khẩu</a>';
             $body .= '<p>Liên kết đặt lại mật khẩu này sẽ hết hạn trong 1 phút. Sau khi liên kết hết hạn, bạn sẽ cần yêu cầu đặt lại mật khẩu mới.</p>';
             $body .= '<p>Nếu bạn gặp bất kỳ vấn đề nào hoặc không yêu cầu hành động này, vui lòng liên hệ với đội ngũ hỗ trợ của chúng tôi.</p>';
             $body .= '<br>';
@@ -312,77 +314,69 @@ class AuthController extends AppController {
         }
 
         header('Location: /auth/login');
+        exit;
     }
 
-
-    function encryptEmail($email) {
-        // Ensure the key is 32 bytes long for AES-256-CBC
-        $key = openssl_digest($_ENV['SECRET_KEY'], 'SHA256', true);
-
-        $encrypted = openssl_encrypt($email, $_ENV['METHOD_ENCRYPT_B'], $key, 0);
-        // Base64-encode
-        return base64_encode($encrypted);
-    }
 
     public function resetPassAction(Request $request) {
+        // Get verification link
         $get = $request->getGet();
-        $encryptedEmail = $get->get('field');
+        $verification_string = $get->get('verification');
 
-        if (!isset($encryptedEmail)) {
-            echo "Invalid request.";
-            return;
-        }
-
-        // Base64-decode
-        $encrypted = base64_decode(urldecode($encryptedEmail));
-        if (!$encrypted) {
-            echo "Invalid or corrupted link.";
-            return;
-        }
-
-        $key = openssl_digest($_ENV['SECRET_KEY'], 'SHA256', true);
-
-        $decryptedEmail = openssl_decrypt($encrypted, $_ENV['METHOD_ENCRYPT_B'], $key, 0);
-
-
-        $object_user = new User();
-
-        $exist_user = $object_user->table('app_user')
-            ->where('email', '=', $decryptedEmail)->first();
-
-        if (!$exist_user) {
+        // Check if verification string is set
+        if (!isset($verification_string)) {
             $_SESSION['sent_email_status'] = 'error';
             header('Location: /auth/login');
             exit;
         }
 
-        // Fetch Initialization Vector in DB and check expiration
-        // Initialize the Token model
-        $object_token = new Token();
+        // Attempt to decrypt and extract the ID and token from the verification string
+        $decrypted = openssl_decrypt($verification_string, $_ENV['METHOD_ENCRYPT'], $_ENV['SECRET_KEY'], 0, hex2bin($_ENV['INITIALIZATION_VECTOR_HEX']));
 
-        // Fetch the token for the user
-        $token = $object_token->findByUserId($exist_user['id']);
+        if (!$decrypted) {
+            $_SESSION['sent_email_status'] = 'token_error';
+            header('Location: /auth/login');
+            exit;
+        }
+
+        // Destructure decrypted param
+        list($id, $request_token) = explode(':', $decrypted);
+
+        // Fetch the user by ID
+        $object_user = new User();
+        $exist_user = $object_user->table('app_user')->where('id', '=', $id)->first();
+        if (!$exist_user) {
+            $_SESSION['sent_email_status'] = 'token_error';
+            header('Location: /auth/login');
+            exit;
+        }
+
+        // Fetch token from DB and check expiration
+        $object_token = new Token();
+        $token = $object_token->findByUserId($id);
 
         if ($token) {
             $expiration = $token['expiration'];
-            $currentTime = time();
+            $current_time = time();
 
-            if ($currentTime > $expiration) {
-                $_SESSION['sent_email_status'] = 'token_expire';
+            // Decrypt the token stored in the database before comparing
+            $decrypted_token = openssl_decrypt($token['value'], $_ENV['METHOD_ENCRYPT'], $_ENV['SECRET_KEY'], 0, hex2bin($_ENV['INITIALIZATION_VECTOR_HEX']));
+
+            if ($current_time > $expiration || $decrypted_token !== $request_token) {
+                $_SESSION['sent_email_status'] = 'token_error';
                 header('Location: /auth/login');
                 exit;
             }
-        }
-
-        if (false === $decryptedEmail) {
-            $_SESSION['sent_email_status'] = 'error';
+        } else {
+            $_SESSION['sent_email_status'] = 'token_not_found';
             header('Location: /auth/login');
             exit;
         }
 
-        $_SESSION['decrypted_email'] = $decryptedEmail;
+        $_SESSION['email'] = $exist_user['email'];
         View::render('home/reset_pass.php');
     }
+
 
     public function changePassAction(Request $request) {
         $post = $request->getPost();
@@ -394,9 +388,9 @@ class AuthController extends AppController {
         $exist_user = $object_user->table('app_user')
             ->where('email', '=', $email)->first();
 
-        $idSanitized = intval($exist_user['id']);
+        $id_sanitized = intval($exist_user['id']);
 
-        $condition = "email = '$email' AND id = $idSanitized";
+        $condition = "email = '$email' AND id = $id_sanitized";
 
         try {
             if ($exist_user && $pass == $pass_confirm && $exist_user['email'] == $email) {
