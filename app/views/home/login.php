@@ -135,12 +135,12 @@
                             </h3>
                             <div class="mt-2">
                                 <p class="text-sm text-gray-500">
-                                    Vui lòng nhập địa chỉ email của bạn để nhận liên kết đặt lại mật khẩu.
+                                    Vui lòng nhập username của bạn để nhận liên kết đặt lại mật khẩu.
                                 </p>
                                 <form id="emailForm" action="/auth/send-mail" method="POST">
-                                    <input onchange="checkValidateEmail()" id='email' type="email" name="email" class="mt-3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline w-full" placeholder="Email">
-                                    <div class="mt-2hidden" id="email_error">
-                                        <p class="w-full h-fit text-xs text-red-500" id="email_error_content">
+                                    <input onchange="checkValidateName()" id='usernameModal' type="text" name="username" class="mt-3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline w-full" placeholder="Username của bạn">
+                                    <div class="mt-2hidden" id="username_error">
+                                        <p class="w-full h-fit text-xs text-red-500" id="username_error_content">
                                         </p>
                                     </div>
                                 </form>
@@ -238,27 +238,31 @@
     <?php endif; ?>
 
     <script>
-        function checkValidateEmail() {
-            var emailEl = document.getElementById('email').value;
-            var emailError = document.getElementById('email_error');
-            var emailErrorContent = document.getElementById('email_error_content');
+        function checkValidateName() {
+            var usernameEl = document.getElementById('usernameModal').value;
+            var usernameError = document.getElementById('username_error');
+            var usernameErrorContent = document.getElementById('username_error_content');
 
-            if (emailEl.trim() === '') {
-                emailError.classList.remove('hidden');
-                emailErrorContent.textContent = 'Email không được để trống.';
+            if (usernameEl.trim() === '') {
+                usernameError.classList.remove('hidden');
+                usernameErrorContent.textContent = 'Tên đăng nhập không được để trống.';
                 return false;
-            } else if (!/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi.test(emailEl)) {
-                emailError.classList.remove('hidden');
-                emailErrorContent.textContent = 'Email phải có dạng [your-email]@[domain]';
+            } else if (!/^[a-zA-Z0-9\S]+$/i.test(usernameEl.trim())) {
+                usernameError.classList.remove('hidden');
+                usernameErrorContent.textContent = 'Tên đăng nhập không được chứa khoảng trắng.';
+                return false;
+            } else if (usernameEl.trim().length < 3 || usernameEl.trim().length > 50) {
+                usernameError.classList.remove('hidden');
+                usernameErrorContent.textContent = 'Tên đăng nhập có độ dài từ 3 đến 50 ký tự.';
                 return false;
             } else {
-                emailError.classList.add('hidden');
+                usernameError.classList.add('hidden');
                 return true;
             }
         }
 
         function submitMail() {
-            if (checkValidateEmail()) {
+            if (checkValidateName()) {
                 document.getElementById('emailForm').submit();
             }
         }
@@ -268,11 +272,14 @@
         <script>
             let sent_mail_status = '<?php echo $_SESSION['sent_email_status'] ?>';
             switch (sent_mail_status) {
-                case "email had not been registered":
-                    Swal.fire('Email chưa được đăng ký', 'Vui lòng đăng ký tài khoản hoặc thử lại', 'error');
+                case "not_register":
+                    Swal.fire('Tài khoản chưa được đăng ký', 'Vui lòng đăng ký tài khoản hoặc thử lại', 'error');
                     break;
                 case "error":
                     Swal.fire('Đã có lỗi xảy ra', '', 'error');
+                    break;
+                case "token_expire":
+                    Swal.fire('Đường link đã hết hạn', 'Vui lòng thử lại', 'error');
                     break;
                 case "success":
                     Swal.fire('Link tạo lại mật khẩu đã được gửi qua email của quý Anh/Chị', '', 'success');

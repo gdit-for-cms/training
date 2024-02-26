@@ -132,9 +132,9 @@
             nameError.classList.remove('hidden');
             nameErrorContent.textContent = 'Tên đăng nhập không được để trống.';
             return false;
-        } else if (!/^[a-zA-Z0-9]+$/i.test(nameEl.trim())) {
+        } else if (!/^[a-zA-Z0-9\S]+$/i.test(nameEl.trim())) {
             nameError.classList.remove('hidden');
-            nameErrorContent.textContent = 'Tên đăng nhập không được chứa ký tự đặc biệt và khoảng trắng.';
+            nameErrorContent.textContent = 'Tên đăng nhập không được chứa khoảng trắng.';
             return false;
         } else if (nameEl.trim().length < 3 || nameEl.trim().length > 50) {
             nameError.classList.remove('hidden');
