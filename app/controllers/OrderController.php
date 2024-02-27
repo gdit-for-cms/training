@@ -75,4 +75,16 @@ class OrderController extends AppController {
 
         header('Location: /order/display');
     }
+
+    public function displayHistoryAction(Request $request) {
+        $user = $request->getUser();
+        $user_id = $user['id'];
+        $detail_order = new DetailOrder;
+        $history_order_result = $detail_order->getHistoryOrderOfCurrentUser($user_id);
+        //var_dump($history_order_result);
+
+        $this->data_ary['history_order_of_current_user'] =  $history_order_result;
+        $this->data_ary['title'] = "Lịch sử đặt";
+        $this->data_ary['content'] = "/order/display_history";
+    }
 }

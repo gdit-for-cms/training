@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Core\Model;
+use Core\QueryBuilder;
 use PDO;
 
 class DetailOrder extends Model {
+    use QueryBuilder;
+
     public function createDetailOrder($user_id, $order_id, $food_id, $price, $amount, $describes, $payed = 0, $confirmed = 0) {
         $pdo = parent::getDB();
         $sql = "INSERT INTO detail_order(user_id, order_id, food_id, price, amount, describes, payed, confirmed)
@@ -112,6 +115,58 @@ class DetailOrder extends Model {
         WHERE d.confirmed = 0 
         AND (o.user_id = ? OR d.user_id = ?)";
         $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(1, $user_id);
+        $stmt->bindParam(2, $user_id);
+        $result = $stmt->execute();
+        $results = [];
+        if ($result) {
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $results[] = $row;
+            }
+        }
+        return $results;
+    }
+
+    public function getHistoryOrderOfCurrentUser($user_id) {
+        // $query = $this->table('detail_order')
+        //     ->join('orders', 'detail_order.order_id = orders.id')
+        //     ->join('app_user user_order', 'detail_order.user_id = user_order.id')
+        //     ->join('food', 'detail_order.food_id = food.id')
+        //     ->join('app_user user_creator', 'orders.user_id = user_creator.id')
+        //     ->join('store', 'orders.store_id = store.id')
+        //     ->where('detail_order.user_id', '=', $user_id)
+        //     ->orWhere('orders.user_id', '=', $user_id)
+        //     ->groupBy('detail_order.order_id');
+
+        // $select_cols = 'detail_order.id, detail_order.order_id, detail_order.food_id, detail_order.price, detail_order.amount, detail_order.user_id as orderer_id, '
+        //     . 'user_order.display_name as orderer_display_name, '
+        //     . 'orders.time_close, orders.user_id as creator_id, '
+        //     . 'user_creator.display_name as creator_display_name, '
+        //     . 'food.name as food_name, '
+        //     . 'store.name as store_name';
+        $pdo = parent::getDB();
+        $query = 'SELECT * FROM (
+            SELECT o.id AS order_id, a.display_name as creater_name, s.name AS store_name, o.time_close AS time_close, SUM(d.amount * d.price) AS total_price
+            FROM orders o 
+            JOIN detail_order d
+            ON d.order_id = o.id
+            JOIN app_user a 
+            ON a.id = o.user_id
+            JOIN store s 
+            ON s.id = o.store_id
+            WHERE d.user_id = ?
+            GROUP BY o.id
+            UNION
+            SELECT o.id AS order_id, a.display_name as creater_name, s.name AS store_name, o.time_close AS time_close, 0 AS total_price
+            FROM orders o 
+            JOIN app_user a 
+            ON a.id = o.user_id  
+            JOIN store s 
+            ON s.id = o.store_id
+            WHERE o.user_id = ?
+            ) AS combine
+            GROUP BY order_id';
+        $stmt = $pdo->prepare($query);
         $stmt->bindParam(1, $user_id);
         $stmt->bindParam(2, $user_id);
         $result = $stmt->execute();
