@@ -92,6 +92,7 @@
     <script>
         function checkValidatePass() {
             var passEl = document.getElementById('pass').value;
+            var passConfirm = document.getElementById('pass_confirm').value;
             var passError = document.getElementById('pass_error');
             var passErrorContent = document.getElementById('pass_error_content');
 
@@ -103,6 +104,8 @@
                 passError.classList.remove('hidden');
                 passErrorContent.textContent = 'Mật khẩu phải có ít nhất 6 ký tự và không chứa khoảng trắng.';
                 return false;
+            } else if (passEl !== passConfirm) {
+                return false;
             } else {
                 passError.classList.add('hidden');
                 return true;
@@ -113,7 +116,7 @@
             if (checkValidatePass()) {
                 document.getElementById('change_pass_form').submit();
             } else {
-                Swal.fire('Mật khẩu chưa hợp lệ', '', 'warning');
+                Swal.fire('Nhập mật khẩu chưa hợp lệ', '', 'warning');
             }
         }
     </script>

@@ -368,7 +368,7 @@ class AuthController extends AppController {
                 exit;
             }
         } else {
-            $_SESSION['sent_email_status'] = 'token_not_found';
+            $_SESSION['sent_email_status'] = 'token_error';
             header('Location: /auth/login');
             exit;
         }
@@ -398,6 +398,12 @@ class AuthController extends AppController {
                     'pass' => $hashed_pass
                 ];
                 $object_user->updateUser($data, $condition);
+
+                // Delete token
+                $object_token = new Token();
+                $condition = 'id = ' . $exist_user['id'];
+                $object_token->destroyOne($condition);
+
                 $_SESSION['sent_email_status'] = 'change_pass_success';
                 header('Location: /auth/login');
                 exit;
