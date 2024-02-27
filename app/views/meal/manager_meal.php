@@ -155,20 +155,22 @@
                     <div class="flex items-center justify-between px-5 py-4 border-t border-gray-200">
                     <span id="total-title" class="text-xl font-bold"><label for="ship_fee">Nhập phí ship + phí dịch vụ</label></span>
                     <div class="flex gap-1 justify-end items-center">
-                    <span id="total-price" class="text-xl font-bold border"><input class="text-end" onchange="setFinalPrice()" style="color: black;" type="number" name="ship_fee" id="ship_fee" value="0"></span>
+                    <span class="text-xl font-bold border"><input class="text-end" style="color: black;" type="text" name="ship_fee" id="ship_fee_display" onchange="setFinalPrice()" placeholder="0"></span>
+                    <input type="hidden" name="ship_fee" id="ship_fee" value="0">
                     <span class="underline font-bold">đ</span>
                     </div>
                     </div>
                     <div class="flex items-center justify-between px-5 py-4 border-t border-gray-200">
                         <span id="total-title" class="text-xl font-bold"><label for="discount">Nhập số tiền giảm giá</label></span>
                         <div class="flex gap-1 justify-end items-center">
-                        <span id="total-price" class="text-xl font-bold border"> <input class="text-end" onchange="setFinalPrice()" style="color: black;" type="number" name="discount" id="discount" value="0"></span>
+                        <span class="text-xl font-bold border"><input class="text-end" style="color: black;" type="text" name="discount_display" id="discount_display" placeholder="0"  onchange="setFinalPrice()"></span>
+                        <input type="hidden" name="discount" id="discount" value="0">                    
                         <span class="underline font-bold">đ</span>
                         </div>
                         </div>
                     <div class="flex items-center justify-between px-5 py-4 border-t border-gray-200">
-                        <span id="total-title" class="text-xl font-bold"><label for="discount">Tổng tiền</label></span>
-                        <span id="total-price" class="text-xl font-bold">
+                        <span class="text-xl font-bold"><label for="discount">Tổng tiền</label></span>
+                        <span class="text-xl font-bold">
                             <div style="color: black;" id="final_price"></div>
                         </span>
                     </div>
@@ -238,6 +240,38 @@
             }
         });
     }
+
+    // Convert ship fee and discount when input
+    $(document).ready(function() {
+        $('#ship_fee_display').on('keyup', function() {
+            // Get the current value
+            var inputValue = $(this).val();
+
+            // Remove non-numeric characters for robustness
+            var numericValue = inputValue.replace(/\D/g, '');
+
+            // Convert to a number if not empty, otherwise default to 0
+            var numberValue = numericValue ? parseInt(numericValue, 10) : 0;
+
+            // Format the number with thousand separators but without the currency symbol
+            var formattedNumber = numberValue.toLocaleString('vi-VN');
+
+            // Update the hidden input with the numeric value for form submission
+            $('#ship_fee').val(numberValue);
+
+            // Replace the input value with the formatted number
+            $(this).val(formattedNumber);
+        });
+
+        $('#discount_display').on('keyup', function() {
+            var inputValue = $(this).val();
+            var numericValue = inputValue.replace(/\D/g, '');
+            var numberValue = numericValue ? parseInt(numericValue, 10) : 0;
+            var formattedNumber = numberValue.toLocaleString('vi-VN');
+            $('#discount').val(numberValue);
+            $(this).val(formattedNumber);
+        });
+    });
 
     function setFinalPrice() {
         let discount = document.getElementById("discount").value * 1;

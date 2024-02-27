@@ -125,6 +125,15 @@ $encryptedLink = "/meal/show?data=" . urlencode($encrypted);
 <script>
     function exportExcel() {
         const mealId = <?php echo json_encode($detail_meal[0]['id']); ?>;
+        // Embed store name and time open from PHP into JS variables
+        const storeName = <?php echo json_encode($detail_meal[0]['store_name']); ?>;
+        const timeOpen = <?php echo json_encode($detail_meal[0]['time_open']); ?>;
+
+        // Format timeOpen to a more filename-friendly format (e.g., replace spaces and colons)
+        const formattedTimeOpen = timeOpen.replace(/\s+/g, '_').replace(/:/g, '-');
+
+        // Generate the filename using storeName and formattedTimeOpen
+        const fileName = `${storeName}_${formattedTimeOpen}.xlsx`.replace(/\s+/g, '_');
 
         fetch('/detail-meal/export', {
                 method: 'POST',
@@ -147,8 +156,8 @@ $encryptedLink = "/meal/show?data=" . urlencode($encrypted);
                 const a = document.createElement('a');
                 a.style.display = 'none';
                 a.href = url;
-                // Use the filename from the Content-Disposition header or a default
-                a.download = 'meals.xlsx';
+                // Use the dynamically generated filename
+                a.download = fileName;
                 document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);

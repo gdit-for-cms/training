@@ -115,7 +115,7 @@ class DetailMealController extends AppController {
 
         // Set the cell content and style for the header row
         $headers = ['#', 'Tên người đặt', 'Món', 'Giá', 'Số lượng', 'Tổng', 'Note'];
-        $column = 1; // Excel columns start at 1
+        $column = 1;
         foreach ($headers as $header) {
             $sheet->setCellValueByColumnAndRow($column, 1, $header);
             $sheet->getStyleByColumnAndRow($column, 1)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
@@ -123,7 +123,7 @@ class DetailMealController extends AppController {
         }
 
         // Fill data
-        $row = 2; // Starting from the second row, because the first row is for headers
+        $row = 2;
         foreach ($meals as $index => $item) {
             $sheet->setCellValueByColumnAndRow(1, $row, $index + 1);
             $sheet->setCellValueByColumnAndRow(2, $row, $item['display_name']);
