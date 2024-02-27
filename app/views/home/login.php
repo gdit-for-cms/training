@@ -278,8 +278,8 @@
                 case "error":
                     Swal.fire('Đã có lỗi xảy ra', '', 'error');
                     break;
-                case "token_expire":
-                    Swal.fire('Đường link đã hết hạn', 'Vui lòng thử lại', 'error');
+                case "token_error":
+                    Swal.fire('Đường link đã hết hạn hoặc không có hiệu lực', 'Vui lòng thử lại', 'error');
                     break;
                 case "success":
                     Swal.fire('Link tạo lại mật khẩu đã được gửi qua email của quý Anh/Chị', '', 'success');

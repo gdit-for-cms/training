@@ -29,9 +29,9 @@
                             <form action="/auth/change-pass" id="change_pass_form" class="w-full my-3" method="POST" x-data="{password: '',password_confirm: ''}" enctype="multipart/form-data">
                                 <p class="mb-4 text-3xl text-center uppercase">Đổi mật khẩu</p>
 
-                                <?php if (isset($_SESSION['decrypted_email'])) : ?>
-                                    <input type="text" name='email' hidden value='<?php echo $_SESSION['decrypted_email'] ?>'>
-                                    <?php unset($_SESSION['decrypted_email']) ?>
+                                <?php if (isset($_SESSION['email'])) : ?>
+                                    <input type="text" name='email' hidden value='<?php echo $_SESSION['email'] ?>'>
+                                    <?php unset($_SESSION['email']) ?>
                                 <?php endif; ?>
                                 <!-- Decrypted Email -->
 
@@ -69,7 +69,7 @@
 
                                 <!--Submit button-->
                                 <div class="mt-2 mb-12 pb-1 pt-1 text-center">
-                                    <div onclick="submitChangePass()" class="mb-2 inline-block w-full rounded px-6 py-2 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]" type="button" onclick="submitButton()" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
+                                    <div onclick="submitChangePass()" class="hover:cursor-pointer mb-2 inline-block w-full rounded px-6 py-2 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]" type="button" onclick="submitButton()" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
                                         Đổi mật khẩu
                                     </div>
                                 </div>
