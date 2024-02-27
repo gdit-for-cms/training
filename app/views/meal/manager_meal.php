@@ -153,13 +153,19 @@
                      <input name="is_free" id="is_free" value=" ' . htmlspecialchars($is_free) . ' " hidden>
                     
                     <div class="flex items-center justify-between px-5 py-4 border-t border-gray-200">
-                        <span id="total-title" class="text-xl font-bold"><label for="ship_fee">Nhập phí ship + phí dịch vụ</label></span>
-                        <span id="total-price" class="text-xl font-bold border"><input class="text-end" onchange="setFinalPrice()" style="color: black;" type="number" name="ship_fee" id="ship_fee" value="0"></span>
+                    <span id="total-title" class="text-xl font-bold"><label for="ship_fee">Nhập phí ship + phí dịch vụ</label></span>
+                    <div class="flex gap-1 justify-end items-center">
+                    <span id="total-price" class="text-xl font-bold border"><input class="text-end" onchange="setFinalPrice()" style="color: black;" type="number" name="ship_fee" id="ship_fee" value="0"></span>
+                    <span class="underline font-bold">đ</span>
+                    </div>
                     </div>
                     <div class="flex items-center justify-between px-5 py-4 border-t border-gray-200">
                         <span id="total-title" class="text-xl font-bold"><label for="discount">Nhập số tiền giảm giá</label></span>
+                        <div class="flex gap-1 justify-end items-center">
                         <span id="total-price" class="text-xl font-bold border"> <input class="text-end" onchange="setFinalPrice()" style="color: black;" type="number" name="discount" id="discount" value="0"></span>
-                    </div>
+                        <span class="underline font-bold">đ</span>
+                        </div>
+                        </div>
                     <div class="flex items-center justify-between px-5 py-4 border-t border-gray-200">
                         <span id="total-title" class="text-xl font-bold"><label for="discount">Tổng tiền</label></span>
                         <span id="total-price" class="text-xl font-bold">

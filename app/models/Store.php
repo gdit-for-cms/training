@@ -104,8 +104,7 @@ class Store extends Model {
         }
 
         if (count($name_list) != count($price_list) || count($name_list) != count($img_list) || count($name_list) != count($status_list)) {
-            echo 1;
-            exit;
+            return -1;
         }
 
 
