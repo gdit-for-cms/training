@@ -4,21 +4,21 @@
         <div class="py-4 px-8 text-2xl font-semibold border-b border-gray-300 text-gray-800 bg-blue-200 rounded-full">Lịch sử đặt</div>
         <div class="overflow-x-auto overflow-y-scroll h-4/5"> <!-- Set overflow-y-scroll and height to full to take the height of parent -->
             <table class="min-w-full leading-normal">
-                <thead>
+                <thead class="sticky top-0 bg-white border-b-2 border-gray-300">
                     <tr>
-                        <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="px-5 py-3  text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Ngày giờ
                         </th>
-                        <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="px-5 py-3  text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Người mở đơn
                         </th>
-                        <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="px-5 py-3  text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Tên quán
                         </th>
-                        <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="px-5 py-3  text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Tổng tiền bạn chi
                         </th>
-                        <th class="px-5 py-3 border-b-2 border-gray-300 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="px-5 py-3  text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Chi tiết đơn
                         </th>
                     </tr>
@@ -33,7 +33,7 @@
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                 <p class="text-gray-900 whitespace-no-wrap">
-                                    <?php echo $history_order['creater_name'] ?>
+                                    <?php echo htmlspecialchars($history_order['creater_name']) ?>
                                 </p>
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
@@ -43,7 +43,7 @@
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                 <p class="text-gray-900 whitespace-no-wrap">
-                                    <?php echo $history_order['total_price'] ?>
+                                    <?php echo number_format($history_order['total_price']) . ' đ' ?>
                                 </p>
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 text-sm text-gray-900 text-center">
@@ -106,15 +106,27 @@
 
 
 <script>
-    // Function to open the modal with the clicked image
-    function openModal() {
-        document.getElementById('modal').classList.remove('hidden'); // Show the modal
-        document.getElementById('modal-backdrop').classList.remove('hidden'); // Show the modal backdrop
-    }
+    const formatNumber = (number) => {
+        const roundedNumber = Math.floor(number);
+        const formattedNumber = roundedNumber.toLocaleString("vi", {
+            style: "currency",
+            currency: "VND",
+        });
+        return formattedNumber;
+    };
 
-    // Function to close the modal
-    function closeModal() {
-        document.getElementById('modal').classList.add('hidden'); // Hide the modal
-        document.getElementById('modal-backdrop').classList.add('hidden'); // Hide the modal backdrop
+    function openModal() {
+        Swal.fire("Chức năng đang phát triển", "", "warning");
     }
+    // // Function to open the modal with the clicked image
+    // function openModal() {
+    // document.getElementById('modal').classList.remove('hidden'); // Show the modal
+    // document.getElementById('modal-backdrop').classList.remove('hidden'); // Show the modal backdrop
+    // }
+
+    // // Function to close the modal
+    // function closeModal() {
+    // document.getElementById('modal').classList.add('hidden'); // Hide the modal
+    // document.getElementById('modal-backdrop').classList.add('hidden'); // Hide the modal backdrop
+    // }
 </script>

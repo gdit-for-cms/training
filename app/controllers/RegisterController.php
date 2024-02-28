@@ -86,13 +86,13 @@ class RegisterController extends AppController {
                     exit;
                 } else {
                     if ($exist_user && $exist_display_name) {
-                        $_SESSION['register_error'] = showError('both name existed');
+                        $_SESSION['register_error'] = showError('both_name_existed');
                     } else if ($exist_user) {
-                        $_SESSION['register_error'] = showError('name existed');
+                        $_SESSION['register_error'] = showError('name_existed');
                     } else if ($exist_display_name) {
-                        $_SESSION['register_error'] = showError('display name existed');
+                        $_SESSION['register_error'] = showError('display_name_existed');
                     } else if ($exist_email) {
-                        $_SESSION['register_error'] = showError('email existed');
+                        $_SESSION['register_error'] = showError('email_existed');
                     }
                     header('Location: /register/register');
                     exit;

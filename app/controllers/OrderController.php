@@ -81,7 +81,19 @@ class OrderController extends AppController {
         $user_id = $user['id'];
         $detail_order = new DetailOrder;
         $history_order_result = $detail_order->getHistoryOrderOfCurrentUser($user_id);
-        //var_dump($history_order_result);
+
+        var_dump($history_order_result);
+        if (!$history_order_result) {
+            $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/home/index';
+            if (strpos($referer, '/order/display-history')) {
+                header('Location: /home/index');
+                exit;
+            } else {
+                $_SESSION['non_history_order'] = TRUE;
+                header('Location: ' . $referer);
+                exit;
+            }
+        }
 
         $this->data_ary['history_order_of_current_user'] =  $history_order_result;
         $this->data_ary['title'] = "Lịch sử đặt";
