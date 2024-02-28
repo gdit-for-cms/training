@@ -118,6 +118,10 @@
             </div>
         </div>
     </div>
+
+    <form action="/register/resend-email" id="resend_email_form" method="POST">
+        <input type="text" name="email" id="email_resend" hidden>
+    </form>
 </body>
 
 <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.js" defer></script>
@@ -267,14 +271,26 @@
         }).then(() => {
             window.location.href = '/auth/login';
         });
+    } else if (register_state == "send_mail_success") {
+        Swal.fire({
+            title: 'Đã gửi link xác thực tài khoản đến email của bạn',
+            text: 'Vui lòng kiểm tra email và xác nhận ở bên dưới',
+            icon: 'success',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Đã nhận email',
+            showDenyButton: true,
+            denyButtonText: 'Gửi lại email',
+            denyButtonColor: '#d33',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/auth/login';
+            } else if (result.isDenied) {
+                document.getElementById("resend_email_form").submit();
+            }
+        })
+    } else if (register_state == "send_mail_expire") {
+        Swal.fire('Link và thông tin đăng ký hết hiệu lực', 'Vui lòng đăng ký lại', 'error');
     } else {
-        <?php if (isset($_SESSION['data_input'])) : ?>
-            document.getElementById('name').value = '<?php echo htmlspecialchars($_SESSION['data_input']['pre_name']); ?>';
-            document.getElementById('display_name').value = '<?php echo htmlspecialchars($_SESSION['data_input']['pre_display_name']); ?>';
-            document.getElementById('email').value = '<?php echo htmlspecialchars($_SESSION['data_input']['email']); ?>';
-            <?php unset($_SESSION['data_input']) ?>
-        <?php endif; ?>
-
         switch (register_error) {
             case "none register value":
                 Swal.fire('Vui lòng nhập đầy đủ thông tin', '', 'warning');
@@ -291,10 +307,21 @@
             case "email existed":
                 Swal.fire('Email đã được sử dụng', '', 'warning');
                 break;
+            case "send mail error":
+                Swal.fire('Đã có lỗi trong quá trình gửi email', '', 'error');
+                break;
             default:
                 console.log("ebc");
         }
     }
+
+    <?php if (isset($_SESSION['data_input'])) : ?>
+        document.getElementById('name').value = '<?php echo htmlspecialchars($_SESSION['data_input']['pre_name']); ?>';
+        document.getElementById('display_name').value = '<?php echo htmlspecialchars($_SESSION['data_input']['pre_display_name']); ?>';
+        document.getElementById('email').value = '<?php echo htmlspecialchars($_SESSION['data_input']['email']); ?>';
+        document.getElementById('email_resend').value = '<?php echo htmlspecialchars($_SESSION['data_input']['email']); ?>';
+        <?php unset($_SESSION['data_input']) ?>
+    <?php endif; ?>
 </script>
 
 </html>
