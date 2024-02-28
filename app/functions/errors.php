@@ -6,10 +6,10 @@ function showError($errorName) {
         "login password" => 'Mật khẩu không đúng',
         "create" => 'Create failed',
         "existed" => 'Object has been exist',
-        "name existed" => 'name existed',
-        "display name existed" => 'display name existed',
-        "both name existed" => 'both name existed',
-        "none register value" => 'none register value',
+        "name_existed" => 'name_existed',
+        "display_name_existed" => 'display_name_existed',
+        "both_name_existed" => 'both_name_existed',
+        "none_register_value" => 'none_register_value',
         "undefined_error" => "Error undefined",
         "string" => "This field must be string",
         "required" => "Missing a field",
@@ -23,7 +23,7 @@ function showError($errorName) {
         "pageExisted" => "'page' you selected does not exist",
         "loadHTML" => 'Can not load HTML from your page, please check link and try again',
         "nonMeal" => 'Bạn không có đơn nào để quản lí',
-        "email existed" => 'email existed'
+        "email_existed" => 'email_existed'
     ];
     if ($error_ary[$errorName]) {
         return $error_ary[$errorName];

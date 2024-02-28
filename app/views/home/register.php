@@ -276,19 +276,19 @@
         <?php endif; ?>
 
         switch (register_error) {
-            case "none register value":
+            case "none_register_value":
                 Swal.fire('Vui lòng nhập đầy đủ thông tin', '', 'warning');
                 break;
-            case "both name existed":
+            case "both_name_existed":
                 Swal.fire('Tên đăng nhập và Tên hiển thị đã được sử dụng', '', 'warning');
                 break;
-            case "name existed":
+            case "name_existed":
                 Swal.fire('Tên đăng nhập đã được sử dụng', '', 'warning');
                 break;
-            case "display name existed":
+            case "display_name_existed":
                 Swal.fire('Tên hiển thị đã được sử dụng', '', 'warning');
                 break;
-            case "email existed":
+            case "email_existed":
                 Swal.fire('Email đã được sử dụng', '', 'warning');
                 break;
             default:

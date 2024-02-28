@@ -301,12 +301,23 @@
             return false;
         }
     </script>
+
     <!-- Display alert non meal -->
     <?php if (isset($_SESSION['non_meal'])) {
-        echo '<script>
-         Swal.fire("Bạn chưa tạo đơn", "Mục này chỉ dành cho host có tạo đơn", "warning");
-       </script>';
+        echo
+        '<script>
+            Swal.fire("Bạn chưa tạo đơn", "Mục này chỉ dành cho host có tạo đơn", "warning");
+        </script>';
         unset($_SESSION['non_meal']);
+    } ?>
+
+    <!-- Display alert non history order -->
+    <?php if (isset($_SESSION['non_history_order'])) {
+        echo
+        '<script>
+            Swal.fire("Bạn chưa có lịch sử đặt hàng", " ", "warning");
+        </script>';
+        unset($_SESSION['non_history_order']);
     } ?>
 </body>
 
