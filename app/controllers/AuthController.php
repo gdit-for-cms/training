@@ -257,14 +257,14 @@ class AuthController extends AppController {
 
         $encode_verification = urlencode($verification_string);
         $serverName = $_SERVER['SERVER_NAME'];
-        $resetPassUrl = "http://$serverName/auth/reset-pass?verification=$encode_verification";
+        $reset_pass_url = "http://$serverName/auth/reset-pass?verification=$encode_verification";
 
 
         $mail = new PHPMailer\PHPMailer(true);
 
         try {
             $mail->isSendmail();
-            $mail->Sendmail = '/usr/bin/env catchmail --smtp-ip 192.168.1.209 -f cms8341-test-mail@glode.co.jp';
+            $mail->Sendmail = '/usr/bin/env catchmail --smtp-ip ' . $_SERVER['SERVER_ADDR'] . ' -f cms8341-test-mail@glode.co.jp';
 
             // Recipients
             $mail->setFrom('no_reply@phpfoodcode.com', 'Mailer');
@@ -277,7 +277,7 @@ class AuthController extends AppController {
 
 
             $name = htmlspecialchars($exist_user['display_name'], ENT_QUOTES, 'UTF-8');
-            $reset_link = htmlspecialchars($resetPassUrl, ENT_QUOTES, 'UTF-8');
+            $reset_link = htmlspecialchars($reset_pass_url, ENT_QUOTES, 'UTF-8');
 
             $body = '<html><head>';
             $body .= '<title>Yêu Cầu Đặt Lại Mật Khẩu</title>';
