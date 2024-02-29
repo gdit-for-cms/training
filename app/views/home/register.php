@@ -289,7 +289,7 @@
             }
         })
     } else if (register_state == "send_mail_expire") {
-        Swal.fire('Link và thông tin đăng ký hết hiệu lực', 'Vui lòng đăng ký lại', 'error');
+        Swal.fire('Link hoặc thông tin đăng ký hết hiệu lực', 'Vui lòng đăng ký lại', 'error');
     } else {
         switch (register_error) {
             case "none_register_value":

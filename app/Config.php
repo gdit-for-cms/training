@@ -37,7 +37,7 @@ class Config {
      * Show or hide error messages on screen
      * @var boolean
      */
-    const SHOW_ERRORS = TRUE;
+    const SHOW_ERRORS = FALSE;
 
     /**
      * Number of retries if catch error when crawl

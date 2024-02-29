@@ -82,7 +82,6 @@ class OrderController extends AppController {
         $detail_order = new DetailOrder;
         $history_order_result = $detail_order->getHistoryOrderOfCurrentUser($user_id);
 
-        var_dump($history_order_result);
         if (!$history_order_result) {
             $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/home/index';
             if (strpos($referer, '/order/display-history')) {
