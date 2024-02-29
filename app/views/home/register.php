@@ -193,15 +193,17 @@
     }
 
     function checkValidateEmail() {
+
         var emailEl = document.getElementById('email').value;
         var emailError = document.getElementById('email_error');
         var emailErrorContent = document.getElementById('email_error_content');
+
 
         if (emailEl.trim() === '') {
             emailError.classList.remove('hidden');
             emailErrorContent.textContent = 'Email không được để trống.';
             return false;
-        } else if (!/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi.test(emailEl)) {
+        } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/gi.test(emailEl)) {
             emailError.classList.remove('hidden');
             emailErrorContent.textContent = 'Email phải có dạng [your-email]@[domain]';
             return false;
