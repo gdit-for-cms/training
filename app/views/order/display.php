@@ -4,24 +4,24 @@
         <div class="py-4 px-8 text-2xl font-semibold border-b border-gray-300 text-gray-800 bg-yellow-200 rounded-full">Công nợ</div>
         <div class="overflow-x-auto overflow-y-scroll h-3/4"> <!-- Set overflow-y-scroll and height to full to take the height of parent -->
             <table class="min-w-full leading-normal">
-                <thead class="sticky top-0 bg-white">
+                <thead class="text-center sticky top-0 bg-white">
                     <tr>
-                        <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="px-5 py-3 border-b-2 border-gray-300 text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Tình trạng
                         </th>
-                        <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="px-5 py-3 border-b-2 border-gray-300 text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Phải trả
                         </th>
-                        <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="px-5 py-3 border-b-2 border-gray-300 text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Phải thu
                         </th>
-                        <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="px-5 py-3 border-b-2 border-gray-300 text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             User
                         </th>
-                        <th class="w-30 px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="w-30 px-5 py-3 border-b-2 border-gray-300 text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             QR Code
                         </th>
-                        <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="px-5 py-3 border-b-2 border-gray-300 text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Thao tác
                         </th>
                     </tr>
@@ -31,67 +31,76 @@
                     <?php foreach ($list_for_debtor_unpaid as $debtor_unpaid) : ?>
                         <tr>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <span class="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight">
-                                    <span aria-hidden="true" class="absolute inset-0 bg-red-200 opacity-50 rounded-full"></span>
-                                    <span class="relative">Bạn chưa trả</span>
-                                </span>
+                                <div class="flex items-center justify-center">
+                                    <span class="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight">
+                                        <span aria-hidden="true" class="absolute inset-0 bg-red-200 opacity-50 rounded-full"></span>
+                                        <span class="relative">Bạn chưa trả</span>
+                                    </span>
+                                </div>
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <p class="text-gray-900 whitespace-no-wrap">
-                                    <?php echo number_format($debtor_unpaid["total"]) . " đ" ?>
-                                </p>
+                                <div class="text-gray-900 whitespace-no-wrap flex items-center justify-center">
+                                    <span>
+                                        <?php echo number_format($debtor_unpaid["total"]) . " đ" ?>
+                                    </span>
+                                </div>
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                 <p class="text-gray-900 whitespace-no-wrap"></p>
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <div class="flex items-center">
-                                    <div class="ml-3">
-                                        <p class="text-gray-900 whitespace-no-wrap">
-                                            <?php echo $debtor_unpaid["creditor_name"] ?>
-                                        </p>
-                                    </div>
+                                <div class="flex items-center justify-center">
+                                    <span class="text-gray-900 whitespace-no-wrap">
+                                        <?php echo $debtor_unpaid["creditor_name"] ?>
+                                    </span>
                                 </div>
                             </td>
-                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm flex justify-center items-center">
                                 <?php
                                 $bank_bin = $debtor_unpaid["bank_bin"];
                                 $bank_acc = $debtor_unpaid["bank_acc"];
                                 ?>
-                                <div class="w-10 h-10 cursor-pointer">
+                                <div class="w-10 h-auto cursor-pointer">
                                     <img src="https://img.vietqr.io/image/<?php echo $bank_bin ?>-<?php echo $bank_acc ?>-compact2.png?amount=<?php echo $debtor_unpaid["total"] ?>&addInfo=CT" alt="QR Code" onclick="openModal(this.src)" onerror="this.onerror=null; this.src='<?php echo '/img/no_QR_code.png'; ?>';">
                                 </div>
                             </td>
-                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <button onclick="confirmPay('<?php echo $debtor_unpaid['ids']; ?>')" class="text-white bg-gray-400 rounded border-b w-20">Trả tiền</button>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm ">
+                                <div class="flex items-center justify-center">
+                                    <button onclick="confirmPay('<?php echo $debtor_unpaid['ids']; ?>')" class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition duration-150 ease-in-out transform hover:scale-105 shadow-lg">
+                                        Trả tiền
+                                    </button>
+                                </div>
                             </td>
+
                         </tr>
                     <?php endforeach; ?>
                     <!-- -list for debtor paid -->
                     <?php foreach ($list_for_debtor_paid as $debtor_paid) : ?>
                         <tr>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <span class="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight">
-                                    <span aria-hidden="true" class="absolute inset-0 bg-red-200 opacity-50 rounded-full"></span>
-                                    <span class="relative">Bạn đã trả, chờ xác nhận</span>
-                                </span>
+                                <div class="flex items-center justify-center">
+                                    <span class="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight">
+                                        <span aria-hidden="true" class="absolute inset-0 bg-red-200 opacity-50 rounded-full"></span>
+                                        <span class="relative">Bạn đã trả, chờ xác nhận</span>
+                                    </span>
+                                </div>
                             </td>
 
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <p class="text-gray-900 whitespace-no-wrap">
-                                    <?php echo number_format($debtor_paid["total"]) . " đ" ?>
-                                </p>
+                                <div class="flex items-center justify-center">
+                                    <span class="text-gray-900 whitespace-no-wrap">
+                                        <?php echo number_format($debtor_paid["total"]) . " đ" ?>
+                                    </span>
+                                </div>
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                 <p class="text-gray-900 whitespace-no-wrap"></p>
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <div class="flex items-center">
-                                    <div class="ml-3">
-                                        <p class="text-gray-900 whitespace-no-wrap">
-                                            <?php echo $debtor_paid["creditor_name"] ?>
-                                        </p>
-                                    </div>
+                                <div class="flex items-center justify-center">
+                                    <span class="text-gray-900 whitespace-no-wrap">
+                                        <?php echo $debtor_paid["creditor_name"] ?>
+                                    </span>
                                 </div>
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
@@ -105,26 +114,28 @@
                     <?php foreach ($list_for_creditor_unpaid as $creditor_unpaid) : ?>
                         <tr>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <span class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                                    <span aria-hidden="true" class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
-                                    <span class="relative">Con nợ chưa trả</span>
-                                </span>
+                                <div class="flex items-center justify-center">
+                                    <span class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
+                                        <span aria-hidden="true" class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
+                                        <span class="relative">Con nợ chưa trả</span>
+                                    </span>
+                                </div>
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
 
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <p class="text-gray-900 whitespace-no-wrap">
-                                    <?php echo number_format($creditor_unpaid["total"]) . " đ" ?>
-                                </p>
+                                <div class="flex items-center justify-center">
+                                    <span class="text-gray-900 whitespace-no-wrap">
+                                        <?php echo number_format($creditor_unpaid["total"]) . " đ" ?>
+                                    </span>
+                                </div>
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <div class="flex items-center">
-                                    <div class="ml-3">
-                                        <p class="text-gray-900 whitespace-no-wrap">
-                                            <?php echo $creditor_unpaid["debtor_name"] ?>
-                                        </p>
-                                    </div>
+                                <div class="flex items-center justify-center">
+                                    <span class="text-gray-900 whitespace-no-wrap">
+                                        <?php echo $creditor_unpaid["debtor_name"] ?>
+                                    </span>
                                 </div>
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
@@ -138,32 +149,38 @@
                     <?php foreach ($list_for_creditor_paid as $creditor_paid) : ?>
                         <tr>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <span class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                                    <span aria-hidden="true" class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
-                                    <span class="relative">Đã trả, bạn hãy xác nhận lại</span>
-                                </span>
+                                <div class="flex items-center justify-center">
+                                    <span class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
+                                        <span aria-hidden="true" class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
+                                        <span class="relative">Đã trả, bạn hãy xác nhận lại</span>
+                                    </span>
+                                </div>
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
 
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <p class="text-gray-900 whitespace-no-wrap">
-                                    <?php echo number_format($creditor_paid["total"]) . " đ" ?>
-                                </p>
+                                <div class="flex items-center justify-center">
+                                    <span class="text-gray-900 whitespace-no-wrap">
+                                        <?php echo number_format($creditor_paid["total"]) . " đ" ?>
+                                    </span>
+                                </div>
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <div class="flex items-center">
-                                    <div class="ml-3">
-                                        <p class="text-gray-900 whitespace-no-wrap">
-                                            <?php echo $creditor_paid["debtor_name"] ?>
-                                        </p>
-                                    </div>
+                                <div class="flex items-center justify-center">
+                                    <span class="text-gray-900 whitespace-no-wrap">
+                                        <?php echo $creditor_paid["creditor_name"] ?>
+                                    </span>
                                 </div>
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <button onclick="confirmConfirm('<?php echo $creditor_paid['ids'] ?>')" class="text-white bg-gray-400 rounded border-b w-20">Xác nhận</button>
+                                <div class="flex items-center justify-center">
+                                    <button onclick="confirmConfirm('<?php echo $creditor_paid['ids'] ?>')" class="text-white bg-green-500 hover:bg-green-600 focus:ring-2 focus:ring-green-300 rounded-full border-b transition ease-in-out duration-150 px-5 py-2.5 transform hover:scale-105 shadow-lg">
+                                        Xác nhận
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -179,30 +196,30 @@
         <div class="py-4 px-8 text-2xl font-semibold border-b border-gray-300 text-gray-800 bg-blue-200 rounded-full">Chi tiết</div>
         <div class="overflow-x-auto overflow-y-scroll h-3/4"> <!-- Set overflow-y-scroll and height to full to take the height of parent -->
             <table class="min-w-full leading-normal">
-                <thead class="sticky top-0 bg-white z-10 ">
+                <thead class="text-center sticky top-0 bg-white z-10 ">
                     <tr>
-                        <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="px-5 py-3 border-b-2 border-gray-300 text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Tình trạng
                         </th>
-                        <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="px-5 py-3 border-b-2 border-gray-300 text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Chủ nợ
                         </th>
-                        <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="px-5 py-3 border-b-2 border-gray-300 text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Con nợ
                         </th>
-                        <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="px-5 py-3 border-b-2 border-gray-300 text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Tên món
                         </th>
-                        <th class="px-5 py-3 border-b-2 border-gray-300 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="px-5 py-3 border-b-2 border-gray-300 text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Số lượng
                         </th>
-                        <th class="w-30 px-5 py-3 border-b-2 border-gray-300 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="w-30 px-5 py-3 border-b-2 border-gray-300 text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Giá
                         </th>
-                        <th class="w-30 px-5 py-3 border-b-2 border-gray-300 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="w-30 px-5 py-3 border-b-2 border-gray-300 text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Tổng
                         </th>
-                        <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="px-5 py-3 border-b-2 border-gray-300 text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Thời gian
                         </th>
                     </tr>
@@ -220,52 +237,60 @@
                             }
                             ?>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <span class="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight">
-                                    <span aria-hidden="true" class="absolute inset-0 bg-red-200 opacity-50 rounded-full"></span>
-                                    <span class="relative"><?php echo $status ?></span>
-                                </span>
-                            </td>
-                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <p class="text-gray-900 whitespace-no-wrap">
-                                    <?php echo $detail['creditor_name'] ?>
-                                </p>
-                            </td>
-                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <p class="text-gray-900 whitespace-no-wrap">
-                                    <?php echo $detail['debtor_name'] ?>
-                                </p>
-                            </td>
-                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <div class="flex items-center">
-                                    <div class="ml-3">
-                                        <p class="text-gray-900 whitespace-no-wrap">
-                                            <?php echo $detail['name'] ?>
-                                        </p>
-                                    </div>
+                                <div class="flex items-center justify-center">
+                                    <span class="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight">
+                                        <span aria-hidden="true" class="absolute inset-0 bg-red-200 opacity-50 rounded-full"></span>
+                                        <span class="relative"><?php echo $status ?></span>
+                                    </span>
                                 </div>
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <p class="text-gray-900 whitespace-no-wrap text-center">
-                                    <?php echo $detail['amount'] ?>
-                                </p>
+                                <div class="flex items-center justify-center">
+                                    <span class="text-gray-900 whitespace-no-wrap">
+                                        <?php echo $detail['creditor_name'] ?>
+                                    </span>
+                                </div>
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <p class="text-gray-900 whitespace-no-wrap text-right">
-                                    <?php echo number_format($detail['price']) . " đ" ?>
-                                </p>
+                                <div class="flex items-center justify-center">
+                                    <span class="text-gray-900 whitespace-no-wrap">
+                                        <?php echo $detail['debtor_name'] ?>
+                                    </span>
+                                </div>
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <p class="text-gray-900 whitespace-no-wrap text-right">
-                                    <?php echo number_format($detail['price'] * $detail['amount']) . " đ" ?>
-                                </p>
+                                <div class="flex items-center justify-center">
+                                    <span class="text-gray-900 whitespace-no-wrap">
+                                        <?php echo $detail['name'] ?>
+                                    </span>
+                                </div>
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <div class="flex items-center">
-                                    <div class="ml-3">
-                                        <p class="text-gray-900 whitespace-no-wrap">
-                                            <?php echo $detail['time_close'] ?>
-                                        </p>
-                                    </div>
+                                <div class="flex items-center justify-center">
+                                    <span class="text-gray-900 whitespace-no-wrap text-center">
+                                        <?php echo $detail['amount'] ?>
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <div class="flex items-center justify-center">
+                                    <span class="text-gray-900 whitespace-no-wrap text-right">
+                                        <?php echo number_format($detail['price']) . " đ" ?>
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <div class="flex items-center justify-center">
+                                    <span class="text-gray-900 whitespace-no-wrap text-right">
+                                        <?php echo number_format($detail['price'] * $detail['amount']) . " đ" ?>
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <div class="flex items-center justify-center">
+                                    <span class="text-gray-900 whitespace-no-wrap">
+                                        <?php echo $detail['time_close'] ?>
+                                    </span>
                                 </div>
                             </td>
                         </tr>
