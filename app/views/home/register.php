@@ -136,7 +136,7 @@
             nameError.classList.remove('hidden');
             nameErrorContent.textContent = 'Tên đăng nhập không được để trống.';
             return false;
-        } else if (!/^[\w]+$/i.test(nameEl.trim())) {
+        } else if (!/^[\w]+$/i.test(nameEl)) {
             nameError.classList.remove('hidden');
             nameErrorContent.textContent = 'Tên đăng nhập chỉ chứa chữ cái, số và gách dưới.';
             return false;
