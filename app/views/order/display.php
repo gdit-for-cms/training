@@ -2,9 +2,9 @@
     <!-- Table 1 -->
     <div class="container mx-auto px-4 bg-white shadow-md rounded-lg mb-10" style="height: 50vh;"> <!-- Set 2/3 of viewport height -->
         <div class="py-4 px-8 text-2xl font-semibold border-b border-gray-300 text-gray-800 bg-yellow-200 rounded-full">Công nợ</div>
-        <div class="overflow-x-auto overflow-y-scroll h-full"> <!-- Set overflow-y-scroll and height to full to take the height of parent -->
+        <div class="overflow-x-auto overflow-y-scroll h-3/4"> <!-- Set overflow-y-scroll and height to full to take the height of parent -->
             <table class="min-w-full leading-normal">
-                <thead>
+                <thead class="sticky top-0 bg-white">
                     <tr>
                         <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Tình trạng
@@ -177,9 +177,9 @@
     <!-- Table 2 -->
     <div class="container mx-auto px-4 bg-white shadow-md rounded-lg" style="height: 50vh;"> <!-- Set 2/3 of viewport height -->
         <div class="py-4 px-8 text-2xl font-semibold border-b border-gray-300 text-gray-800 bg-blue-200 rounded-full">Chi tiết</div>
-        <div class="overflow-x-auto overflow-y-scroll h-full"> <!-- Set overflow-y-scroll and height to full to take the height of parent -->
+        <div class="overflow-x-auto overflow-y-scroll h-3/4"> <!-- Set overflow-y-scroll and height to full to take the height of parent -->
             <table class="min-w-full leading-normal">
-                <thead>
+                <thead class="sticky top-0 bg-white z-10 ">
                     <tr>
                         <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Tình trạng
