@@ -199,6 +199,9 @@
                         <th class="w-30 px-5 py-3 border-b-2 border-gray-300 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Giá
                         </th>
+                        <th class="w-30 px-5 py-3 border-b-2 border-gray-300 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            Tổng
+                        </th>
                         <th class="px-5 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Thời gian
                         </th>
@@ -249,6 +252,11 @@
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                 <p class="text-gray-900 whitespace-no-wrap text-right">
                                     <?php echo number_format($detail['price']) . " đ" ?>
+                                </p>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <p class="text-gray-900 whitespace-no-wrap text-right">
+                                    <?php echo number_format($detail['price'] * $detail['amount']) . " đ" ?>
                                 </p>
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
