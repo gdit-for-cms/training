@@ -136,9 +136,9 @@
             nameError.classList.remove('hidden');
             nameErrorContent.textContent = 'Tên đăng nhập không được để trống.';
             return false;
-        } else if (!/^[a-zA-Z0-9\S]+$/i.test(nameEl.trim())) {
+        } else if (!/^[\w]+$/i.test(nameEl.trim())) {
             nameError.classList.remove('hidden');
-            nameErrorContent.textContent = 'Tên đăng nhập không được chứa khoảng trắng.';
+            nameErrorContent.textContent = 'Tên đăng nhập chỉ chứa chữ cái, số và gách dưới.';
             return false;
         } else if (nameEl.trim().length < 3 || nameEl.trim().length > 50) {
             nameError.classList.remove('hidden');
@@ -182,9 +182,9 @@
             passError.classList.remove('hidden');
             passErrorContent.textContent = 'Mật khẩu không được để trống.';
             return false;
-        } else if (!/^[a-zA-Z0-9\S]{6,}$/.test(passEl)) {
+        } else if (!/^[\w!@#$%^&*()+=<>?.]{6,}$/.test(passEl)) {
             passError.classList.remove('hidden');
-            passErrorContent.textContent = 'Mật khẩu phải có ít nhất 6 ký tự và không chứa khoảng trắng.';
+            passErrorContent.textContent = 'Mật khẩu chứa ít nhất 6 ký tự và không chứa khoảng trắng.';
             return false;
         } else {
             passError.classList.add('hidden');
