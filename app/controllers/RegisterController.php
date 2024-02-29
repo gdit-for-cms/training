@@ -97,9 +97,9 @@ class RegisterController extends AppController {
                     }
 
                     // Set token
-                    $redis->setex("verificationToken:$encrypted_token", 180, json_encode($userInfo));
+                    $redis->setex("verificationToken:$encrypted_token", 3600, json_encode($userInfo));
                     // Set userInfo
-                    $redis->setex("userInfo:$email", 180, json_encode($userInfo));
+                    $redis->setex("userInfo:$email", 3600, json_encode($userInfo));
 
                     // Send verification email:
                     if ($this->sendMailAction($email, $encrypted_token)) {
@@ -166,7 +166,7 @@ class RegisterController extends AppController {
             $body .= '<p>Bạn nhận được email này vì bạn đã đăng ký tài khoản trên PHP Food Code. Để hoàn tất quá trình đăng ký, bạn cần xác thực địa chỉ email của mình.</p>';
             $body .= '<p>Để xác thực email của bạn, vui lòng nhấp vào liên kết dưới đây:</p>';
             $body .= '<a href="' . $verification_link . '" style="padding: 10px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">Xác Thực Email</a>';
-            $body .= '<p>Liên kết xác thực này sẽ hết hạn trong 24 giờ. Sau khi liên kết hết hạn, bạn sẽ cần yêu cầu xác thực mới.</p>';
+            $body .= '<p>Liên kết xác thực này sẽ hết hạn trong 1 giờ. Sau khi liên kết hết hạn, bạn sẽ cần yêu cầu xác thực mới.</p>';
             $body .= '<p>Nếu bạn không tạo tài khoản trên PHP Food Code, bạn có thể bỏ qua email này.</p>';
             $body .= '<br>';
             $body .= '<p>Trân trọng,</p>';
@@ -251,13 +251,19 @@ class RegisterController extends AppController {
         // Fetch token from Redis
         $userInfoJson = $redis->get("userInfo:$email");
 
-        // Generate a random token
-        $token = bin2hex(random_bytes(32));
-        // Encrypt token
-        $encrypted_token = openssl_encrypt($token, $_ENV['METHOD_ENCRYPT'], $_ENV['SECRET_KEY'], 0, hex2bin($_ENV['INITIALIZATION_VECTOR_HEX']));
+        if ($userInfoJson) {
+            // Generate a random token
+            $token = bin2hex(random_bytes(32));
+            // Encrypt token
+            $encrypted_token = openssl_encrypt($token, $_ENV['METHOD_ENCRYPT'], $_ENV['SECRET_KEY'], 0, hex2bin($_ENV['INITIALIZATION_VECTOR_HEX']));
 
-        // Set token
-        $redis->setex("verificationToken:$encrypted_token", 180, $userInfoJson);
+            // Set token
+            $redis->setex("verificationToken:$encrypted_token", 3600, $userInfoJson);
+        } else {
+            $_SESSION['register_state'] = 'send_mail_expire';
+            header('Location: /register/register');
+            exit;
+        }
 
         // Send verification email:
         if ($this->sendMailAction($email, $encrypted_token)) {

@@ -32,7 +32,7 @@
                                 <div class="relative mt-4">
                                     <input id="username" type="text" name="name" class="w-full rounded-lg shadow-lg leading-normal px-6 pb-2 pt-2.5" placeholder="Tên tài khoản" <?php
                                                                                                                                                                                     if (isset($_SESSION['pre_name'])) {
-                                                                                                                                                                                        echo 'value="' . htmlspecialchars($_SESSION['pre_name']) . '"';
+                                                                                                                                                                                        echo 'value="' . $_SESSION['pre_name'] . '"';
                                                                                                                                                                                     }
                                                                                                                                                                                     unset($_SESSION['pre_name']);
                                                                                                                                                                                     ?> />

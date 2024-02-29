@@ -112,7 +112,7 @@ if (!empty($user_data[0]['img']) && $user_data[0]['img'] != null) {
                     </div>
                     <h3 class="text-center text-lg font-bold mt-2 flex flex-col">
                         <span class="text-base underline">Username</span>
-                        <span><?php echo htmlspecialchars($user_data[0]['name']); ?></span>
+                        <span><?php echo $user_data[0]['name']; ?></span>
                     </h3>
                 </div>
             </div>
@@ -134,7 +134,7 @@ if (!empty($user_data[0]['img']) && $user_data[0]['img'] != null) {
                                                                                         }  ?>">
                         <div class="my-4">
                             <label for="display_name" class="block text-lg font-semibold mb-1">Tên hiển thị</label>
-                            <input onchange="checkValidate()" type="text" id="display_name" name="display_name" value="<?php echo htmlspecialchars($user_data[0]['display_name']); ?>" class="w-full border rounded p-2" />
+                            <input onchange="checkValidate()" type="text" id="display_name" name="display_name" value="<?php echo $user_data[0]['display_name']; ?>" class="w-full border rounded p-2" />
                             <div id="display_name_error" class="text-red-800 hidden">
                                 <div class="flex gap-1 items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -153,15 +153,15 @@ if (!empty($user_data[0]['img']) && $user_data[0]['img'] != null) {
                                     Vui lòng chọn thông tin...
                                 </option>
                                 <?php foreach ($banks as $bank) : ?>
-                                    <option value="<?php echo htmlspecialchars($bank['bin']); ?>" <?php echo $bank['bin'] == $user_data[0]['bank_bin'] ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($bank['bin'] . ' - ' . $bank['shortName']); ?>
+                                    <option value="<?php echo $bank['bin']; ?>" <?php echo $bank['bin'] == $user_data[0]['bank_bin'] ? 'selected' : ''; ?>>
+                                        <?php echo $bank['bin'] . ' - ' . $bank['shortName']; ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="my-4">
                             <label for="bank_acc" class="block text-lg font-semibold mb-1">Số tài khoản</label>
-                            <input type="text" id="bank_acc" name="bank_acc" placeholder="Vui lòng nhập số tài khoản" value="<?php echo htmlspecialchars($user_data[0]['bank_acc']); ?>" class="w-full border rounded p-2" />
+                            <input type="text" id="bank_acc" name="bank_acc" placeholder="Vui lòng nhập số tài khoản" value="<?php echo $user_data[0]['bank_acc']; ?>" class="w-full border rounded p-2" />
                         </div>
                         <div class="flex gap-2">
                             <button onclick="submitUpdate()" type="button" class="bg-green-600 text-white rounded px-4 py-2 mt-4 w-28">Cập nhật</button>
