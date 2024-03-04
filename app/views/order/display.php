@@ -169,7 +169,7 @@
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                 <div class="flex items-center justify-center">
                                     <span class="text-gray-900 whitespace-no-wrap">
-                                        <?php echo $creditor_paid["creditor_name"] ?>
+                                        <?php echo $creditor_paid["debtor_name"] ?>
                                     </span>
                                 </div>
                             </td>
