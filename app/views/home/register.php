@@ -168,6 +168,7 @@
             displayNameErrorContent.textContent = 'Tên hiển thị phải có độ dài từ 3 đến 50 ký tự.';
             return false;
         } else {
+            document.getElementById('display_name').value = displayNameEl.trim();
             displayNameError.classList.add('hidden');
             return true;
         }
@@ -223,6 +224,7 @@
         let email = document.getElementById('email').value;
         let flag = true;
 
+
         if (name.trim() == "" || display_name.trim() == "" || pass == "" || pass_confirm == "" || email == "") {
             Swal.fire('Vui lòng nhập đầy đủ thông tin', '', 'warning');
             flag = false;
@@ -245,6 +247,7 @@
             }
         }
         if (flag) {
+
             document.getElementById("register_form").submit();
         }
     }
