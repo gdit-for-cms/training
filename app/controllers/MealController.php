@@ -8,6 +8,7 @@ use App\Models\Meal;
 use App\Models\Store;
 use Core\View;
 use Core\Http\Request;
+use Exception;
 
 class MealController extends AppController {
 
@@ -41,7 +42,7 @@ class MealController extends AppController {
                 exit;
             } else {
                 $_SESSION['status_create_meal'] = FALSE;
-                header('Location: /home/index');
+                header('Location: /meal/create');
                 exit;
             }
         }
@@ -60,7 +61,7 @@ class MealController extends AppController {
         list($encryptedData, $iv) = explode('::', $encrypted, 2);
 
         // Decrypt the data
-        $decrypted = openssl_decrypt($encryptedData, 'aes-256-cbc', 'gdit', 0, $iv);
+        $decrypted = openssl_decrypt($encryptedData, $_ENV['METHOD_ENCRYPT'], $_ENV['SECRET_KEY'], 0, $iv);
 
         parse_str($decrypted, $output);
 
@@ -68,18 +69,25 @@ class MealController extends AppController {
 
         $meal = new Meal();
         $detail_meal = $meal->getDetailMealById($meal_id, 0);
-        if (!isset($detail_meal)) {
-            // Handle error
+        if (empty($detail_meal)) {
+            $_SESSION['no_meal'] = TRUE;
+            header('Location: /home/index');
             exit;
         }
 
         $object_detail_meal = new DetailMeal();
         $user_foods = $object_detail_meal->getDetailsByUserAndMeal($meal_id, $login_user_id);
+        try {
+            $store = $meal->getStoreFromMealId($meal_id);
+            $store_id = $store['store_id'];
+            $food = new Food();
+            $foods = $food->getFoodsByStoreId($store_id);
+        } catch (Exception $e) {
+            $_SESSION['no_meal'] = TRUE;
+            header('Location: /home/index');
+            exit;
+        }
 
-        $store = $meal->getStoreFromMealId($meal_id);
-        $store_id = $store['store_id'];
-        $food = new Food();
-        $foods = $food->getFoodsByStoreId($store_id);
 
         $this->data_ary['user_foods'] = $user_foods;
         $this->data_ary['meal_id'] = $meal_id;

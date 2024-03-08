@@ -303,10 +303,10 @@
 </div>
 
 <!-- Modal backdrop -->
-<div id="modal-backdrop" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+<div id="modal-backdrop" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-20" aria-hidden="true"></div>
 
 <!-- Modal -->
-<div id="modal" class="hidden fixed z-10 inset-0 overflow-y-auto">
+<div id="modal" class="hidden fixed z-30 inset-0 overflow-y-auto">
     <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center">
         <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
             <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">

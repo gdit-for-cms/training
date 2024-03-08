@@ -27,7 +27,7 @@ function getHTMLPage($url, $maxRetries = 5) {
             $capabilities->setCapability('timeouts', $timeouts);
 
             // Use environment variable for Selenium WebDriver hub URL
-            $seleniumHubUrl = $_ENV['SELENIUM_HUB_URL'] ?: 'http://localhost:4444/wd/hub';
+            $seleniumHubUrl = str_replace('{SERVER_ADDR}', $_SERVER['SERVER_ADDR'], $_ENV['SELENIUM_HUB_URL']) ?: 'http://localhost:4444/wd/hub';
 
             try {
                 $driver = RemoteWebDriver::create($seleniumHubUrl, $capabilities);
