@@ -7,6 +7,7 @@ use App\Models\Meal;
 use Core\Http\Request;
 use Core\Http\ResponseTrait;
 use Core\View;
+use Exception;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
@@ -61,14 +62,16 @@ class DetailMealController extends AppController {
         exit;
     }
 
-    public function addOrderAction() {
+    public function addOrderAction(Request $request) {
         $json = file_get_contents('php://input');
         $orderData = json_decode($json, true);
+
+        $user = $request->getUser();
 
         $detailMeal = new DetailMeal();
 
         try {
-            $result = $detailMeal->processOrder($orderData);
+            $result = $detailMeal->processOrder($user['id'], $orderData);
             header('Content-Type: application/json');
             return $this->successResponse($result, 'Had response');
             exit;
@@ -80,25 +83,32 @@ class DetailMealController extends AppController {
     }
 
     public function showAction(Request $request) {
-        $get = $request->getGet();
-        $meal_id = $get->get('meal_id');
+        try {
+            $get = $request->getGet();
+            $meal_id = $get->get('meal_id');
 
-        $meal = new Meal();
-        $detail_meal = $meal->getDetailMealById($meal_id);
-        if (empty($detail_meal)) {
-            header('Location: /404.php');
+            $meal = new Meal();
+            $detail_meal = $meal->getDetailMealById($meal_id);
+            if (empty($detail_meal)) {
+                $_SESSION['no_meal'] = TRUE;
+                header('Location: /home/index');
+                exit;
+            }
+
+
+            $object_detail_meal = new DetailMeal();
+            $data = $object_detail_meal->getDetailsByUserAndMeal($meal_id);
+            $this->data_ary['meals'] = $data;
+            $this->data_ary['detail_meal'] = $detail_meal;
+
+            $this->data_ary['content'] = '/detail_meal/show';
+            View::render('/layouts/master.php', $this->data_ary);
+            exit;
+        } catch (Exception $e) {
+            $_SESSION['no_meal'] = TRUE;
+            header('Location: /home/index');
             exit;
         }
-
-
-        $object_detail_meal = new DetailMeal();
-        $data = $object_detail_meal->getDetailsByUserAndMeal($meal_id);
-        $this->data_ary['meals'] = $data;
-        $this->data_ary['detail_meal'] = $detail_meal;
-
-        $this->data_ary['content'] = '/detail_meal/show';
-        View::render('/layouts/master.php', $this->data_ary);
-        exit;
     }
 
     public function exportAction() {
@@ -131,7 +141,7 @@ class DetailMealController extends AppController {
             $sheet->setCellValueByColumnAndRow(4, $row, $item['price']);
             $sheet->setCellValueByColumnAndRow(5, $row, $item['amount']);
             $sheet->setCellValueByColumnAndRow(6, $row, $item['price'] * $item['amount']);
-            $sheet->setCellValueByColumnAndRow(7, $row, $item['describes'] ?: 'N/A');
+            $sheet->setCellValueByColumnAndRow(7, $row, $item['describes'] ?: '');
             $row++;
         }
 

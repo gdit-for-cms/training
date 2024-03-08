@@ -85,12 +85,9 @@
                     <?php
                     $data = 'id=' . $meal['id'];
 
-                    // Encryption key
-                    $key = 'gdit';
-
                     // Encrypt the data
                     $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
-                    $encrypted = openssl_encrypt($data, 'aes-256-cbc', $key, 0, $iv);
+                    $encrypted = openssl_encrypt($data, $_ENV['METHOD_ENCRYPT'], $_ENV['SECRET_KEY'], 0, $iv);
                     $encrypted = base64_encode($encrypted . '::' . $iv);
 
                     // Encrypted link
@@ -149,5 +146,15 @@ if (isset($_SESSION['status_create_meal'])) {
             </script>';
     }
     unset($_SESSION['status_create_meal']);
+}
+?>
+<?php
+if (isset($_SESSION['no_meal'])) {
+    if ($_SESSION['no_meal'] == TRUE) {
+        echo '<script>
+                Swal.fire("Đơn hàng đã đóng hoặc không còn tồn tại", "", "error");
+            </script>';
+    }
+    unset($_SESSION['no_meal']);
 }
 ?>

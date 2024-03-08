@@ -90,7 +90,7 @@
 
                                 <!--Submit button-->
                                 <div class="mt-2 mb-12 pb-1 pt-1 text-center">
-                                    <button class="mb-2 inline-block w-full rounded px-6 py-2 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]" type="button" onclick="submitButton()" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
+                                    <button id="resgisterBtn" class="mb-2 inline-block w-full rounded px-6 py-2 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]" type="button" onclick="submitButton()" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
                                         Đăng ký
                                     </button>
                                 </div>
@@ -138,7 +138,7 @@
             return false;
         } else if (!/^[\w]+$/i.test(nameEl)) {
             nameError.classList.remove('hidden');
-            nameErrorContent.textContent = 'Tên đăng nhập chỉ chứa chữ cái, số và gách dưới.';
+            nameErrorContent.textContent = 'Tên đăng nhập chỉ chứa chữ cái, số và gạch dưới.';
             return false;
         } else if (nameEl.trim().length < 3 || nameEl.trim().length > 50) {
             nameError.classList.remove('hidden');
@@ -224,7 +224,6 @@
         let email = document.getElementById('email').value;
         let flag = true;
 
-
         if (name.trim() == "" || display_name.trim() == "" || pass == "" || pass_confirm == "" || email == "") {
             Swal.fire('Vui lòng nhập đầy đủ thông tin', '', 'warning');
             flag = false;
@@ -247,7 +246,9 @@
             }
         }
         if (flag) {
-
+            const btn = document.getElementById("resgisterBtn");
+            btn.disabled = true;
+            btn.innerText = 'Đang xử lý';
             document.getElementById("register_form").submit();
         }
     }

@@ -96,8 +96,7 @@ class DetailMeal extends Model {
         return $result;
     }
 
-    public function processOrder($orderData) {
-        $userId = $orderData['user_id'];
+    public function processOrder($user_id, $orderData) {
         $mealId = $orderData['meal_id'];
         $submittedItems = $orderData['items'];
 
@@ -111,7 +110,7 @@ class DetailMeal extends Model {
         // Retrieve existing items from the database
         $existingItems = $this->table($this->_table)
             ->where('meal_id', '=', $mealId)
-            ->where('user_id', '=', $userId)
+            ->where('user_id', '=', $user_id)
             ->get();
 
         try {
@@ -124,7 +123,7 @@ class DetailMeal extends Model {
             // Process each submitted item
             foreach ($submittedItems as $foodId => $submittedItem) {
                 $insertData = [
-                    'user_id' => $userId,
+                    'user_id' => $user_id,
                     'meal_id' => $mealId,
                     'food_id' => $foodId,
                     'price' => $submittedItem['price'],
@@ -134,7 +133,7 @@ class DetailMeal extends Model {
 
                 if (isset($existingItemsAssoc[$foodId])) {
                     // Update existing item
-                    $this->table($this->_table)->update($insertData, "food_id = $foodId " . " AND " . " user_id = $userId ");
+                    $this->table($this->_table)->update($insertData, "food_id = $foodId " . " AND " . " user_id = $user_id ");
                     unset($existingItemsAssoc[$foodId]);
                 } else {
                     // Insert new item
@@ -144,7 +143,7 @@ class DetailMeal extends Model {
 
             // Delete any items that were not in the submitted data
             foreach ($existingItemsAssoc as $foodId => $item) {
-                $this->table($this->_table)->destroy("food_id = $foodId " . " AND " . " user_id = $userId ");
+                $this->table($this->_table)->destroy("food_id = $foodId " . " AND " . " user_id = $user_id ");
             }
 
             return ['status' => 'success'];

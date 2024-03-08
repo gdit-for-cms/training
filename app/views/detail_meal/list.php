@@ -286,7 +286,6 @@
   <script>
       function submitOrder() {
           const orderData = {
-              user_id: <?php echo json_encode($user_id); ?>,
               meal_id: <?php echo json_encode($meal_id); ?>,
               items: order.items,
               total: order.total
