@@ -149,3 +149,18 @@
     </script>
     <?php unset($_SESSION['failed_connect_selenium']); ?>
 <?php endif; ?>
+
+<?php
+if (isset($_SESSION['status_create_meal'])) {
+    if ($_SESSION['status_create_meal'] == TRUE) {
+        echo '<script>
+                Swal.fire("Đã tạo đơn thành công", "", "success");
+            </script>';
+    } else {
+        echo '<script>
+                Swal.fire("Đã có lỗi trong quá trình tạo đơn", "Vui lòng thử lại", "error");
+            </script>';
+    }
+    unset($_SESSION['status_create_meal']);
+}
+?>

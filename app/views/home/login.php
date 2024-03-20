@@ -195,7 +195,7 @@
                     $helper = $fb->getRedirectLoginHelper();
 
                     $permissions = ['email'];
-                    $loginUrl = $helper->getLoginUrl($_ENV['FACEBOOK_URL_LOGIN'], $permissions);
+                    $loginUrl = $helper->getLoginUrl(str_replace('{HTTP_HOST}', $_SERVER['HTTP_HOST'], $_ENV['FACEBOOK_URL_LOGIN']), $permissions);
                     ?>
                     console.log("<?php echo $loginUrl ?>");
                     window.location.href = "<?php echo $loginUrl ?>";

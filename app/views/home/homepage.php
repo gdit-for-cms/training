@@ -140,3 +140,13 @@ if (isset($_SESSION['status_create_meal'])) {
     unset($_SESSION['status_create_meal']);
 }
 ?>
+<?php
+if (isset($_SESSION['no_meal'])) {
+    if ($_SESSION['no_meal'] == TRUE) {
+        echo '<script>
+                Swal.fire("Đơn hàng đã đóng hoặc không còn tồn tại", "", "error");
+            </script>';
+    }
+    unset($_SESSION['no_meal']);
+}
+?>

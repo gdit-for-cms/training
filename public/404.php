@@ -39,7 +39,7 @@
         }
     </style>
     <div class="bg-gray-100 h-screen justify-center">
-        <center class="mt-24 m-auto">
+        <center class="m-auto">
             <svg class="emoji-404 " enable-background="new 0 0 226 249.135" height="249.135" id="Layer_1" overflow="visible" version="1.1" viewBox="0 0 226 249.135" width="226" xml:space="preserve">
                 <circle cx="113" cy="113" fill="#FFE585" r="109" />
                 <line enable-background="new    " fill="none" opacity="0.29" stroke="#6E6E96" stroke-linecap="round" stroke-linejoin="round" stroke-width="8" x1="88.866" x2="136.866" y1="245.135" y2="245.135" />

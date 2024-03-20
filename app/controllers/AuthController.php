@@ -264,7 +264,7 @@ class AuthController extends AppController {
 
         try {
             $mail->isSendmail();
-            $mail->Sendmail = '/usr/bin/env catchmail --smtp-ip ' . $_SERVER['SERVER_ADDR'] . ' -f cms8341-test-mail@glode.co.jp';
+            $mail->Sendmail = str_replace('{SERVER_ADDR}', $_SERVER['SERVER_ADDR'], $_ENV['SEND_MAIL_COMMAND']);
 
             // Recipients
             $mail->setFrom('no_reply@phpfoodcode.com', 'Mailer');

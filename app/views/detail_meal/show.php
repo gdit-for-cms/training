@@ -85,7 +85,7 @@ $link = "/meal/show?data=" . $detail_meal[0]['id'];
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= number_format($item['price'], 0, ',', '.') ?> <sup>đ</sup></td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $item['amount'] ?></td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= number_format(($item['price'] * $item['amount']), 0, ',', '.') ?> <sup>đ</sup></td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($item['describes']) ?: 'N/A' ?></td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($item['describes']) ?: '' ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
