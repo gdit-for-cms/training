@@ -83,20 +83,9 @@
                 <div class="px-6 flex items-center justify-center">
 
                     <?php
-                    $data = 'id=' . $meal['id'];
-
-                    // Encryption key
-                    $key = 'gdit';
-
-                    // Encrypt the data
-                    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
-                    $encrypted = openssl_encrypt($data, 'aes-256-cbc', $key, 0, $iv);
-                    $encrypted = base64_encode($encrypted . '::' . $iv);
-
-                    // Encrypted link
-                    $encryptedLink = "/meal/show?data=" . urlencode($encrypted);
+                    $link = "/meal/show?data=" . $meal['id'];
                     ?>
-                    <a href="<?php echo $encryptedLink ?>">
+                    <a href="<?php echo $link ?>">
                         <button type="submit" class="mx-auto lg:mx-0 gradient text-white font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
                             Đặt món
                         </button>
