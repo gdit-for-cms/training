@@ -277,25 +277,6 @@
         }).then(() => {
             window.location.href = '/auth/login';
         });
-    } else if (register_state == "send_mail_success") {
-        Swal.fire({
-            title: 'Đã gửi link xác thực tài khoản đến email của bạn',
-            text: 'Vui lòng kiểm tra email và xác nhận ở bên dưới',
-            icon: 'success',
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Đã nhận email',
-            showDenyButton: true,
-            denyButtonText: 'Gửi lại email',
-            denyButtonColor: '#d33',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = '/auth/login';
-            } else if (result.isDenied) {
-                document.getElementById("resend_email_form").submit();
-            }
-        })
-    } else if (register_state == "send_mail_expire") {
-        Swal.fire('Link hoặc thông tin đăng ký hết hiệu lực', 'Vui lòng đăng ký lại', 'error');
     } else {
         switch (register_error) {
             case "none_register_value":
