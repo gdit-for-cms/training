@@ -73,18 +73,29 @@ class Store extends Model {
     }
 
     function checkLink($url) {
-
         if (!strpos($url, "shopeefood")) {
             return -1;
         }
-
+        if (checkSelenium() == 1) {
+            $_SESSION['failed_connect_selenium'] = 'failed_connect_selenium';
+            header('Location: /meal/create');
+            exit;
+        }
+        runSelenium();
         $store = new Store();
         $pageSource = getHTMLPage($url);
+        if ($pageSource == -1) {
+            $_SESSION['failed_connect_selenium'] = 'failed_connect_selenium';
+            stopSelenium();
+            header('Location: /meal/create');
+            exit;
+        }
+
         $id = $store->checkStore($url);
 
         $options = LIBXML_NOERROR | LIBXML_NOWARNING;
         $dom = new DOMDocument();
-
+        stopSelenium();
         try {
             $dom->loadHTML('<?xml encoding="utf-8" ?>' . $pageSource, $options);
         } catch (Exception $e) {

@@ -6,7 +6,56 @@ use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\WebDriverDimension;
 use App\Config;
 
-function getHTMLPage($url, $maxRetries = 5) {
+
+require '../vendor/autoload.php';
+
+use phpseclib3\Net\SSH2;
+
+
+
+function runSelenium() {
+    $ssh = new SSH2('192.168.1.217');
+    if (!$ssh->login('root', 'test00')) {
+        return;
+    } else {
+        // Chạy lệnh 'java -jar selenium-server-4.16.1.jar standalone' trong một tiến trình bất đồng bộ
+        $command = 'cd /htdocs/php_food_code/ && java -jar selenium-server-4.16.1.jar standalone &';
+        $pid = trim($ssh->exec($command));
+    }
+}
+
+function checkSelenium() {
+    $ssh = new SSH2('192.168.1.217');
+    if (!$ssh->login('root', 'test00')) {
+        return -1;
+    } else {
+        $output = $ssh->exec('pgrep -f "java -jar selenium-server-4.16.1.jar standalone"');
+        if (!empty($output)) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+}
+
+function stopSelenium() {
+    $ssh = new SSH2('192.168.1.217');
+    if (!$ssh->login('root', 'test00')) {
+        return;
+    } else {
+        // Tìm và tắt quy trình Selenium
+        $output = $ssh->exec('pgrep -f "java -jar selenium-server-4.16.1.jar standalone"');
+        $processIds = explode("\n", trim($output));
+        if (!empty($processIds)) {
+            foreach ($processIds as $processId) {
+                $ssh->exec('kill -9 ' . $processId);
+            }
+        }
+    }
+}
+
+
+function getHTMLPage($url, $maxRetries = 2) {
     $retryCount = 0;
     $maxRetries = Config::RETRY_CRAWL_TIMES;
     $pageSource = ""; // Initialize an empty string to store the entire page source
@@ -18,8 +67,8 @@ function getHTMLPage($url, $maxRetries = 5) {
 
             // Set longer timeout values
             $timeouts = [
-                'pageLoad' => 600000, // 10 minutes for page load
-                'script' => 120000, // 2 minutes for scripts
+                'pageLoad' => 30000, // 5 minutes for page load
+                'script' => 6000, // 1 minutes for scripts
             ];
 
             $capabilities = DesiredCapabilities::chrome();
@@ -27,16 +76,13 @@ function getHTMLPage($url, $maxRetries = 5) {
             $capabilities->setCapability('timeouts', $timeouts);
 
             // Use environment variable for Selenium WebDriver hub URL
-            $seleniumHubUrl = str_replace('{SERVER_ADDR}', $_SERVER['SERVER_ADDR'], $_ENV['SELENIUM_HUB_URL']) ?: 'http://localhost:4444/wd/hub';
+            $seleniumHubUrl = $_ENV['SELENIUM_HUB_URL'] ?: 'http://localhost:4444/wd/hub';
 
             try {
                 $driver = RemoteWebDriver::create($seleniumHubUrl, $capabilities);
             } catch (Exception $e) {
                 // Handle when server error or did not run
-                error_log("Failed to connect to Selenium Server: " . $e->getMessage());
-                $_SESSION['failed_connect_selenium'] = 'failed_connect_selenium';
-                header('Location: /meal/create');
-                exit;
+                return -1;
             }
 
             // Set the browser window size to a large dimension
@@ -64,19 +110,19 @@ function getHTMLPage($url, $maxRetries = 5) {
             $retryCount++;
             // Optionally, log the retry attempt
             echo "Attempt $retryCount failed: " . $e->getMessage() . "\nRetrying...\n";
-        } finally {
-            // Ensure the browser is always closed after each attempt
-            if (isset($driver)) {
-                $driver->quit();
-            }
         }
+        // finally {
+        //     // Ensure the browser is always closed after each attempt
+        //     if (isset($driver)) {
+        //         $driver->quit();
+        //     }
+        // }
     }
 
     if ($retryCount == $maxRetries) {
         // Handle the case where all retries have failed
         echo "Failed to load the page after $maxRetries attempts.";
     }
-
     return $pageSource;
 }
 
