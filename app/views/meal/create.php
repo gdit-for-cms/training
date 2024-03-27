@@ -145,7 +145,7 @@
 
 <?php if (isset($_SESSION['failed_connect_selenium'])) : ?>
     <script>
-        Swal.fire('Chưa kết nối Server Selenium', 'Vui lòng liên hệ admin', 'error');
+        Swal.fire('Bạn không thể tạo đơn cùng lúc với người khác, vui lòng đợi khoảng 1 phút rồi tạo đơn lại.', 'Xin lỗi vì sự bất tiện này!');
     </script>
     <?php unset($_SESSION['failed_connect_selenium']); ?>
 <?php endif; ?>
