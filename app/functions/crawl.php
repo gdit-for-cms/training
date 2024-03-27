@@ -14,9 +14,9 @@ use phpseclib3\Net\SSH2;
 
 
 function runSelenium() {
-    $ssh = new SSH2('192.168.1.217');
-    if (!$ssh->login('root', 'test00')) {
-        return;
+    $ssh = new SSH2($_ENV['SERVER']);
+    if (!$ssh->login($_ENV['USER'], $_ENV['PASS'])) {
+        return 0;
     } else {
         // Chạy lệnh 'java -jar selenium-server-4.16.1.jar standalone' trong một tiến trình bất đồng bộ
         $command = 'cd /htdocs/php_food_code/ && java -jar selenium-server-4.16.1.jar standalone &';
@@ -25,9 +25,9 @@ function runSelenium() {
 }
 
 function checkSelenium() {
-    $ssh = new SSH2('192.168.1.217');
-    if (!$ssh->login('root', 'test00')) {
-        return -1;
+    $ssh = new SSH2($_ENV['SERVER']);
+    if (!$ssh->login($_ENV['USER'], $_ENV['PASS'])) {
+        return 0;
     } else {
         $output = $ssh->exec('pgrep -f "java -jar selenium-server-4.16.1.jar standalone"');
         if (!empty($output)) {
@@ -39,9 +39,9 @@ function checkSelenium() {
 }
 
 function stopSelenium() {
-    $ssh = new SSH2('192.168.1.217');
-    if (!$ssh->login('root', 'test00')) {
-        return;
+    $ssh = new SSH2($_ENV['SERVER']);
+    if (!$ssh->login($_ENV['USER'], $_ENV['PASS'])) {
+        return 0;
     } else {
         // Tìm và tắt quy trình Selenium
         $output = $ssh->exec('pgrep -f "java -jar selenium-server-4.16.1.jar standalone"');

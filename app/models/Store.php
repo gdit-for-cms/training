@@ -77,15 +77,22 @@ class Store extends Model {
             return -1;
         }
         if (checkSelenium() == 1) {
+            $_SESSION['failed_create'] = 'failed_create';
+            header('Location: /meal/create');
+            exit;
+        }
+
+        if (checkSelenium() == 0) {
             $_SESSION['failed_connect_selenium'] = 'failed_connect_selenium';
             header('Location: /meal/create');
             exit;
         }
+
         runSelenium();
         $store = new Store();
         $pageSource = getHTMLPage($url);
         if ($pageSource == -1) {
-            $_SESSION['failed_connect_selenium'] = 'failed_connect_selenium';
+            $_SESSION['failed_create'] = 'failed_create';
             stopSelenium();
             header('Location: /meal/create');
             exit;

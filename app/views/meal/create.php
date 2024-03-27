@@ -145,9 +145,16 @@
 
 <?php if (isset($_SESSION['failed_connect_selenium'])) : ?>
     <script>
-        Swal.fire('Bạn không thể tạo đơn cùng lúc với người khác, vui lòng đợi khoảng 1 phút rồi tạo đơn lại.', 'Xin lỗi vì sự bất tiện này!');
+        Swal.fire('Không thể kết nối với server selenium, vui lòng liên hệ ai đó để fix');
     </script>
     <?php unset($_SESSION['failed_connect_selenium']); ?>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['failed_create'])) : ?>
+    <script>
+        Swal.fire('Bạn không thể tạo đơn cùng lúc với người khác, vui lòng đợi khoảng 1 phút rồi tạo đơn lại.', 'Xin lỗi vì sự bất tiện này!');
+    </script>
+    <?php unset($_SESSION['failed_create']); ?>
 <?php endif; ?>
 
 <?php
