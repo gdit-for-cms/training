@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: localhost
--- Thời gian đã tạo: Th3 18, 2024 lúc 10:46 AM
+-- Thời gian đã tạo: Th3 27, 2024 lúc 12:49 PM
 -- Phiên bản máy phục vụ: 10.3.28-MariaDB-log
 -- Phiên bản PHP: 7.4.33
 
@@ -135,6 +135,18 @@ CREATE TABLE `store` (
   `deleted` bit(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_vietnamese_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `token`
+--
+
+CREATE TABLE `token` (
+  `id` int(11) NOT NULL,
+  `value` text COLLATE utf8mb4_vietnamese_ci NOT NULL,
+  `expiration` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_vietnamese_ci;
+
 --
 -- Chỉ mục cho các bảng đã đổ
 --
@@ -197,6 +209,12 @@ ALTER TABLE `store`
   ADD UNIQUE KEY `link` (`link`);
 
 --
+-- Chỉ mục cho bảng `token`
+--
+ALTER TABLE `token`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT cho các bảng đã đổ
 --
 
@@ -210,7 +228,7 @@ ALTER TABLE `app_user`
 -- AUTO_INCREMENT cho bảng `detail_meal`
 --
 ALTER TABLE `detail_meal`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT cho bảng `detail_order`
@@ -228,7 +246,7 @@ ALTER TABLE `food`
 -- AUTO_INCREMENT cho bảng `meal`
 --
 ALTER TABLE `meal`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT cho bảng `orders`
@@ -281,6 +299,12 @@ ALTER TABLE `meal`
 ALTER TABLE `orders`
   ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `app_user` (`id`),
   ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`store_id`) REFERENCES `store` (`id`) ON DELETE SET NULL;
+
+--
+-- Các ràng buộc cho bảng `token`
+--
+ALTER TABLE `token`
+  ADD CONSTRAINT `fk_token_user_id` FOREIGN KEY (`id`) REFERENCES `app_user` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
