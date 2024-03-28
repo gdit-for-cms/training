@@ -12,46 +12,58 @@ require '../vendor/autoload.php';
 use phpseclib3\Net\SSH2;
 
 
+function getStatusCrawling() {
+    $handle = fopen('../app/functions/status.csv', 'r');
+    $data = fgetcsv($handle);
+    fclose($handle);
+    return $data[0];
+}
 
-function runSelenium() {
-    $ssh = new SSH2('192.168.1.217');
-    if (!$ssh->login('root', 'test00')) {
-        return;
+function setStatusCrawling($status) {
+    $handle = fopen('../app/functions/status.csv', 'w');
+    $arr = [$status];
+    fputcsv($handle, $arr);
+    fclose($handle);
+}
+
+function createConnection() {
+    setStatusCrawling('1');
+    $ssh = new SSH2($_ENV['SERVER']);
+    if (!$ssh->login($_ENV['USER'], $_ENV['PASS'])) {
+        return 0;
     } else {
-        // Chạy lệnh 'java -jar selenium-server-4.16.1.jar standalone' trong một tiến trình bất đồng bộ
-        $command = 'cd /htdocs/php_food_code/ && java -jar selenium-server-4.16.1.jar standalone &';
-        $pid = trim($ssh->exec($command));
+        return $ssh;
     }
 }
 
-function checkSelenium() {
-    $ssh = new SSH2('192.168.1.217');
-    if (!$ssh->login('root', 'test00')) {
+
+function runSelenium($ssh) {
+    // Chạy lệnh 'java -jar selenium-server-4.16.1.jar standalone' trong một tiến trình bất đồng bộ
+    $command = 'cd /htdocs/php_food_code/ && java -jar selenium-server-4.16.1.jar standalone > /dev/null 2>&1 & echo $!';
+    $ssh->exec($command);
+}
+
+function checkSelenium($ssh) {
+    $output = $ssh->exec('pgrep -f "java -jar selenium-server-4.16.1.jar standalone"');
+    if (!empty($output)) {
+        $ssh->disconnect();
+        return 1;
+    } else {
         return -1;
-    } else {
-        $output = $ssh->exec('pgrep -f "java -jar selenium-server-4.16.1.jar standalone"');
-        if (!empty($output)) {
-            return 1;
-        } else {
-            return -1;
-        }
     }
 }
 
-function stopSelenium() {
-    $ssh = new SSH2('192.168.1.217');
-    if (!$ssh->login('root', 'test00')) {
-        return;
-    } else {
-        // Tìm và tắt quy trình Selenium
-        $output = $ssh->exec('pgrep -f "java -jar selenium-server-4.16.1.jar standalone"');
-        $processIds = explode("\n", trim($output));
-        if (!empty($processIds)) {
-            foreach ($processIds as $processId) {
-                $ssh->exec('kill -9 ' . $processId);
-            }
+function stopSelenium($ssh) {
+    // Tìm và tắt quy trình Selenium
+    $output = $ssh->exec('pgrep -f "java -jar selenium-server-4.16.1.jar standalone"');
+    $processIds = explode("\n", trim($output));
+    if (!empty($processIds)) {
+        foreach ($processIds as $processId) {
+            $ssh->exec('kill -9 ' . $processId);
         }
     }
+    $ssh->disconnect();
+    setStatusCrawling('0');
 }
 
 
@@ -121,7 +133,7 @@ function getHTMLPage($url, $maxRetries = 2) {
 
     if ($retryCount == $maxRetries) {
         // Handle the case where all retries have failed
-        echo "Failed to load the page after $maxRetries attempts.";
+        return -1;
     }
     return $pageSource;
 }

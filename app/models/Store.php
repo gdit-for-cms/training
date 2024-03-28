@@ -9,8 +9,8 @@ use Exception;
 use Core\QueryBuilder;
 
 class Store extends Model {
-
     use QueryBuilder;
+    static $abc = 1;
 
     private $_table = 'store';
 
@@ -76,17 +76,33 @@ class Store extends Model {
         if (!strpos($url, "shopeefood")) {
             return -1;
         }
-        if (checkSelenium() == 1) {
+
+
+        if (getStatusCrawling() == 1) {
+            $_SESSION['failed_create'] = 'failed_create';
+            header('Location: /meal/create');
+            exit;
+        }
+
+        $ssh = createConnection();
+        if ($ssh === 0) {
             $_SESSION['failed_connect_selenium'] = 'failed_connect_selenium';
             header('Location: /meal/create');
             exit;
         }
-        runSelenium();
+        $check = checkSelenium($ssh);
+        if ($check == 1) {
+            $_SESSION['failed_create'] = 'failed_create';
+            header('Location: /meal/create');
+            exit;
+        }
+
+        runSelenium($ssh);
         $store = new Store();
         $pageSource = getHTMLPage($url);
         if ($pageSource == -1) {
-            $_SESSION['failed_connect_selenium'] = 'failed_connect_selenium';
-            stopSelenium();
+            $_SESSION['failed_create'] = 'failed_create';
+            stopSelenium($ssh);
             header('Location: /meal/create');
             exit;
         }
@@ -95,7 +111,7 @@ class Store extends Model {
 
         $options = LIBXML_NOERROR | LIBXML_NOWARNING;
         $dom = new DOMDocument();
-        stopSelenium();
+        stopSelenium($ssh);
         try {
             $dom->loadHTML('<?xml encoding="utf-8" ?>' . $pageSource, $options);
         } catch (Exception $e) {
